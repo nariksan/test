@@ -400,9 +400,9 @@ body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-p
 <button class="logout-btn" id="logoutBtn">ВЫЙТИ</button>
 </div>
 
-<!-- TRACKS PAGE -->
+<!-- ИСПРАВЛЕНО: все кнопки "Назад" теперь ведут на homePage, а не на index.html -->
 <div class="page" id="tracksPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">Все треки</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">Все треки</div></div>
 <div class="featured-release fade-in-up" id="featuredRelease" onclick="playNewRelease()"></div>
 <div class="category-tabs fade-in-up" id="categoryTabs">
 <button class="category-tab active" data-category="all" onclick="switchCategory('all')"><span class="tab-icon">🎧</span><span>Все</span><span class="tab-count" id="countAll">0</span></button>
@@ -413,17 +413,15 @@ body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-p
 <div class="tracks-list fade-in-up" id="allTracksList"></div>
 </div>
 
-<!-- INSTRUMENTALS PAGE -->
 <div class="page" id="instrumentalsPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">Инструменталы</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">Инструменталы</div></div>
 <div class="intro-block gold fade-in-up"><div class="intro-title gold">БЕЗ СЛОВ · ТОЛЬКО ЗВУК</div><div class="intro-text">Музыка, в которой говорят не тексты, а эмоции.</div></div>
 <div class="section-title fade-in-up">КОЛЛЕКЦИЯ</div>
 <div class="tracks-list fade-in-up" id="instrumentalsList"></div>
 </div>
 
-<!-- SUBSCRIBERS PAGE -->
 <div class="page" id="subscribersPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">Дай голос</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">Дай голос</div></div>
 <div class="intro-block pink fade-in-up"><div class="intro-title pink">ТВОЙ ТЕКСТ — НАШ ГОЛОС</div><div class="intro-text">Присылай свой текст и стиль, в котором ты хотел бы его услышать.</div></div>
 <button class="voice-toggle-btn fade-in-up" id="voiceToggleBtn" onclick="toggleVoiceForm()"><span>🎤</span><span id="voiceToggleText">ПРИСЛАТЬ СВОЙ ТЕКСТ</span><span class="btn-arrow">▼</span></button>
 <div class="voice-form-wrapper" id="voiceFormWrapper">
@@ -445,9 +443,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-p
 <div class="tracks-list fade-in-up" id="subscribersList"></div>
 </div>
 
-<!-- DISCUSSIONS PAGE -->
 <div class="page" id="discussionsPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">Обсуждения</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">Обсуждения</div></div>
 <div class="discussions-intro fade-in-up"><p>Общее пространство для разговоров о музыке. Делись впечатлениями, задавай вопросы.</p></div>
 <div class="discussions-container fade-in-up">
 <div class="discussions-header">
@@ -475,9 +472,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-p
 </div>
 </div>
 
-<!-- ABOUT PAGE -->
 <div class="page" id="aboutPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">О проекте</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">О проекте</div></div>
 <div class="about-content fade-in-up">
 <div class="about-card"><p><span class="evgenii-title">EVGENII <span class="ai-badge">AI</span></span> — это эксперимент на стыке человеческих эмоций и искусственного интеллекта.</p><div class="about-quote">«Я придумываю текст и стиль исполнения. А выучить и воплотить в песню доверяю ИИ.»</div></div>
 <div class="about-card"><p>Искусственный интеллект становится моим <span class="highlight">голосом</span>. Он заучивает мои слова, учится чувствовать ритм, подбирать интонации.</p><p>Это не замена человеку — это <span class="highlight">новый инструмент выражения</span>.</p></div>
@@ -485,9 +481,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-p
 </div>
 </div>
 
-<!-- COMMUNITY PAGE -->
 <div class="page" id="communityPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">Сообщества</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">Сообщества</div></div>
 <div class="community-content fade-in-up">
 <div class="community-intro"><p>Присоединяйтесь к нашим сообществам, чтобы быть в курсе новых релизов</p></div>
 <a href="#" class="community-card coming-soon" onclick="event.preventDefault()"><div class="community-icon bip">🎵</div><div class="community-info"><div class="community-name">Bip</div><div class="community-desc">Музыкальная платформа</div><span class="community-badge">Скоро</span></div><div class="community-arrow">→</div></a>
@@ -496,9 +491,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-p
 </div>
 </div>
 
-<!-- CONTACT PAGE -->
 <div class="page" id="contactPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">Связь</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">Связь</div></div>
 <div class="contact-intro fade-in-up"><p>Есть вопрос, предложение или хотите сотрудничать? Напишите мне — я обязательно отвечу!</p></div>
 <div class="contact-form-container fade-in-up">
 <h3 style="margin-bottom:20px;font-family:'Orbitron';letter-spacing:2px;text-align:center">НАПИСАТЬ АВТОРУ</h3>
@@ -513,9 +507,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-p
 </div>
 </div>
 
-<!-- SUPPORT PAGE -->
 <div class="page" id="supportPage">
-<div class="page-header fade-in-up"><button class="back-btn" onclick="goToHub()">←</button><div class="page-title">Поддержать</div></div>
+<div class="page-header fade-in-up"><button class="back-btn" onclick="navigateTo('homePage')">←</button><div class="page-title">Поддержать</div></div>
 <div class="support-wrapper">
 <div class="support-intro-new fade-in-up">
 <span class="heart-icon">💜</span>
