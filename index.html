@@ -1,0 +1,355 @@
+<!-- ДОБАВИТЬ В БЛОК БЫСТРОГО ДОСТУПА на главной странице (после supportPage) -->
+<div class="quick-tile" onclick="navigateTo('neiroLabPage')">
+    <div class="tile-icon" style="background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(0, 229, 255, 0.15)); color: #8a2be2;">
+        🧪
+    </div>
+    <div class="tile-title">Neiro Lab</div>
+    <div class="tile-desc">AI видео лаборатория</div>
+</div>
+
+<!-- НОВАЯ СТРАНИЦА НЕЙРОЛАБОРАТОРИЯ (добавить после cinemaPage) -->
+<div class="page" id="neiroLabPage">
+    <div class="page-header fade-in-up">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <div class="page-title"><span>🧪 НЕЙРОЛАБОРАТОРИЯ</span></div>
+    </div>
+    
+    <!-- БАННЕР -->
+    <div class="banner fade-in-up" style="background: linear-gradient(135deg, #1a0a2e, #2a0a1a, #1a0a2e); border-color: rgba(138, 43, 226, 0.3);">
+        <div class="banner-content" style="background: radial-gradient(ellipse at 30% 50%, rgba(138, 43, 226, 0.2) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(0, 229, 255, 0.2) 0%, transparent 60%);">
+            <div class="banner-geometric">
+                <div class="geo-shape-banner" style="border-color: #8a2be2;"></div>
+                <div class="geo-shape-banner" style="border-color: #00e5ff; animation-delay: -2s;"></div>
+                <div class="geo-shape-banner" style="border-color: #ff00e5; animation-delay: -4s;"></div>
+                <div class="geo-shape-banner" style="border-color: #8a2be2; animation-delay: -1s;"></div>
+            </div>
+            <div class="banner-title" style="background: linear-gradient(135deg, #8a2be2, #00e5ff, #ff00e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.3));">
+                NEIRO<span class="ai-badge" style="background: linear-gradient(135deg, #8a2be2, #00e5ff); -webkit-text-fill-color: #000;">LAB</span>
+            </div>
+            <div class="banner-subtitle" style="color: #00e5ff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);">AI VIDEO PRODUCTION</div>
+            <div class="banner-slogan">Создаю AI-видео, которые хочется пересматривать</div>
+        </div>
+    </div>
+    
+    <!-- НАВИГАЦИЯ -->
+    <div class="cinema-nav fade-in-up" id="neiroNav">
+        <button class="cinema-nav-btn active" onclick="switchNeiroSection('services', this)">
+            <span class="nav-icon"></span>
+            <span>Услуги</span>
+        </button>
+        <button class="cinema-nav-btn" onclick="switchNeiroSection('portfolio', this)">
+            <span class="nav-icon">🎬</span>
+            <span>Портфолио</span>
+        </button>
+        <button class="cinema-nav-btn" onclick="switchNeiroSection('process', this)">
+            <span class="nav-icon">🔄</span>
+            <span>Как заказать</span>
+        </button>
+        <button class="cinema-nav-btn" onclick="switchNeiroSection('about', this)">
+            <span class="nav-icon">🔬</span>
+            <span>О лаборатории</span>
+        </button>
+    </div>
+    
+    <!-- РАЗДЕЛ: УСЛУГИ -->
+    <div class="cinema-section active" id="neiroServices">
+        <div class="intro-block" style="background: linear-gradient(135deg, rgba(138, 43, 226, 0.08), rgba(0, 229, 255, 0.08)); border: 1px solid rgba(138, 43, 226, 0.2);">
+            <div class="intro-title" style="color: #8a2be2;">🎬 ЧТО Я СОЗДАЮ</div>
+            <div class="intro-text">AI-видео для любых задач: от рекламы до поздравлений. Быстро, качественно, креативно.</div>
+        </div>
+        
+        <div class="media-grid fade-in-up" id="servicesGrid">
+            <div class="media-card">
+                <div class="media-poster" style="background: linear-gradient(135deg, #1a0a2e, #2a1a3a);">
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">📺</div>
+                    <div class="media-play-overlay">
+                        <div class="media-play-icon" style="background: rgba(138, 43, 226, 0.9);">
+                            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-info">
+                    <div class="media-title">Рекламные видео</div>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:8px;">Привлекайте внимание клиентов</div>
+                    <div style="font-size:0.7rem;color:#8a2be2;font-weight:700;">от 24 часов</div>
+                </div>
+            </div>
+            
+            <div class="media-card">
+                <div class="media-poster" style="background: linear-gradient(135deg, #2a0a1a, #3a1a2a);">
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;"></div>
+                    <div class="media-play-overlay">
+                        <div class="media-play-icon" style="background: rgba(0, 229, 255, 0.9);">
+                            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-info">
+                    <div class="media-title">Reels / Shorts</div>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:8px;">Вирусный контент для соцсетей</div>
+                    <div style="font-size:0.7rem;color:#00e5ff;font-weight:700;">от 12 часов</div>
+                </div>
+            </div>
+            
+            <div class="media-card">
+                <div class="media-poster" style="background: linear-gradient(135deg, #0a1a2e, #1a2a3a);">
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;"></div>
+                    <div class="media-play-overlay">
+                        <div class="media-play-icon" style="background: rgba(255, 0, 229, 0.9);">
+                            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-info">
+                    <div class="media-title">Поздравления</div>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:8px;">Уникальные видео-поздравления</div>
+                    <div style="font-size:0.7rem;color:#ff00e5;font-weight:700;">от 6 часов</div>
+                </div>
+            </div>
+            
+            <div class="media-card">
+                <div class="media-poster" style="background: linear-gradient(135deg, #2a1a0a, #3a2a1a);">
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">🎭</div>
+                    <div class="media-play-overlay">
+                        <div class="media-play-icon" style="background: rgba(255, 179, 71, 0.9);">
+                            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-info">
+                    <div class="media-title">Анимация персонажей</div>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:8px;">Создание и оживление героев</div>
+                    <div style="font-size:0.7rem;color:#ffb347;font-weight:700;">от 48 часов</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- РАЗДЕЛ: ПОРТФОЛИО -->
+    <div class="cinema-section" id="neiroPortfolio">
+        <div class="intro-block" style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(138, 43, 226, 0.08)); border: 1px solid rgba(0, 229, 255, 0.2);">
+            <div class="intro-title" style="color: #00e5ff;"> МОИ РАБОТЫ</div>
+            <div class="intro-text">Примеры AI-видео, созданных для клиентов. Каждая работа уникальна.</div>
+        </div>
+        
+        <div class="category-tabs fade-in-up" id="portfolioCategoryTabs">
+            <button class="category-tab active" data-category="all" onclick="switchPortfolioCategory('all', this)">
+                <span class="tab-icon"></span>
+                <span>Все</span>
+            </button>
+            <button class="category-tab" data-category="reels" onclick="switchPortfolioCategory('reels', this)">
+                <span class="tab-icon"></span>
+                <span>Reels</span>
+            </button>
+            <button class="category-tab" data-category="ads" onclick="switchPortfolioCategory('ads', this)">
+                <span class="tab-icon">📺</span>
+                <span>Реклама</span>
+            </button>
+            <button class="category-tab" data-category="greetings" onclick="switchPortfolioCategory('greetings', this)">
+                <span class="tab-icon">🎉</span>
+                <span>Поздравления</span>
+            </button>
+        </div>
+        
+        <div class="media-grid fade-in-up" id="portfolioGrid">
+            <div class="tv-empty-state"><div class="loading-spinner"></div></div>
+        </div>
+    </div>
+    
+    <!-- РАЗДЕЛ: КАК ЗАКАЗАТЬ -->
+    <div class="cinema-section" id="neiroProcess">
+        <div class="intro-block" style="background: linear-gradient(135deg, rgba(255, 0, 229, 0.08), rgba(138, 43, 226, 0.08)); border: 1px solid rgba(255, 0, 229, 0.2);">
+            <div class="intro-title" style="color: #ff00e5;">🔄 ПРОЦЕСС РАБОТЫ</div>
+            <div class="intro-text">Простой и понятный путь от идеи до готового видео</div>
+        </div>
+        
+        <div class="news-list fade-in-up" id="processList">
+            <div class="news-card">
+                <div class="news-header">
+                    <span class="news-tag" style="background: rgba(138, 43, 226, 0.15); color: #8a2be2;">ШАГ 01</span>
+                </div>
+                <div class="news-title">Заявка</div>
+                <div class="news-text">Напишите мне "Хочу видео" и опишите вашу идею. Обсудим детали, формат и сроки.</div>
+            </div>
+            
+            <div class="news-card">
+                <div class="news-header">
+                    <span class="news-tag" style="background: rgba(0, 229, 255, 0.15); color: #00e5ff;">ШАГ 02</span>
+                </div>
+                <div class="news-title">Обсуждение</div>
+                <div class="news-text">Детально обсуждаем концепцию, стиль, цветовую гамму и все пожелания.</div>
+            </div>
+            
+            <div class="news-card">
+                <div class="news-header">
+                    <span class="news-tag" style="background: rgba(255, 179, 71, 0.15); color: #ffb347;">ШАГ 03</span>
+                </div>
+                <div class="news-title">Создание</div>
+                <div class="news-text">AI генерирует видео по вашему запросу. Вношу правки при необходимости.</div>
+            </div>
+            
+            <div class="news-card">
+                <div class="news-header">
+                    <span class="news-tag" style="background: rgba(0, 255, 136, 0.15); color: #00ff88;">ШАГ 04</span>
+                </div>
+                <div class="news-title">Результат</div>
+                <div class="news-text">Вы получаете готовое видео в высоком качестве и довольны результатом!</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- РАЗДЕЛ: О ЛАБОРАТОРИИ -->
+    <div class="cinema-section" id="neiroAbout">
+        <div class="intro-block" style="background: linear-gradient(135deg, rgba(138, 43, 226, 0.08), rgba(255, 0, 229, 0.08)); border: 1px solid rgba(138, 43, 226, 0.2);">
+            <div class="intro-title" style="color: #8a2be2;">🔬 О ЛАБОРАТОРИИ</div>
+            <div class="intro-text">Где искусственный интеллект встречается с творчеством</div>
+        </div>
+        
+        <div class="about-content fade-in-up">
+            <div class="about-card" style="background: rgba(20, 25, 40, 0.6); border: 1px solid rgba(138, 43, 226, 0.2);">
+                <p><span style="color: #8a2be2; font-weight: 600;">NEIRO_LAB</span> — это пространство, где искусственный интеллект встречается с творчеством.</p>
+                <p>Я создаю видеоконтент нового поколения: от рекламных роликов до уникальных поздравлений.</p>
+            </div>
+            
+            <div class="about-card" style="background: rgba(20, 25, 40, 0.6); border: 1px solid rgba(0, 229, 255, 0.2);">
+                <p>Используя передовые <span style="color: #00e5ff; font-weight: 600;">AI-технологии</span>, я превращаю ваши идеи в захватывающие видео.</p>
+                <p>Каждый проект — это эксперимент, где технологии усиливают эмоции, а не заменяют их.</p>
+            </div>
+            
+            <div class="about-card" style="background: rgba(20, 25, 40, 0.6); border: 1px solid rgba(255, 0, 229, 0.2);">
+                <div style="border-left: 3px solid #ff00e5; padding-left: 20px; margin: 20px 0; font-style: italic; color: #ff00e5; font-size: 1.05rem; line-height: 1.7;">
+                    "Создаю AI-видео, которые хочется пересматривать"
+                </div>
+                <p>Быстро • Качественно • Креативно</p>
+            </div>
+        </div>
+        
+        <!-- КНОПКА ЗАКАЗА -->
+        <div style="max-width: 600px; margin: 30px auto; text-align: center;" class="fade-in-up">
+            <button class="submit-btn" style="background: linear-gradient(135deg, #8a2be2, #00e5ff, #ff00e5); padding: 20px 40px; font-size: 1.1rem;" onclick="openNeiroOrder()">
+                <span> ХОЧУ ВИДЕО</span>
+            </button>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 12px;">
+                Напишите мне — и мы создадим что-то невероятное!
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- СТИЛИ ДЛЯ НЕЙРОЛАБОРАТОРИИ -->
+<style>
+/* Дополнительные стили для Neiro Lab */
+#neiroLabPage .banner {
+    border-color: rgba(138, 43, 226, 0.3);
+}
+
+#neiroLabPage .ai-badge {
+    background: linear-gradient(135deg, #8a2be2, #00e5ff);
+    -webkit-text-fill-color: #000;
+}
+
+#neiroLabPage .cinema-nav-btn.active {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(0, 229, 255, 0.15));
+    border-color: #8a2be2;
+    box-shadow: 0 4px 20px rgba(138, 43, 226, 0.15);
+}
+</style>
+
+<!-- JAVASCRIPT ДЛЯ НЕЙРОЛАБОРАТОРИИ -->
+<script>
+let currentNeiroSection = 'services';
+let currentPortfolioCategory = 'all';
+
+// Примеры портфолио
+const portfolioItems = [
+    { id: 1, category: 'reels', title: 'Гигантский кот в городе', emoji: '🐱', time: '0:45' },
+    { id: 2, category: 'reels', title: 'Joker AI Edition', emoji: '🃏', time: '1:20' },
+    { id: 3, category: 'ads', title: 'Реклама продукта', emoji: '📺', time: '0:30' },
+    { id: 4, category: 'greetings', title: 'Поздравление с ДР', emoji: '🎂', time: '1:00' },
+    { id: 5, category: 'reels', title: 'Енот в стиле', emoji: '🦝', time: '0:55' },
+    { id: 6, category: 'ads', title: 'Промо ролик', emoji: '🎬', time: '0:40' }
+];
+
+function switchNeiroSection(section, btn) {
+    currentNeiroSection = section;
+    
+    // Обновляем кнопки навигации
+    document.querySelectorAll('#neiroNav .cinema-nav-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    // Показываем нужный раздел
+    document.querySelectorAll('#neiroLabPage .cinema-section').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+    });
+    
+    const targetId = 'neiro' + section.charAt(0).toUpperCase() + section.slice(1);
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+        targetEl.classList.add('active');
+        targetEl.style.display = 'block';
+    }
+    
+    // Загружаем контент
+    if (section === 'portfolio') {
+        renderPortfolio();
+    }
+    
+    window.scrollTo(0, 0);
+}
+
+function switchPortfolioCategory(category, btn) {
+    currentPortfolioCategory = category;
+    
+    document.querySelectorAll('#portfolioCategoryTabs .category-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    renderPortfolio();
+}
+
+function renderPortfolio() {
+    const grid = document.getElementById('portfolioGrid');
+    
+    let filtered = portfolioItems;
+    if (currentPortfolioCategory !== 'all') {
+        filtered = portfolioItems.filter(item => item.category === currentPortfolioCategory);
+    }
+    
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="tv-empty-state"><div class="tv-empty-state-icon">🎬</div><div class="tv-empty-state-text">Пока нет работ</div><div class="tv-empty-state-subtext">Скоро здесь появятся новые видео</div></div>';
+        return;
+    }
+    
+    grid.innerHTML = filtered.map(item => `
+        <div class="media-card">
+            <div class="media-poster" style="background: linear-gradient(135deg, #1a0a2e, #2a1a3a);">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">${item.emoji}</div>
+                <div style="position:absolute;bottom:10px;right:10px;padding:4px 10px;background:rgba(0,0,0,0.85);border-radius:6px;font-size:0.75rem;font-weight:700;">${item.time}</div>
+                <div class="media-play-overlay">
+                    <div class="media-play-icon" style="background: rgba(138, 43, 226, 0.9);">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="media-info">
+                <div class="media-title">${item.title}</div>
+                <button class="media-watch-btn" onclick="alert('Видео: ${item.title}')">
+                    <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    <span>Смотреть</span>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openNeiroOrder() {
+    // Открываем форму заказа или переходим на контакты
+    navigateTo('contactPage');
+    // Можно также открыть модальное окно с формой заказа
+}
+
+// Инициализация при загрузке страницы
+function initNeiroLabPage() {
+    renderPortfolio();
+}
+</script>
