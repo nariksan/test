@@ -32,11 +32,7 @@
     gap: 15px;
   }
   header h1 { font-size: 24px; }
-  .month-selector {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .month-selector { display: flex; align-items: center; gap: 10px; }
   .month-selector select {
     padding: 8px 12px;
     border-radius: 8px;
@@ -82,9 +78,7 @@
     font-weight: 700;
     color: #2c3e50;
   }
-  .section {
-    margin-bottom: 30px;
-  }
+  .section { margin-bottom: 30px; }
   .section h2 {
     font-size: 18px;
     margin-bottom: 15px;
@@ -119,6 +113,11 @@
   .status-unpaid { color: #e74c3c; font-weight: 700; font-size: 18px; }
   .amount { font-weight: 600; color: #2c3e50; }
   .empty-row { color: #aaa; font-style: italic; }
+  .totals-row {
+    background: #fffbea !important;
+    font-weight: 700;
+  }
+  .totals-row td { border-top: 2px solid #ffc107; }
   .modal-overlay {
     display: none;
     position: fixed;
@@ -159,6 +158,12 @@
   .form-group input:focus, .form-group textarea:focus {
     outline: none;
     border-color: #667eea;
+  }
+  .form-group input[readonly] {
+    background: #f0f2f8;
+    color: #2c3e50;
+    font-weight: 700;
+    cursor: not-allowed;
   }
   .btn {
     padding: 10px 20px;
@@ -232,6 +237,15 @@
     font-size: 13px;
     color: #856404;
   }
+  .auto-calc-info {
+    background: #e7f5ff;
+    border-left: 4px solid #339af0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #1864ab;
+  }
   @media (max-width: 600px) {
     .content { padding: 15px; }
     header { padding: 15px; }
@@ -252,10 +266,8 @@
   </header>
 
   <div class="content">
-    <!-- Сводка -->
     <div class="summary" id="summary"></div>
 
-    <!-- Вкладки -->
     <div class="tab-buttons">
       <button class="tab-btn active" onclick="switchTab('students', this)">👥 Ученики</button>
       <button class="tab-btn" onclick="switchTab('expenses', this)">💸 Расходы</button>
@@ -322,7 +334,7 @@
 <div class="modal-overlay" id="adminModal">
   <div class="modal">
     <h2>⚙️ Админ-панель</h2>
-    <div class="hint">💡 Все изменения сохраняются автоматически. Не забудьте сделать экспорт перед важными правками!</div>
+    <div class="hint">💡 Приход и расход считаются автоматически. Не забудьте сделать экспорт перед важными правками!</div>
 
     <div class="tab-buttons">
       <button class="tab-btn active" onclick="switchAdminTab('edit', this)">✏️ Редактировать</button>
@@ -337,13 +349,33 @@
         <label>Остаток с прошлого месяца, ₽</label>
         <input type="number" id="editPrevBalance" step="0.01">
       </div>
-      <div class="form-group">
-        <label>Основной приход (взносы), ₽</label>
-        <input type="number" id="editIncome" step="0.01">
+
+      <div class="auto-calc-info">
+        📊 <b>Приход</b> считается автоматически как сумма взносов учеников со статусом «✔ сдал».
       </div>
       <div class="form-group">
-        <label>Дополнительный приход, ₽</label>
+        <label>Приход (автоматически) — <span id="autoIncomeDisplay">0</span> ₽</label>
+        <input type="text" id="autoIncome" readonly value="0">
+      </div>
+
+      <div class="form-group">
+        <label>Дополнительный приход, ₽ (вручную)</label>
         <input type="number" id="editAddIncome" step="0.01">
+      </div>
+
+      <div class="auto-calc-info">
+        💸 <b>Расход</b> считается автоматически как сумма всех расходов ниже.
+      </div>
+      <div class="form-group">
+        <label>Расход (автоматически) — <span id="autoExpenseDisplay">0</span> ₽</label>
+        <input type="text" id="autoExpense" readonly value="0">
+      </div>
+
+      <div class="form-group">
+        <label>📌 Итого бюджет месяца: <span id="autoBudgetDisplay" style="color:#27ae60;font-size:16px">0</span> ₽</label>
+      </div>
+      <div class="form-group">
+        <label>📌 Итого остаток на конец месяца: <span id="autoBalanceDisplay" style="color:#2c3e50;font-size:16px">0</span> ₽</label>
       </div>
 
       <h3 style="margin:20px 0 10px">Ученики (до 30)</h3>
@@ -396,7 +428,7 @@
 
 <script>
 // ============ ХРАНИЛИЩЕ ============
-const STORAGE_KEY = 'parentBudget_v1';
+const STORAGE_KEY = 'parentBudget_v2';
 const PASSWORD_KEY = 'parentBudget_password';
 
 let data = loadData();
@@ -404,13 +436,21 @@ let currentMonthId = data.currentMonthId;
 
 function loadData() {
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) return JSON.parse(saved);
-  // Дефолтная структура
+  if (saved) {
+    const d = JSON.parse(saved);
+    // Миграция со старой версии: убираем income из месяцев
+    if (d.months) {
+      d.months.forEach(m => { delete m.income; });
+    }
+    if (d.archive) {
+      d.archive.forEach(m => { delete m.income; });
+    }
+    return d;
+  }
   const defaultMonth = {
     id: 'month_' + Date.now(),
     name: new Date().toLocaleString('ru', { month: 'long', year: 'numeric' }),
     prevBalance: 0,
-    income: 0,
     additionalIncome: 0,
     students: Array.from({length: 30}, () => ({ name: '', amount: 0, paid: false })),
     expenses: []
@@ -428,6 +468,24 @@ function saveData() {
 
 function getCurrentMonth() {
   return data.months.find(m => m.id === currentMonthId) || data.months[0];
+}
+
+// ============ АВТО-ПОДСЧЁТ ============
+function calcIncome(month) {
+  // Приход = сумма amount только у тех, кто сдал
+  return month.students.reduce((sum, s) => sum + (s.paid ? Number(s.amount || 0) : 0), 0);
+}
+
+function calcExpense(month) {
+  return month.expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+}
+
+function calcBudget(month) {
+  return calcIncome(month) + Number(month.additionalIncome || 0);
+}
+
+function calcBalance(month) {
+  return Number(month.prevBalance || 0) + calcBudget(month) - calcExpense(month);
 }
 
 // ============ ОТРИСОВКА ============
@@ -454,9 +512,11 @@ function renderMonthSelector() {
 
 function renderSummary() {
   const m = getCurrentMonth();
-  const totalIncome = Number(m.income) + Number(m.additionalIncome);
-  const totalExpense = m.expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
-  const balance = Number(m.prevBalance) + totalIncome - totalExpense;
+  const income = calcIncome(m);
+  const addIncome = Number(m.additionalIncome || 0);
+  const budget = calcBudget(m);
+  const expense = calcExpense(m);
+  const balance = calcBalance(m);
 
   document.getElementById('summary').innerHTML = `
     <div class="summary-card balance">
@@ -464,20 +524,20 @@ function renderSummary() {
       <div class="value">${formatMoney(m.prevBalance)} ₽</div>
     </div>
     <div class="summary-card">
-      <div class="label">Приход (взносы)</div>
-      <div class="value">${formatMoney(m.income)} ₽</div>
+      <div class="label">Приход (авт.)</div>
+      <div class="value">${formatMoney(income)} ₽</div>
     </div>
     <div class="summary-card">
       <div class="label">Доп. приход</div>
-      <div class="value">${formatMoney(m.additionalIncome)} ₽</div>
+      <div class="value">${formatMoney(addIncome)} ₽</div>
     </div>
     <div class="summary-card balance">
       <div class="label">Бюджет текущего месяца</div>
-      <div class="value">${formatMoney(totalIncome)} ₽</div>
+      <div class="value">${formatMoney(budget)} ₽</div>
     </div>
     <div class="summary-card expense">
-      <div class="label">Расход за месяц</div>
-      <div class="value">${formatMoney(totalExpense)} ₽</div>
+      <div class="label">Расход (авт.)</div>
+      <div class="value">${formatMoney(expense)} ₽</div>
     </div>
     <div class="summary-card balance">
       <div class="label">Остаток на конец месяца</div>
@@ -490,8 +550,19 @@ function renderStudents() {
   const m = getCurrentMonth();
   const tbody = document.getElementById('studentsTable');
   tbody.innerHTML = '';
+  let totalPaid = 0;
+  let totalExpected = 0;
+  let paidCount = 0;
+  let totalCount = 0;
+
   m.students.forEach((s, i) => {
-    if (!s.name && !s.amount) return; // пустые строки не показываем
+    if (!s.name && !s.amount) return;
+    totalCount++;
+    totalExpected += Number(s.amount || 0);
+    if (s.paid) {
+      paidCount++;
+      totalPaid += Number(s.amount || 0);
+    }
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${i + 1}</td>
@@ -501,7 +572,20 @@ function renderStudents() {
     `;
     tbody.appendChild(tr);
   });
-  if (tbody.children.length === 0) {
+
+  // Итоговая строка
+  if (totalCount > 0) {
+    const tr = document.createElement('tr');
+    tr.className = 'totals-row';
+    tr.innerHTML = `
+      <td colspan="2"><b>ИТОГО:</b> сдали ${paidCount} из ${totalCount}</td>
+      <td class="amount"><b>${formatMoney(totalPaid)} ₽</b></td>
+      <td><small style="color:#777">ожидалось ${formatMoney(totalExpected)} ₽</small></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  if (totalCount === 0) {
     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa;padding:20px">Нет данных. Войдите в админку для заполнения.</td></tr>';
   }
 }
@@ -510,7 +594,9 @@ function renderExpenses() {
   const m = getCurrentMonth();
   const tbody = document.getElementById('expensesTable');
   tbody.innerHTML = '';
+  let total = 0;
   m.expenses.forEach((e, i) => {
+    total += Number(e.amount || 0);
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${i + 1}</td>
@@ -519,7 +605,16 @@ function renderExpenses() {
     `;
     tbody.appendChild(tr);
   });
-  if (tbody.children.length === 0) {
+  if (m.expenses.length > 0) {
+    const tr = document.createElement('tr');
+    tr.className = 'totals-row';
+    tr.innerHTML = `
+      <td colspan="2"><b>ИТОГО РАСХОД:</b></td>
+      <td class="amount"><b>${formatMoney(total)} ₽</b></td>
+    `;
+    tbody.appendChild(tr);
+  }
+  if (m.expenses.length === 0) {
     tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Расходов нет</td></tr>';
   }
 }
@@ -532,9 +627,11 @@ function renderArchive() {
   }
   list.innerHTML = '';
   data.archive.slice().reverse().forEach(m => {
-    const totalIncome = Number(m.income) + Number(m.additionalIncome);
-    const totalExpense = m.expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
-    const balance = Number(m.prevBalance) + totalIncome - totalExpense;
+    const income = calcIncome(m);
+    const addIncome = Number(m.additionalIncome || 0);
+    const budget = income + addIncome;
+    const expense = calcExpense(m);
+    const balance = Number(m.prevBalance || 0) + budget - expense;
     const paidCount = m.students.filter(s => s.paid).length;
     const totalCount = m.students.filter(s => s.name).length;
 
@@ -544,8 +641,9 @@ function renderArchive() {
       <div>
         <strong>${escapeHtml(m.name)}</strong><br>
         <small style="color:#666">
-          Приход: ${formatMoney(totalIncome)} ₽ · 
-          Расход: ${formatMoney(totalExpense)} ₽ · 
+          Приход: ${formatMoney(income)} ₽ · 
+          Доп: ${formatMoney(addIncome)} ₽ · 
+          Расход: ${formatMoney(expense)} ₽ · 
           Остаток: <b>${formatMoney(balance)} ₽</b><br>
           Сдали: ${paidCount}/${totalCount}
         </small>
@@ -558,8 +656,8 @@ function renderArchive() {
 
 // ============ ВКЛАДКИ ============
 function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-buttons .tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.content > .tab-buttons .tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.content > .tab-content').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
   btn.classList.add('active');
 }
@@ -592,7 +690,6 @@ function checkPassword() {
 function openAdminPanel() {
   const m = getCurrentMonth();
   document.getElementById('editPrevBalance').value = m.prevBalance;
-  document.getElementById('editIncome').value = m.income;
   document.getElementById('editAddIncome').value = m.additionalIncome;
 
   // Ученики
@@ -606,6 +703,7 @@ function openAdminPanel() {
   m.expenses.forEach(e => addExpenseRow(e));
 
   document.getElementById('adminModal').classList.add('active');
+  recalcAdminTotals();
 }
 
 function addStudentRow(s = null, idx = null) {
@@ -619,8 +717,13 @@ function addStudentRow(s = null, idx = null) {
       <option value="false" ${s && !s.paid ? 'selected' : ''}>✘ не сдал</option>
       <option value="true" ${s && s.paid ? 'selected' : ''}>✔ сдал</option>
     </select>
-    <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">✕</button>
+    <button class="btn btn-danger btn-small" onclick="this.parentElement.remove();recalcAdminTotals()">✕</button>
   `;
+  // Навешиваем автопересчёт
+  div.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', recalcAdminTotals);
+    el.addEventListener('change', recalcAdminTotals);
+  });
   document.getElementById('adminStudents').appendChild(div);
 }
 
@@ -631,56 +734,60 @@ function addExpenseRow(e = null) {
   div.innerHTML = `
     <input type="text" placeholder="На что потрачено" value="${e ? escapeHtml(e.description) : ''}">
     <input type="number" placeholder="Сумма" step="0.01" value="${e ? e.amount : ''}">
-    <button class="btn btn-danger btn-small" onclick="this.parentElement.remove()">✕</button>
+    <button class="btn btn-danger btn-small" onclick="this.parentElement.remove();recalcAdminTotals()">✕</button>
   `;
+  div.querySelectorAll('input').forEach(el => {
+    el.addEventListener('input', recalcAdminTotals);
+  });
   document.getElementById('adminExpenses').appendChild(div);
 }
 
-function saveAll() {
-  const m = getCurrentMonth();
-  m.prevBalance = Number(document.getElementById('editPrevBalance').value) || 0;
-  m.income = Number(document.getElementById('editIncome').value) || 0;
-  m.additionalIncome = Number(document.getElementById('editAddIncome').value) || 0;
-
-  // Собираем учеников
-  m.students = [];
+// Автопересчёт итогов в админке в реальном времени
+function recalcAdminTotals() {
+  // Собираем временные данные учеников
+  const tempStudents = [];
   document.querySelectorAll('#adminStudents .admin-row').forEach(row => {
     const [nameInp, amountInp, statusSel] = row.querySelectorAll('input, select');
-    const name = nameInp.value.trim();
-    const amount = Number(amountInp.value) || 0;
-    const paid = statusSel.value === 'true';
-    if (name || amount) {
-      m.students.push({ name, amount, paid });
-    }
+    tempStudents.push({
+      name: nameInp.value.trim(),
+      amount: Number(amountInp.value) || 0,
+      paid: statusSel.value === 'true'
+    });
   });
-  // Дополняем до 30 пустыми строками (чтобы структура была стабильной)
-  while (m.students.length < 30) m.students.push({ name: '', amount: 0, paid: false });
 
-  // Собираем расходы
-  m.expenses = [];
+  // Собираем временные расходы
+  const tempExpenses = [];
   document.querySelectorAll('#adminExpenses .admin-row').forEach(row => {
     const [descInp, amountInp] = row.querySelectorAll('input');
-    const description = descInp.value.trim();
-    const amount = Number(amountInp.value) || 0;
-    if (description || amount) {
-      m.expenses.push({ description, amount });
-    }
+    tempExpenses.push({
+      description: descInp.value.trim(),
+      amount: Number(amountInp.value) || 0
+    });
   });
 
-  saveData();
-  render();
-  alert('✅ Сохранено!');
+  const prevBalance = Number(document.getElementById('editPrevBalance').value) || 0;
+  const addIncome = Number(document.getElementById('editAddIncome').value) || 0;
+
+  // Считаем
+  const income = tempStudents.reduce((sum, s) => sum + (s.paid ? s.amount : 0), 0);
+  const expense = tempExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const budget = income + addIncome;
+  const balance = prevBalance + budget - expense;
+
+  // Обновляем отображение
+  document.getElementById('autoIncome').value = formatMoney(income);
+  document.getElementById('autoIncomeDisplay').textContent = formatMoney(income);
+  document.getElementById('autoExpense').value = formatMoney(expense);
+  document.getElementById('autoExpenseDisplay').textContent = formatMoney(expense);
+  document.getElementById('autoBudgetDisplay').textContent = formatMoney(budget);
+  document.getElementById('autoBalanceDisplay').textContent = formatMoney(balance);
 }
 
-function archiveMonth() {
-  if (!confirm('Архивировать текущий месяц? Он переместится в архив, а на его месте создастся новый с переносом остатка.')) return;
+function collectAdminData() {
   const m = getCurrentMonth();
-  // Сохраняем перед архивированием
-  m.prevBalance = Number(document.getElementById('editPrevBalance').value) || m.prevBalance;
-  m.income = Number(document.getElementById('editIncome').value) || m.income;
-  m.additionalIncome = Number(document.getElementById('editAddIncome').value) || m.additionalIncome;
+  m.prevBalance = Number(document.getElementById('editPrevBalance').value) || 0;
+  m.additionalIncome = Number(document.getElementById('editAddIncome').value) || 0;
 
-  // Пересчитываем учеников и расходы (как в saveAll)
   m.students = [];
   document.querySelectorAll('#adminStudents .admin-row').forEach(row => {
     const [nameInp, amountInp, statusSel] = row.querySelectorAll('input, select');
@@ -698,16 +805,24 @@ function archiveMonth() {
     const amount = Number(amountInp.value) || 0;
     if (description || amount) m.expenses.push({ description, amount });
   });
+}
 
-  // Считаем остаток
-  const totalIncome = Number(m.income) + Number(m.additionalIncome);
-  const totalExpense = m.expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
-  const balance = Number(m.prevBalance) + totalIncome - totalExpense;
+function saveAll() {
+  collectAdminData();
+  saveData();
+  render();
+  alert('✅ Сохранено!');
+}
 
-  // В архив
-  data.archive.push({ ...m });
+function archiveMonth() {
+  if (!confirm('Архивировать текущий месяц? Он переместится в архив, а на его месте создастся новый с переносом остатка.')) return;
+  collectAdminData();
+  const m = getCurrentMonth();
 
-  // Удаляем из текущих и создаём новый месяц
+  const balance = calcBalance(m);
+
+  data.archive.push({ ...m, students: [...m.students], expenses: [...m.expenses] });
+
   data.months = data.months.filter(x => x.id !== m.id);
   const nextMonthName = prompt('Название нового месяца:', getNextMonthName());
   if (!nextMonthName) return;
@@ -715,8 +830,7 @@ function archiveMonth() {
   const newMonth = {
     id: 'month_' + Date.now(),
     name: nextMonthName,
-    prevBalance: balance, // переносим остаток
-    income: 0,
+    prevBalance: balance,
     additionalIncome: 0,
     students: Array.from({length: 30}, () => ({ name: '', amount: 0, paid: false })),
     expenses: []
@@ -743,7 +857,6 @@ function createNewMonth() {
     id: 'month_' + Date.now(),
     name: name,
     prevBalance: 0,
-    income: 0,
     additionalIncome: 0,
     students: Array.from({length: 30}, () => ({ name: '', amount: 0, paid: false })),
     expenses: []
@@ -767,14 +880,17 @@ function changePassword() {
 function viewArchive(monthId) {
   const m = data.archive.find(x => x.id === monthId);
   if (!m) return;
-  const totalIncome = Number(m.income) + Number(m.additionalIncome);
-  const totalExpense = m.expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
-  const balance = Number(m.prevBalance) + totalIncome - totalExpense;
+  const income = calcIncome(m);
+  const addIncome = Number(m.additionalIncome || 0);
+  const budget = income + addIncome;
+  const expense = calcExpense(m);
+  const balance = Number(m.prevBalance || 0) + budget - expense;
 
   let html = `<h2>📦 ${escapeHtml(m.name)}</h2>`;
   html += `<p><b>Остаток с прошлого месяца:</b> ${formatMoney(m.prevBalance)} ₽</p>`;
-  html += `<p><b>Приход:</b> ${formatMoney(m.income)} ₽ | <b>Доп. приход:</b> ${formatMoney(m.additionalIncome)} ₽</p>`;
-  html += `<p><b>Расход:</b> ${formatMoney(totalExpense)} ₽ | <b>Остаток:</b> ${formatMoney(balance)} ₽</p>`;
+  html += `<p><b>Приход (авт.):</b> ${formatMoney(income)} ₽ | <b>Доп. приход:</b> ${formatMoney(addIncome)} ₽</p>`;
+  html += `<p><b>Бюджет:</b> ${formatMoney(budget)} ₽ | <b>Расход (авт.):</b> ${formatMoney(expense)} ₽</p>`;
+  html += `<p><b>Остаток на конец:</b> ${formatMoney(balance)} ₽</p>`;
   html += `<h3 style="margin-top:15px">Ученики:</h3><ul>`;
   m.students.forEach(s => {
     if (s.name) html += `<li>${escapeHtml(s.name)} — ${formatMoney(s.amount)} ₽ ${s.paid ? '✔' : '✘'}</li>`;
@@ -828,6 +944,7 @@ function resetData() {
   if (!confirm('Удалить ВСЕ данные? Это действие необратимо!')) return;
   if (!confirm('Точно-точно? Все месяцы и архив будут удалены!')) return;
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(PASSWORD_KEY);
   location.reload();
 }
 
@@ -844,6 +961,10 @@ function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+
+// Навешиваем пересчёт на поля сводки (остаток с прошлого + доп приход)
+document.getElementById('editPrevBalance').addEventListener('input', recalcAdminTotals);
+document.getElementById('editAddIncome').addEventListener('input', recalcAdminTotals);
 
 // Закрытие модалок по клику на фон
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
