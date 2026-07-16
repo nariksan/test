@@ -18,24 +18,24 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         
-        .login-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
-        .login-screen.hidden { display: none; }
-        .login-container { background: white; border-radius: var(--radius-xl); padding: 30px 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.4s ease; }
+        .login-screen, .maintenance-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+        .login-screen.hidden, .maintenance-screen.hidden { display: none; }
+        .login-container, .maintenance-container { background: white; border-radius: var(--radius-xl); padding: 30px 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.4s ease; text-align: center; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .login-logo { text-align: center; margin-bottom: 24px; }
         .login-logo-icon { font-size: 3em; margin-bottom: 8px; }
         .login-logo h2 { color: var(--primary); font-size: 1.6em; margin-bottom: 4px; }
         .login-logo p { color: var(--gray); font-size: 0.9em; }
-        .login-form .form-group { margin-bottom: 14px; }
+        .login-form .form-group { margin-bottom: 14px; text-align: left; }
         .login-form label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--dark); font-size: 0.85em; }
         .login-form input { width: 100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1em; background: white; min-height: 46px; transition: border-color 0.2s; }
         .login-form input:focus { outline: none; border-color: var(--primary); }
         .login-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 1em; cursor: pointer; margin-top: 8px; transition: all 0.2s; min-height: 48px; }
         .login-btn:hover { background: var(--primary-dark); }
         .login-btn:active { transform: scale(0.98); }
-        .login-error { background: #fff5f5; border-left: 3px solid var(--danger); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.85em; color: var(--danger); display: none; }
+        .login-error { background: #fff5f5; border-left: 3px solid var(--danger); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.85em; color: var(--danger); display: none; text-align: left; }
         .login-error.show { display: block; }
-        .login-hint { background: #e7f3ff; border-left: 3px solid var(--info); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.82em; color: #0c5460; line-height: 1.4; }
+        .login-hint { background: #e7f3ff; border-left: 3px solid var(--info); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.82em; color: #0c5460; line-height: 1.4; text-align: left; }
         
         .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
         .header-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
@@ -49,64 +49,16 @@
         .clock-separator { animation: blink 1s infinite; }
         @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.3; } }
         
-        .top-nav {
-            background: white;
-            border-bottom: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 99;
-        }
-        .top-nav-inner {
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding: 0 8px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .top-nav { background: white; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 99; }
+        .top-nav-inner { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 0 8px; max-width: 1200px; margin: 0 auto; }
         .top-nav-inner::-webkit-scrollbar { display: none; }
-        .top-nav-btn {
-            flex-shrink: 0;
-            background: none;
-            border: none;
-            padding: 10px 12px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            color: var(--gray);
-            transition: all 0.2s;
-            font-size: 0.72em;
-            font-weight: 600;
-            white-space: nowrap;
-            border-bottom: 3px solid transparent;
-            min-width: 60px;
-        }
+        .top-nav-btn { flex-shrink: 0; background: none; border: none; padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--gray); transition: all 0.2s; font-size: 0.72em; font-weight: 600; white-space: nowrap; border-bottom: 3px solid transparent; min-width: 60px; }
         .top-nav-btn .nav-icon { font-size: 1.5em; line-height: 1; }
         .top-nav-btn:hover { background: var(--bg); color: var(--primary); }
         .top-nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .top-nav-btn.active .nav-icon { transform: scale(1.1); }
         .top-nav-btn:active { transform: scale(0.95); }
-        .top-nav-logout {
-            flex-shrink: 0;
-            background: #fff5f5;
-            color: var(--danger);
-            border: none;
-            padding: 8px 12px;
-            margin-left: auto;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.75em;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-        }
+        .top-nav-logout { flex-shrink: 0; background: #fff5f5; color: var(--danger); border: none; padding: 8px 12px; margin-left: auto; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; font-size: 0.75em; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
         .top-nav-logout:hover { background: var(--danger); color: white; }
         
         .app-content { max-width: 1200px; margin: 0 auto; padding: 16px; }
@@ -127,56 +79,20 @@
         .today-badge { background: var(--success); color: white; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 50% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); } }
         
-        .employee-schedule-card {
-            background: white;
-            border-radius: var(--radius-md);
-            padding: 12px;
-            margin: 8px 0;
-            border-left: 4px solid var(--primary);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        .employee-schedule-card { background: white; border-radius: var(--radius-md); padding: 12px; margin: 8px 0; border-left: 4px solid var(--primary); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 6px; }
         .employee-schedule-card.kassa { border-left-color: var(--success); }
         .employee-schedule-card.kd { border-left-color: var(--gold); }
         .employee-schedule-card.zal { border-left-color: var(--info); }
         .employee-schedule-card.sklad { border-left-color: #6f42c1; }
 
-        .employee-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-        .employee-card-name {
-            font-weight: 700;
-            color: var(--dark);
-            font-size: 0.95em;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .employee-card-position {
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            font-weight: 700;
-            color: white;
-        }
+        .employee-card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .employee-card-name { font-weight: 700; color: var(--dark); font-size: 0.95em; display: flex; align-items: center; gap: 6px; }
+        .employee-card-position { padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 700; color: white; }
         .employee-card-position.kassa { background: var(--success); }
         .employee-card-position.kd { background: var(--gold); color: var(--dark); }
         .employee-card-position.zal { background: var(--info); }
         .employee-card-position.sklad { background: #6f42c1; }
-
-        .employee-card-shift {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85em;
-            color: var(--gray);
-        }
+        .employee-card-shift { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--gray); }
         .employee-card-shift-icon { font-size: 1.2em; }
         .employee-card-time { font-weight: 600; color: var(--dark); }
         
@@ -322,7 +238,18 @@
     </style>
 </head>
 <body>
-    <div class="login-screen" id="loginScreen">
+    <!-- ЭКРАН ТЕХНИЧЕСКИХ РАБОТ -->
+    <div class="maintenance-screen hidden" id="maintenanceScreen">
+        <div class="maintenance-container">
+            <div class="login-logo-icon">🚧</div>
+            <h2 style="color: var(--warning); margin-bottom: 12px;">Технические работы</h2>
+            <p style="color: var(--gray); margin-bottom: 24px; line-height: 1.5;">Сайт временно недоступен для сотрудников и администраторов. Пожалуйста, зайдите позже.</p>
+            <button class="btn btn-secondary btn-block" onclick="doLogout()">🚪 Выйти из аккаунта</button>
+        </div>
+    </div>
+
+    <!-- ЭКРАН ВХОДА -->
+    <div class="login-screen hidden" id="loginScreen">
         <div class="login-container">
             <div class="login-logo">
                 <div class="login-logo-icon">🏠</div>
@@ -332,7 +259,7 @@
             <div class="login-form">
                 <div class="form-group">
                     <label>📱 Телефон</label>
-                    <input type="tel" id="loginPhone" placeholder="89001234567" autocomplete="tel">
+                    <input type="tel" id="loginPhone" placeholder="89146443734" autocomplete="tel">
                 </div>
                 <div class="form-group">
                     <label>🔒 Пароль</label>
@@ -341,9 +268,10 @@
                 <button class="login-btn" onclick="doLogin()">Войти</button>
                 <div class="login-error" id="loginError"></div>
                 <div class="login-hint">
-                    💡 Тестовый вход:<br>
-                    Телефон: <strong>89004346000</strong><br>
-                    Пароль: <strong>6000</strong>
+                    💡 Тестовый вход (Владелец):<br>
+                    Телефон: <strong>89146443734</strong><br>
+                    Пароль: <strong>6000</strong><br>
+                    <em style="font-size: 0.9em; margin-top: 4px; display: block;">(Убедитесь, что в базе Firebase для этого номера установлена роль "superadmin")</em>
                 </div>
             </div>
         </div>
@@ -399,6 +327,10 @@
             <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;">
                 <span class="nav-icon">⚙️</span>
                 <span>Админ</span>
+            </button>
+            <button class="top-nav-btn" onclick="showSection('superadmin', this)" id="topNavSuperAdminBtn" style="display:none; color: var(--danger);">
+                <span class="nav-icon">👑</span>
+                <span>Владелец</span>
             </button>
             <button class="top-nav-logout" onclick="doLogout()">
                 <span>🚪</span>
@@ -601,6 +533,27 @@
                 </div>
             </div>
         </div>
+
+        <!-- ПАНЕЛЬ ВЛАДЕЛЬЦА (СУПЕРАДМИНА) -->
+        <div id="superadmin" class="section">
+            <h2 class="section-title">👑 Панель Владельца</h2>
+            
+            <div class="admin-card danger-zone">
+                <div class="admin-card-title">🚧 Режим технических работ</div>
+                <p style="color: var(--gray); font-size: 0.9em; margin-bottom: 12px; line-height: 1.4;">
+                    При включении этого режима обычные сотрудники и администраторы увидят экран "Технические работы" и не смогут пользоваться приложением. Вы (как Владелец) будете иметь полный доступ.
+                </p>
+                <button class="btn btn-warning btn-block" id="maintenanceToggleBtn" onclick="toggleMaintenanceMode()">Загрузка статуса...</button>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title">👥 Передача полномочий Владельца</div>
+                <p style="color: var(--gray); font-size: 0.9em; margin-bottom: 12px; line-height: 1.4;">
+                    Вы можете передать роль Владельца любому из текущих Администраторов. Ваша роль при этом автоматически изменится на "Администратор".
+                </p>
+                <div id="superAdminList"></div>
+            </div>
+        </div>
     </main>
 
     <div class="modal" id="materialModal">
@@ -615,7 +568,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDTHWwfpt059YCSt5YI9Aou1n1GjHxgQ6s",
@@ -631,7 +584,6 @@
 
         const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00' };
         const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11' };
-        // ОБНОВЛЕНО: Типы работ (Зал и Склад вместо "Без указания")
         const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад' };
         const MAX_FILE_SIZE = 5 * 1024 * 1024;
         const RECOMMENDED_FILE_SIZE = 2 * 1024 * 1024;
@@ -642,8 +594,12 @@
         let currentMaterialType = 'text';
         let selectedFileData = null;
         let openResultForms = {};
-        let editingEmployeeId = null; // ДЛЯ РЕДАКТИРОВАНИЯ СОТРУДНИКА
-        let data = { employees: [], schedule: {}, materials: [], contests: [], info: [], stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } };
+        let editingEmployeeId = null;
+        let data = { 
+            employees: [], schedule: {}, materials: [], contests: [], info: [], 
+            settings: { maintenanceMode: false },
+            stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } 
+        };
 
         function updateClock() {
             const now = new Date();
@@ -688,6 +644,9 @@
                 const infoSnap = await getDocs(collection(db, "info"));
                 data.info = infoSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
+                const settingsDoc = await getDoc(doc(db, "settings", "global"));
+                data.settings = settingsDoc.exists() ? settingsDoc.data() : { maintenanceMode: false };
+
                 updateStats();
             } catch (error) {
                 console.error("Ошибка загрузки данных:", error);
@@ -700,6 +659,7 @@
         function showLoginScreen() {
             currentUser = null;
             document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('maintenanceScreen').classList.add('hidden');
             document.getElementById('topNav').style.display = 'none';
         }
 
@@ -709,7 +669,6 @@
             el.classList.add('show');
         }
 
-        // АВТОМАТИЧЕСКИЙ ВХОД (Запомнить меня)
         async function autoLogin() {
             const sessionStr = localStorage.getItem('domovidSession');
             if (sessionStr) {
@@ -759,7 +718,6 @@
                 const userId = querySnapshot.docs[0].id;
 
                 currentUser = { id: userId, name: userData.name, phone: userData.phone, role: userData.role };
-                // Сохраняем сессию для автоматического входа в будущем
                 localStorage.setItem('domovidSession', JSON.stringify({ id: userId }));
 
                 await loadAllDataFromFirebase();
@@ -773,14 +731,27 @@
         };
 
         function enterApp() {
+            if (data.settings.maintenanceMode && currentUser.role !== 'superadmin') {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('maintenanceScreen').classList.remove('hidden');
+                document.getElementById('topNav').style.display = 'none';
+                return;
+            }
+
             document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('maintenanceScreen').classList.add('hidden');
             document.getElementById('topNav').style.display = 'block';
             document.getElementById('currentUserBadge').style.display = 'inline-flex';
             document.getElementById('currentUserName').textContent = currentUser.name;
-            document.getElementById('currentUserRole').textContent = currentUser.role === 'admin' ? '👑 Админ' : '👤 Сотрудник';
             
-            const isAdmin = currentUser.role === 'admin';
+            let roleText = '👤 Сотрудник';
+            if (currentUser.role === 'admin') roleText = '👑 Админ';
+            if (currentUser.role === 'superadmin') roleText = '💎 Владелец';
+            document.getElementById('currentUserRole').textContent = roleText;
+            
+            const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
             document.getElementById('topNavAdminBtn').style.display = isAdmin ? '' : 'none';
+            document.getElementById('topNavSuperAdminBtn').style.display = (currentUser.role === 'superadmin') ? '' : 'none';
             
             if (!isAdmin && document.getElementById('admin').classList.contains('active')) {
                 showSection('schedule', document.querySelector('.top-nav-btn'));
@@ -790,7 +761,7 @@
 
         window.doLogout = function() {
             if (!confirm('Выйти из аккаунта?')) return;
-            localStorage.removeItem('domovidSession'); // Удаляем сессию при выходе
+            localStorage.removeItem('domovidSession');
             currentUser = null;
             editingEmployeeId = null;
             showLoginScreen();
@@ -800,20 +771,23 @@
         };
 
         window.showSection = function(sectionId, btn) {
-            if (sectionId === 'admin' && (!currentUser || currentUser.role !== 'admin')) {
-                alert('🔒 Доступ только для администраторов');
+            if ((sectionId === 'admin' || sectionId === 'superadmin') && (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin'))) {
+                alert('🔒 Доступ запрещён');
                 return;
             }
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active'));
             if (btn && btn.classList) btn.classList.add('active');
+            
             if (sectionId === 'schedule') renderSchedule();
             if (sectionId === 'materials') renderMaterials();
             if (sectionId === 'contests') renderContests();
             if (sectionId === 'info') renderInfo();
             if (sectionId === 'stats') renderStats();
             if (sectionId === 'admin') renderAdmin();
+            if (sectionId === 'superadmin') renderSuperAdminPanel();
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
@@ -824,7 +798,6 @@
             if (btn) btn.classList.add('active');
         };
 
-        // --- ФУНКЦИИ РЕДАКТИРОВАНИЯ СОТРУДНИКОВ ---
         window.editEmployee = function(id) {
             const emp = data.employees.find(e => e.id === id);
             if (!emp) return;
@@ -896,7 +869,6 @@
             const cancelBtn = document.getElementById('cancelEditBtn');
             if (cancelBtn) cancelBtn.remove();
         };
-        // ------------------------------------------
 
         window.addEmployee = async function() {
             if (editingEmployeeId) {
@@ -941,8 +913,12 @@
             const list = document.getElementById('employeesList');
             if (!list) return;
             list.innerHTML = '';
-            if (data.employees.length === 0) { list.innerHTML = '<div class="no-employees">Список сотрудников пуст</div>'; return; }
-            data.employees.forEach(emp => {
+            
+            const visibleEmployees = data.employees.filter(e => e.role !== 'superadmin');
+            
+            if (visibleEmployees.length === 0) { list.innerHTML = '<div class="no-employees">Список сотрудников пуст</div>'; return; }
+            
+            visibleEmployees.forEach(emp => {
                 const item = document.createElement('div');
                 item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
                 const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">👑 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
@@ -953,19 +929,95 @@
                 item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(emp.name)} ${roleBadge}</div><div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div></div>`;
                 list.appendChild(item);
             });
-            document.getElementById('employeeCounter').textContent = data.employees.length + ' чел.';
+            document.getElementById('employeeCounter').textContent = visibleEmployees.length + ' чел.';
         };
 
         window.renderEmployeeSelect = function() {
             const select = document.getElementById('adminEmployee');
             if (!select) return;
             select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
-            data.employees.forEach(emp => {
+            data.employees.filter(e => e.role !== 'superadmin').forEach(emp => {
                 const option = document.createElement('option');
                 option.value = emp.name;
                 option.textContent = emp.name;
                 select.appendChild(option);
             });
+        };
+
+        window.renderSuperAdminPanel = function() {
+            const maintBtn = document.getElementById('maintenanceToggleBtn');
+            if (data.settings.maintenanceMode) {
+                maintBtn.textContent = '🔴 Выключить режим технических работ';
+                maintBtn.className = 'btn btn-danger btn-block';
+            } else {
+                maintBtn.textContent = '🟡 Включить режим технических работ';
+                maintBtn.className = 'btn btn-warning btn-block';
+            }
+
+            const list = document.getElementById('superAdminList');
+            list.innerHTML = '';
+            const admins = data.employees.filter(e => e.role === 'admin');
+            
+            if (admins.length === 0) {
+                list.innerHTML = '<div class="no-employees">Нет администраторов для передачи полномочий. Сначала создайте админа.</div>';
+                return;
+            }
+
+            admins.forEach(admin => {
+                const item = document.createElement('div');
+                item.className = 'employee-admin-item role-admin';
+                item.innerHTML = `
+                    <div class="employee-admin-header">
+                        <div class="employee-admin-info">
+                            <div class="employee-admin-name">👑 ${escapeHtml(admin.name)}</div>
+                            <div class="employee-admin-phone">📱 ${escapeHtml(admin.phone)}</div>
+                        </div>
+                        <button class="btn btn-gold btn-sm" onclick="transferSuperAdmin('${admin.id}')">Передать полномочия</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        };
+
+        window.toggleMaintenanceMode = async function() {
+            const newMode = !data.settings.maintenanceMode;
+            const confirmMsg = newMode 
+                ? '⚠️ Вы собираетесь включить режим технических работ. Обычные сотрудники и админы потеряют доступ к приложению. Продолжить?'
+                : 'Выключить режим технических работ и открыть доступ для всех?';
+                
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                await setDoc(doc(db, "settings", "global"), { maintenanceMode: newMode }, { merge: true });
+                data.settings.maintenanceMode = newMode;
+                renderSuperAdminPanel();
+                alert(newMode ? '✅ Режим технических работ ВКЛЮЧЁН' : '✅ Режим технических работ ВЫКЛЮЧЕН');
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+            }
+        };
+
+        window.transferSuperAdmin = async function(targetId) {
+            const targetAdmin = data.employees.find(e => e.id === targetId);
+            if (!targetAdmin) return;
+            
+            if (!confirm(`⚠️ ВЫ УВЕРЕНЫ?\n\nВы собираетесь передать роль Владельца пользователю "${targetAdmin.name}".\nВаша роль будет изменена на "Администратор".\n\nЭто действие нельзя отменить через интерфейс.`)) {
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "users", currentUser.id), { role: 'admin' });
+                await updateDoc(doc(db, "users", targetId), { role: 'superadmin' });
+                
+                currentUser.role = 'admin';
+                alert(`✅ Полномочия успешно переданы пользователю ${targetAdmin.name}!\nТеперь вы обычный Администратор.`);
+                
+                await loadAllDataFromFirebase();
+                renderAll();
+                showSection('admin', document.querySelector('.top-nav-btn'));
+            } catch (e) {
+                alert('Ошибка при передаче полномочий: ' + e.message);
+            }
         };
 
         window.renderSchedule = function() {
@@ -1250,7 +1302,7 @@
             const totalIntermediate = data.contests.reduce((sum, c) => sum + (c.intermediateResults ? c.intermediateResults.length : 0), 0);
             const totalFinal = data.contests.filter(c => c.finalResult).length;
             content.innerHTML = `<div class="stats-grid">
-                <div class="stat-card"><div class="stat-number">${data.employees.length}</div><div class="stat-label">Сотрудников</div></div>
+                <div class="stat-card"><div class="stat-number">${data.employees.filter(e => e.role !== 'superadmin').length}</div><div class="stat-label">Сотрудников</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.totalEntries}</div><div class="stat-label">Записей в графике</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);"><div class="stat-number">${data.materials.length}</div><div class="stat-label">Материалов</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);"><div class="stat-number">${data.contests.length}</div><div class="stat-label">Конкурсов</div></div>
@@ -1440,7 +1492,7 @@
                 const actionBtn = material.type === 'text' 
                     ? `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Читать</button>`
                     : `<button class="btn btn-download btn-sm" onclick="downloadMaterial('${material.id}')">⬇️ Скачать</button>`;
-                card.innerHTML = `<div class="material-header"><div class="material-icon">${icon}</div><div class="material-title">${escapeHtml(material.title)}</div></div><div class="material-meta"><span class="material-tag ${tagClass}">${tagText}</span><span class="material-date">${formatDateTime(material.createdAt)}</span></div>${previewHtml}<div class="material-actions">${actionBtn}${currentUser && currentUser.role === 'admin' ? `<button class="btn btn-danger btn-sm" onclick="deleteMaterial('${material.id}')">🗑️</button>` : ''}</div>`;
+                card.innerHTML = `<div class="material-header"><div class="material-icon">${icon}</div><div class="material-title">${escapeHtml(material.title)}</div></div><div class="material-meta"><span class="material-tag ${tagClass}">${tagText}</span><span class="material-date">${formatDateTime(material.createdAt)}</span></div>${previewHtml}<div class="material-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteMaterial('${material.id}')">🗑️</button>` : ''}</div>`;
                 list.appendChild(card);
             });
         };
@@ -1458,13 +1510,13 @@
             renderContests();
             renderInfo();
             renderStats();
-            if (currentUser && currentUser.role === 'admin') renderAdmin();
+            if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) renderAdmin();
         }
 
         window.resetAllData = async function() {
             if (!confirm('⚠️ ВСЕ данные в облаке будут удалены! Продолжить?') || !confirm('Точно-точно? Последнее предупреждение!')) return;
             try {
-                const collections = ["users", "schedule", "materials", "contests", "info"];
+                const collections = ["users", "schedule", "materials", "contests", "info", "settings"];
                 for (const colName of collections) {
                     const snap = await getDocs(collection(db, colName));
                     for (const d of snap.docs) {
@@ -1478,7 +1530,6 @@
             }
         };
 
-        // ЗАПУСК: Проверяем автовход вместо немедленного показа экрана логина
         autoLogin();
     </script>
 </body>
