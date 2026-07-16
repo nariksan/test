@@ -97,7 +97,6 @@
         .employee-card-shift-icon { font-size: 1.2em; }
         .employee-card-time { font-weight: 600; color: var(--dark); }
         
-        /* СТИЛИ ДЛЯ АРХИВА */
         .archive-info { background: linear-gradient(135deg, #e7f3ff 0%, #d1ecf1 100%); border-left: 4px solid var(--info); padding: 12px 14px; border-radius: var(--radius-md); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .archive-info-text { font-size: 0.88em; color: #0c5460; line-height: 1.4; }
         .archive-info-text strong { color: var(--dark); }
@@ -163,6 +162,104 @@
         .stat-card { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 16px 10px; border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm); }
         .stat-number { font-size: 1.8em; font-weight: 800; margin-bottom: 3px; line-height: 1; }
         .stat-label { font-size: 0.75em; opacity: 0.95; line-height: 1.3; }
+        
+        /* НОВЫЕ СТИЛИ ДЛЯ ПЕРСОНАЛЬНОЙ СТАТИСТИКИ */
+        .my-stats-block {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+            border: 2px solid var(--gold);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+        }
+        .my-stats-header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #ffc107;
+        }
+        .my-stats-header-icon {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .my-stats-header-title {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 2px;
+        }
+        .my-stats-header-subtitle {
+            font-size: 0.82em;
+            color: #856404;
+            opacity: 0.85;
+        }
+        .my-stats-month-info {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 0.85em;
+            color: #856404;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .my-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .my-stat-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 12px 10px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border-top: 3px solid var(--gold);
+        }
+        .my-stat-icon {
+            font-size: 1.5em;
+            margin-bottom: 4px;
+        }
+        .my-stat-value {
+            font-size: 1.6em;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        .my-stat-label {
+            font-size: 0.72em;
+            color: var(--gray);
+            line-height: 1.2;
+        }
+        .my-stat-hours {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-top-color: var(--gold);
+        }
+        .my-stat-hours .my-stat-value { color: white; }
+        .my-stat-hours .my-stat-label { color: rgba(255,255,255,0.9); }
+        .my-stat-total {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
+            color: white;
+        }
+        .my-stat-total .my-stat-value { color: white; }
+        .my-stat-total .my-stat-label { color: rgba(255,255,255,0.9); }
+        .my-stats-empty {
+            text-align: center;
+            padding: 30px 16px;
+            color: #856404;
+            font-size: 0.9em;
+        }
+        .my-stats-empty-icon {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
         
         .dev-block { text-align: center; padding: 40px 16px; background: white; border-radius: var(--radius-xl); border: 2px dashed var(--primary); }
         .dev-icon { font-size: 3em; margin-bottom: 12px; display: block; }
@@ -337,7 +434,7 @@
             </button>
             <button class="top-nav-btn" onclick="showSection('stats', this)">
                 <span class="nav-icon">📊</span>
-                <span>Ещё</span>
+                <span>Статистика</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;">
                 <span class="nav-icon">⚙️</span>
@@ -360,7 +457,6 @@
             <div id="scheduleGrid" class="schedule-grid"></div>
         </div>
 
-        <!-- НОВАЯ СЕКЦИЯ: АРХИВ -->
         <div id="archive" class="section">
             <h2 class="section-title">📦 Архив графика</h2>
             <div id="archiveContent"></div>
@@ -605,10 +701,13 @@
 
         const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00' };
         const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11' };
+        // Часы для каждой смены (для подсчёта отработанных часов)
+        const shiftHours = { 1: 9, 2: 9, 3: 11 };
         const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад' };
         const MAX_FILE_SIZE = 5 * 1024 * 1024;
         const RECOMMENDED_FILE_SIZE = 2 * 1024 * 1024;
         const MONTH_NAMES = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        const MONTH_NAMES_GEN = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
         const WEEKDAY_NAMES = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
 
         let currentUser = null;
@@ -641,6 +740,19 @@
             if (diff < 0) return 'past';
             if (diff === 0) return 'today';
             return 'future';
+        }
+
+        // Получить текущий месяц и год в формате "MM.YYYY"
+        function getCurrentMonthKey() {
+            const now = new Date();
+            return `${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+        }
+
+        // Получить месяц из даты "DD.MM.YYYY"
+        function getMonthFromDate(dateStr) {
+            const parts = dateStr.split('.');
+            if (parts.length !== 3) return null;
+            return `${parts[1]}.${parts[2]}`;
         }
 
         async function loadAllDataFromFirebase() {
@@ -1042,13 +1154,11 @@
             }
         };
 
-        // === ГРАФИК: показываем только today и future ===
         window.renderSchedule = function() {
             const grid = document.getElementById('scheduleGrid');
             if (!grid) return;
             grid.innerHTML = '';
             const dates = getSortedDates();
-            // Фильтруем: только сегодня и будущее
             const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
             
             if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
@@ -1100,7 +1210,6 @@
             });
         };
 
-        // === АРХИВ: показываем только past даты ===
         window.renderArchive = function() {
             const content = document.getElementById('archiveContent');
             if (!content) return;
@@ -1109,13 +1218,11 @@
             const dates = getSortedDates();
             const pastDates = dates.filter(d => getDateStatus(d) === 'past');
             
-            // Подсчёт общего количества записей в архиве
             let archiveEntriesCount = 0;
             pastDates.forEach(d => {
                 if (data.schedule[d]) archiveEntriesCount += data.schedule[d].length;
             });
             
-            // Информационный блок
             const infoBlock = document.createElement('div');
             infoBlock.className = 'archive-info';
             infoBlock.innerHTML = `
@@ -1127,7 +1234,6 @@
             `;
             content.appendChild(infoBlock);
             
-            // Кнопка очистки (только для владельца)
             if (currentUser && currentUser.role === 'superadmin' && pastDates.length > 0) {
                 const clearBtn = document.createElement('button');
                 clearBtn.className = 'btn btn-danger btn-block';
@@ -1148,7 +1254,6 @@
                 return;
             }
             
-            // Показываем прошедшие даты в обратном порядке (новые сверху)
             const reversedPastDates = [...pastDates].reverse();
             
             reversedPastDates.forEach(date => {
@@ -1195,7 +1300,6 @@
             });
         };
 
-        // Удаление одной записи из архива (только для владельца)
         window.deleteArchiveEntry = async function(id) {
             if (!currentUser || currentUser.role !== 'superadmin') {
                 alert('🔒 Только владелец может удалять записи из архива');
@@ -1212,7 +1316,6 @@
             }
         };
 
-        // Полная очистка архива (только для владельца)
         window.clearArchive = async function() {
             if (!currentUser || currentUser.role !== 'superadmin') {
                 alert('🔒 Только владелец может очищать архив');
@@ -1240,7 +1343,6 @@
             }
         };
 
-        // В админ-панели показываем только текущие и будущие записи
         window.renderScheduleList = function() {
             const list = document.getElementById('scheduleList');
             if (!list) return;
@@ -1465,22 +1567,141 @@
             } catch (e) { alert('Ошибка: ' + e.message); }
         };
 
+        // === ПЕРСОНАЛЬНАЯ СТАТИСТИКА СОТРУДНИКА ===
+        function getMyStats() {
+            if (!currentUser) return null;
+            
+            const now = new Date();
+            const currentMonth = now.getMonth(); // 0-11
+            const currentYear = now.getFullYear();
+            const currentMonthKey = getCurrentMonthKey();
+            
+            let myKassa = 0, myKd = 0, myZal = 0, mySklad = 0;
+            let myTotalShifts = 0;
+            let myHoursThisMonth = 0;
+            let myShiftsThisMonth = 0;
+            
+            Object.keys(data.schedule).forEach(date => {
+                const entries = data.schedule[date];
+                if (!entries) return;
+                
+                const dateMonth = getMonthFromDate(date);
+                const isCurrentMonth = dateMonth === currentMonthKey;
+                
+                entries.forEach(entry => {
+                    // Считаем по имени текущего пользователя
+                    if (entry.employee !== currentUser.name) return;
+                    
+                    // Считаем ВСЕ смены (общая статистика)
+                    if (entry.type === 'kassa') myKassa++;
+                    if (entry.type === 'kd') myKd++;
+                    if (entry.type === 'zal') myZal++;
+                    if (entry.type === 'sklad') mySklad++;
+                    myTotalShifts++;
+                    
+                    // Считаем часы ТОЛЬКО за текущий месяц
+                    if (isCurrentMonth) {
+                        const hours = shiftHours[entry.shift] || 0;
+                        myHoursThisMonth += hours;
+                        myShiftsThisMonth++;
+                    }
+                });
+            });
+            
+            return {
+                kassa: myKassa,
+                kd: myKd,
+                zal: myZal,
+                sklad: mySklad,
+                totalShifts: myTotalShifts,
+                hoursThisMonth: myHoursThisMonth,
+                shiftsThisMonth: myShiftsThisMonth,
+                currentMonthName: `${MONTH_NAMES_GEN[currentMonth]} ${currentYear}`
+            };
+        }
+
         window.renderStats = function() {
             updateStats();
             const content = document.getElementById('statsContent');
             if (!content) return;
+            
             const totalIntermediate = data.contests.reduce((sum, c) => sum + (c.intermediateResults ? c.intermediateResults.length : 0), 0);
             const totalFinal = data.contests.filter(c => c.finalResult).length;
-            content.innerHTML = `<div class="stats-grid">
+            
+            // Общая статистика (разбитая на 4 типа)
+            let html = `<div class="stats-grid">
                 <div class="stat-card"><div class="stat-number">${data.employees.filter(e => e.role !== 'superadmin').length}</div><div class="stat-label">Сотрудников</div></div>
-                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.totalEntries}</div><div class="stat-label">Записей в графике</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.totalEntries}</div><div class="stat-label">Всего записей</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);"><div class="stat-number">${data.materials.length}</div><div class="stat-label">Материалов</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);"><div class="stat-number">${data.contests.length}</div><div class="stat-label">Конкурсов</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #667eea 100%);"><div class="stat-number">${totalIntermediate}</div><div class="stat-label">Промежуточных этапов</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%);"><div class="stat-number">${totalFinal}</div><div class="stat-label">Победителей</div></div>
-                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #17a2b8 100%);"><div class="stat-number">${data.stats.kassaCount + data.stats.kdCount}</div><div class="stat-label">Смен Касса/КД</div></div>
-                <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);"><div class="stat-number">${data.stats.zalCount + data.stats.skladCount}</div><div class="stat-label">Смен Зал/Склад</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.kassaCount}</div><div class="stat-label">Смен на Кассе</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);"><div class="stat-number">${data.stats.kdCount}</div><div class="stat-label">Смен на КД</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);"><div class="stat-number">${data.stats.zalCount}</div><div class="stat-label">Смен в Зале</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);"><div class="stat-number">${data.stats.skladCount}</div><div class="stat-label">Смен на Складе</div></div>
             </div>`;
+            
+            // === ПЕРСОНАЛЬНАЯ СТАТИСТИКА ===
+            const myStats = getMyStats();
+            if (myStats) {
+                const hasAnyShifts = myStats.totalShifts > 0;
+                
+                html += `<div class="my-stats-block">
+                    <div class="my-stats-header">
+                        <span class="my-stats-header-icon">👤</span>
+                        <div class="my-stats-header-title">${escapeHtml(currentUser.name)}</div>
+                        <div class="my-stats-header-subtitle">Ваша личная статистика</div>
+                    </div>
+                    <div class="my-stats-month-info">
+                        📅 Статистика за ${myStats.currentMonthName}
+                    </div>`;
+                
+                if (!hasAnyShifts) {
+                    html += `<div class="my-stats-empty">
+                        <span class="my-stats-empty-icon">📭</span>
+                        У вас пока нет смен в графике.<br>
+                        <span style="font-size: 0.9em; opacity: 0.8;">Как только вас добавят в график — здесь появится ваша статистика.</span>
+                    </div>`;
+                } else {
+                    html += `<div class="my-stats-grid">
+                        <div class="my-stat-card">
+                            <div class="my-stat-icon">💵</div>
+                            <div class="my-stat-value">${myStats.kassa}</div>
+                            <div class="my-stat-label">дней на Кассе</div>
+                        </div>
+                        <div class="my-stat-card">
+                            <div class="my-stat-icon">📋</div>
+                            <div class="my-stat-value">${myStats.kd}</div>
+                            <div class="my-stat-label">дней на КД</div>
+                        </div>
+                        <div class="my-stat-card">
+                            <div class="my-stat-icon">🏬</div>
+                            <div class="my-stat-value">${myStats.zal}</div>
+                            <div class="my-stat-label">дней в Зале</div>
+                        </div>
+                        <div class="my-stat-card">
+                            <div class="my-stat-icon">📦</div>
+                            <div class="my-stat-value">${myStats.sklad}</div>
+                            <div class="my-stat-label">дней на Складе</div>
+                        </div>
+                        <div class="my-stat-total">
+                            <div class="my-stat-icon">📊</div>
+                            <div class="my-stat-value">${myStats.totalShifts}</div>
+                            <div class="my-stat-label">Всего смен за всё время</div>
+                        </div>
+                        <div class="my-stat-hours">
+                            <div class="my-stat-icon">⏱️</div>
+                            <div class="my-stat-value">${myStats.hoursThisMonth}</div>
+                            <div class="my-stat-label">часов отработано в этом месяце (${myStats.shiftsThisMonth} смен)</div>
+                        </div>
+                    </div>`;
+                }
+                
+                html += `</div>`;
+            }
+            
+            content.innerHTML = html;
         };
 
         function updateStats() {
