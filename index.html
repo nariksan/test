@@ -70,13 +70,18 @@
         .schedule-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .date-card { background: white; padding: 14px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
         .date-card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.05em; text-align: center; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .date-card.past { background: #fafafa; border-color: #ddd; opacity: 0.7; }
-        .date-card.past h3 { color: #888; border-bottom-color: #bbb; text-decoration: line-through; }
+        
+        /* СТАРЫЙ СТИЛЬ past УДАЛЁН — теперь past только в архиве */
+        .date-card.yesterday { background: #fafafa; border-color: #ddd; opacity: 0.75; }
+        .date-card.yesterday h3 { color: #888; border-bottom-color: #bbb; text-decoration: line-through; }
+        
         .date-card.today { border-color: var(--success); border-width: 2px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15); }
-        .date-card.today h3 { color: var(--success); border-bottom-color: var(--success); }
-        .past-badge, .today-badge, .archive-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase; text-decoration: none !important; }
+        .date-card.today h3 { color: var(--success); border-bottom-color: var(--success); text-decoration: line-through; }
+        
+        .past-badge, .today-badge, .yesterday-badge, .archive-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase; text-decoration: none !important; }
         .past-badge { background: var(--danger); color: white; }
         .today-badge { background: var(--success); color: white; animation: pulse 2s infinite; }
+        .yesterday-badge { background: #6c757d; color: white; }
         .archive-badge { background: #6c757d; color: white; }
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 50% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); } }
         
@@ -163,7 +168,6 @@
         .stat-number { font-size: 1.8em; font-weight: 800; margin-bottom: 3px; line-height: 1; }
         .stat-label { font-size: 0.75em; opacity: 0.95; line-height: 1.3; }
         
-        /* НОВЫЕ СТИЛИ ДЛЯ ПЕРСОНАЛЬНОЙ СТАТИСТИКИ */
         .my-stats-block {
             background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
             border: 2px solid var(--gold);
@@ -172,94 +176,24 @@
             margin-top: 20px;
             box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
         }
-        .my-stats-header {
-            text-align: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px dashed #ffc107;
-        }
-        .my-stats-header-icon {
-            font-size: 2.5em;
-            display: block;
-            margin-bottom: 6px;
-        }
-        .my-stats-header-title {
-            font-size: 1.15em;
-            font-weight: 700;
-            color: #856404;
-            margin-bottom: 2px;
-        }
-        .my-stats-header-subtitle {
-            font-size: 0.82em;
-            color: #856404;
-            opacity: 0.85;
-        }
-        .my-stats-month-info {
-            background: rgba(255, 255, 255, 0.6);
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            text-align: center;
-            font-size: 0.85em;
-            color: #856404;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-        .my-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .my-stat-card {
-            background: white;
-            border-radius: var(--radius-md);
-            padding: 12px 10px;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            border-top: 3px solid var(--gold);
-        }
-        .my-stat-icon {
-            font-size: 1.5em;
-            margin-bottom: 4px;
-        }
-        .my-stat-value {
-            font-size: 1.6em;
-            font-weight: 800;
-            color: var(--dark);
-            line-height: 1;
-            margin-bottom: 2px;
-        }
-        .my-stat-label {
-            font-size: 0.72em;
-            color: var(--gray);
-            line-height: 1.2;
-        }
-        .my-stat-hours {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border-top-color: var(--gold);
-        }
+        .my-stats-header { text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px dashed #ffc107; }
+        .my-stats-header-icon { font-size: 2.5em; display: block; margin-bottom: 6px; }
+        .my-stats-header-title { font-size: 1.15em; font-weight: 700; color: #856404; margin-bottom: 2px; }
+        .my-stats-header-subtitle { font-size: 0.82em; color: #856404; opacity: 0.85; }
+        .my-stats-month-info { background: rgba(255, 255, 255, 0.6); padding: 8px 12px; border-radius: var(--radius-sm); text-align: center; font-size: 0.85em; color: #856404; margin-bottom: 12px; font-weight: 600; }
+        .my-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .my-stat-card { background: white; border-radius: var(--radius-md); padding: 12px 10px; text-align: center; box-shadow: var(--shadow-sm); border-top: 3px solid var(--gold); }
+        .my-stat-icon { font-size: 1.5em; margin-bottom: 4px; }
+        .my-stat-value { font-size: 1.6em; font-weight: 800; color: var(--dark); line-height: 1; margin-bottom: 2px; }
+        .my-stat-label { font-size: 0.72em; color: var(--gray); line-height: 1.2; }
+        .my-stat-hours { grid-column: 1 / -1; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border-top-color: var(--gold); }
         .my-stat-hours .my-stat-value { color: white; }
         .my-stat-hours .my-stat-label { color: rgba(255,255,255,0.9); }
-        .my-stat-total {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
-            color: white;
-        }
+        .my-stat-total { grid-column: 1 / -1; background: linear-gradient(135deg, var(--success) 0%, #20c997 100%); color: white; }
         .my-stat-total .my-stat-value { color: white; }
         .my-stat-total .my-stat-label { color: rgba(255,255,255,0.9); }
-        .my-stats-empty {
-            text-align: center;
-            padding: 30px 16px;
-            color: #856404;
-            font-size: 0.9em;
-        }
-        .my-stats-empty-icon {
-            font-size: 2.5em;
-            display: block;
-            margin-bottom: 8px;
-            opacity: 0.6;
-        }
+        .my-stats-empty { text-align: center; padding: 30px 16px; color: #856404; font-size: 0.9em; }
+        .my-stats-empty-icon { font-size: 2.5em; display: block; margin-bottom: 8px; opacity: 0.6; }
         
         .dev-block { text-align: center; padding: 40px 16px; background: white; border-radius: var(--radius-xl); border: 2px dashed var(--primary); }
         .dev-icon { font-size: 3em; margin-bottom: 12px; display: block; }
@@ -311,8 +245,8 @@
         .schedule-item { background: var(--bg); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
         .schedule-item-info { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.82em; }
         .schedule-item-info span { font-weight: 600; }
-        .schedule-item.past { opacity: 0.6; }
-        .schedule-item.past .schedule-item-info span:first-child { text-decoration: line-through; }
+        .schedule-item.yesterday { opacity: 0.65; }
+        .schedule-item.yesterday .schedule-item-info span:first-child { text-decoration: line-through; }
         .type-switcher { display: flex; gap: 4px; margin-bottom: 14px; background: var(--bg); padding: 4px; border-radius: var(--radius-sm); }
         .type-switcher button { flex: 1; padding: 8px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-weight: 600; color: var(--gray); transition: all 0.2s; font-size: 0.85em; min-height: 38px; }
         .type-switcher button.active { background: white; color: var(--primary); box-shadow: var(--shadow-sm); }
@@ -701,7 +635,6 @@
 
         const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00' };
         const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11' };
-        // Часы для каждой смены (для подсчёта отработанных часов)
         const shiftHours = { 1: 9, 2: 9, 3: 11 };
         const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад' };
         const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -731,24 +664,28 @@
         updateClock();
         setInterval(updateClock, 1000);
 
+        // === НОВАЯ ЛОГИКА СТАТУСОВ ДАТ ===
+        // today = сегодня (зачёркнуто в графике)
+        // yesterday = вчера (зачёркнуто в графике, "закончившийся день")
+        // past = позавчера и раньше (в архиве)
+        // future = будущее
         function getDateStatus(dateStr) {
             const [day, month, year] = dateStr.split('.').map(Number);
             const date = new Date(year, month - 1, day);
             const today = new Date(); today.setHours(0, 0, 0, 0);
             date.setHours(0, 0, 0, 0);
-            const diff = date.getTime() - today.getTime();
-            if (diff < 0) return 'past';
-            if (diff === 0) return 'today';
+            const diffDays = Math.round((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays === 0) return 'today';
+            if (diffDays === -1) return 'yesterday';
+            if (diffDays < -1) return 'past';
             return 'future';
         }
 
-        // Получить текущий месяц и год в формате "MM.YYYY"
         function getCurrentMonthKey() {
             const now = new Date();
             return `${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
         }
 
-        // Получить месяц из даты "DD.MM.YYYY"
         function getMonthFromDate(dateStr) {
             const parts = dateStr.split('.');
             if (parts.length !== 3) return null;
@@ -1154,11 +1091,13 @@
             }
         };
 
+        // === ГРАФИК: показываем yesterday (зачёркнуто) + today (зачёркнуто) + future ===
         window.renderSchedule = function() {
             const grid = document.getElementById('scheduleGrid');
             if (!grid) return;
             grid.innerHTML = '';
             const dates = getSortedDates();
+            // В основном графике: yesterday + today + future (т.е. всё кроме past)
             const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
             
             if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
@@ -1171,7 +1110,10 @@
                 const dateCard = document.createElement('div');
                 dateCard.className = `date-card ${status}`;
                 
-                let statusBadge = status === 'today' ? '<span class="today-badge">Сегодня</span>' : '';
+                let statusBadge = '';
+                if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>';
+                else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>';
+                
                 dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`;
                 
                 const sortedEntries = [...entries].sort((a, b) => {
@@ -1210,6 +1152,7 @@
             });
         };
 
+        // === АРХИВ: показываем только past (позавчера и раньше) ===
         window.renderArchive = function() {
             const content = document.getElementById('archiveContent');
             if (!content) return;
@@ -1228,7 +1171,7 @@
             infoBlock.innerHTML = `
                 <div class="archive-info-text">
                     📦 Здесь хранятся <strong>прошедшие смены</strong>.<br>
-                    Новые прошедшие даты автоматически попадают сюда.
+                    Даты автоматически попадают сюда на следующий день после окончания.
                 </div>
                 <div class="archive-counter">${archiveEntriesCount} записей</div>
             `;
@@ -1249,7 +1192,7 @@
                 empty.style.textAlign = 'center';
                 empty.style.padding = '40px 20px';
                 empty.style.color = 'var(--light-gray)';
-                empty.innerHTML = '📦<br><br>Архив пока пуст.<br><span style="font-size: 0.9em;">Прошедшие даты будут появляться здесь автоматически.</span>';
+                empty.innerHTML = '📦<br><br>Архив пока пуст.<br><span style="font-size: 0.9em;">Прошедшие даты автоматически попадают сюда на следующий день.</span>';
                 content.appendChild(empty);
                 return;
             }
@@ -1343,6 +1286,7 @@
             }
         };
 
+        // В админ-панели показываем yesterday + today + future
         window.renderScheduleList = function() {
             const list = document.getElementById('scheduleList');
             if (!list) return;
@@ -1356,9 +1300,9 @@
                 const status = getDateStatus(date);
                 data.schedule[date].forEach(entry => {
                     const item = document.createElement('div');
-                    item.className = `schedule-item ${status === 'past' ? 'past' : ''}`;
+                    item.className = `schedule-item ${status === 'yesterday' ? 'yesterday' : ''}`;
                     const badgeClass = `badge-${entry.type}`;
-                    let statusMark = status === 'today' ? ' 🔵' : '';
+                    let statusMark = status === 'today' ? ' 🔵' : (status === 'yesterday' ? ' ✓' : '');
                     item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
                     list.appendChild(item);
                 });
@@ -1567,12 +1511,11 @@
             } catch (e) { alert('Ошибка: ' + e.message); }
         };
 
-        // === ПЕРСОНАЛЬНАЯ СТАТИСТИКА СОТРУДНИКА ===
         function getMyStats() {
             if (!currentUser) return null;
             
             const now = new Date();
-            const currentMonth = now.getMonth(); // 0-11
+            const currentMonth = now.getMonth();
             const currentYear = now.getFullYear();
             const currentMonthKey = getCurrentMonthKey();
             
@@ -1589,17 +1532,14 @@
                 const isCurrentMonth = dateMonth === currentMonthKey;
                 
                 entries.forEach(entry => {
-                    // Считаем по имени текущего пользователя
                     if (entry.employee !== currentUser.name) return;
                     
-                    // Считаем ВСЕ смены (общая статистика)
                     if (entry.type === 'kassa') myKassa++;
                     if (entry.type === 'kd') myKd++;
                     if (entry.type === 'zal') myZal++;
                     if (entry.type === 'sklad') mySklad++;
                     myTotalShifts++;
                     
-                    // Считаем часы ТОЛЬКО за текущий месяц
                     if (isCurrentMonth) {
                         const hours = shiftHours[entry.shift] || 0;
                         myHoursThisMonth += hours;
@@ -1628,7 +1568,6 @@
             const totalIntermediate = data.contests.reduce((sum, c) => sum + (c.intermediateResults ? c.intermediateResults.length : 0), 0);
             const totalFinal = data.contests.filter(c => c.finalResult).length;
             
-            // Общая статистика (разбитая на 4 типа)
             let html = `<div class="stats-grid">
                 <div class="stat-card"><div class="stat-number">${data.employees.filter(e => e.role !== 'superadmin').length}</div><div class="stat-label">Сотрудников</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.totalEntries}</div><div class="stat-label">Всего записей</div></div>
@@ -1642,7 +1581,6 @@
                 <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);"><div class="stat-number">${data.stats.skladCount}</div><div class="stat-label">Смен на Складе</div></div>
             </div>`;
             
-            // === ПЕРСОНАЛЬНАЯ СТАТИСТИКА ===
             const myStats = getMyStats();
             if (myStats) {
                 const hasAnyShifts = myStats.totalShifts > 0;
