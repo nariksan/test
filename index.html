@@ -71,12 +71,12 @@
         .date-card { background: white; padding: 14px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
         .date-card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.05em; text-align: center; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
         
-        /* СТАРЫЙ СТИЛЬ past УДАЛЁН — теперь past только в архиве */
         .date-card.yesterday { background: #fafafa; border-color: #ddd; opacity: 0.75; }
         .date-card.yesterday h3 { color: #888; border-bottom-color: #bbb; text-decoration: line-through; }
         
         .date-card.today { border-color: var(--success); border-width: 2px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15); }
-        .date-card.today h3 { color: var(--success); border-bottom-color: var(--success); text-decoration: line-through; }
+        /* ИСПРАВЛЕНО: убрано text-decoration: line-through для сегодняшней даты */
+        .date-card.today h3 { color: var(--success); border-bottom-color: var(--success); }
         
         .past-badge, .today-badge, .yesterday-badge, .archive-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase; text-decoration: none !important; }
         .past-badge { background: var(--danger); color: white; }
@@ -664,11 +664,6 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // === НОВАЯ ЛОГИКА СТАТУСОВ ДАТ ===
-        // today = сегодня (зачёркнуто в графике)
-        // yesterday = вчера (зачёркнуто в графике, "закончившийся день")
-        // past = позавчера и раньше (в архиве)
-        // future = будущее
         function getDateStatus(dateStr) {
             const [day, month, year] = dateStr.split('.').map(Number);
             const date = new Date(year, month - 1, day);
@@ -1091,13 +1086,11 @@
             }
         };
 
-        // === ГРАФИК: показываем yesterday (зачёркнуто) + today (зачёркнуто) + future ===
         window.renderSchedule = function() {
             const grid = document.getElementById('scheduleGrid');
             if (!grid) return;
             grid.innerHTML = '';
             const dates = getSortedDates();
-            // В основном графике: yesterday + today + future (т.е. всё кроме past)
             const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
             
             if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
@@ -1152,7 +1145,6 @@
             });
         };
 
-        // === АРХИВ: показываем только past (позавчера и раньше) ===
         window.renderArchive = function() {
             const content = document.getElementById('archiveContent');
             if (!content) return;
@@ -1286,7 +1278,6 @@
             }
         };
 
-        // В админ-панели показываем yesterday + today + future
         window.renderScheduleList = function() {
             const list = document.getElementById('scheduleList');
             if (!list) return;
@@ -1294,7 +1285,21 @@
             const dates = getSortedDates();
             const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
             
-            if (activeDates.length === 0) { list.innerHTML = '<div class="no-employees">Активных записей нет. Прошедшие смены находятся в Архиве.</div>'; return; }
+            if (activeDates.length === 0) { 
+                list.innerHTML = '<div class="no-employees">Активных записей нет. Прошедшие смены находятся в Архиве.</div>'; 
+                return; 
+            }
+
+            // --- НОВАЯ КНОПКА ОЧИСТКИ ТЕКУЩЕГО ГРАФИКА ---
+            if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) {
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'btn btn-danger btn-block';
+                clearBtn.style.marginBottom = '12px';
+                clearBtn.innerHTML = '🗑️ Очистить весь текущий график';
+                clearBtn.onclick = clearCurrentSchedule;
+                list.appendChild(clearBtn);
+            }
+            // -----------------------------------------------
             
             activeDates.forEach(date => {
                 const status = getDateStatus(date);
@@ -1308,6 +1313,36 @@
                 });
             });
         };
+
+        // --- НОВАЯ ФУНКЦИЯ ОЧИСТКИ ТЕКУЩЕГО ГРАФИКА ---
+        window.clearCurrentSchedule = async function() {
+            if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) {
+                alert('🔒 Недостаточно прав для этого действия');
+                return;
+            }
+            if (!confirm('⚠️ Вы собираетесь удалить ВСЕ записи из текущего графика (вчера, сегодня и будущие даты).\n\nАрхивные записи (позавчера и старше) НЕ будут затронуты.\n\nЭто действие нельзя отменить! Продолжить?')) return;
+            if (!confirm('Точно удалить все текущие смены? Последнее предупреждение!')) return;
+            
+            try {
+                const dates = Object.keys(data.schedule);
+                let deletedCount = 0;
+                for (const date of dates) {
+                    if (getDateStatus(date) !== 'past') { // Удаляем только не-архивные записи
+                        for (const entry of data.schedule[date]) {
+                            await deleteDoc(doc(db, "schedule", entry.id));
+                            deletedCount++;
+                        }
+                    }
+                }
+                await loadAllDataFromFirebase();
+                renderScheduleList();
+                renderSchedule();
+                alert(`✅ Текущий график очищен! Удалено записей: ${deletedCount}`);
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+            }
+        };
+        // -----------------------------------------------
 
         window.addScheduleEntry = async function() {
             const dateInput = document.getElementById('adminDate').value;
