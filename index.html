@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -9,1045 +8,320 @@
     <title>ДОМОВИД</title>
     <style>
         :root {
-            --primary: #667eea;
-            --primary-dark: #5568d3;
-            --secondary: #764ba2;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #fd7e14;
-            --info: #17a2b8;
-            --gold: #ffc107;
-            --dark: #333;
-            --gray: #666;
-            --light-gray: #999;
-            --bg: #f8f9fa;
-            --border: #e9ecef;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
-            --bottom-nav-height: 70px;
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --primary: #667eea; --primary-dark: #5568d3; --secondary: #764ba2;
+            --success: #28a745; --danger: #dc3545; --warning: #fd7e14;
+            --info: #17a2b8; --gold: #ffc107; --dark: #333; --gray: #666;
+            --light-gray: #999; --bg: #f8f9fa; --border: #e9ecef;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05); --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        html, body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--dark);
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body.logged-in { padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom)); }
-
-        /* ============ ЭКРАН ВХОДА ============ */
-        .login-screen {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
+        html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        
+        .login-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
         .login-screen.hidden { display: none; }
-
-        .login-container {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 30px 24px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.4s ease;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        .login-container { background: white; border-radius: var(--radius-xl); padding: 30px 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .login-logo { text-align: center; margin-bottom: 24px; }
         .login-logo-icon { font-size: 3em; margin-bottom: 8px; }
         .login-logo h2 { color: var(--primary); font-size: 1.6em; margin-bottom: 4px; }
         .login-logo p { color: var(--gray); font-size: 0.9em; }
-
         .login-form .form-group { margin-bottom: 14px; }
-
-        .login-form label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 0.85em;
-        }
-
-        .login-form input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 1em;
-            background: white;
-            min-height: 46px;
-            transition: border-color 0.2s;
-        }
-
+        .login-form label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--dark); font-size: 0.85em; }
+        .login-form input { width: 100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1em; background: white; min-height: 46px; transition: border-color 0.2s; }
         .login-form input:focus { outline: none; border-color: var(--primary); }
-
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 1em;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: all 0.2s;
-            min-height: 48px;
-        }
-
+        .login-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 1em; cursor: pointer; margin-top: 8px; transition: all 0.2s; min-height: 48px; }
         .login-btn:hover { background: var(--primary-dark); }
         .login-btn:active { transform: scale(0.98); }
-
-        .login-error {
-            background: #fff5f5;
-            border-left: 3px solid var(--danger);
-            padding: 10px 12px;
-            border-radius: 6px;
-            margin-top: 14px;
-            font-size: 0.85em;
-            color: var(--danger);
-            display: none;
-        }
-
+        .login-error { background: #fff5f5; border-left: 3px solid var(--danger); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.85em; color: var(--danger); display: none; }
         .login-error.show { display: block; }
-
-        .login-hint {
-            background: #e7f3ff;
-            border-left: 3px solid var(--info);
-            padding: 10px 12px;
-            border-radius: 6px;
-            margin-top: 14px;
-            font-size: 0.82em;
-            color: #0c5460;
-            line-height: 1.4;
-        }
-
-        /* ============ HEADER ============ */
-        .app-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow-md);
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .login-hint { background: #e7f3ff; border-left: 3px solid var(--info); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.82em; color: #0c5460; line-height: 1.4; }
+        
+        .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
         .header-title h1 { font-size: 1.3em; font-weight: 700; letter-spacing: 0.5px; }
-
-        .header-subtitle {
-            font-size: 0.75em;
-            opacity: 0.85;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .current-user-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.9em;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .role-badge {
-            background: var(--gold);
-            color: var(--dark);
-            padding: 1px 6px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 700;
-        }
-
-        .header-clock {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            padding: 6px 12px;
-            border-radius: var(--radius-md);
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .clock-time {
-            font-size: 1.2em;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 1px;
-        }
-
+        .header-subtitle { font-size: 0.75em; opacity: 0.85; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .current-user-badge { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 0.9em; display: inline-flex; align-items: center; gap: 4px; }
+        .role-badge { background: var(--gold); color: var(--dark); padding: 1px 6px; border-radius: 8px; font-size: 0.85em; font-weight: 700; }
+        .header-clock { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 6px 12px; border-radius: var(--radius-md); text-align: center; flex-shrink: 0; }
+        .clock-time { font-size: 1.2em; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
         .clock-date { font-size: 0.7em; opacity: 0.9; margin-top: 1px; }
         .clock-separator { animation: blink 1s infinite; }
         @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.3; } }
-
-        /* ============ DESKTOP NAV ============ */
-        .desktop-nav {
-            display: none;
+        
+        .top-nav {
             background: white;
-            padding: 10px 20px;
             border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 99;
-            box-shadow: var(--shadow-sm);
         }
-
-        .desktop-nav-inner {
+        .top-nav-inner {
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 8px;
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            flex-wrap: wrap;
         }
-
-        .desktop-nav button {
-            padding: 8px 16px;
-            border: none;
-            background: transparent;
-            color: var(--gray);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9em;
-            transition: all 0.2s;
-        }
-
-        .desktop-nav button:hover { background: var(--bg); color: var(--primary); }
-        .desktop-nav button.active { background: var(--primary); color: white; }
-
-        .logout-btn {
-            background: transparent !important;
-            color: var(--danger) !important;
-            border: 1px solid var(--danger) !important;
-        }
-
-        .logout-btn:hover { background: var(--danger) !important; color: white !important; }
-
-        /* ============ BOTTOM NAV ============ */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: white;
-            border-top: 1px solid var(--border);
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
-            z-index: 100;
-            padding-bottom: var(--safe-bottom);
-            display: none;
-        }
-
-        body.logged-in .bottom-nav { display: block; }
-
-        .bottom-nav-inner {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            height: var(--bottom-nav-height);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .bottom-nav button {
-            flex: 1;
+        .top-nav-inner::-webkit-scrollbar { display: none; }
+        .top-nav-btn {
+            flex-shrink: 0;
             background: none;
             border: none;
-            padding: 6px 4px;
+            padding: 10px 12px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 2px;
-            color: var(--light-gray);
-            transition: color 0.2s;
-            font-size: 0.68em;
+            color: var(--gray);
+            transition: all 0.2s;
+            font-size: 0.72em;
             font-weight: 600;
-            min-height: 56px;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            min-width: 60px;
         }
-
-        .bottom-nav button .nav-icon {
-            font-size: 1.7em;
-            line-height: 1;
-            transition: transform 0.2s;
-        }
-
-        .bottom-nav button.active { color: var(--primary); }
-        .bottom-nav button.active .nav-icon { transform: scale(1.15); }
-        .bottom-nav button:active { transform: scale(0.95); }
-
-        .mobile-logout {
-            display: block;
-            width: calc(100% - 32px);
-            margin: 8px 16px 12px;
-            padding: 10px;
+        .top-nav-btn .nav-icon { font-size: 1.5em; line-height: 1; }
+        .top-nav-btn:hover { background: var(--bg); color: var(--primary); }
+        .top-nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .top-nav-btn.active .nav-icon { transform: scale(1.1); }
+        .top-nav-btn:active { transform: scale(0.95); }
+        .top-nav-logout {
+            flex-shrink: 0;
             background: #fff5f5;
             color: var(--danger);
-            border: 1px solid var(--danger);
+            border: none;
+            padding: 8px 12px;
+            margin-left: auto;
             border-radius: var(--radius-sm);
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.75em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
         }
-
-        /* ============ CONTENT ============ */
+        .top-nav-logout:hover { background: var(--danger); color: white; }
+        
         .app-content { max-width: 1200px; margin: 0 auto; padding: 16px; }
-
         .section { display: none; animation: fadeIn 0.3s ease; }
         .section.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-title {
-            font-size: 1.4em;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 14px;
-        }
-
-        /* ============ SCHEDULE ============ */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .section-title { font-size: 1.4em; font-weight: 700; color: var(--dark); margin-bottom: 14px; }
+        
         .schedule-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-
-        .date-card {
-            background: white;
-            padding: 14px;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .date-card h3 {
-            color: var(--primary);
-            margin-bottom: 10px;
-            font-size: 1.05em;
-            text-align: center;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
+        .date-card { background: white; padding: 14px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+        .date-card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.05em; text-align: center; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
         .date-card.past { background: #fafafa; border-color: #ddd; opacity: 0.7; }
         .date-card.past h3 { color: #888; border-bottom-color: #bbb; text-decoration: line-through; }
-        .date-card.past .shift { opacity: 0.7; }
-        .date-card.past .employee-tag { text-decoration: line-through; opacity: 0.75; }
-
-        .date-card.today {
-            border-color: var(--success);
-            border-width: 2px;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15);
-        }
-
+        .date-card.today { border-color: var(--success); border-width: 2px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15); }
         .date-card.today h3 { color: var(--success); border-bottom-color: var(--success); }
-
-        .past-badge, .today-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.65em;
-            font-weight: 700;
-            text-transform: uppercase;
-            text-decoration: none !important;
-        }
-
+        .past-badge, .today-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase; text-decoration: none !important; }
         .past-badge { background: var(--danger); color: white; }
         .today-badge { background: var(--success); color: white; animation: pulse 2s infinite; }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
-            50% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); }
-        }
-
-        .shift {
-            background: var(--bg);
-            padding: 10px;
-            margin: 6px 0;
-            border-radius: var(--radius-sm);
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 50% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); } }
+        
+        .employee-schedule-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin: 8px 0;
             border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
+        .employee-schedule-card.kassa { border-left-color: var(--success); }
+        .employee-schedule-card.kd { border-left-color: var(--gold); }
+        .employee-schedule-card.zal { border-left-color: var(--info); }
+        .employee-schedule-card.sklad { border-left-color: #6f42c1; }
 
-        .shift.kassa { border-left-color: var(--success); }
-        .shift.kd { border-left-color: var(--gold); }
-        .shift.other { border-left-color: #6c757d; }
-
-        .shift-header {
+        .employee-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-            gap: 4px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
         }
-
-        .shift-type { font-weight: 600; color: var(--dark); font-size: 0.9em; }
-        .shift-time { color: var(--gray); font-size: 0.75em; }
-
-        .shift-badge {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7em;
+        .employee-card-name {
             font-weight: 700;
-            color: white;
-        }
-
-        .badge-kassa { background: var(--success); }
-        .badge-kd { background: var(--gold); color: var(--dark); }
-        .badge-other { background: #6c757d; }
-
-        .shift-employees {
-            margin-top: 6px;
-            padding-top: 6px;
-            border-top: 1px solid var(--border);
+            color: var(--dark);
+            font-size: 0.95em;
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
+            align-items: center;
+            gap: 6px;
         }
-
-        .employee-tag {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 3px 9px;
-            border-radius: 12px;
-            font-size: 0.78em;
-            font-weight: 500;
-        }
-
-        .employee-tag.kassa { background: var(--success); }
-        .employee-tag.kd { background: var(--gold); color: var(--dark); }
-        .employee-tag.other { background: #6c757d; }
-
-        .empty-message {
-            text-align: center;
-            color: var(--gray);
-            padding: 30px 16px;
-            background: white;
-            border-radius: var(--radius-lg);
-            font-size: 0.9em;
-            line-height: 1.5;
-            border: 1px dashed var(--border);
-        }
-
-        /* ============ CONTESTS ============ */
-        .contests-list { display: grid; gap: 12px; }
-
-        .contest-card {
-            background: white;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            border-left: 4px solid var(--success);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .contest-card.status-finished-card { border-left-color: #6c757d; }
-        .contest-card h3 { color: var(--success); margin-bottom: 6px; font-size: 1.05em; }
-        .contest-card.status-finished-card h3 { color: #6c757d; }
-
-        .contest-status {
-            display: inline-block;
+        .employee-card-position {
             padding: 3px 10px;
             border-radius: 12px;
             font-size: 0.75em;
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: white;
         }
+        .employee-card-position.kassa { background: var(--success); }
+        .employee-card-position.kd { background: var(--gold); color: var(--dark); }
+        .employee-card-position.zal { background: var(--info); }
+        .employee-card-position.sklad { background: #6f42c1; }
 
+        .employee-card-shift {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: var(--gray);
+        }
+        .employee-card-shift-icon { font-size: 1.2em; }
+        .employee-card-time { font-weight: 600; color: var(--dark); }
+        
+        .contests-list { display: grid; gap: 12px; }
+        .contest-card { background: white; padding: 16px; border-radius: var(--radius-lg); border-left: 4px solid var(--success); box-shadow: var(--shadow-sm); }
+        .contest-card.status-finished-card { border-left-color: #6c757d; }
+        .contest-card h3 { color: var(--success); margin-bottom: 6px; font-size: 1.05em; }
+        .contest-card.status-finished-card h3 { color: #6c757d; }
+        .contest-status { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; margin-bottom: 8px; }
         .status-active { background: var(--success); color: white; }
         .status-finished { background: #6c757d; color: white; }
-
         .contest-description { color: #555; line-height: 1.5; margin-bottom: 10px; font-size: 0.9em; }
-
-        .results-section {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 2px dashed var(--border);
-        }
-
-        .results-section h4 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 0.95em;
-        }
-
-        .result-item {
-            background: var(--bg);
-            padding: 8px 10px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 6px;
-            border-left: 3px solid var(--info);
-        }
-
-        .result-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3px;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
+        .results-section { margin-top: 12px; padding-top: 12px; border-top: 2px dashed var(--border); }
+        .results-section h4 { color: var(--primary); margin-bottom: 8px; font-size: 0.95em; }
+        .result-item { background: var(--bg); padding: 8px 10px; border-radius: var(--radius-sm); margin-bottom: 6px; border-left: 3px solid var(--info); }
+        .result-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; flex-wrap: wrap; gap: 4px; }
         .result-title { font-weight: 600; color: var(--dark); font-size: 0.9em; }
         .result-date { font-size: 0.72em; color: var(--light-gray); }
         .result-description { color: #555; font-size: 0.85em; line-height: 1.4; }
-
-        .final-result {
-            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
-            padding: 12px;
-            border-radius: var(--radius-md);
-            border-left: 4px solid var(--gold);
-            margin-top: 8px;
-        }
-
+        .final-result { background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%); padding: 12px; border-radius: var(--radius-md); border-left: 4px solid var(--gold); margin-top: 8px; }
         .final-result-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
         .final-result-icon { font-size: 1.3em; }
         .final-result-title { font-size: 0.9em; font-weight: 700; color: #856404; }
         .final-result-winner { font-size: 1.05em; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
         .final-result-description { color: #555; line-height: 1.4; font-size: 0.85em; }
         .final-result-date { font-size: 0.75em; color: #856404; margin-top: 4px; }
-
-        /* ============ MATERIALS ============ */
+        
         .materials-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
-
-        .material-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 14px;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-        }
-
+        .material-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
         .material-card.type-text { border-left: 4px solid var(--info); }
         .material-card.type-file { border-left: 4px solid var(--warning); }
-
         .material-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         .material-icon { font-size: 1.6em; flex-shrink: 0; }
         .material-title { font-size: 1em; font-weight: 600; color: var(--dark); flex: 1; word-break: break-word; }
-
         .material-meta { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
-
         .material-tag { padding: 2px 8px; border-radius: 10px; font-size: 0.68em; font-weight: 700; }
         .tag-text { background: #d1ecf1; color: #0c5460; }
         .tag-file { background: #ffe5d0; color: #8a4b0c; }
         .material-date { font-size: 0.72em; color: var(--light-gray); }
-
-        .material-preview {
-            background: var(--bg);
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 10px;
-            font-size: 0.82em;
-            color: #555;
-            line-height: 1.4;
-            max-height: 70px;
-            overflow: hidden;
-            position: relative;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-
-        .material-preview::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 18px;
-            background: linear-gradient(transparent, var(--bg));
-        }
-
-        .material-file-info {
-            background: var(--bg);
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .material-preview { background: var(--bg); padding: 8px; border-radius: var(--radius-sm); margin-bottom: 10px; font-size: 0.82em; color: #555; line-height: 1.4; max-height: 70px; overflow: hidden; position: relative; white-space: pre-wrap; word-break: break-word; }
+        .material-preview::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 18px; background: linear-gradient(transparent, var(--bg)); }
+        .material-file-info { background: var(--bg); padding: 8px; border-radius: var(--radius-sm); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         .file-icon-big { font-size: 1.3em; }
         .file-details { flex: 1; font-size: 0.82em; }
         .file-name { font-weight: 600; color: var(--dark); word-break: break-all; }
         .file-size { color: var(--gray); font-size: 0.85em; margin-top: 1px; }
-
         .material-actions { display: flex; gap: 6px; margin-top: auto; flex-wrap: wrap; }
         .material-actions .btn { flex: 1; min-width: 90px; }
-
-        /* ============ INFO ============ */
-        .info-block {
-            background: white;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 12px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
-
+        
+        .info-block { background: white; padding: 16px; border-radius: var(--radius-lg); margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
         .info-block h3 { color: var(--primary); margin-bottom: 8px; font-size: 1.05em; }
         .info-block p { color: #555; line-height: 1.5; font-size: 0.9em; }
-
-        /* ============ STATS ============ */
+        
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 16px 10px;
-            border-radius: var(--radius-lg);
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-
+        .stat-card { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 16px 10px; border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm); }
         .stat-number { font-size: 1.8em; font-weight: 800; margin-bottom: 3px; line-height: 1; }
         .stat-label { font-size: 0.75em; opacity: 0.95; line-height: 1.3; }
-
-        /* ============ DEV BLOCK ============ */
-        .dev-block {
-            text-align: center;
-            padding: 40px 16px;
-            background: white;
-            border-radius: var(--radius-xl);
-            border: 2px dashed var(--primary);
-        }
-
+        
+        .dev-block { text-align: center; padding: 40px 16px; background: white; border-radius: var(--radius-xl); border: 2px dashed var(--primary); }
         .dev-icon { font-size: 3em; margin-bottom: 12px; display: block; }
         .dev-block h3 { color: var(--primary); margin-bottom: 8px; font-size: 1.2em; }
         .dev-block p { color: var(--gray); font-size: 0.9em; max-width: 500px; margin: 0 auto; line-height: 1.5; }
-
-        /* ============ BUTTONS ============ */
-        .btn {
-            padding: 10px 16px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9em;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            min-height: 42px;
-        }
-
+        
+        .btn { padding: 10px 16px; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9em; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 42px; }
         .btn:active { transform: scale(0.97); }
-
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-warning { background: var(--warning); color: white; }
         .btn-info { background: var(--info); color: white; }
         .btn-gold { background: var(--gold); color: var(--dark); }
+        .btn-secondary { background: #6c757d; color: white; }
         .btn-sm { padding: 6px 12px; font-size: 0.82em; min-height: 34px; }
         .btn-block { width: 100%; }
-
         .btn-view { background: var(--info); color: white; }
         .btn-download { background: var(--warning); color: white; }
-
-        /* ============ FORMS ============ */
+        
         .form-group { margin-bottom: 14px; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 0.85em;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 0.95em;
-            background: white;
-            font-family: inherit;
-            transition: border-color 0.2s;
-            min-height: 42px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus { outline: none; border-color: var(--primary); }
-
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark); font-size: 0.85em; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95em; background: white; font-family: inherit; transition: border-color 0.2s; min-height: 42px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
         .form-group textarea { resize: vertical; min-height: 90px; }
         .form-row { display: grid; grid-template-columns: 1fr; gap: 10px; }
-
-        /* ============ ADMIN PANEL ============ */
-        .admin-tabs {
-            display: flex;
-            gap: 4px;
-            overflow-x: auto;
-            background: white;
-            padding: 6px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 14px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            scrollbar-width: none;
-        }
-
+        
+        .admin-tabs { display: flex; gap: 4px; overflow-x: auto; background: white; padding: 6px; border-radius: var(--radius-lg); margin-bottom: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); scrollbar-width: none; }
         .admin-tabs::-webkit-scrollbar { display: none; }
-
-        .admin-tab {
-            flex-shrink: 0;
-            padding: 8px 12px;
-            border: none;
-            background: transparent;
-            color: var(--gray);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.82em;
-            transition: all 0.2s;
-            white-space: nowrap;
-            min-height: 38px;
-        }
-
+        .admin-tab { flex-shrink: 0; padding: 8px 12px; border: none; background: transparent; color: var(--gray); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 0.82em; transition: all 0.2s; white-space: nowrap; min-height: 38px; }
         .admin-tab.active { background: var(--primary); color: white; }
         .admin-tab:not(.active):hover { background: var(--bg); color: var(--primary); }
-
         .admin-section { display: none; animation: fadeIn 0.3s ease; }
         .admin-section.active { display: block; }
-
-        .admin-card {
-            background: white;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 12px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
-
-        .admin-card-title {
-            font-size: 1em;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .admin-card.danger-zone {
-            background: #fff5f5;
-            border: 2px dashed var(--danger);
-        }
-
-        .admin-card.danger-zone .admin-card-title {
-            color: var(--danger);
-            border-bottom-color: #ffc9c9;
-        }
-
-        .employee-admin-item {
-            background: var(--bg);
-            padding: 12px;
-            border-radius: var(--radius-md);
-            margin-bottom: 8px;
-            border-left: 4px solid var(--primary);
-        }
-
+        .admin-card { background: white; padding: 16px; border-radius: var(--radius-lg); margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+        .admin-card-title { font-size: 1em; font-weight: 700; color: var(--primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+        .admin-card.danger-zone { background: #fff5f5; border: 2px dashed var(--danger); }
+        .admin-card.danger-zone .admin-card-title { color: var(--danger); border-bottom-color: #ffc9c9; }
+        .employee-admin-item { background: var(--bg); padding: 12px; border-radius: var(--radius-md); margin-bottom: 8px; border-left: 4px solid var(--primary); }
         .employee-admin-item.role-admin { border-left-color: var(--gold); }
-
-        .employee-admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
+        .employee-admin-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
         .employee-admin-info { flex: 1; min-width: 150px; }
-
-        .employee-admin-name {
-            font-weight: 700;
-            color: var(--dark);
-            font-size: 0.95em;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
+        .employee-admin-name { font-weight: 700; color: var(--dark); font-size: 0.95em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .employee-admin-phone { color: var(--gray); font-size: 0.82em; margin-top: 2px; }
-
-        .employee-admin-role {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7em;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
+        .employee-admin-role { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7em; font-weight: 700; text-transform: uppercase; }
         .role-admin-badge { background: var(--gold); color: var(--dark); }
         .role-user-badge { background: #e9ecef; color: var(--gray); }
-
-        .no-employees {
-            text-align: center;
-            color: var(--light-gray);
-            padding: 16px;
-            font-style: italic;
-            font-size: 0.85em;
-        }
-
-        .schedule-item {
-            background: var(--bg);
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .schedule-item-info {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-            font-size: 0.82em;
-        }
-
+        .no-employees { text-align: center; color: var(--light-gray); padding: 16px; font-style: italic; font-size: 0.85em; }
+        .schedule-item { background: var(--bg); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .schedule-item-info { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.82em; }
         .schedule-item-info span { font-weight: 600; }
         .schedule-item.past { opacity: 0.6; }
         .schedule-item.past .schedule-item-info span:first-child { text-decoration: line-through; }
-
-        .type-switcher {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 14px;
-            background: var(--bg);
-            padding: 4px;
-            border-radius: var(--radius-sm);
-        }
-
-        .type-switcher button {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            background: transparent;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--gray);
-            transition: all 0.2s;
-            font-size: 0.85em;
-            min-height: 38px;
-        }
-
-        .type-switcher button.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .file-warning {
-            background: #fff3cd;
-            border-left: 4px solid var(--gold);
-            padding: 8px 10px;
-            border-radius: 6px;
-            margin-top: 8px;
-            font-size: 0.82em;
-            color: #856404;
-        }
-
-        .admin-contest-item {
-            background: var(--bg);
-            padding: 12px;
-            border-radius: var(--radius-md);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--success);
-        }
-
+        .type-switcher { display: flex; gap: 4px; margin-bottom: 14px; background: var(--bg); padding: 4px; border-radius: var(--radius-sm); }
+        .type-switcher button { flex: 1; padding: 8px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-weight: 600; color: var(--gray); transition: all 0.2s; font-size: 0.85em; min-height: 38px; }
+        .type-switcher button.active { background: white; color: var(--primary); box-shadow: var(--shadow-sm); }
+        .file-warning { background: #fff3cd; border-left: 4px solid var(--gold); padding: 8px 10px; border-radius: 6px; margin-top: 8px; font-size: 0.82em; color: #856404; }
+        .admin-contest-item { background: var(--bg); padding: 12px; border-radius: var(--radius-md); margin-bottom: 10px; border-left: 4px solid var(--success); }
         .admin-contest-item.status-finished-item { border-left-color: #6c757d; }
-
-        .admin-contest-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
+        .admin-contest-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 6px; flex-wrap: wrap; }
         .admin-contest-title { font-weight: 700; color: var(--dark); font-size: 0.95em; flex: 1; }
         .admin-contest-actions { display: flex; gap: 4px; flex-wrap: wrap; }
-
-        .admin-contest-results {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed var(--border);
-        }
-
-        .admin-contest-results h5 {
-            color: var(--primary);
-            font-size: 0.85em;
-            margin-bottom: 5px;
-            margin-top: 8px;
-        }
-
+        .admin-contest-results { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+        .admin-contest-results h5 { color: var(--primary); font-size: 0.85em; margin-bottom: 5px; margin-top: 8px; }
         .admin-contest-results h5:first-child { margin-top: 0; }
-
-        .admin-result-item {
-            background: white;
-            padding: 6px 8px;
-            border-radius: 6px;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 6px;
-            border-left: 3px solid var(--info);
-        }
-
+        .admin-result-item { background: white; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; gap: 6px; border-left: 3px solid var(--info); }
         .admin-result-item.final { border-left-color: var(--gold); background: #fff9e6; }
         .admin-result-info { flex: 1; font-size: 0.82em; }
         .admin-result-info strong { color: var(--dark); }
         .admin-result-info small { color: var(--light-gray); margin-left: 4px; }
-
-        .inline-form {
-            background: #e7f3ff;
-            padding: 12px;
-            border-radius: var(--radius-sm);
-            margin-top: 8px;
-            border: 1px dashed #0066cc;
-        }
-
+        .inline-form { background: #e7f3ff; padding: 12px; border-radius: var(--radius-sm); margin-top: 8px; border: 1px dashed #0066cc; }
         .inline-form h5 { color: #0066cc; margin-bottom: 8px; font-size: 0.85em; }
         .inline-form-actions { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
         .modal.open { display: flex; }
-
-        .modal-content {
-            background: white;
-            border-radius: var(--radius-xl);
-            max-width: 700px;
-            width: 100%;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .modal-header {
-            padding: 16px 18px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .modal-content { background: white; border-radius: var(--radius-xl); max-width: 700px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+        .modal-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .modal-header h3 { color: var(--primary); font-size: 1.1em; word-break: break-word; }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.6em;
-            cursor: pointer;
-            color: var(--light-gray);
-            line-height: 1;
-            padding: 0 4px;
-            min-width: 38px;
-            min-height: 38px;
-        }
-
-        .modal-body {
-            padding: 18px;
-            overflow-y: auto;
-            flex: 1;
-            white-space: pre-wrap;
-            word-break: break-word;
-            line-height: 1.6;
-            color: var(--dark);
-            font-size: 0.92em;
-        }
-
-        /* ============ RESPONSIVE ============ */
-        @media (min-width: 768px) {
-            body.logged-in { padding-bottom: 0; }
-            .bottom-nav { display: none !important; }
-            .desktop-nav { display: block; }
-
-            .app-header { padding: 24px 24px 20px; }
-            .header-title h1 { font-size: 1.8em; }
-            .header-subtitle { font-size: 0.85em; }
-            .clock-time { font-size: 1.6em; }
-            .clock-date { font-size: 0.85em; }
-
-            .app-content { padding: 24px; }
-            .section-title { font-size: 1.6em; }
-
-            .schedule-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-            .materials-list { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-            .stats-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-            .form-row { grid-template-columns: 1fr 1fr; }
-
-            .admin-tabs { flex-wrap: wrap; }
-        }
-
+        .modal-close { background: none; border: none; font-size: 1.6em; cursor: pointer; color: var(--light-gray); line-height: 1; padding: 0 4px; min-width: 38px; min-height: 38px; }
+        .modal-body { padding: 18px; overflow-y: auto; flex: 1; white-space: pre-wrap; word-break: break-word; line-height: 1.6; color: var(--dark); font-size: 0.92em; }
+        
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
     </style>
 </head>
 <body>
-    <!-- ============ ЭКРАН ВХОДА ============ -->
     <div class="login-screen" id="loginScreen">
         <div class="login-container">
             <div class="login-logo">
@@ -1055,7 +329,6 @@
                 <h2>ДОМОВИД</h2>
                 <p>Вход в рабочую группу</p>
             </div>
-
             <div class="login-form">
                 <div class="form-group">
                     <label>📱 Телефон</label>
@@ -1076,12 +349,11 @@
         </div>
     </div>
 
-    <!-- ============ HEADER ============ -->
     <header class="app-header">
         <div class="header-top">
             <div class="header-title">
                 <div>
-                    <h1>🏠 ДОМОВИД</h1>
+                    <h1> ДОМОВИД</h1>
                     <div class="header-subtitle">
                         <span>Рабочая группа</span>
                         <span class="current-user-badge" id="currentUserBadge" style="display:none;">
@@ -1098,27 +370,48 @@
         </div>
     </header>
 
-    <!-- ============ DESKTOP NAV ============ -->
-    <nav class="desktop-nav">
-        <div class="desktop-nav-inner">
-            <button onclick="showSection('schedule', this)" class="active">📅 График</button>
-            <button onclick="showSection('plan', this)">📈 План</button>
-            <button onclick="showSection('materials', this)">📚 Обучение</button>
-            <button onclick="showSection('contests', this)">🏆 Конкурсы</button>
-            <button onclick="showSection('info', this)">📢 Информация</button>
-            <button onclick="showSection('stats', this)">📊 Статистика</button>
-            <button onclick="showSection('admin', this)" id="desktopAdminBtn" style="display:none;">⚙️ Админ</button>
-            <button onclick="doLogout()" class="logout-btn">🚪 Выйти</button>
+    <nav class="top-nav" id="topNav" style="display:none;">
+        <div class="top-nav-inner">
+            <button class="top-nav-btn active" onclick="showSection('schedule', this)">
+                <span class="nav-icon">📅</span>
+                <span>График</span>
+            </button>
+            <button class="top-nav-btn" onclick="showSection('plan', this)">
+                <span class="nav-icon">📈</span>
+                <span>План</span>
+            </button>
+            <button class="top-nav-btn" onclick="showSection('materials', this)">
+                <span class="nav-icon">📚</span>
+                <span>Обучение</span>
+            </button>
+            <button class="top-nav-btn" onclick="showSection('contests', this)">
+                <span class="nav-icon">🏆</span>
+                <span>Конкурсы</span>
+            </button>
+            <button class="top-nav-btn" onclick="showSection('info', this)">
+                <span class="nav-icon">📢</span>
+                <span>Инфо</span>
+            </button>
+            <button class="top-nav-btn" onclick="showSection('stats', this)">
+                <span class="nav-icon">📊</span>
+                <span>Ещё</span>
+            </button>
+            <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;">
+                <span class="nav-icon">⚙️</span>
+                <span>Админ</span>
+            </button>
+            <button class="top-nav-logout" onclick="doLogout()">
+                <span>🚪</span>
+                <span>Выйти</span>
+            </button>
         </div>
     </nav>
 
-    <!-- ============ CONTENT ============ -->
     <main class="app-content">
         <div id="schedule" class="section active">
             <h2 class="section-title">📅 График работы</h2>
             <div id="scheduleGrid" class="schedule-grid"></div>
         </div>
-
         <div id="plan" class="section">
             <h2 class="section-title">📈 План на месяц</h2>
             <div class="dev-block">
@@ -1127,30 +420,24 @@
                 <p>Здесь скоро появится блок с финансовым планом на месяц: целевая сумма выручки, прогресс выполнения и аналитика.</p>
             </div>
         </div>
-
         <div id="materials" class="section">
             <h2 class="section-title">📚 Обучающие материалы</h2>
             <div id="materialsList" class="materials-list"></div>
         </div>
-
         <div id="contests" class="section">
             <h2 class="section-title">🏆 Конкурсы персонала</h2>
             <div id="contestsList" class="contests-list"></div>
         </div>
-
         <div id="info" class="section">
             <h2 class="section-title">📢 Информация</h2>
             <div id="infoContent"></div>
         </div>
-
         <div id="stats" class="section">
             <h2 class="section-title">📊 Статистика</h2>
             <div id="statsContent"></div>
         </div>
-
         <div id="admin" class="section">
             <h2 class="section-title">⚙️ Админ-панель</h2>
-
             <div class="admin-tabs">
                 <button class="admin-tab active" onclick="showAdminTab('schedule', this)">📅 График</button>
                 <button class="admin-tab" onclick="showAdminTab('employees', this)">👥 Сотрудники</button>
@@ -1159,7 +446,6 @@
                 <button class="admin-tab" onclick="showAdminTab('info', this)">📢 Инфо</button>
                 <button class="admin-tab" onclick="showAdminTab('settings', this)">⚙️ Настройки</button>
             </div>
-
             <div id="admin-schedule" class="admin-section active">
                 <div class="admin-card">
                     <div class="admin-card-title">➕ Добавить сотрудника в график</div>
@@ -1170,9 +456,7 @@
                         </div>
                         <div class="form-group">
                             <label>👤 Сотрудник</label>
-                            <select id="adminEmployee">
-                                <option value="">-- Выберите сотрудника --</option>
-                            </select>
+                            <select id="adminEmployee"><option value="">-- Выберите сотрудника --</option></select>
                         </div>
                     </div>
                     <div class="form-row">
@@ -1181,30 +465,29 @@
                             <select id="adminType">
                                 <option value="kassa">Касса</option>
                                 <option value="kd">КД</option>
-                                <option value="other">Без указания</option>
+                                <option value="zal">Зал</option>
+                                <option value="sklad">Склад</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>🕐 Смена</label>
+                            <label>🕒 Смена</label>
                             <select id="adminShift">
-                                <option value="1">Смена 1 (10:00 - 19:00)</option>
-                                <option value="2">Смена 2 (12:00 - 21:00)</option>
-                                <option value="3">Смена 3 (10:00 - 21:00)</option>
+                                <option value="1">Смена 9/1 (10:00 - 19:00)</option>
+                                <option value="2">Смена 9/2 (12:00 - 21:00)</option>
+                                <option value="3">Смена 11 (10:00 - 21:00)</option>
                             </select>
                         </div>
                     </div>
                     <button class="btn btn-primary btn-block" onclick="addScheduleEntry()">➕ Добавить в график</button>
                 </div>
-
                 <div class="admin-card">
                     <div class="admin-card-title">📋 Текущие записи графика</div>
                     <div id="scheduleList"></div>
                 </div>
             </div>
-
             <div id="admin-employees" class="admin-section">
                 <div class="admin-card">
-                    <div class="admin-card-title">➕ Добавить сотрудника</div>
+                    <div class="admin-card-title" id="employeeFormTitle">➕ Добавить сотрудника</div>
                     <div class="form-group">
                         <label>👤 ФИО</label>
                         <input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович">
@@ -1226,18 +509,16 @@
                             <option value="admin">👑 Администратор</option>
                         </select>
                     </div>
-                    <button class="btn btn-success btn-block" onclick="addEmployee()">➕ Добавить сотрудника</button>
+                    <button class="btn btn-success btn-block" id="employeeSubmitBtn" onclick="addEmployee()">➕ Добавить сотрудника</button>
                 </div>
-
                 <div class="admin-card">
                     <div class="admin-card-title">👥 Список сотрудников <span id="employeeCounter" style="background:var(--primary);color:white;padding:2px 10px;border-radius:10px;font-size:0.8em;margin-left:8px;">0</span></div>
                     <div id="employeesList"></div>
                 </div>
             </div>
-
             <div id="admin-contests" class="admin-section">
                 <div class="admin-card">
-                    <div class="admin-card-title">➕ Добавить конкурс</div>
+                    <div class="admin-card-title">🏆 Добавить конкурс</div>
                     <div class="form-group">
                         <label>🏆 Название конкурса</label>
                         <input type="text" id="contestName" placeholder="Введите название конкурса">
@@ -1255,34 +536,28 @@
                     </div>
                     <button class="btn btn-primary btn-block" onclick="addContest()">➕ Добавить конкурс</button>
                 </div>
-
                 <div class="admin-card">
                     <div class="admin-card-title">📋 Список конкурсов</div>
                     <div id="adminContestList"></div>
                 </div>
             </div>
-
             <div id="admin-materials" class="admin-section">
                 <div class="admin-card" id="addMaterialSection" style="display: none; border: 2px solid var(--info);">
-                    <div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);">📚 Новый материал</div>
-                    
+                    <div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);">📝 Новый материал</div>
                     <div class="type-switcher">
                         <button type="button" id="typeTextBtn" class="active" onclick="switchMaterialType('text')">📝 Текст</button>
                         <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')">📎 Файл</button>
                     </div>
-
                     <div class="form-group">
                         <label>📌 Название</label>
                         <input type="text" id="materialTitle" placeholder="Например: Инструкция по работе с кассой">
                     </div>
-
                     <div id="textForm">
                         <div class="form-group">
                             <label>📄 Текст материала</label>
                             <textarea id="materialText" rows="6" placeholder="Введите текст..."></textarea>
                         </div>
                     </div>
-
                     <div id="fileForm" style="display: none;">
                         <div class="form-group">
                             <label>📎 Загрузить файл</label>
@@ -1291,20 +566,17 @@
                             <div id="fileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div>
                         </div>
                     </div>
-
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                         <button class="btn btn-success" style="flex:1;" onclick="saveMaterial()">💾 Сохранить</button>
                         <button class="btn btn-danger" style="flex:1;" onclick="cancelMaterialForm()">✕ Отмена</button>
                     </div>
                 </div>
-
                 <div class="admin-card">
                     <div class="admin-card-title">📚 Обучающие материалы</div>
                     <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Добавляйте инструкции и файлы для обучения.</p>
                     <button class="btn btn-primary btn-block" onclick="openMaterialForm()">➕ Добавить материал</button>
                 </div>
             </div>
-
             <div id="admin-info" class="admin-section">
                 <div class="admin-card">
                     <div class="admin-card-title">📢 Добавить информацию</div>
@@ -1319,7 +591,6 @@
                     <button class="btn btn-primary btn-block" onclick="addInfo()">➕ Добавить</button>
                 </div>
             </div>
-
             <div id="admin-settings" class="admin-section">
                 <div class="admin-card danger-zone">
                     <div class="admin-card-title">⚠️ Опасная зона</div>
@@ -1332,32 +603,6 @@
         </div>
     </main>
 
-    <!-- ============ BOTTOM NAV ============ -->
-    <nav class="bottom-nav">
-        <div class="bottom-nav-inner">
-            <button onclick="showSection('schedule', this)" class="active">
-                <span class="nav-icon">📅</span><span>График</span>
-            </button>
-            <button onclick="showSection('materials', this)">
-                <span class="nav-icon">📚</span><span>Обучение</span>
-            </button>
-            <button onclick="showSection('contests', this)">
-                <span class="nav-icon">🏆</span><span>Конкурсы</span>
-            </button>
-            <button onclick="showSection('plan', this)">
-                <span class="nav-icon">📈</span><span>План</span>
-            </button>
-            <button onclick="showSection('admin', this)" id="mobileAdminBtn" style="display:none;">
-                <span class="nav-icon">⚙️</span><span>Админ</span>
-            </button>
-            <button onclick="showSection('stats', this)">
-                <span class="nav-icon">📊</span><span>Ещё</span>
-            </button>
-        </div>
-        <button class="mobile-logout" onclick="doLogout()">🚪 Выйти из аккаунта</button>
-    </nav>
-
-    <!-- Modal -->
     <div class="modal" id="materialModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1368,9 +613,26 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTHWwfpt059YCSt5YI9Aou1n1GjHxgQ6s",
+            authDomain: "domovidi.firebaseapp.com",
+            projectId: "domovidi",
+            storageBucket: "domovidi.firebasestorage.app",
+            messagingSenderId: "261930585857",
+            appId: "1:261930585857:web:856cf36981d8e0c2d51500"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00' };
-        const typeLabels = { kassa: 'Касса', kd: 'КД', other: 'Без указания' };
+        const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11' };
+        // ОБНОВЛЕНО: Типы работ (Зал и Склад вместо "Без указания")
+        const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад' };
         const MAX_FILE_SIZE = 5 * 1024 * 1024;
         const RECOMMENDED_FILE_SIZE = 2 * 1024 * 1024;
         const MONTH_NAMES = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
@@ -1380,8 +642,9 @@
         let currentMaterialType = 'text';
         let selectedFileData = null;
         let openResultForms = {};
+        let editingEmployeeId = null; // ДЛЯ РЕДАКТИРОВАНИЯ СОТРУДНИКА
+        let data = { employees: [], schedule: {}, materials: [], contests: [], info: [], stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } };
 
-        // ============ ЧАСЫ ============
         function updateClock() {
             const now = new Date();
             const dateStr = `${WEEKDAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`;
@@ -1392,12 +655,10 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // ============ ДАТЫ ============
         function getDateStatus(dateStr) {
             const [day, month, year] = dateStr.split('.').map(Number);
             const date = new Date(year, month - 1, day);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            const today = new Date(); today.setHours(0, 0, 0, 0);
             date.setHours(0, 0, 0, 0);
             const diff = date.getTime() - today.getTime();
             if (diff < 0) return 'past';
@@ -1405,109 +666,41 @@
             return 'future';
         }
 
-        // ============ ДАННЫЕ ============
-        function createEmptyData() {
-            return {
-                employees: [
-                    {
-                        id: 'test-admin-001',
-                        name: 'Тест',
-                        phone: '89004346000',
-                        password: '6000',
-                        role: 'admin'
-                    }
-                ],
-                schedule: {},
-                materials: [],
-                contests: [],
-                info: [],
-                stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, otherCount: 0, activeContests: 0 }
-            };
-        }
-
-        function loadData() {
-            const saved = localStorage.getItem('domovidData');
-            if (!saved) return createEmptyData();
+        async function loadAllDataFromFirebase() {
             try {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed.schedule)) return createEmptyData();
-                if (!parsed.employees || parsed.employees.length === 0) return createEmptyData();
-                if (!parsed.materials) parsed.materials = [];
-                if (parsed.contests) {
-                    parsed.contests = parsed.contests.map(c => {
-                        if (!c.id) c.id = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-                        if (!c.intermediateResults) c.intermediateResults = [];
-                        if (c.finalResult === undefined) c.finalResult = null;
-                        return c;
-                    });
-                }
-                parsed.employees = parsed.employees.map(emp => {
-                    if (typeof emp === 'string') {
-                        return { id: Date.now() + '-' + Math.random().toString(36).substr(2, 9), name: emp, phone: '', password: '', role: 'user' };
-                    }
-                    if (!emp.id) emp.id = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-                    if (!emp.role) emp.role = 'user';
-                    if (!emp.phone) emp.phone = '';
-                    if (!emp.password) emp.password = '';
-                    return emp;
+                const usersSnap = await getDocs(collection(db, "users"));
+                data.employees = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                data.schedule = {};
+                const scheduleSnap = await getDocs(collection(db, "schedule"));
+                scheduleSnap.docs.forEach(d => {
+                    const entry = d.data();
+                    if (!data.schedule[entry.date]) data.schedule[entry.date] = [];
+                    data.schedule[entry.date].push({ id: d.id, ...entry });
                 });
-                if (!parsed.stats) {
-                    parsed.stats = { totalEntries: 0, kassaCount: 0, kdCount: 0, otherCount: 0, activeContests: 0 };
-                }
-                return parsed;
-            } catch (e) { return createEmptyData(); }
-        }
 
-        let data = loadData();
+                const matSnap = await getDocs(collection(db, "materials"));
+                data.materials = matSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-        function saveData() {
-            try {
-                localStorage.setItem('domovidData', JSON.stringify(data));
+                const contSnap = await getDocs(collection(db, "contests"));
+                data.contests = contSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                const infoSnap = await getDocs(collection(db, "info"));
+                data.info = infoSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
                 updateStats();
-            } catch (e) {
-                alert(e.name === 'QuotaExceededError' ? '⚠️ Превышен лимит хранилища!' : 'Ошибка: ' + e.message);
+            } catch (error) {
+                console.error("Ошибка загрузки данных:", error);
+                alert("Не удалось загрузить данные из облака: " + error.message);
             }
         }
 
-        function resetAllData() {
-            if (confirm('⚠️ ВСЕ данные будут удалены! Продолжить?') && confirm('Точно-точно? Последнее предупреждение!')) {
-                data = createEmptyData();
-                saveData();
-                doLogout();
-            }
-        }
-
-        // ============ АВТОРИЗАЦИЯ ============
-        function normalizePhone(phone) {
-            return (phone || '').replace(/\D/g, '');
-        }
-
-        function checkAuth() {
-            const session = localStorage.getItem('domovidSession');
-            if (!session) {
-                showLoginScreen();
-                return;
-            }
-            try {
-                const sessionData = JSON.parse(session);
-                const emp = data.employees.find(e => e.id === sessionData.id);
-                if (!emp) {
-                    localStorage.removeItem('domovidSession');
-                    showLoginScreen();
-                    return;
-                }
-                currentUser = { id: emp.id, name: emp.name, phone: emp.phone, role: emp.role };
-                enterApp();
-            } catch (e) {
-                localStorage.removeItem('domovidSession');
-                showLoginScreen();
-            }
-        }
+        function normalizePhone(phone) { return (phone || '').replace(/\D/g, ''); }
 
         function showLoginScreen() {
             currentUser = null;
-            document.body.classList.remove('logged-in');
             document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('topNav').style.display = 'none';
         }
 
         function showLoginError(msg) {
@@ -1516,358 +709,256 @@
             el.classList.add('show');
         }
 
-        function doLogin() {
-            const phone = normalizePhone(document.getElementById('loginPhone').value);
-            const password = document.getElementById('loginPassword').value;
+        // АВТОМАТИЧЕСКИЙ ВХОД (Запомнить меня)
+        async function autoLogin() {
+            const sessionStr = localStorage.getItem('domovidSession');
+            if (sessionStr) {
+                try {
+                    const session = JSON.parse(sessionStr);
+                    const userRef = doc(db, "users", session.id);
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        currentUser = { id: session.id, name: userData.name, phone: userData.phone, role: userData.role };
+                        await loadAllDataFromFirebase();
+                        enterApp();
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Авто-вход не удался:", e);
+                    localStorage.removeItem('domovidSession');
+                }
+            }
+            showLoginScreen();
+        }
 
-            if (!phone || !password) {
+        window.doLogin = async function() {
+            const phoneInput = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            if (!phoneInput || !password) {
                 showLoginError('Введите телефон и пароль');
                 return;
             }
 
-            const emp = data.employees.find(e => 
-                normalizePhone(e.phone) === phone && e.password === password
-            );
+            const phone = normalizePhone(phoneInput);
+            errorEl.textContent = 'Проверка...';
+            errorEl.classList.add('show');
 
-            if (!emp) {
-                showLoginError('❌ Неверный телефон или пароль');
-                return;
+            try {
+                const q = query(collection(db, "users"), where("phone", "==", phone), where("password", "==", password));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    showLoginError('❌ Неверный телефон или пароль');
+                    return;
+                }
+
+                const userData = querySnapshot.docs[0].data();
+                const userId = querySnapshot.docs[0].id;
+
+                currentUser = { id: userId, name: userData.name, phone: userData.phone, role: userData.role };
+                // Сохраняем сессию для автоматического входа в будущем
+                localStorage.setItem('domovidSession', JSON.stringify({ id: userId }));
+
+                await loadAllDataFromFirebase();
+                
+                errorEl.classList.remove('show');
+                enterApp();
+            } catch (error) {
+                console.error("Ошибка входа:", error);
+                showLoginError('❌ Ошибка подключения: ' + error.message);
             }
-
-            localStorage.setItem('domovidSession', JSON.stringify({ id: emp.id }));
-            currentUser = { id: emp.id, name: emp.name, phone: emp.phone, role: emp.role };
-            enterApp();
-        }
+        };
 
         function enterApp() {
             document.getElementById('loginScreen').classList.add('hidden');
-            document.body.classList.add('logged-in');
-            
+            document.getElementById('topNav').style.display = 'block';
             document.getElementById('currentUserBadge').style.display = 'inline-flex';
             document.getElementById('currentUserName').textContent = currentUser.name;
             document.getElementById('currentUserRole').textContent = currentUser.role === 'admin' ? '👑 Админ' : '👤 Сотрудник';
             
             const isAdmin = currentUser.role === 'admin';
-            document.getElementById('desktopAdminBtn').style.display = isAdmin ? '' : 'none';
-            document.getElementById('mobileAdminBtn').style.display = isAdmin ? '' : 'none';
+            document.getElementById('topNavAdminBtn').style.display = isAdmin ? '' : 'none';
             
             if (!isAdmin && document.getElementById('admin').classList.contains('active')) {
-                showSection('schedule', document.querySelector('.desktop-nav button'));
+                showSection('schedule', document.querySelector('.top-nav-btn'));
             }
-            
             renderAll();
         }
 
-        function doLogout() {
+        window.doLogout = function() {
             if (!confirm('Выйти из аккаунта?')) return;
-            localStorage.removeItem('domovidSession');
+            localStorage.removeItem('domovidSession'); // Удаляем сессию при выходе
             currentUser = null;
+            editingEmployeeId = null;
             showLoginScreen();
             document.getElementById('loginPhone').value = '';
             document.getElementById('loginPassword').value = '';
             document.getElementById('loginError').classList.remove('show');
-        }
+        };
 
-        // ============ НАВИГАЦИЯ ============
-        function showSection(sectionId, btn) {
+        window.showSection = function(sectionId, btn) {
             if (sectionId === 'admin' && (!currentUser || currentUser.role !== 'admin')) {
-                alert('⛔ Доступ только для администраторов');
+                alert('🔒 Доступ только для администраторов');
                 return;
             }
-
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-
-            document.querySelectorAll('.bottom-nav button, .desktop-nav button').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-            syncNavButtons(sectionId);
-
+            document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active'));
+            if (btn && btn.classList) btn.classList.add('active');
             if (sectionId === 'schedule') renderSchedule();
             if (sectionId === 'materials') renderMaterials();
             if (sectionId === 'contests') renderContests();
             if (sectionId === 'info') renderInfo();
             if (sectionId === 'stats') renderStats();
             if (sectionId === 'admin') renderAdmin();
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        };
 
-        function syncNavButtons(sectionId) {
-            document.querySelectorAll('.bottom-nav button').forEach(b => {
-                const label = b.querySelector('span:last-child');
-                if (!label) return;
-                const text = label.textContent;
-                const map = { 'График': 'schedule', 'Обучение': 'materials', 'Конкурсы': 'contests', 'План': 'plan', 'Админ': 'admin', 'Ещё': 'stats' };
-                b.classList.toggle('active', map[text] === sectionId);
-            });
-
-            document.querySelectorAll('.desktop-nav button:not(.logout-btn)').forEach(b => {
-                const text = b.textContent.trim();
-                let match = false;
-                if (sectionId === 'schedule' && text.includes('График')) match = true;
-                if (sectionId === 'plan' && text.includes('План')) match = true;
-                if (sectionId === 'materials' && text.includes('Обучение')) match = true;
-                if (sectionId === 'contests' && text.includes('Конкурсы')) match = true;
-                if (sectionId === 'info' && text.includes('Информация')) match = true;
-                if (sectionId === 'stats' && text.includes('Статистика')) match = true;
-                if (sectionId === 'admin' && text.includes('Админ')) match = true;
-                b.classList.toggle('active', match);
-            });
-        }
-
-        function showAdminTab(tabName, btn) {
+        window.showAdminTab = function(tabName, btn) {
             document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('admin-' + tabName).classList.add('active');
             if (btn) btn.classList.add('active');
-        }
+        };
 
-        // ============ МАТЕРИАЛЫ ============
-        function openMaterialForm() {
-            document.getElementById('addMaterialSection').style.display = 'block';
-            document.getElementById('addMaterialSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            switchMaterialType('text');
-        }
-
-        function cancelMaterialForm() {
-            document.getElementById('addMaterialSection').style.display = 'none';
-            document.getElementById('materialTitle').value = '';
-            document.getElementById('materialText').value = '';
-            document.getElementById('materialFile').value = '';
-            document.getElementById('fileInfo').textContent = '';
-            document.getElementById('fileWarning').style.display = 'none';
-            selectedFileData = null;
-        }
-
-        function switchMaterialType(type) {
-            currentMaterialType = type;
-            document.getElementById('typeTextBtn').classList.toggle('active', type === 'text');
-            document.getElementById('typeFileBtn').classList.toggle('active', type === 'file');
-            document.getElementById('textForm').style.display = type === 'text' ? 'block' : 'none';
-            document.getElementById('fileForm').style.display = type === 'file' ? 'block' : 'none';
-        }
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            const infoEl = document.getElementById('fileInfo');
-            const warningEl = document.getElementById('fileWarning');
+        // --- ФУНКЦИИ РЕДАКТИРОВАНИЯ СОТРУДНИКОВ ---
+        window.editEmployee = function(id) {
+            const emp = data.employees.find(e => e.id === id);
+            if (!emp) return;
             
-            if (!file) {
-                selectedFileData = null;
-                infoEl.textContent = '';
-                warningEl.style.display = 'none';
-                return;
-            }
-
-            if (file.size > MAX_FILE_SIZE) {
-                alert(`⚠️ Файл слишком большой!\nМаксимум: ${formatFileSize(MAX_FILE_SIZE)}\nВаш: ${formatFileSize(file.size)}`);
-                event.target.value = '';
-                selectedFileData = null;
-                infoEl.textContent = '';
-                warningEl.style.display = 'none';
-                return;
-            }
-
-            warningEl.style.display = file.size > RECOMMENDED_FILE_SIZE ? 'block' : 'none';
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedFileData = { name: file.name, mimeType: file.type || 'application/octet-stream', size: file.size, data: e.target.result };
-                infoEl.innerHTML = `✅ Выбран: <strong>${file.name}</strong> (${formatFileSize(file.size)})`;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function saveMaterial() {
-            const title = document.getElementById('materialTitle').value.trim();
-            if (!title) { alert('Введите название'); return; }
-
-            let material = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 9), title, type: currentMaterialType, createdAt: Date.now() };
-
-            if (currentMaterialType === 'text') {
-                const text = document.getElementById('materialText').value.trim();
-                if (!text) { alert('Введите текст'); return; }
-                material.content = text;
-                material.file = null;
-            } else {
-                if (!selectedFileData) { alert('Выберите файл'); return; }
-                material.content = null;
-                material.file = selectedFileData;
-            }
-
-            data.materials.unshift(material);
-            saveData();
-            cancelMaterialForm();
-            renderMaterials();
-            alert('✅ Материал добавлен!');
-        }
-
-        function deleteMaterial(id) {
-            if (!confirm('Удалить материал?')) return;
-            data.materials = data.materials.filter(m => m.id !== id);
-            saveData();
-            renderMaterials();
-        }
-
-        function renderMaterials() {
-            const list = document.getElementById('materialsList');
-            if (!list) return;
-            list.innerHTML = '';
-
-            if (data.materials.length === 0) {
-                list.innerHTML = '<div class="empty-message">📚 Обучающие материалы пока не добавлены.</div>';
-                return;
-            }
-
-            data.materials.forEach(material => {
-                const card = document.createElement('div');
-                card.className = `material-card type-${material.type}`;
-                const icon = material.type === 'text' ? '📝' : (material.file ? getFileIcon(material.file.mimeType) : '📄');
-                const tagClass = material.type === 'text' ? 'tag-text' : 'tag-file';
-                const tagText = material.type === 'text' ? 'Текст' : 'Файл';
-
-                let previewHtml = '';
-                if (material.type === 'text') {
-                    const preview = material.content.length > 200 ? material.content.substring(0, 200) + '...' : material.content;
-                    previewHtml = `<div class="material-preview">${escapeHtml(preview)}</div>`;
-                } else if (material.file) {
-                    previewHtml = `<div class="material-file-info"><div class="file-icon-big">${getFileIcon(material.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(material.file.name)}</div><div class="file-size">${formatFileSize(material.file.size)}</div></div></div>`;
-                }
-
-                const actionBtn = material.type === 'text' 
-                    ? `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Читать</button>`
-                    : `<button class="btn btn-download btn-sm" onclick="downloadMaterial('${material.id}')">⬇️ Скачать</button>`;
-
-                card.innerHTML = `
-                    <div class="material-header"><div class="material-icon">${icon}</div><div class="material-title">${escapeHtml(material.title)}</div></div>
-                    <div class="material-meta"><span class="material-tag ${tagClass}">${tagText}</span><span class="material-date">${formatDateTime(material.createdAt)}</span></div>
-                    ${previewHtml}
-                    <div class="material-actions">${actionBtn}</div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        function viewMaterial(id) {
-            const material = data.materials.find(m => m.id === id);
-            if (!material) return;
-            document.getElementById('modalTitle').textContent = material.title;
-            document.getElementById('modalBody').textContent = material.content;
-            document.getElementById('materialModal').classList.add('open');
-        }
-
-        function downloadMaterial(id) {
-            const material = data.materials.find(m => m.id === id);
-            if (!material || !material.file) return;
-            const link = document.createElement('a');
-            link.href = material.file.data;
-            link.download = material.file.name;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function closeModal() { document.getElementById('materialModal').classList.remove('open'); }
-        document.getElementById('materialModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
-
-        // ============ СОТРУДНИКИ ============
-        function renderEmployeesList() {
-            const list = document.getElementById('employeesList');
-            if (!list) return;
-            list.innerHTML = '';
+            editingEmployeeId = id;
+            document.getElementById('newEmployeeName').value = emp.name;
+            document.getElementById('newEmployeePhone').value = emp.phone;
+            document.getElementById('newEmployeePassword').value = emp.password;
+            document.getElementById('newEmployeeRole').value = emp.role;
             
-            if (data.employees.length === 0) {
-                list.innerHTML = '<div class="no-employees">Список сотрудников пуст</div>';
-                return;
+            const btn = document.getElementById('employeeSubmitBtn');
+            btn.textContent = '💾 Сохранить изменения';
+            btn.className = 'btn btn-warning btn-block';
+            btn.onclick = updateEmployee;
+            
+            document.getElementById('employeeFormTitle').textContent = '✏️ Редактирование сотрудника';
+            
+            if (!document.getElementById('cancelEditBtn')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.id = 'cancelEditBtn';
+                cancelBtn.className = 'btn btn-secondary btn-block';
+                cancelBtn.style.marginTop = '8px';
+                cancelBtn.textContent = '✕ Отмена';
+                cancelBtn.onclick = cancelEditEmployee;
+                btn.parentNode.appendChild(cancelBtn);
             }
             
-            data.employees.forEach((emp, index) => {
-                const item = document.createElement('div');
-                item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
-                
-                const roleBadge = emp.role === 'admin' 
-                    ? '<span class="employee-admin-role role-admin-badge">👑 Админ</span>'
-                    : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
-                
-                const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
-                
-                const isSelf = currentUser && currentUser.id === emp.id;
-                const deleteBtn = isSelf 
-                    ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>'
-                    : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee(${index})">🗑️</button>`;
-                
-                item.innerHTML = `
-                    <div class="employee-admin-header">
-                        <div class="employee-admin-info">
-                            <div class="employee-admin-name">
-                                👤 ${escapeHtml(emp.name)}
-                                ${roleBadge}
-                            </div>
-                            <div class="employee-admin-phone">${phoneText}</div>
-                        </div>
-                        ${deleteBtn}
-                    </div>
-                `;
-                list.appendChild(item);
-            });
-            
-            document.getElementById('employeeCounter').textContent = data.employees.length + ' чел.';
-        }
+            document.getElementById('admin-employees').scrollIntoView({ behavior: 'smooth' });
+        };
 
-        function addEmployee() {
+        window.updateEmployee = async function() {
+            if (!editingEmployeeId) return;
             const name = document.getElementById('newEmployeeName').value.trim();
             const phone = document.getElementById('newEmployeePhone').value.trim();
             const password = document.getElementById('newEmployeePassword').value;
             const role = document.getElementById('newEmployeeRole').value;
-
-            if (!name) { alert('Введите ФИО'); return; }
-            if (!phone) { alert('Введите телефон'); return; }
-            if (!password) { alert('Введите пароль'); return; }
+            
+            if (!name || !phone || !password) { alert('Заполните все поля'); return; }
             if (password.length < 3) { alert('Пароль минимум 3 символа'); return; }
-
+            
             const normalizedPhone = normalizePhone(phone);
-            if (data.employees.some(e => normalizePhone(e.phone) === normalizedPhone)) {
-                alert('❌ Сотрудник с таким телефоном уже есть!');
-                return;
-            }
+            const phoneExists = data.employees.some(e => e.id !== editingEmployeeId && normalizePhone(e.phone) === normalizedPhone);
+            if (phoneExists) { alert('❌ Сотрудник с таким телефоном уже есть!'); return; }
+            
+            try {
+                await updateDoc(doc(db, "users", editingEmployeeId), { name, phone, password, role });
+                cancelEditEmployee();
+                await loadAllDataFromFirebase();
+                renderEmployeesList();
+                renderEmployeeSelect();
+                alert('✅ Данные сотрудника успешно обновлены!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-            data.employees.push({
-                id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-                name, phone, password, role
-            });
-
+        window.cancelEditEmployee = function() {
+            editingEmployeeId = null;
             document.getElementById('newEmployeeName').value = '';
             document.getElementById('newEmployeePhone').value = '';
             document.getElementById('newEmployeePassword').value = '';
+            document.getElementById('newEmployeeRole').value = 'user';
             
-            saveData();
-            renderEmployeesList();
-            renderEmployeeSelect();
-            alert('✅ Сотрудник добавлен!');
-        }
+            const btn = document.getElementById('employeeSubmitBtn');
+            btn.textContent = '➕ Добавить сотрудника';
+            btn.className = 'btn btn-success btn-block';
+            btn.onclick = addEmployee;
+            
+            document.getElementById('employeeFormTitle').textContent = '➕ Добавить сотрудника';
+            
+            const cancelBtn = document.getElementById('cancelEditBtn');
+            if (cancelBtn) cancelBtn.remove();
+        };
+        // ------------------------------------------
 
-        function deleteEmployee(index) {
-            const emp = data.employees[index];
-            if (!emp) return;
-            
-            if (currentUser && currentUser.id === emp.id) {
-                alert('⛔ Нельзя удалить свой собственный аккаунт!');
+        window.addEmployee = async function() {
+            if (editingEmployeeId) {
+                alert('Сначала отмените редактирование или сохраните изменения.');
                 return;
             }
-            
-            if (!confirm(`Удалить сотрудника "${emp.name}"?\nОн больше не сможет войти в систему.`)) return;
-            
-            data.employees.splice(index, 1);
-            saveData();
-            renderEmployeesList();
-            renderEmployeeSelect();
-        }
+            const name = document.getElementById('newEmployeeName').value.trim();
+            const phone = document.getElementById('newEmployeePhone').value.trim();
+            const password = document.getElementById('newEmployeePassword').value;
+            const role = document.getElementById('newEmployeeRole').value;
+            if (!name || !phone || !password) { alert('Заполните все поля'); return; }
+            if (password.length < 3) { alert('Пароль минимум 3 символа'); return; }
+            const normalizedPhone = normalizePhone(phone);
+            if (data.employees.some(e => normalizePhone(e.phone) === normalizedPhone)) { alert('❌ Сотрудник с таким телефоном уже есть!'); return; }
+            try {
+                await addDoc(collection(db, "users"), { name, phone, password, role });
+                document.getElementById('newEmployeeName').value = '';
+                document.getElementById('newEmployeePhone').value = '';
+                document.getElementById('newEmployeePassword').value = '';
+                await loadAllDataFromFirebase();
+                renderEmployeesList();
+                renderEmployeeSelect();
+                alert('✅ Сотрудник добавлен!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function renderEmployeeSelect() {
+        window.deleteEmployee = async function(id) {
+            const emp = data.employees.find(e => e.id === id);
+            if (!emp) return;
+            if (currentUser && currentUser.id === emp.id) { alert('⛔ Нельзя удалить свой собственный аккаунт!'); return; }
+            if (!confirm(`Удалить сотрудника "${emp.name}"?`)) return;
+            try {
+                await deleteDoc(doc(db, "users", id));
+                if (editingEmployeeId === id) cancelEditEmployee();
+                await loadAllDataFromFirebase();
+                renderEmployeesList();
+                renderEmployeeSelect();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.renderEmployeesList = function() {
+            const list = document.getElementById('employeesList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (data.employees.length === 0) { list.innerHTML = '<div class="no-employees">Список сотрудников пуст</div>'; return; }
+            data.employees.forEach(emp => {
+                const item = document.createElement('div');
+                item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
+                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">👑 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
+                const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
+                const isSelf = currentUser && currentUser.id === emp.id;
+                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`;
+                const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`;
+                item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(emp.name)} ${roleBadge}</div><div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div></div>`;
+                list.appendChild(item);
+            });
+            document.getElementById('employeeCounter').textContent = data.employees.length + ' чел.';
+        };
+
+        window.renderEmployeeSelect = function() {
             const select = document.getElementById('adminEmployee');
             if (!select) return;
-            const currentValue = select.value;
             select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
             data.employees.forEach(emp => {
                 const option = document.createElement('option');
@@ -1875,337 +966,320 @@
                 option.textContent = emp.name;
                 select.appendChild(option);
             });
-            if (data.employees.some(e => e.name === currentValue)) select.value = currentValue;
-        }
+        };
 
-        // ============ ГРАФИК ============
-        function renderSchedule() {
+        window.renderSchedule = function() {
             const grid = document.getElementById('scheduleGrid');
             if (!grid) return;
             grid.innerHTML = '';
             const dates = getSortedDates();
-            if (dates.length === 0) {
-                grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>';
-                return;
-            }
+            if (dates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
+            
             dates.forEach(date => {
                 const entries = data.schedule[date];
                 if (!entries || entries.length === 0) return;
+                
                 const status = getDateStatus(date);
                 const dateCard = document.createElement('div');
                 dateCard.className = `date-card ${status}`;
-                let statusBadge = status === 'past' ? '<span class="past-badge">Прошло</span>' : (status === 'today' ? '<span class="today-badge">Сегодня</span>' : '');
-                dateCard.innerHTML = `<h3>📅 ${date}${statusBadge}</h3>`;
                 
-                const grouped = {};
-                entries.forEach(entry => {
-                    const key = `${entry.shift}-${entry.type}`;
-                    if (!grouped[key]) grouped[key] = { shift: entry.shift, type: entry.type, employees: [] };
-                    grouped[key].employees.push(entry.employee);
+                let statusBadge = status === 'past' ? '<span class="past-badge">Прошло</span>' : (status === 'today' ? '<span class="today-badge">Сегодня</span>' : '');
+                dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`;
+                
+                const sortedEntries = [...entries].sort((a, b) => {
+                    if (a.shift !== b.shift) return a.shift - b.shift;
+                    return a.type.localeCompare(b.type);
                 });
                 
-                Object.values(grouped).sort((a, b) => a.shift !== b.shift ? a.shift - b.shift : a.type.localeCompare(b.type)).forEach(group => {
-                    const shiftDiv = document.createElement('div');
-                    shiftDiv.className = `shift ${group.type}`;
-                    const badgeClass = group.type === 'kassa' ? 'badge-kassa' : group.type === 'kd' ? 'badge-kd' : 'badge-other';
-                    shiftDiv.innerHTML = `
-                        <div class="shift-header">
-                            <div><span class="shift-type">Смена ${group.shift}</span><span class="shift-time">(${shiftTimes[group.shift]})</span></div>
-                            <span class="shift-badge ${badgeClass}">${typeLabels[group.type]}</span>
+                sortedEntries.forEach(entry => {
+                    const card = document.createElement('div');
+                    card.className = `employee-schedule-card ${entry.type}`;
+                    
+                    const positionLabel = typeLabels[entry.type] || entry.type;
+                    const positionClass = entry.type;
+                    const shiftLabel = shiftLabels[entry.shift] || entry.shift;
+                    const shiftTime = shiftTimes[entry.shift];
+                    
+                    card.innerHTML = `
+                        <div class="employee-card-header">
+                            <div class="employee-card-name">
+                                👤 ${escapeHtml(entry.employee)}
+                            </div>
+                            <span class="employee-card-position ${positionClass}">
+                                ${positionLabel}
+                            </span>
                         </div>
-                        <div class="shift-employees">${group.employees.map(emp => `<span class="employee-tag ${group.type}">${emp}</span>`).join('')}</div>
+                        <div class="employee-card-shift">
+                            <span class="employee-card-shift-icon">🕒</span>
+                            <span>Смена ${shiftLabel}</span>
+                            <span style="color: var(--light-gray);">•</span>
+                            <span class="employee-card-time">${shiftTime}</span>
+                        </div>
                     `;
-                    dateCard.appendChild(shiftDiv);
+                    dateCard.appendChild(card);
                 });
                 grid.appendChild(dateCard);
             });
-        }
+        };
 
-        function renderScheduleList() {
+        window.renderScheduleList = function() {
             const list = document.getElementById('scheduleList');
             if (!list) return;
             list.innerHTML = '';
             const dates = getSortedDates();
-            if (dates.length === 0) {
-                list.innerHTML = '<div class="no-employees">Записей пока нет</div>';
-                return;
-            }
+            if (dates.length === 0) { list.innerHTML = '<div class="no-employees">Записей пока нет</div>'; return; }
             dates.forEach(date => {
                 const status = getDateStatus(date);
-                data.schedule[date].forEach((entry, idx) => {
+                data.schedule[date].forEach(entry => {
                     const item = document.createElement('div');
                     item.className = `schedule-item ${status === 'past' ? 'past' : ''}`;
-                    const badgeClass = entry.type === 'kassa' ? 'badge-kassa' : entry.type === 'kd' ? 'badge-kd' : 'badge-other';
+                    const badgeClass = `badge-${entry.type}`;
                     let statusMark = status === 'past' ? ' ✓' : (status === 'today' ? ' 🔵' : '');
-                    item.innerHTML = `
-                        <div class="schedule-item-info">
-                            <span>📅 ${date}${statusMark}</span>
-                            <span>👤 ${entry.employee}</span>
-                            <span class="shift-badge ${badgeClass}">${typeLabels[entry.type]}</span>
-                            <span>Смена ${entry.shift}</span>
-                        </div>
-                        <button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${date}', ${idx})">✕</button>
-                    `;
+                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
                     list.appendChild(item);
                 });
             });
-        }
+        };
 
-        function addScheduleEntry() {
+        window.addScheduleEntry = async function() {
             const dateInput = document.getElementById('adminDate').value;
             const employee = document.getElementById('adminEmployee').value;
             const type = document.getElementById('adminType').value;
             const shift = document.getElementById('adminShift').value;
-            if (!dateInput) { alert('Выберите дату'); return; }
-            if (!employee) { alert('Выберите сотрудника!'); return; }
+            if (!dateInput || !employee) { alert('Выберите дату и сотрудника'); return; }
             const date = formatDate(dateInput);
-            if (!data.schedule[date]) data.schedule[date] = [];
-            data.schedule[date].push({ employee, type, shift });
-            saveData();
-            renderScheduleList();
-            renderSchedule();
-            alert(`✅ Добавлен!\n📅 ${date}\n👤 ${employee}\n💼 ${typeLabels[type]}\n🕐 Смена ${shift}`);
-        }
-
-        function deleteScheduleEntry(date, index) {
-            if (confirm('Удалить запись?')) {
-                data.schedule[date].splice(index, 1);
-                if (data.schedule[date].length === 0) delete data.schedule[date];
-                saveData();
+            try {
+                await addDoc(collection(db, "schedule"), { date, employee, type, shift });
+                await loadAllDataFromFirebase();
                 renderScheduleList();
                 renderSchedule();
-            }
-        }
+                alert(`✅ Добавлен!\n📅 ${date}\n👤 ${employee}`);
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        // ============ КОНКУРСЫ ============
-        function addContest() {
+        window.deleteScheduleEntry = async function(id) {
+            if (!confirm('Удалить запись?')) return;
+            try {
+                await deleteDoc(doc(db, "schedule", id));
+                await loadAllDataFromFirebase();
+                renderScheduleList();
+                renderSchedule();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.addContest = async function() {
             const name = document.getElementById('contestName').value.trim();
             const description = document.getElementById('contestDescription').value.trim();
             const status = document.getElementById('contestStatus').value;
             if (!name || !description) { alert('Заполните все поля'); return; }
-            data.contests.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 9), name, description, status, intermediateResults: [], finalResult: null });
-            document.getElementById('contestName').value = '';
-            document.getElementById('contestDescription').value = '';
-            saveData();
-            renderContests();
-            renderAdminContestList();
-            alert('✅ Конкурс добавлен!');
-        }
+            try {
+                await addDoc(collection(db, "contests"), { name, description, status, intermediateResults: [], finalResult: null });
+                document.getElementById('contestName').value = '';
+                document.getElementById('contestDescription').value = '';
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+                alert('✅ Конкурс добавлен!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function deleteContest(id) {
+        window.deleteContest = async function(id) {
             if (!confirm('Удалить конкурс и все результаты?')) return;
-            data.contests = data.contests.filter(c => c.id !== id);
-            saveData();
-            renderContests();
-            renderAdminContestList();
-        }
+            try {
+                await deleteDoc(doc(db, "contests", id));
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function toggleContestStatus(id) {
+        window.toggleContestStatus = async function(id) {
             const contest = data.contests.find(c => c.id === id);
             if (!contest) return;
-            contest.status = contest.status === 'active' ? 'finished' : 'active';
-            saveData();
-            renderContests();
-            renderAdminContestList();
-        }
+            const newStatus = contest.status === 'active' ? 'finished' : 'active';
+            try {
+                await updateDoc(doc(db, "contests", id), { status: newStatus });
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function toggleResultForm(contestId, formType) {
+        window.toggleResultForm = function(contestId, formType) {
             openResultForms[contestId] = openResultForms[contestId] === formType ? null : formType;
             renderAdminContestList();
-        }
+        };
 
-        function saveIntermediateResult(contestId) {
+        window.saveIntermediateResult = async function(contestId) {
             const title = document.getElementById(`intTitle_${contestId}`).value.trim();
             const description = document.getElementById(`intDesc_${contestId}`).value.trim();
             if (!title) { alert('Введите название этапа'); return; }
             const contest = data.contests.find(c => c.id === contestId);
             if (!contest) return;
-            contest.intermediateResults.push({ id: Date.now() + '-' + Math.random().toString(36).substr(2, 9), title, description, date: Date.now() });
-            saveData();
-            openResultForms[contestId] = null;
-            renderContests();
-            renderAdminContestList();
-        }
+            const newResult = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 9), title, description, date: Date.now() };
+            const updatedResults = [...(contest.intermediateResults || []), newResult];
+            try {
+                await updateDoc(doc(db, "contests", contestId), { intermediateResults: updatedResults });
+                openResultForms[contestId] = null;
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function saveFinalResult(contestId) {
+        window.saveFinalResult = async function(contestId) {
             const winner = document.getElementById(`finalWinner_${contestId}`).value.trim();
             const description = document.getElementById(`finalDesc_${contestId}`).value.trim();
             if (!winner) { alert('Введите имя победителя'); return; }
-            const contest = data.contests.find(c => c.id === contestId);
-            if (!contest) return;
-            contest.finalResult = { winner, description, date: Date.now() };
-            contest.status = 'finished';
-            saveData();
-            openResultForms[contestId] = null;
-            renderContests();
-            renderAdminContestList();
-        }
+            try {
+                await updateDoc(doc(db, "contests", contestId), { 
+                    finalResult: { winner, description, date: Date.now() },
+                    status: 'finished'
+                });
+                openResultForms[contestId] = null;
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function deleteIntermediateResult(contestId, resultId) {
+        window.deleteIntermediateResult = async function(contestId, resultId) {
             if (!confirm('Удалить результат?')) return;
             const contest = data.contests.find(c => c.id === contestId);
             if (!contest) return;
-            contest.intermediateResults = contest.intermediateResults.filter(r => r.id !== resultId);
-            saveData();
-            renderContests();
-            renderAdminContestList();
-        }
+            const updated = (contest.intermediateResults || []).filter(r => r.id !== resultId);
+            try {
+                await updateDoc(doc(db, "contests", contestId), { intermediateResults: updated });
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function deleteFinalResult(contestId) {
+        window.deleteFinalResult = async function(contestId) {
             if (!confirm('Удалить финальный результат?')) return;
-            const contest = data.contests.find(c => c.id === contestId);
-            if (!contest) return;
-            contest.finalResult = null;
-            saveData();
-            renderContests();
-            renderAdminContestList();
-        }
+            try {
+                await updateDoc(doc(db, "contests", contestId), { finalResult: null });
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        function renderContests() {
+        window.renderContests = function() {
             const list = document.getElementById('contestsList');
             if (!list) return;
             list.innerHTML = '';
-            if (data.contests.length === 0) {
-                list.innerHTML = '<div class="empty-message">🏆 Конкурсы пока не добавлены</div>';
-                return;
-            }
+            if (data.contests.length === 0) { list.innerHTML = '<div class="empty-message">🏆 Конкурсы пока не добавлены</div>'; return; }
             data.contests.forEach(contest => {
                 const card = document.createElement('div');
                 card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`;
                 const statusClass = contest.status === 'active' ? 'status-active' : 'status-finished';
                 const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
-                
                 let intermediateHtml = '';
                 if (contest.intermediateResults && contest.intermediateResults.length > 0) {
                     intermediateHtml = `<div class="results-section"><h4>📊 Промежуточные результаты</h4>${[...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="result-item"><div class="result-item-header"><span class="result-title">${escapeHtml(r.title)}</span><span class="result-date">${formatDateTime(r.date)}</span></div>${r.description ? `<div class="result-description">${escapeHtml(r.description)}</div>` : ''}</div>`).join('')}</div>`;
                 }
-                
                 let finalHtml = '';
                 if (contest.finalResult) {
                     finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
                 }
-                
                 card.innerHTML = `<span class="contest-status ${statusClass}">${statusText}</span><h3>${escapeHtml(contest.name)}</h3><div class="contest-description">${escapeHtml(contest.description)}</div>${intermediateHtml}${finalHtml}`;
                 list.appendChild(card);
             });
-        }
+        };
 
-        function renderAdminContestList() {
+        window.renderAdminContestList = function() {
             const list = document.getElementById('adminContestList');
             if (!list) return;
             list.innerHTML = '';
-            if (data.contests.length === 0) {
-                list.innerHTML = '<div class="no-employees">Конкурсы пока не добавлены</div>';
-                return;
-            }
+            if (data.contests.length === 0) { list.innerHTML = '<div class="no-employees">Конкурсы пока не добавлены</div>'; return; }
             data.contests.forEach(contest => {
                 const item = document.createElement('div');
                 item.className = `admin-contest-item ${contest.status === 'finished' ? 'status-finished-item' : ''}`;
                 const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
                 const toggleBtnText = contest.status === 'active' ? '⏸️ Завершить' : '▶️ Возобновить';
-                
-                let intResultsHtml = contest.intermediateResults && contest.intermediateResults.length > 0
+                let intResultsHtml = (contest.intermediateResults && contest.intermediateResults.length > 0)
                     ? [...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="admin-result-item"><div class="admin-result-info"><strong>${escapeHtml(r.title)}</strong><small>${formatDateTime(r.date)}</small>${r.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteIntermediateResult('${contest.id}', '${r.id}')">✕</button></div>`).join('')
-                    : '<div class="no-results">Нет промежуточных результатов</div>';
-                
+                    : '<div class="no-employees">Нет промежуточных результатов</div>';
                 let finalResultHtml = contest.finalResult
                     ? `<div class="admin-result-item final"><div class="admin-result-info"><strong>🏆 ${escapeHtml(contest.finalResult.winner)}</strong><small>${formatDateTime(contest.finalResult.date)}</small>${contest.finalResult.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(contest.finalResult.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteFinalResult('${contest.id}')">✕</button></div>`
-                    : '<div class="no-results">Финальный результат не определён</div>';
-                
+                    : '<div class="no-employees">Финальный результат не определён</div>';
                 let formHtml = '';
                 if (openResultForms[contest.id] === 'intermediate') {
                     formHtml = `<div class="inline-form"><h5>📊 Новый промежуточный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название этапа"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">✕ Отмена</button></div></div>`;
                 } else if (openResultForms[contest.id] === 'final') {
                     formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;">🏆 Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
                 }
-                
-                item.innerHTML = `
-                    <div class="admin-contest-header">
-                        <div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div>
-                        <div class="admin-contest-actions">
-                            <button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button>
-                            <button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button>
-                            <button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="admin-contest-results">
-                        <h5>📊 Промежуточные</h5>${intResultsHtml}
-                        <h5>🏆 Финальный</h5>${finalResultHtml}
-                    </div>${formHtml}
-                `;
+                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
                 list.appendChild(item);
             });
-        }
+        };
 
-        // ============ ИНФОРМАЦИЯ ============
-        function renderInfo() {
+        window.renderInfo = function() {
             const content = document.getElementById('infoContent');
             if (!content) return;
             content.innerHTML = '';
-            if (data.info.length === 0) {
-                content.innerHTML = '<div class="empty-message">📢 Информация пока не добавлена</div>';
-                return;
-            }
-            data.info.forEach((item, index) => {
+            if (data.info.length === 0) { content.innerHTML = '<div class="empty-message">📢 Информация пока не добавлена</div>'; return; }
+            data.info.forEach(item => {
                 const block = document.createElement('div');
                 block.className = 'info-block';
                 block.innerHTML = `<h3>${item.title}</h3><p>${item.text}</p>`;
                 content.appendChild(block);
             });
-        }
+        };
 
-        function addInfo() {
+        window.addInfo = async function() {
             const title = document.getElementById('infoTitle').value.trim();
             const text = document.getElementById('infoText').value.trim();
             if (!title || !text) { alert('Заполните все поля'); return; }
-            data.info.push({ title, text });
-            document.getElementById('infoTitle').value = '';
-            document.getElementById('infoText').value = '';
-            saveData();
-            renderInfo();
-            alert('✅ Информация добавлена!');
-        }
+            try {
+                await addDoc(collection(db, "info"), { title, text });
+                document.getElementById('infoTitle').value = '';
+                document.getElementById('infoText').value = '';
+                await loadAllDataFromFirebase();
+                renderInfo();
+                alert('✅ Информация добавлена!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
 
-        // ============ СТАТИСТИКА ============
-        function renderStats() {
+        window.renderStats = function() {
             updateStats();
             const content = document.getElementById('statsContent');
             if (!content) return;
             const totalIntermediate = data.contests.reduce((sum, c) => sum + (c.intermediateResults ? c.intermediateResults.length : 0), 0);
             const totalFinal = data.contests.filter(c => c.finalResult).length;
-            content.innerHTML = `
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-number">${data.employees.length}</div><div class="stat-label">Сотрудников</div></div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.totalEntries}</div><div class="stat-label">Записей в графике</div></div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);"><div class="stat-number">${data.materials.length}</div><div class="stat-label">Материалов</div></div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);"><div class="stat-number">${data.contests.length}</div><div class="stat-label">Конкурсов</div></div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #667eea 100%);"><div class="stat-number">${totalIntermediate}</div><div class="stat-label">Промежуточных этапов</div></div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%);"><div class="stat-number">${totalFinal}</div><div class="stat-label">Победителей</div></div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #17a2b8 100%);"><div class="stat-number">${data.stats.kassaCount}</div><div class="stat-label">Смен на кассе</div></div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%);"><div class="stat-number">${data.stats.activeContests}</div><div class="stat-label">Активных конкурсов</div></div>
-                </div>
-            `;
-        }
+            content.innerHTML = `<div class="stats-grid">
+                <div class="stat-card"><div class="stat-number">${data.employees.length}</div><div class="stat-label">Сотрудников</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.totalEntries}</div><div class="stat-label">Записей в графике</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);"><div class="stat-number">${data.materials.length}</div><div class="stat-label">Материалов</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);"><div class="stat-number">${data.contests.length}</div><div class="stat-label">Конкурсов</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #667eea 100%);"><div class="stat-number">${totalIntermediate}</div><div class="stat-label">Промежуточных этапов</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%);"><div class="stat-number">${totalFinal}</div><div class="stat-label">Победителей</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #17a2b8 100%);"><div class="stat-number">${data.stats.kassaCount + data.stats.kdCount}</div><div class="stat-label">Смен Касса/КД</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);"><div class="stat-number">${data.stats.zalCount + data.stats.skladCount}</div><div class="stat-label">Смен Зал/Склад</div></div>
+            </div>`;
+        };
 
         function updateStats() {
-            let totalEntries = 0, kassaCount = 0, kdCount = 0, otherCount = 0;
+            let totalEntries = 0, kassaCount = 0, kdCount = 0, zalCount = 0, skladCount = 0;
             Object.values(data.schedule).forEach(entries => {
                 entries.forEach(entry => {
                     totalEntries++;
                     if (entry.type === 'kassa') kassaCount++;
                     if (entry.type === 'kd') kdCount++;
-                    if (entry.type === 'other') otherCount++;
+                    if (entry.type === 'zal') zalCount++;
+                    if (entry.type === 'sklad') skladCount++;
                 });
             });
             data.stats.totalEntries = totalEntries;
             data.stats.kassaCount = kassaCount;
             data.stats.kdCount = kdCount;
-            data.stats.otherCount = otherCount;
+            data.stats.zalCount = zalCount;
+            data.stats.skladCount = skladCount;
             data.stats.activeContests = data.contests.filter(c => c.status === 'active').length;
         }
 
-        // ============ ОБЩЕЕ ============
         function formatDate(dateStr) {
             if (!dateStr) return '';
             const [year, month, day] = dateStr.split('-');
@@ -2250,12 +1324,133 @@
             return div.innerHTML;
         }
 
-        function renderAdmin() {
+        window.openMaterialForm = function() {
+            document.getElementById('addMaterialSection').style.display = 'block';
+            document.getElementById('addMaterialSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            switchMaterialType('text');
+        };
+
+        window.cancelMaterialForm = function() {
+            document.getElementById('addMaterialSection').style.display = 'none';
+            document.getElementById('materialTitle').value = '';
+            document.getElementById('materialText').value = '';
+            document.getElementById('materialFile').value = '';
+            document.getElementById('fileInfo').textContent = '';
+            document.getElementById('fileWarning').style.display = 'none';
+            selectedFileData = null;
+        };
+
+        window.switchMaterialType = function(type) {
+            currentMaterialType = type;
+            document.getElementById('typeTextBtn').classList.toggle('active', type === 'text');
+            document.getElementById('typeFileBtn').classList.toggle('active', type === 'file');
+            document.getElementById('textForm').style.display = type === 'text' ? 'block' : 'none';
+            document.getElementById('fileForm').style.display = type === 'file' ? 'block' : 'none';
+        };
+
+        window.handleFileSelect = function(event) {
+            const file = event.target.files[0];
+            const infoEl = document.getElementById('fileInfo');
+            const warningEl = document.getElementById('fileWarning');
+            if (!file) { selectedFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return; }
+            if (file.size > MAX_FILE_SIZE) {
+                alert(`⚠️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
+                event.target.value = ''; selectedFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return;
+            }
+            warningEl.style.display = file.size > RECOMMENDED_FILE_SIZE ? 'block' : 'none';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFileData = { name: file.name, mimeType: file.type || 'application/octet-stream', size: file.size, data: e.target.result };
+                infoEl.innerHTML = `✅ Выбран: <strong>${file.name}</strong> (${formatFileSize(file.size)})`;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.saveMaterial = async function() {
+            const title = document.getElementById('materialTitle').value.trim();
+            if (!title) { alert('Введите название'); return; }
+            let material = { title, type: currentMaterialType, createdAt: Date.now() };
+            if (currentMaterialType === 'text') {
+                const text = document.getElementById('materialText').value.trim();
+                if (!text) { alert('Введите текст'); return; }
+                material.content = text; material.file = null;
+            } else {
+                if (!selectedFileData) { alert('Выберите файл'); return; }
+                material.content = null; material.file = selectedFileData;
+            }
+            try {
+                await addDoc(collection(db, "materials"), material);
+                cancelMaterialForm();
+                await loadAllDataFromFirebase();
+                renderMaterials();
+                alert('✅ Материал добавлен!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.deleteMaterial = async function(id) {
+            if (!confirm('Удалить материал?')) return;
+            try {
+                await deleteDoc(doc(db, "materials", id));
+                await loadAllDataFromFirebase();
+                renderMaterials();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.viewMaterial = function(id) {
+            const material = data.materials.find(m => m.id === id);
+            if (!material) return;
+            document.getElementById('modalTitle').textContent = material.title;
+            document.getElementById('modalBody').textContent = material.content;
+            document.getElementById('materialModal').classList.add('open');
+        };
+
+        window.downloadMaterial = function(id) {
+            const material = data.materials.find(m => m.id === id);
+            if (!material || !material.file) return;
+            const link = document.createElement('a');
+            link.href = material.file.data;
+            link.download = material.file.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        window.closeModal = function() { document.getElementById('materialModal').classList.remove('open'); };
+        document.getElementById('materialModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+        window.renderMaterials = function() {
+            const list = document.getElementById('materialsList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (data.materials.length === 0) { list.innerHTML = '<div class="empty-message">📚 Обучающие материалы пока не добавлены.</div>'; return; }
+            data.materials.forEach(material => {
+                const card = document.createElement('div');
+                card.className = `material-card type-${material.type}`;
+                const icon = material.type === 'text' ? '📝' : (material.file ? getFileIcon(material.file.mimeType) : '📄');
+                const tagClass = material.type === 'text' ? 'tag-text' : 'tag-file';
+                const tagText = material.type === 'text' ? 'Текст' : 'Файл';
+                let previewHtml = '';
+                if (material.type === 'text') {
+                    const preview = material.content.length > 200 ? material.content.substring(0, 200) + '...' : material.content;
+                    previewHtml = `<div class="material-preview">${escapeHtml(preview)}</div>`;
+                } else if (material.file) {
+                    previewHtml = `<div class="material-file-info"><div class="file-icon-big">${getFileIcon(material.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(material.file.name)}</div><div class="file-size">${formatFileSize(material.file.size)}</div></div></div>`;
+                }
+                const actionBtn = material.type === 'text' 
+                    ? `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Читать</button>`
+                    : `<button class="btn btn-download btn-sm" onclick="downloadMaterial('${material.id}')">⬇️ Скачать</button>`;
+                card.innerHTML = `<div class="material-header"><div class="material-icon">${icon}</div><div class="material-title">${escapeHtml(material.title)}</div></div><div class="material-meta"><span class="material-tag ${tagClass}">${tagText}</span><span class="material-date">${formatDateTime(material.createdAt)}</span></div>${previewHtml}<div class="material-actions">${actionBtn}${currentUser && currentUser.role === 'admin' ? `<button class="btn btn-danger btn-sm" onclick="deleteMaterial('${material.id}')">🗑️</button>` : ''}</div>`;
+                list.appendChild(card);
+            });
+        };
+
+        window.renderAdmin = function() {
             renderEmployeesList();
             renderEmployeeSelect();
             renderScheduleList();
             renderAdminContestList();
-        }
+        };
 
         function renderAll() {
             renderSchedule();
@@ -2266,8 +1461,26 @@
             if (currentUser && currentUser.role === 'admin') renderAdmin();
         }
 
-        // ============ СТАРТ ============
-        checkAuth();
+        window.resetAllData = async function() {
+            if (!confirm('⚠️ ВСЕ данные в облаке будут удалены! Продолжить?') || !confirm('Точно-точно? Последнее предупреждение!')) return;
+            try {
+                const collections = ["users", "schedule", "materials", "contests", "info"];
+                for (const colName of collections) {
+                    const snap = await getDocs(collection(db, colName));
+                    for (const d of snap.docs) {
+                        await deleteDoc(doc(db, colName, d.id));
+                    }
+                }
+                alert('✅ Все данные удалены');
+                doLogout();
+            } catch (e) {
+                alert('Ошибка при сбросе: ' + e.message);
+            }
+        };
+
+        // ЗАПУСК: Проверяем автовход вместо немедленного показа экрана логина
+        autoLogin();
     </script>
 </body>
 </html>
+
