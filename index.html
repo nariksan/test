@@ -74,9 +74,10 @@
         .date-card.past h3 { color: #888; border-bottom-color: #bbb; text-decoration: line-through; }
         .date-card.today { border-color: var(--success); border-width: 2px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15); }
         .date-card.today h3 { color: var(--success); border-bottom-color: var(--success); }
-        .past-badge, .today-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase; text-decoration: none !important; }
+        .past-badge, .today-badge, .archive-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase; text-decoration: none !important; }
         .past-badge { background: var(--danger); color: white; }
         .today-badge { background: var(--success); color: white; animation: pulse 2s infinite; }
+        .archive-badge { background: #6c757d; color: white; }
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 50% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); } }
         
         .employee-schedule-card { background: white; border-radius: var(--radius-md); padding: 12px; margin: 8px 0; border-left: 4px solid var(--primary); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 6px; }
@@ -95,6 +96,18 @@
         .employee-card-shift { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--gray); }
         .employee-card-shift-icon { font-size: 1.2em; }
         .employee-card-time { font-weight: 600; color: var(--dark); }
+        
+        /* СТИЛИ ДЛЯ АРХИВА */
+        .archive-info { background: linear-gradient(135deg, #e7f3ff 0%, #d1ecf1 100%); border-left: 4px solid var(--info); padding: 12px 14px; border-radius: var(--radius-md); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .archive-info-text { font-size: 0.88em; color: #0c5460; line-height: 1.4; }
+        .archive-info-text strong { color: var(--dark); }
+        .archive-counter { background: var(--info); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 700; }
+        
+        .archive-date-card { background: #f8f9fa; padding: 14px; border-radius: var(--radius-lg); border: 1px solid #ddd; box-shadow: var(--shadow-sm); margin-bottom: 12px; opacity: 0.9; }
+        .archive-date-card h3 { color: #6c757d; margin-bottom: 10px; font-size: 1.05em; text-align: center; padding-bottom: 8px; border-bottom: 2px solid #adb5bd; display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
+        
+        .archive-employee-card { background: white; border-radius: var(--radius-md); padding: 10px; margin: 6px 0; border-left: 4px solid #adb5bd; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; opacity: 0.85; }
+        .archive-employee-info { flex: 1; min-width: 200px; }
         
         .contests-list { display: grid; gap: 12px; }
         .contest-card { background: white; padding: 16px; border-radius: var(--radius-lg); border-left: 4px solid var(--success); box-shadow: var(--shadow-sm); }
@@ -238,7 +251,6 @@
     </style>
 </head>
 <body>
-    <!-- ЭКРАН ТЕХНИЧЕСКИХ РАБОТ -->
     <div class="maintenance-screen hidden" id="maintenanceScreen">
         <div class="maintenance-container">
             <div class="login-logo-icon">🚧</div>
@@ -248,7 +260,6 @@
         </div>
     </div>
 
-    <!-- ЭКРАН ВХОДА -->
     <div class="login-screen hidden" id="loginScreen">
         <div class="login-container">
             <div class="login-logo">
@@ -304,6 +315,10 @@
                 <span class="nav-icon">📅</span>
                 <span>График</span>
             </button>
+            <button class="top-nav-btn" onclick="showSection('archive', this)">
+                <span class="nav-icon">📦</span>
+                <span>Архив</span>
+            </button>
             <button class="top-nav-btn" onclick="showSection('plan', this)">
                 <span class="nav-icon">📈</span>
                 <span>План</span>
@@ -344,6 +359,13 @@
             <h2 class="section-title">📅 График работы</h2>
             <div id="scheduleGrid" class="schedule-grid"></div>
         </div>
+
+        <!-- НОВАЯ СЕКЦИЯ: АРХИВ -->
+        <div id="archive" class="section">
+            <h2 class="section-title">📦 Архив графика</h2>
+            <div id="archiveContent"></div>
+        </div>
+
         <div id="plan" class="section">
             <h2 class="section-title">📈 План на месяц</h2>
             <div class="dev-block">
@@ -534,7 +556,6 @@
             </div>
         </div>
 
-        <!-- ПАНЕЛЬ ВЛАДЕЛЬЦА (СУПЕРАДМИНА) -->
         <div id="superadmin" class="section">
             <h2 class="section-title">👑 Панель Владельца</h2>
             
@@ -781,6 +802,7 @@
             if (btn && btn.classList) btn.classList.add('active');
             
             if (sectionId === 'schedule') renderSchedule();
+            if (sectionId === 'archive') renderArchive();
             if (sectionId === 'materials') renderMaterials();
             if (sectionId === 'contests') renderContests();
             if (sectionId === 'info') renderInfo();
@@ -1020,14 +1042,18 @@
             }
         };
 
+        // === ГРАФИК: показываем только today и future ===
         window.renderSchedule = function() {
             const grid = document.getElementById('scheduleGrid');
             if (!grid) return;
             grid.innerHTML = '';
             const dates = getSortedDates();
-            if (dates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
+            // Фильтруем: только сегодня и будущее
+            const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
             
-            dates.forEach(date => {
+            if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
+            
+            activeDates.forEach(date => {
                 const entries = data.schedule[date];
                 if (!entries || entries.length === 0) return;
                 
@@ -1035,7 +1061,7 @@
                 const dateCard = document.createElement('div');
                 dateCard.className = `date-card ${status}`;
                 
-                let statusBadge = status === 'past' ? '<span class="past-badge">Прошло</span>' : (status === 'today' ? '<span class="today-badge">Сегодня</span>' : '');
+                let statusBadge = status === 'today' ? '<span class="today-badge">Сегодня</span>' : '';
                 dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`;
                 
                 const sortedEntries = [...entries].sort((a, b) => {
@@ -1074,19 +1100,163 @@
             });
         };
 
+        // === АРХИВ: показываем только past даты ===
+        window.renderArchive = function() {
+            const content = document.getElementById('archiveContent');
+            if (!content) return;
+            content.innerHTML = '';
+            
+            const dates = getSortedDates();
+            const pastDates = dates.filter(d => getDateStatus(d) === 'past');
+            
+            // Подсчёт общего количества записей в архиве
+            let archiveEntriesCount = 0;
+            pastDates.forEach(d => {
+                if (data.schedule[d]) archiveEntriesCount += data.schedule[d].length;
+            });
+            
+            // Информационный блок
+            const infoBlock = document.createElement('div');
+            infoBlock.className = 'archive-info';
+            infoBlock.innerHTML = `
+                <div class="archive-info-text">
+                    📦 Здесь хранятся <strong>прошедшие смены</strong>.<br>
+                    Новые прошедшие даты автоматически попадают сюда.
+                </div>
+                <div class="archive-counter">${archiveEntriesCount} записей</div>
+            `;
+            content.appendChild(infoBlock);
+            
+            // Кнопка очистки (только для владельца)
+            if (currentUser && currentUser.role === 'superadmin' && pastDates.length > 0) {
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'btn btn-danger btn-block';
+                clearBtn.style.marginBottom = '16px';
+                clearBtn.innerHTML = '🗑️ Очистить весь архив';
+                clearBtn.onclick = clearArchive;
+                content.appendChild(clearBtn);
+            }
+            
+            if (pastDates.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-message';
+                empty.style.textAlign = 'center';
+                empty.style.padding = '40px 20px';
+                empty.style.color = 'var(--light-gray)';
+                empty.innerHTML = '📦<br><br>Архив пока пуст.<br><span style="font-size: 0.9em;">Прошедшие даты будут появляться здесь автоматически.</span>';
+                content.appendChild(empty);
+                return;
+            }
+            
+            // Показываем прошедшие даты в обратном порядке (новые сверху)
+            const reversedPastDates = [...pastDates].reverse();
+            
+            reversedPastDates.forEach(date => {
+                const entries = data.schedule[date];
+                if (!entries || entries.length === 0) return;
+                
+                const dateCard = document.createElement('div');
+                dateCard.className = 'archive-date-card';
+                dateCard.innerHTML = `<h3>📅 ${date} <span class="archive-badge">Архив</span></h3>`;
+                
+                const sortedEntries = [...entries].sort((a, b) => {
+                    if (a.shift !== b.shift) return a.shift - b.shift;
+                    return a.type.localeCompare(b.type);
+                });
+                
+                sortedEntries.forEach(entry => {
+                    const card = document.createElement('div');
+                    card.className = 'archive-employee-card';
+                    
+                    const positionLabel = typeLabels[entry.type] || entry.type;
+                    const positionClass = entry.type;
+                    const shiftLabel = shiftLabels[entry.shift] || entry.shift;
+                    const shiftTime = shiftTimes[entry.shift];
+                    
+                    let deleteBtn = '';
+                    if (currentUser && currentUser.role === 'superadmin') {
+                        deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')" title="Удалить запись">🗑️</button>`;
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="archive-employee-info">
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;">👤 ${escapeHtml(entry.employee)}</div>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 0.85em;">
+                                <span class="employee-card-position ${positionClass}" style="font-size: 0.8em;">${positionLabel}</span>
+                                <span style="color: var(--gray);">🕒 Смена ${shiftLabel} • ${shiftTime}</span>
+                            </div>
+                        </div>
+                        ${deleteBtn}
+                    `;
+                    dateCard.appendChild(card);
+                });
+                
+                content.appendChild(dateCard);
+            });
+        };
+
+        // Удаление одной записи из архива (только для владельца)
+        window.deleteArchiveEntry = async function(id) {
+            if (!currentUser || currentUser.role !== 'superadmin') {
+                alert('🔒 Только владелец может удалять записи из архива');
+                return;
+            }
+            if (!confirm('Удалить эту запись из архива?')) return;
+            try {
+                await deleteDoc(doc(db, "schedule", id));
+                await loadAllDataFromFirebase();
+                renderArchive();
+                alert('✅ Запись удалена из архива');
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+            }
+        };
+
+        // Полная очистка архива (только для владельца)
+        window.clearArchive = async function() {
+            if (!currentUser || currentUser.role !== 'superadmin') {
+                alert('🔒 Только владелец может очищать архив');
+                return;
+            }
+            if (!confirm('⚠️ Вы собираетесь удалить ВСЕ записи из архива?\n\nЭто действие нельзя отменить!')) return;
+            if (!confirm('Точно удалить все прошедшие смены? Последнее предупреждение!')) return;
+            
+            try {
+                const dates = Object.keys(data.schedule);
+                let deletedCount = 0;
+                for (const date of dates) {
+                    if (getDateStatus(date) === 'past') {
+                        for (const entry of data.schedule[date]) {
+                            await deleteDoc(doc(db, "schedule", entry.id));
+                            deletedCount++;
+                        }
+                    }
+                }
+                await loadAllDataFromFirebase();
+                renderArchive();
+                alert(`✅ Архив очищен! Удалено записей: ${deletedCount}`);
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+            }
+        };
+
+        // В админ-панели показываем только текущие и будущие записи
         window.renderScheduleList = function() {
             const list = document.getElementById('scheduleList');
             if (!list) return;
             list.innerHTML = '';
             const dates = getSortedDates();
-            if (dates.length === 0) { list.innerHTML = '<div class="no-employees">Записей пока нет</div>'; return; }
-            dates.forEach(date => {
+            const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
+            
+            if (activeDates.length === 0) { list.innerHTML = '<div class="no-employees">Активных записей нет. Прошедшие смены находятся в Архиве.</div>'; return; }
+            
+            activeDates.forEach(date => {
                 const status = getDateStatus(date);
                 data.schedule[date].forEach(entry => {
                     const item = document.createElement('div');
                     item.className = `schedule-item ${status === 'past' ? 'past' : ''}`;
                     const badgeClass = `badge-${entry.type}`;
-                    let statusMark = status === 'past' ? ' ✓' : (status === 'today' ? ' 🔵' : '');
+                    let statusMark = status === 'today' ? ' 🔵' : '';
                     item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
                     list.appendChild(item);
                 });
