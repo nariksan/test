@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>ДОМОВИД</title>
+    <style>
+        :root {
+            --primary: #667eea; --primary-dark: #5568d3; --secondary: #764ba2;
+            --success: #28a745; --danger: #dc3545; --warning: #fd7e14;
+            --info: #17a2b8; --gold: #ffc107; --dark: #333; --gray: #666;
+            --light-gray: #999; --bg: #f8f9fa; --border: #e9ecef;
+            --brand-green: #2d8b4d; --brand-orange: #e87722;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05); --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        
+        .login-screen, .maintenance-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+        .login-screen.hidden, .maintenance-screen.hidden { display: none; }
+        .login-container, .maintenance-container { background: white; border-radius: var(--radius-xl); padding: 30px 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.4s ease; text-align: center; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .login-logo { text-align: center; margin-bottom: 24px; }
+        .login-logo-icon { font-size: 3em; margin-bottom: 8px; }
+        .login-logo h2 { color: var(--primary); font-size: 1.6em; margin-bottom: 4px; }
+        .login-logo p { color: var(--gray); font-size: 0.9em; }
+        .login-form .form-group { margin-bottom: 14px; text-align: left; }
+        .login-form label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--dark); font-size: 0.85em; }
+        .login-form input { width: 100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1em; background: white; min-height: 46px; transition: border-color 0.2s; }
+        .login-form input:focus { outline: none; border-color: var(--primary); }
+        .login-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 1em; cursor: pointer; margin-top: 8px; transition: all 0.2s; min-height: 48px; }
+        .login-btn:hover { background: var(--primary-dark); }
+        .login-btn:active { transform: scale(0.98); }
+        .login-error { background: #fff5f5; border-left: 3px solid var(--danger); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.85em; color: var(--danger); display: none; text-align: left; }
+        .login-error.show { display: block; }
+        .login-hint { background: #e7f3ff; border-left: 3px solid var(--info); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.82em; color: #0c5460; line-height: 1.4; text-align: left; }
+        
+        .app-header { position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
+        .header-banner { position: relative; width: 100%; height: auto; overflow: visible; background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); }
+        .header-banner img { width: 100%; height: auto; display: block; max-height: 200px; object-fit: cover; object-position: center; }
+        .header-content { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 16px 8px; z-index: 2; }
+        .header-top { display: flex; justify-content: flex-start; align-items: flex-start; gap: 12px; }
+        .header-title { margin-top: -5px; }
+        .header-title h1 { font-size: 1.6em; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: none; margin-bottom: 4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .current-user-badge { background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.9) 100%); backdrop-filter: blur(10px); color: var(--brand-green); padding: 4px 10px; border-radius: 16px; font-size: 0.75em; display: inline-flex; align-items: center; gap: 5px; border: 2px solid var(--brand-orange); box-shadow: 0 2px 6px rgba(0,0,0,0.15); font-weight: 600; }
+        .role-badge { background: linear-gradient(135deg, var(--brand-orange) 0%, var(--gold) 100%); color: white; padding: 2px 7px; border-radius: 10px; font-size: 0.85em; font-weight: 700; box-shadow: 0 2px 4px rgba(232, 119, 34, 0.3); }
+        .header-clock { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: var(--brand-green); padding: 4px 10px; border-radius: var(--radius-md); text-align: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 2px solid rgba(232, 119, 34, 0.6); }
+        .clock-time { font-size: 1em; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 1px; background: linear-gradient(135deg, var(--brand-orange) 0%, var(--brand-green) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .clock-date { font-size: 0.65em; color: var(--brand-orange); font-weight: 600; margin-top: 2px; }
+        .clock-separator { animation: blink 1s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.3; } }
+        .fox-paw { display: inline-block; animation: pawWave 2s ease-in-out infinite; margin-left: 3px; }
+        @keyframes pawWave { 0%, 100% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(-15deg) scale(1.1); } 50% { transform: rotate(0deg) scale(1); } 75% { transform: rotate(15deg) scale(1.1); } }
+        
+        .top-nav { background: white; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 99; }
+        .top-nav-inner { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 0 8px; max-width: 1200px; margin: 0 auto; }
+        .top-nav-inner::-webkit-scrollbar { display: none; }
+        .top-nav-btn { flex-shrink: 0; background: none; border: none; padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--gray); transition: all 0.2s; font-size: 0.72em; font-weight: 600; white-space: nowrap; border-bottom: 3px solid transparent; min-width: 60px; }
+        .top-nav-btn .nav-icon { font-size: 1.5em; line-height: 1; }
+        .top-nav-btn:hover { background: var(--bg); color: var(--brand-green); }
+        .top-nav-btn.active { color: var(--brand-green); border-bottom-color: var(--brand-orange); }
+        .top-nav-btn.active .nav-icon { transform: scale(1.1); }
+        .top-nav-btn:active { transform: scale(0.95); }
+        .top-nav-logout { flex-shrink: 0; background: #fff5f5; color: var(--danger); border: none; padding: 8px 12px; margin-left: auto; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; font-size: 0.75em; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .top-nav-logout:hover { background: var(--danger); color: white; }
+        
+        .app-content { max-width: 1200px; margin: 0 auto; padding: 16px; }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .section-title { font-size: 1.4em; font-weight: 700; color: var(--brand-green); margin-bottom: 14px; }
+        
+        .schedule-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .date-card { background: white; padding: 14px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+        .date-card h3 { color: var(--brand-green); margin-bottom: 10px; font-size: 1.05em; text-align: center; padding-bottom: 8px; border-bottom: 2px solid var(--brand-orange); display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .date-card.yesterday { background: #fafafa; border-color: #ddd; opacity: 0.75; }
+        .date-card.yesterday h3 { color: #888; border-bottom-color: #bbb; text-decoration: line-through; }
+        .date-card.today { border-color: var(--success); border-width: 2px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15); }
+        .date-card.today h3 { color: var(--success); border-bottom-color: var(--success); }
+        .past-badge, .today-badge, .yesterday-badge, .archive-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase; text-decoration: none !important; }
+        .past-badge { background: var(--danger); color: white; }
+        .today-badge { background: var(--success); color: white; animation: pulse 2s infinite; }
+        .yesterday-badge { background: #6c757d; color: white; }
+        .archive-badge { background: #6c757d; color: white; }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); } 50% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); } }
+        
+        .employee-schedule-card { background: white; border-radius: var(--radius-md); padding: 12px; margin: 8px 0; border-left: 4px solid var(--brand-orange); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 6px; }
+        .employee-schedule-card.kassa { border-left-color: var(--success); }
+        .employee-schedule-card.kd { border-left-color: var(--gold); }
+        .employee-schedule-card.zal { border-left-color: var(--info); }
+        .employee-schedule-card.sklad { border-left-color: #6f42c1; }
+        .employee-card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .employee-card-name { font-weight: 700; color: var(--dark); font-size: 0.95em; display: flex; align-items: center; gap: 6px; }
+        .employee-card-position { padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 700; color: white; }
+        .employee-card-position.kassa { background: var(--success); }
+        .employee-card-position.kd { background: var(--gold); color: var(--dark); }
+        .employee-card-position.zal { background: var(--info); }
+        .employee-card-position.sklad { background: #6f42c1; }
+        .employee-card-shift { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--gray); }
+        .employee-card-shift-icon { font-size: 1.2em; }
+        .employee-card-time { font-weight: 600; color: var(--dark); }
+        
+        .archive-info { background: linear-gradient(135deg, #e7f3ff 0%, #d1ecf1 100%); border-left: 4px solid var(--info); padding: 12px 14px; border-radius: var(--radius-md); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .archive-info-text { font-size: 0.88em; color: #0c5460; line-height: 1.4; }
+        .archive-info-text strong { color: var(--dark); }
+        .archive-counter { background: var(--info); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 700; }
+        .archive-date-card { background: #f8f9fa; padding: 14px; border-radius: var(--radius-lg); border: 1px solid #ddd; box-shadow: var(--shadow-sm); margin-bottom: 12px; opacity: 0.9; }
+        .archive-date-card h3 { color: #6c757d; margin-bottom: 10px; font-size: 1.05em; text-align: center; padding-bottom: 8px; border-bottom: 2px solid #adb5bd; display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .archive-employee-card { background: white; border-radius: var(--radius-md); padding: 10px; margin: 6px 0; border-left: 4px solid #adb5bd; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; opacity: 0.85; }
+        .archive-employee-info { flex: 1; min-width: 200px; }
+        
+        .contests-list { display: grid; gap: 12px; }
+        .contest-card { background: white; padding: 16px; border-radius: var(--radius-lg); border-left: 4px solid var(--success); box-shadow: var(--shadow-sm); }
+        .contest-card.status-finished-card { border-left-color: #6c757d; }
+        .contest-card h3 { color: var(--success); margin-bottom: 6px; font-size: 1.05em; }
+        .contest-card.status-finished-card h3 { color: #6c757d; }
+        .contest-status { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; margin-bottom: 8px; }
+        .status-active { background: var(--success); color: white; }
+        .status-finished { background: #6c757d; color: white; }
+        .contest-description { color: #555; line-height: 1.5; margin-bottom: 10px; font-size: 0.9em; }
+        .results-section { margin-top: 12px; padding-top: 12px; border-top: 2px dashed var(--border); }
+        .results-section h4 { color: var(--brand-green); margin-bottom: 8px; font-size: 0.95em; }
+        .result-item { background: var(--bg); padding: 8px 10px; border-radius: var(--radius-sm); margin-bottom: 6px; border-left: 3px solid var(--info); }
+        .result-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; flex-wrap: wrap; gap: 4px; }
+        .result-title { font-weight: 600; color: var(--dark); font-size: 0.9em; }
+        .result-date { font-size: 0.72em; color: var(--light-gray); }
+        .result-description { color: #555; font-size: 0.85em; line-height: 1.4; }
+        .final-result { background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%); padding: 12px; border-radius: var(--radius-md); border-left: 4px solid var(--gold); margin-top: 8px; }
+        .final-result-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .final-result-icon { font-size: 1.3em; }
+        .final-result-title { font-size: 0.9em; font-weight: 700; color: #856404; }
+        .final-result-winner { font-size: 1.05em; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+        .final-result-description { color: #555; line-height: 1.4; font-size: 0.85em; }
+        .final-result-date { font-size: 0.75em; color: #856404; margin-top: 4px; }
+        
+        .materials-list, .info-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .material-card, .info-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+        .material-card.type-text, .info-card.type-text { border-left: 4px solid var(--info); }
+        .material-card.type-file, .info-card.type-file { border-left: 4px solid var(--warning); }
+        .material-header, .info-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .material-icon, .info-icon { font-size: 1.6em; flex-shrink: 0; }
+        .material-title, .info-title { font-size: 1em; font-weight: 600; color: var(--dark); flex: 1; word-break: break-word; }
+        .material-meta, .info-meta { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+        .material-tag, .info-tag { padding: 2px 8px; border-radius: 10px; font-size: 0.68em; font-weight: 700; }
+        .tag-text { background: #d1ecf1; color: #0c5460; }
+        .tag-file { background: #ffe5d0; color: #8a4b0c; }
+        .material-date, .info-date { font-size: 0.72em; color: var(--light-gray); }
+        .material-preview, .info-preview { background: var(--bg); padding: 8px; border-radius: var(--radius-sm); margin-bottom: 10px; font-size: 0.82em; color: #555; line-height: 1.4; max-height: 70px; overflow: hidden; position: relative; white-space: pre-wrap; word-break: break-word; }
+        .material-preview::after, .info-preview::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 18px; background: linear-gradient(transparent, var(--bg)); }
+        .material-file-info, .info-file-info { background: var(--bg); padding: 8px; border-radius: var(--radius-sm); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .file-icon-big { font-size: 1.3em; }
+        .file-details { flex: 1; font-size: 0.82em; }
+        .file-name { font-weight: 600; color: var(--dark); word-break: break-all; }
+        .file-size { color: var(--gray); font-size: 0.85em; margin-top: 1px; }
+        .material-actions, .info-actions { display: flex; gap: 6px; margin-top: auto; flex-wrap: wrap; }
+        .material-actions .btn, .info-actions .btn { flex: 1; min-width: 90px; }
+        
+        .info-block { background: white; padding: 16px; border-radius: var(--radius-lg); margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+        .info-block h3 { color: var(--brand-green); margin-bottom: 8px; font-size: 1.05em; }
+        .info-block p { color: #555; line-height: 1.5; font-size: 0.9em; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .stat-card { background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); color: white; padding: 16px 10px; border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm); }
+        .stat-number { font-size: 1.8em; font-weight: 800; margin-bottom: 3px; line-height: 1; }
+        .stat-label { font-size: 0.75em; opacity: 0.95; line-height: 1.3; }
+        
+        .my-stats-block { background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%); border: 2px solid var(--gold); border-radius: var(--radius-xl); padding: 20px; margin-top: 20px; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15); }
+        .my-stats-header { text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px dashed #ffc107; }
+        .my-stats-header-icon { font-size: 2.5em; display: block; margin-bottom: 6px; }
+        .my-stats-header-title { font-size: 1.15em; font-weight: 700; color: #856404; margin-bottom: 2px; }
+        .my-stats-header-subtitle { font-size: 0.82em; color: #856404; opacity: 0.85; }
+        .my-stats-month-info { background: rgba(255, 255, 255, 0.6); padding: 8px 12px; border-radius: var(--radius-sm); text-align: center; font-size: 0.85em; color: #856404; margin-bottom: 12px; font-weight: 600; }
+        .my-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .my-stat-card { background: white; border-radius: var(--radius-md); padding: 12px 10px; text-align: center; box-shadow: var(--shadow-sm); border-top: 3px solid var(--gold); }
+        .my-stat-icon { font-size: 1.5em; margin-bottom: 4px; }
+        .my-stat-value { font-size: 1.6em; font-weight: 800; color: var(--dark); line-height: 1; margin-bottom: 2px; }
+        .my-stat-label { font-size: 0.72em; color: var(--gray); line-height: 1.2; }
+        .my-stat-hours { grid-column: 1 / -1; background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); color: white; border-top-color: var(--gold); }
+        .my-stat-hours .my-stat-value { color: white; }
+        .my-stat-hours .my-stat-label { color: rgba(255,255,255,0.9); }
+        .my-stat-total { grid-column: 1 / -1; background: linear-gradient(135deg, var(--success) 0%, #20c997 100%); color: white; }
+        .my-stat-total .my-stat-value { color: white; }
+        .my-stat-total .my-stat-label { color: rgba(255,255,255,0.9); }
+        .my-stats-empty { text-align: center; padding: 30px 16px; color: #856404; font-size: 0.9em; }
+        .my-stats-empty-icon { font-size: 2.5em; display: block; margin-bottom: 8px; opacity: 0.6; }
+        
+        .dev-block { text-align: center; padding: 40px 16px; background: white; border-radius: var(--radius-xl); border: 2px dashed var(--brand-green); }
+        .dev-icon { font-size: 3em; margin-bottom: 12px; display: block; }
+        .dev-block h3 { color: var(--brand-green); margin-bottom: 8px; font-size: 1.2em; }
+        .dev-block p { color: var(--gray); font-size: 0.9em; max-width: 500px; margin: 0 auto; line-height: 1.5; }
+        
+        .btn { padding: 10px 16px; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9em; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 42px; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--brand-green); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-gold { background: var(--gold); color: var(--dark); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 0.82em; min-height: 34px; }
+        .btn-block { width: 100%; }
+        .btn-view { background: var(--info); color: white; }
+        .btn-download { background: var(--warning); color: white; }
+        
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark); font-size: 0.85em; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95em; background: white; font-family: inherit; transition: border-color 0.2s; min-height: 42px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--brand-green); }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-row { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        
+        .admin-tabs { display: flex; gap: 4px; overflow-x: auto; background: white; padding: 6px; border-radius: var(--radius-lg); margin-bottom: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); scrollbar-width: none; }
+        .admin-tabs::-webkit-scrollbar { display: none; }
+        .admin-tab { flex-shrink: 0; padding: 8px 12px; border: none; background: transparent; color: var(--gray); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 0.82em; transition: all 0.2s; white-space: nowrap; min-height: 38px; }
+        .admin-tab.active { background: var(--brand-green); color: white; }
+        .admin-tab:not(.active):hover { background: var(--bg); color: var(--brand-green); }
+        .admin-section { display: none; animation: fadeIn 0.3s ease; }
+        .admin-section.active { display: block; }
+        .admin-card { background: white; padding: 16px; border-radius: var(--radius-lg); margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+        .admin-card-title { font-size: 1em; font-weight: 700; color: var(--brand-green); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--brand-orange); }
+        .admin-card.danger-zone { background: #fff5f5; border: 2px dashed var(--danger); }
+        .admin-card.danger-zone .admin-card-title { color: var(--danger); border-bottom-color: #ffc9c9; }
+        .employee-admin-item { background: var(--bg); padding: 12px; border-radius: var(--radius-md); margin-bottom: 8px; border-left: 4px solid var(--brand-orange); }
+        .employee-admin-item.role-admin { border-left-color: var(--gold); }
+        .employee-admin-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+        .employee-admin-info { flex: 1; min-width: 150px; }
+        .employee-admin-name { font-weight: 700; color: var(--dark); font-size: 0.95em; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .employee-admin-phone { color: var(--gray); font-size: 0.82em; margin-top: 2px; }
+        .employee-admin-role { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7em; font-weight: 700; text-transform: uppercase; }
+        .role-admin-badge { background: var(--gold); color: var(--dark); }
+        .role-user-badge { background: #e9ecef; color: var(--gray); }
+        .no-employees { text-align: center; color: var(--light-gray); padding: 16px; font-style: italic; font-size: 0.85em; }
+        .schedule-item { background: var(--bg); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .schedule-item-info { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.82em; }
+        .schedule-item-info span { font-weight: 600; }
+        .schedule-item.yesterday { opacity: 0.65; }
+        .schedule-item.yesterday .schedule-item-info span:first-child { text-decoration: line-through; }
+        .type-switcher { display: flex; gap: 4px; margin-bottom: 14px; background: var(--bg); padding: 4px; border-radius: var(--radius-sm); }
+        .type-switcher button { flex: 1; padding: 8px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-weight: 600; color: var(--gray); transition: all 0.2s; font-size: 0.85em; min-height: 38px; }
+        .type-switcher button.active { background: white; color: var(--brand-green); box-shadow: var(--shadow-sm); }
+        .file-warning { background: #fff3cd; border-left: 4px solid var(--gold); padding: 8px 10px; border-radius: 6px; margin-top: 8px; font-size: 0.82em; color: #856404; }
+        .admin-contest-item { background: var(--bg); padding: 12px; border-radius: var(--radius-md); margin-bottom: 10px; border-left: 4px solid var(--success); }
+        .admin-contest-item.status-finished-item { border-left-color: #6c757d; }
+        .admin-contest-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 6px; flex-wrap: wrap; }
+        .admin-contest-title { font-weight: 700; color: var(--dark); font-size: 0.95em; flex: 1; }
+        .admin-contest-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+        .admin-contest-results { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+        .admin-contest-results h5 { color: var(--brand-green); font-size: 0.85em; margin-bottom: 5px; margin-top: 8px; }
+        .admin-contest-results h5:first-child { margin-top: 0; }
+        .admin-result-item { background: white; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; gap: 6px; border-left: 3px solid var(--info); }
+        .admin-result-item.final { border-left-color: var(--gold); background: #fff9e6; }
+        .admin-result-info { flex: 1; font-size: 0.82em; }
+        .admin-result-info strong { color: var(--dark); }
+        .admin-result-info small { color: var(--light-gray); margin-left: 4px; }
+        .inline-form { background: #e7f3ff; padding: 12px; border-radius: var(--radius-sm); margin-top: 8px; border: 1px dashed #0066cc; }
+        .inline-form h5 { color: #0066cc; margin-bottom: 8px; font-size: 0.85em; }
+        .inline-form-actions { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
+        .modal.open { display: flex; }
+        .modal-content { background: white; border-radius: var(--radius-xl); max-width: 700px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+        .modal-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .modal-header h3 { color: var(--brand-green); font-size: 1.1em; word-break: break-word; }
+        .modal-close { background: none; border: none; font-size: 1.6em; cursor: pointer; color: var(--light-gray); line-height: 1; padding: 0 4px; min-width: 38px; min-height: 38px; }
+        .modal-body { padding: 18px; overflow-y: auto; flex: 1; line-height: 1.6; color: var(--dark); font-size: 0.92em; }
+        .modal-body img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: var(--shadow-md); }
+        .modal-body iframe { width: 100%; height: 60vh; border: 1px solid var(--border); border-radius: 8px; }
+        .modal-body pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); padding: 12px; border-radius: 8px; font-size: 0.9em; font-family: monospace; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        
+        @media (max-width: 768px) {
+            .header-banner img { max-height: 140px; }
+            .header-content { padding: 8px 12px 6px; }
+            .header-title { margin-top: -3px; }
+            .header-title h1 { font-size: 1.3em; }
+            .current-user-badge { font-size: 0.7em; padding: 3px 8px; }
+            .clock-time { font-size: 0.9em; }
+            .clock-date { font-size: 0.6em; }
+            .header-clock { padding: 3px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-screen hidden" id="maintenanceScreen">
+        <div class="maintenance-container">
+            <div class="login-logo-icon">🚧</div>
+            <h2 style="color: var(--warning); margin-bottom: 12px;">Технические работы</h2>
+            <p style="color: var(--gray); margin-bottom: 24px; line-height: 1.5;">Сайт временно недоступен для сотрудников и администраторов. Пожалуйста, зайдите позже.</p>
+            <button class="btn btn-secondary btn-block" onclick="doLogout()">🚪 Выйти из аккаунта</button>
+        </div>
+    </div>
+
+    <div class="login-screen hidden" id="loginScreen">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="login-logo-icon"></div>
+                <h2>ДОМОВИД</h2>
+                <p>Вход в рабочую группу</p>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>📱 Телефон</label>
+                    <input type="tel" id="loginPhone" placeholder="89146443734" autocomplete="tel">
+                </div>
+                <div class="form-group">
+                    <label>🔒 Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="Введите пароль" autocomplete="current-password">
+                </div>
+                <button class="login-btn" onclick="doLogin()">Войти</button>
+                <div class="login-error" id="loginError"></div>
+                <div class="login-hint">
+                    💡 Тестовый вход (Владелец):<br>
+                    Телефон: <strong>89146443734</strong><br>
+                    Пароль: <strong>6000</strong><br>
+                    <em style="font-size: 0.9em; margin-top: 4px; display: block;">(Убедитесь, что в базе Firebase для этого номера установлена роль "superadmin")</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="app-header">
+        <div class="header-banner">
+            <img src="domovid-banner.jpg" alt="ДОМОВИД - магазины домашнего уюта">
+            <div class="header-content">
+                <div class="header-top">
+                    <div class="header-title">
+                        <h1>Рабочая группа</h1>
+                    </div>
+                </div>
+                <div class="header-bottom" style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div class="current-user-badge" id="currentUserBadge" style="display:none;">
+                        <span>👤</span>
+                        <span id="currentUserName"></span>
+                        <span class="role-badge" id="currentUserRole"></span>
+                        <span class="fox-paw"></span>
+                    </div>
+                    <div class="header-clock">
+                        <div class="clock-time" id="clockTime">--:--:--</div>
+                        <div class="clock-date" id="clockDate">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="top-nav" id="topNav" style="display:none;">
+        <div class="top-nav-inner">
+            <button class="top-nav-btn active" onclick="showSection('schedule', this)"><span class="nav-icon">📅</span><span>График</span></button>
+            <button class="top-nav-btn" onclick="showSection('archive', this)"><span class="nav-icon">📦</span><span>Архив</span></button>
+            <button class="top-nav-btn" onclick="showSection('plan', this)"><span class="nav-icon">📈</span><span>План</span></button>
+            <button class="top-nav-btn" onclick="showSection('materials', this)"><span class="nav-icon">📚</span><span>Обучение</span></button>
+            <button class="top-nav-btn" onclick="showSection('contests', this)"><span class="nav-icon">🏆</span><span>Конкурсы</span></button>
+            <button class="top-nav-btn" onclick="showSection('info', this)"><span class="nav-icon">📢</span><span>Инфо</span></button>
+            <button class="top-nav-btn" onclick="showSection('stats', this)"><span class="nav-icon">📊</span><span>Статистика</span></button>
+            <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;"><span class="nav-icon">⚙️</span><span>Админ</span></button>
+            <button class="top-nav-btn" onclick="showSection('superadmin', this)" id="topNavSuperAdminBtn" style="display:none; color: var(--danger);"><span class="nav-icon">👑</span><span>Владелец</span></button>
+            <button class="top-nav-logout" onclick="doLogout()"><span>🚪</span><span>Выйти</span></button>
+        </div>
+    </nav>
+
+    <main class="app-content">
+        <div id="schedule" class="section active">
+            <h2 class="section-title">📅 График работы</h2>
+            <div id="scheduleGrid" class="schedule-grid"></div>
+        </div>
+
+        <div id="archive" class="section">
+            <h2 class="section-title">📦 Архив графика</h2>
+            <div id="archiveContent"></div>
+        </div>
+
+        <div id="plan" class="section">
+            <h2 class="section-title">📈 План на месяц</h2>
+            <div class="dev-block">
+                <span class="dev-icon">🚧</span>
+                <h3>Раздел в разработке</h3>
+                <p>Здесь скоро появится блок с финансовым планом на месяц: целевая сумма выручки, прогресс выполнения и аналитика.</p>
+            </div>
+        </div>
+        
+        <div id="materials" class="section">
+            <h2 class="section-title">📚 Обучающие материалы</h2>
+            <div id="materialsList" class="materials-list"></div>
+        </div>
+        
+        <div id="contests" class="section">
+            <h2 class="section-title">🏆 Конкурсы персонала</h2>
+            <div id="contestsList" class="contests-list"></div>
+        </div>
+        
+        <div id="info" class="section">
+            <h2 class="section-title">📢 Информация</h2>
+            <div id="infoContent" class="info-list"></div>
+        </div>
+        
+        <div id="stats" class="section">
+            <h2 class="section-title">📊 Статистика</h2>
+            <div id="statsContent"></div>
+        </div>
+        
+        <div id="admin" class="section">
+            <h2 class="section-title">⚙️ Админ-панель</h2>
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="showAdminTab('schedule', this)">📅 График</button>
+                <button class="admin-tab" onclick="showAdminTab('employees', this)">👥 Сотрудники</button>
+                <button class="admin-tab" onclick="showAdminTab('contests', this)">🏆 Конкурсы</button>
+                <button class="admin-tab" onclick="showAdminTab('materials', this)">📚 Обучение</button>
+                <button class="admin-tab" onclick="showAdminTab('info', this)">📢 Инфо</button>
+                <button class="admin-tab" onclick="showAdminTab('settings', this)">⚙️ Настройки</button>
+            </div>
+            
+            <div id="admin-schedule" class="admin-section active">
+                <div class="admin-card">
+                    <div class="admin-card-title" id="scheduleFormTitle">➕ Добавить сотрудника в график</div>
+                    <div class="form-row">
+                        <div class="form-group"><label>📅 Дата</label><input type="date" id="adminDate"></div>
+                        <div class="form-group"><label>👤 Сотрудник</label><select id="adminEmployee"><option value="">-- Выберите сотрудника --</option></select></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>💼 Тип работы</label>
+                            <select id="adminType">
+                                <option value="kassa">Касса</option><option value="kd">КД</option><option value="zal">Зал</option><option value="sklad">Склад</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>🕒 Смена</label>
+                            <select id="adminShift">
+                                <option value="1">Смена 9/1 (10:00 - 19:00)</option><option value="2">Смена 9/2 (12:00 - 21:00)</option><option value="3">Смена 11 (10:00 - 21:00)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block" id="scheduleSubmitBtn" onclick="addScheduleEntry()">➕ Добавить в график</button>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-title">📋 Текущие записи графика</div>
+                    <div id="scheduleList"></div>
+                </div>
+            </div>
+            
+            <div id="admin-employees" class="admin-section">
+                <div class="admin-card">
+                    <div class="admin-card-title" id="employeeFormTitle">➕ Добавить сотрудника</div>
+                    <div class="form-group"><label>👤 ФИО</label><input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович"></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>📱 Телефон (логин)</label><input type="tel" id="newEmployeePhone" placeholder="89001234567"></div>
+                        <div class="form-group"><label>🔒 Пароль</label><input type="text" id="newEmployeePassword" placeholder="Пароль для входа"></div>
+                    </div>
+                    <div class="form-group"><label>🛡️ Роль</label>
+                        <select id="newEmployeeRole"><option value="user">👤 Сотрудник</option><option value="admin">💎 Администратор</option></select>
+                    </div>
+                    <button class="btn btn-success btn-block" id="employeeSubmitBtn" onclick="addEmployee()">➕ Добавить сотрудника</button>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-title">👥 Список сотрудников <span id="employeeCounter" style="background:var(--brand-green);color:white;padding:2px 10px;border-radius:10px;font-size:0.8em;margin-left:8px;">0</span></div>
+                    <div id="employeesList"></div>
+                </div>
+            </div>
+            
+            <div id="admin-contests" class="admin-section">
+                <div class="admin-card">
+                    <div class="admin-card-title">🏆 Добавить конкурс</div>
+                    <div class="form-group"><label>🏆 Название конкурса</label><input type="text" id="contestName" placeholder="Введите название конкурса"></div>
+                    <div class="form-group"><label>📝 Описание</label><textarea id="contestDescription" rows="3" placeholder="Описание конкурса"></textarea></div>
+                    <div class="form-group"><label>📊 Статус</label>
+                        <select id="contestStatus"><option value="active">Активный</option><option value="finished">Завершен</option></select>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="addContest()">➕ Добавить конкурс</button>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-title">📋 Список конкурсов</div>
+                    <div id="adminContestList"></div>
+                </div>
+            </div>
+            
+            <div id="admin-materials" class="admin-section">
+                <div class="admin-card" id="addMaterialSection" style="display: none; border: 2px solid var(--info);">
+                    <div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);">📝 Новый материал</div>
+                    <div class="type-switcher">
+                        <button type="button" id="typeTextBtn" class="active" onclick="switchMaterialType('text')">📝 Текст</button>
+                        <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')">📎 Файл</button>
+                    </div>
+                    <div class="form-group"><label>📌 Название</label><input type="text" id="materialTitle" placeholder="Например: Инструкция по работе с кассой"></div>
+                    <div id="textForm">
+                        <div class="form-group"><label>📄 Текст материала</label><textarea id="materialText" rows="6" placeholder="Введите текст..."></textarea></div>
+                    </div>
+                    <div id="fileForm" style="display: none;">
+                        <div class="form-group">
+                            <label>📎 Загрузить файл</label>
+                            <input type="file" id="materialFile" onchange="handleFileSelect(event)">
+                            <div id="fileWarning" class="file-warning" style="display: none;">⚠️ Рекомендуется до 2 МБ.</div>
+                            <div id="fileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button class="btn btn-success" style="flex:1;" onclick="saveMaterial()">💾 Сохранить</button>
+                        <button class="btn btn-danger" style="flex:1;" onclick="cancelMaterialForm()">✕ Отмена</button>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-title">📚 Обучающие материалы</div>
+                    <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Добавляйте инструкции и файлы для обучения.</p>
+                    <button class="btn btn-primary btn-block" onclick="openMaterialForm()">➕ Добавить материал</button>
+                </div>
+            </div>
+            
+            <div id="admin-info" class="admin-section">
+                <div class="admin-card" id="addInfoSection" style="display: none; border: 2px solid var(--warning);">
+                    <div class="admin-card-title" style="color: var(--warning); border-bottom-color: var(--warning);">📝 Новая информация</div>
+                    <div class="type-switcher">
+                        <button type="button" id="infoTypeTextBtn" class="active" onclick="switchInfoType('text')">📝 Текст</button>
+                        <button type="button" id="infoTypeFileBtn" onclick="switchInfoType('file')">📎 Файл</button>
+                    </div>
+                    <div class="form-group"><label>📌 Заголовок</label><input type="text" id="infoTitle" placeholder="Заголовок"></div>
+                    <div id="infoTextForm">
+                        <div class="form-group"><label>📝 Текст</label><textarea id="infoText" rows="4" placeholder="Текст информации"></textarea></div>
+                    </div>
+                    <div id="infoFileForm" style="display: none;">
+                        <div class="form-group">
+                            <label>📎 Загрузить файл</label>
+                            <input type="file" id="infoFile" onchange="handleInfoFileSelect(event)">
+                            <div id="infoFileWarning" class="file-warning" style="display: none;">⚠️ Рекомендуется до 2 МБ.</div>
+                            <div id="infoFileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button class="btn btn-success" style="flex:1;" onclick="saveInfo()">💾 Сохранить</button>
+                        <button class="btn btn-danger" style="flex:1;" onclick="cancelInfoForm()">✕ Отмена</button>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-title">📢 Информация</div>
+                    <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Добавляйте важные объявления текстом или файлом.</p>
+                    <button class="btn btn-primary btn-block" onclick="openInfoForm()">➕ Добавить информацию</button>
+                </div>
+            </div>
+            
+            <div id="admin-settings" class="admin-section">
+                <div class="admin-card danger-zone">
+                    <div class="admin-card-title">⚠️ Опасная зона</div>
+                    <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px; line-height: 1.4;">Полный сброс всех данных сайта. Это действие нельзя отменить.</p>
+                    <button class="btn btn-danger btn-block" onclick="resetAllData()">🗑️ Сбросить все данные</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="superadmin" class="section">
+            <h2 class="section-title">👑 Панель Владельца</h2>
+            <div class="admin-card danger-zone">
+                <div class="admin-card-title">🚧 Режим технических работ</div>
+                <p style="color: var(--gray); font-size: 0.9em; margin-bottom: 12px; line-height: 1.4;">При включении этого режима обычные сотрудники и администраторы увидят экран "Технические работы" и не смогут пользоваться приложением. Вы (как Владелец) будете иметь полный доступ.</p>
+                <button class="btn btn-warning btn-block" id="maintenanceToggleBtn" onclick="toggleMaintenanceMode()">Загрузка статуса...</button>
+            </div>
+            <div class="admin-card">
+                <div class="admin-card-title">👑 Передача полномочий Владельца</div>
+                <p style="color: var(--gray); font-size: 0.9em; margin-bottom: 12px; line-height: 1.4;">Вы можете передать роль Владельца любому из текущих Администраторов. Ваша роль при этом автоматически изменится на "Администратор".</p>
+                <div id="superAdminList"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="materialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Название</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTHWwfpt059YCSt5YI9Aou1n1GjHxgQ6s",
+            authDomain: "domovidi.firebaseapp.com",
+            projectId: "domovidi",
+            storageBucket: "domovidi.firebasestorage.app",
+            messagingSenderId: "261930585857",
+            appId: "1:261930585857:web:856cf36981d8e0c2d51500"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00' };
+        const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11' };
+        const shiftHours = { 1: 9, 2: 9, 3: 11 };
+        const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад' };
+        const MAX_FILE_SIZE = 5 * 1024 * 1024;
+        const RECOMMENDED_FILE_SIZE = 2 * 1024 * 1024;
+        const MONTH_NAMES = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        const MONTH_NAMES_GEN = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+        const WEEKDAY_NAMES = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+
+        let currentUser = null;
+        let currentMaterialType = 'text';
+        let selectedFileData = null;
+        let currentInfoType = 'text';
+        let selectedInfoFileData = null;
+        let openResultForms = {};
+        let editingEmployeeId = null;
+        let editingScheduleId = null;
+        let data = { 
+            employees: [], schedule: {}, materials: [], contests: [], info: [], 
+            settings: { maintenanceMode: false },
+            stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } 
+        };
+
+        function updateClock() {
+            const now = new Date();
+            const dateStr = `${WEEKDAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`;
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}<span class="clock-separator">:</span>${String(now.getMinutes()).padStart(2, '0')}<span class="clock-separator">:</span>${String(now.getSeconds()).padStart(2, '0')}`;
+            document.getElementById('clockDate').textContent = dateStr;
+            document.getElementById('clockTime').innerHTML = timeStr;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        function getDateStatus(dateStr) {
+            const [day, month, year] = dateStr.split('.').map(Number);
+            const date = new Date(year, month - 1, day);
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            date.setHours(0, 0, 0, 0);
+            const diffDays = Math.round((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays === 0) return 'today';
+            if (diffDays === -1) return 'yesterday';
+            if (diffDays < -1) return 'past';
+            return 'future';
+        }
+
+        function getCurrentMonthKey() {
+            const now = new Date();
+            return `${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+        }
+
+        function getMonthFromDate(dateStr) {
+            const parts = dateStr.split('.');
+            if (parts.length !== 3) return null;
+            return `${parts[1]}.${parts[2]}`;
+        }
+
+        async function loadAllDataFromFirebase() {
+            try {
+                const usersSnap = await getDocs(collection(db, "users"));
+                data.employees = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                data.schedule = {};
+                const scheduleSnap = await getDocs(collection(db, "schedule"));
+                scheduleSnap.docs.forEach(d => {
+                    const entry = d.data();
+                    if (!data.schedule[entry.date]) data.schedule[entry.date] = [];
+                    data.schedule[entry.date].push({ id: d.id, ...entry });
+                });
+
+                const matSnap = await getDocs(collection(db, "materials"));
+                data.materials = matSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                const contSnap = await getDocs(collection(db, "contests"));
+                data.contests = contSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                const infoSnap = await getDocs(collection(db, "info"));
+                data.info = infoSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                const settingsDoc = await getDoc(doc(db, "settings", "global"));
+                data.settings = settingsDoc.exists() ? settingsDoc.data() : { maintenanceMode: false };
+
+                updateStats();
+            } catch (error) {
+                console.error("Ошибка загрузки данных:", error);
+                alert("Не удалось загрузить данные из облака: " + error.message);
+            }
+        }
+
+        function normalizePhone(phone) { return (phone || '').replace(/\D/g, ''); }
+
+        function showLoginScreen() {
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('maintenanceScreen').classList.add('hidden');
+            document.getElementById('topNav').style.display = 'none';
+        }
+
+        function showLoginError(msg) {
+            const el = document.getElementById('loginError');
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        async function autoLogin() {
+            const sessionStr = localStorage.getItem('domovidSession');
+            if (sessionStr) {
+                try {
+                    const session = JSON.parse(sessionStr);
+                    const userRef = doc(db, "users", session.id);
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        currentUser = { id: session.id, name: userData.name, phone: userData.phone, role: userData.role };
+                        await loadAllDataFromFirebase();
+                        enterApp();
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Авто-вход не удался:", e);
+                    localStorage.removeItem('domovidSession');
+                }
+            }
+            showLoginScreen();
+        }
+
+        window.doLogin = async function() {
+            const phoneInput = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            if (!phoneInput || !password) {
+                showLoginError('Введите телефон и пароль');
+                return;
+            }
+
+            const phone = normalizePhone(phoneInput);
+            errorEl.textContent = 'Проверка...';
+            errorEl.classList.add('show');
+
+            try {
+                const q = query(collection(db, "users"), where("phone", "==", phone), where("password", "==", password));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    showLoginError('❌ Неверный телефон или пароль');
+                    return;
+                }
+
+                const userData = querySnapshot.docs[0].data();
+                const userId = querySnapshot.docs[0].id;
+
+                currentUser = { id: userId, name: userData.name, phone: userData.phone, role: userData.role };
+                localStorage.setItem('domovidSession', JSON.stringify({ id: userId }));
+
+                await loadAllDataFromFirebase();
+                
+                errorEl.classList.remove('show');
+                enterApp();
+            } catch (error) {
+                console.error("Ошибка входа:", error);
+                showLoginError('❌ Ошибка подключения: ' + error.message);
+            }
+        };
+
+        function enterApp() {
+            if (data.settings.maintenanceMode && currentUser.role !== 'superadmin') {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('maintenanceScreen').classList.remove('hidden');
+                document.getElementById('topNav').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('maintenanceScreen').classList.add('hidden');
+            document.getElementById('topNav').style.display = 'block';
+            document.getElementById('currentUserBadge').style.display = 'inline-flex';
+            document.getElementById('currentUserName').textContent = currentUser.name;
+            
+            let roleText = '👤 Сотрудник';
+            if (currentUser.role === 'admin') roleText = '💎 Админ';
+            if (currentUser.role === 'superadmin') roleText = '👑 Владелец';
+            document.getElementById('currentUserRole').textContent = roleText;
+            
+            const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
+            document.getElementById('topNavAdminBtn').style.display = isAdmin ? '' : 'none';
+            document.getElementById('topNavSuperAdminBtn').style.display = (currentUser.role === 'superadmin') ? '' : 'none';
+            
+            if (!isAdmin && document.getElementById('admin').classList.contains('active')) {
+                showSection('schedule', document.querySelector('.top-nav-btn'));
+            }
+            renderAll();
+        }
+
+        window.doLogout = function() {
+            if (!confirm('Выйти из аккаунта?')) return;
+            localStorage.removeItem('domovidSession');
+            currentUser = null;
+            editingEmployeeId = null;
+            editingScheduleId = null;
+            showLoginScreen();
+            document.getElementById('loginPhone').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').classList.remove('show');
+        };
+
+        window.showSection = function(sectionId, btn) {
+            if ((sectionId === 'admin' || sectionId === 'superadmin') && (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin'))) {
+                alert('🔒 Доступ запрещён');
+                return;
+            }
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active'));
+            if (btn && btn.classList) btn.classList.add('active');
+            
+            if (sectionId === 'schedule') renderSchedule();
+            if (sectionId === 'archive') renderArchive();
+            if (sectionId === 'materials') renderMaterials();
+            if (sectionId === 'contests') renderContests();
+            if (sectionId === 'info') renderInfo();
+            if (sectionId === 'stats') renderStats();
+            if (sectionId === 'admin') renderAdmin();
+            if (sectionId === 'superadmin') renderSuperAdminPanel();
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.showAdminTab = function(tabName, btn) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('admin-' + tabName).classList.add('active');
+            if (btn) btn.classList.add('active');
+        };
+
+        window.openFileViewer = function(title, fileData, isText = false, textContent = '') {
+            document.getElementById('modalTitle').textContent = title;
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '';
+
+            if (isText) {
+                body.innerHTML = `<pre>${escapeHtml(textContent)}</pre>`;
+            } else if (fileData) {
+                const mimeType = fileData.mimeType || 'application/octet-stream';
+                const dataUrl = fileData.data;
+
+                if (mimeType.startsWith('image/')) {
+                    body.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
+                } else if (mimeType === 'application/pdf' || mimeType.includes('pdf')) {
+                    body.innerHTML = `<iframe src="${dataUrl}"></iframe>`;
+                } else if (mimeType.startsWith('text/') || mimeType === 'application/json') {
+                    try {
+                        const base64Data = dataUrl.split(',')[1];
+                        const decodedText = atob(base64Data);
+                        body.innerHTML = `<pre>${escapeHtml(decodedText)}</pre>`;
+                    } catch(e) {
+                        body.innerHTML = `<p style="color:var(--danger);">Не удалось отобразить текст файла.</p>`;
+                    }
+                } else {
+                    body.innerHTML = `
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 4em; margin-bottom: 16px;">${getFileIcon(mimeType)}</div>
+                            <p style="margin-bottom: 16px; color: var(--gray);">Предпросмотр недоступен для этого типа файла.</p>
+                            <button class="btn btn-warning" onclick="downloadFileFromModal('${escapeHtml(fileData.name)}', '${dataUrl}')">⬇️ Скачать файл</button>
+                        </div>
+                    `;
+                }
+            }
+            document.getElementById('materialModal').classList.add('open');
+        };
+
+        window.downloadFileFromModal = function(filename, dataUrl) {
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // --- СОТРУДНИКИ ---
+        window.editEmployee = function(id) {
+            const emp = data.employees.find(e => e.id === id);
+            if (!emp) return;
+            editingEmployeeId = id;
+            document.getElementById('newEmployeeName').value = emp.name;
+            document.getElementById('newEmployeePhone').value = emp.phone;
+            document.getElementById('newEmployeePassword').value = emp.password;
+            document.getElementById('newEmployeeRole').value = emp.role;
+            
+            const btn = document.getElementById('employeeSubmitBtn');
+            btn.textContent = '💾 Сохранить изменения';
+            btn.className = 'btn btn-warning btn-block';
+            btn.onclick = updateEmployee;
+            document.getElementById('employeeFormTitle').textContent = '✏️ Редактирование сотрудника';
+            
+            if (!document.getElementById('cancelEditBtn')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.id = 'cancelEditBtn';
+                cancelBtn.className = 'btn btn-secondary btn-block';
+                cancelBtn.style.marginTop = '8px';
+                cancelBtn.textContent = '✕ Отмена';
+                cancelBtn.onclick = cancelEditEmployee;
+                btn.parentNode.appendChild(cancelBtn);
+            }
+            document.getElementById('admin-employees').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.updateEmployee = async function() {
+            if (!editingEmployeeId) return;
+            const name = document.getElementById('newEmployeeName').value.trim();
+            const phone = document.getElementById('newEmployeePhone').value.trim();
+            const password = document.getElementById('newEmployeePassword').value;
+            const role = document.getElementById('newEmployeeRole').value;
+            
+            if (!name || !phone || !password) { alert('Заполните все поля'); return; }
+            if (password.length < 3) { alert('Пароль минимум 3 символа'); return; }
+            
+            const normalizedPhone = normalizePhone(phone);
+            const phoneExists = data.employees.some(e => e.id !== editingEmployeeId && normalizePhone(e.phone) === normalizedPhone);
+            if (phoneExists) { alert('❌ Сотрудник с таким телефоном уже есть!'); return; }
+            
+            try {
+                await updateDoc(doc(db, "users", editingEmployeeId), { name, phone, password, role });
+                cancelEditEmployee();
+                await loadAllDataFromFirebase();
+                renderEmployeesList();
+                renderEmployeeSelect();
+                alert('✅ Данные сотрудника успешно обновлены!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.cancelEditEmployee = function() {
+            editingEmployeeId = null;
+            document.getElementById('newEmployeeName').value = '';
+            document.getElementById('newEmployeePhone').value = '';
+            document.getElementById('newEmployeePassword').value = '';
+            document.getElementById('newEmployeeRole').value = 'user';
+            
+            const btn = document.getElementById('employeeSubmitBtn');
+            btn.textContent = '➕ Добавить сотрудника';
+            btn.className = 'btn btn-success btn-block';
+            btn.onclick = addEmployee;
+            document.getElementById('employeeFormTitle').textContent = '➕ Добавить сотрудника';
+            
+            const cancelBtn = document.getElementById('cancelEditBtn');
+            if (cancelBtn) cancelBtn.remove();
+        };
+
+        window.addEmployee = async function() {
+            if (editingEmployeeId) { alert('Сначала отмените редактирование или сохраните изменения.'); return; }
+            const name = document.getElementById('newEmployeeName').value.trim();
+            const phone = document.getElementById('newEmployeePhone').value.trim();
+            const password = document.getElementById('newEmployeePassword').value;
+            const role = document.getElementById('newEmployeeRole').value;
+            if (!name || !phone || !password) { alert('Заполните все поля'); return; }
+            if (password.length < 3) { alert('Пароль минимум 3 символа'); return; }
+            const normalizedPhone = normalizePhone(phone);
+            if (data.employees.some(e => normalizePhone(e.phone) === normalizedPhone)) { alert('❌ Сотрудник с таким телефоном уже есть!'); return; }
+            try {
+                await addDoc(collection(db, "users"), { name, phone, password, role });
+                document.getElementById('newEmployeeName').value = '';
+                document.getElementById('newEmployeePhone').value = '';
+                document.getElementById('newEmployeePassword').value = '';
+                await loadAllDataFromFirebase();
+                renderEmployeesList();
+                renderEmployeeSelect();
+                alert('✅ Сотрудник добавлен!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.deleteEmployee = async function(id) {
+            const emp = data.employees.find(e => e.id === id);
+            if (!emp) return;
+            if (currentUser && currentUser.id === emp.id) { alert('⛔ Нельзя удалить свой собственный аккаунт!'); return; }
+            if (!confirm(`Удалить сотрудника "${emp.name}"?`)) return;
+            try {
+                await deleteDoc(doc(db, "users", id));
+                if (editingEmployeeId === id) cancelEditEmployee();
+                await loadAllDataFromFirebase();
+                renderEmployeesList();
+                renderEmployeeSelect();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.renderEmployeesList = function() {
+            const list = document.getElementById('employeesList');
+            if (!list) return;
+            list.innerHTML = '';
+            const visibleEmployees = data.employees.filter(e => e.role !== 'superadmin');
+            if (visibleEmployees.length === 0) { list.innerHTML = '<div class="no-employees">Список сотрудников пуст</div>'; return; }
+            
+            visibleEmployees.forEach(emp => {
+                const item = document.createElement('div');
+                item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
+                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">💎 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
+                const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
+                const isSelf = currentUser && currentUser.id === emp.id;
+                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`;
+                const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`;
+                item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name">👤 ${escapeHtml(emp.name)} ${roleBadge}</div><div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div></div>`;
+                list.appendChild(item);
+            });
+            document.getElementById('employeeCounter').textContent = visibleEmployees.length + ' чел.';
+        };
+
+        window.renderEmployeeSelect = function() {
+            const select = document.getElementById('adminEmployee');
+            if (!select) return;
+            select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+            data.employees.filter(e => e.role !== 'superadmin').forEach(emp => {
+                const option = document.createElement('option');
+                option.value = emp.name;
+                option.textContent = emp.name;
+                select.appendChild(option);
+            });
+        };
+
+        // --- ВЛАДЕЛЕЦ ---
+        window.renderSuperAdminPanel = function() {
+            const maintBtn = document.getElementById('maintenanceToggleBtn');
+            if (data.settings.maintenanceMode) {
+                maintBtn.textContent = '🔴 Выключить режим технических работ';
+                maintBtn.className = 'btn btn-danger btn-block';
+            } else {
+                maintBtn.textContent = '🟡 Включить режим технических работ';
+                maintBtn.className = 'btn btn-warning btn-block';
+            }
+
+            const list = document.getElementById('superAdminList');
+            list.innerHTML = '';
+            const admins = data.employees.filter(e => e.role === 'admin');
+            if (admins.length === 0) {
+                list.innerHTML = '<div class="no-employees">Нет администраторов для передачи полномочий. Сначала создайте админа.</div>';
+                return;
+            }
+            admins.forEach(admin => {
+                const item = document.createElement('div');
+                item.className = 'employee-admin-item role-admin';
+                item.innerHTML = `
+                    <div class="employee-admin-header">
+                        <div class="employee-admin-info">
+                            <div class="employee-admin-name">👑 ${escapeHtml(admin.name)}</div>
+                            <div class="employee-admin-phone">📱 ${escapeHtml(admin.phone)}</div>
+                        </div>
+                        <button class="btn btn-gold btn-sm" onclick="transferSuperAdmin('${admin.id}')">Передать полномочия</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        };
+
+        window.toggleMaintenanceMode = async function() {
+            const newMode = !data.settings.maintenanceMode;
+            const confirmMsg = newMode 
+                ? '⚠️ Вы собираетесь включить режим технических работ. Обычные сотрудники и админы потеряют доступ к приложению. Продолжить?'
+                : 'Выключить режим технических работ и открыть доступ для всех?';
+            if (!confirm(confirmMsg)) return;
+            try {
+                await setDoc(doc(db, "settings", "global"), { maintenanceMode: newMode }, { merge: true });
+                data.settings.maintenanceMode = newMode;
+                renderSuperAdminPanel();
+                alert(newMode ? '✅ Режим технических работ ВКЛЮЧЁН' : '✅ Режим технических работ ВЫКЛЮЧЕН');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.transferSuperAdmin = async function(targetId) {
+            const targetAdmin = data.employees.find(e => e.id === targetId);
+            if (!targetAdmin) return;
+            if (!confirm(`⚠️ ВЫ УВЕРЕНЫ?\n\nВы собираетесь передать роль Владельца пользователю "${targetAdmin.name}".\nВаша роль будет изменена на "Администратор".\n\nЭто действие нельзя отменить через интерфейс.`)) return;
+            try {
+                await updateDoc(doc(db, "users", currentUser.id), { role: 'admin' });
+                await updateDoc(doc(db, "users", targetId), { role: 'superadmin' });
+                currentUser.role = 'admin';
+                alert(`✅ Полномочия успешно переданы пользователю ${targetAdmin.name}!\nТеперь вы обычный Администратор.`);
+                await loadAllDataFromFirebase();
+                renderAll();
+                showSection('admin', document.querySelector('.top-nav-btn'));
+            } catch (e) { alert('Ошибка при передаче полномочий: ' + e.message); }
+        };
+
+        // --- ГРАФИК ---
+        window.renderSchedule = function() {
+            const grid = document.getElementById('scheduleGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            const dates = getSortedDates();
+            const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
+            if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
+            
+            activeDates.forEach(date => {
+                const entries = data.schedule[date];
+                if (!entries || entries.length === 0) return;
+                const status = getDateStatus(date);
+                const dateCard = document.createElement('div');
+                dateCard.className = `date-card ${status}`;
+                let statusBadge = '';
+                if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>';
+                else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>';
+                dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`;
+                
+                const sortedEntries = [...entries].sort((a, b) => {
+                    if (a.shift !== b.shift) return a.shift - b.shift;
+                    return a.type.localeCompare(b.type);
+                });
+                
+                sortedEntries.forEach(entry => {
+                    const card = document.createElement('div');
+                    card.className = `employee-schedule-card ${entry.type}`;
+                    const positionLabel = typeLabels[entry.type] || entry.type;
+                    const positionClass = entry.type;
+                    const shiftLabel = shiftLabels[entry.shift] || entry.shift;
+                    const shiftTime = shiftTimes[entry.shift];
+                    card.innerHTML = `
+                        <div class="employee-card-header">
+                            <div class="employee-card-name">👤 ${escapeHtml(entry.employee)}</div>
+                            <span class="employee-card-position ${positionClass}">${positionLabel}</span>
+                        </div>
+                        <div class="employee-card-shift">
+                            <span class="employee-card-shift-icon">🕒</span>
+                            <span>Смена ${shiftLabel}</span>
+                            <span style="color: var(--light-gray);">•</span>
+                            <span class="employee-card-time">${shiftTime}</span>
+                        </div>
+                    `;
+                    dateCard.appendChild(card);
+                });
+                grid.appendChild(dateCard);
+            });
+        };
+
+        window.renderArchive = function() {
+            const content = document.getElementById('archiveContent');
+            if (!content) return;
+            content.innerHTML = '';
+            const dates = getSortedDates();
+            const pastDates = dates.filter(d => getDateStatus(d) === 'past');
+            let archiveEntriesCount = 0;
+            pastDates.forEach(d => { if (data.schedule[d]) archiveEntriesCount += data.schedule[d].length; });
+            
+            const infoBlock = document.createElement('div');
+            infoBlock.className = 'archive-info';
+            infoBlock.innerHTML = `<div class="archive-info-text">📦 Здесь хранятся <strong>прошедшие смены</strong>.<br>Даты автоматически попадают сюда на следующий день после окончания.</div><div class="archive-counter">${archiveEntriesCount} записей</div>`;
+            content.appendChild(infoBlock);
+            
+            if (currentUser && currentUser.role === 'superadmin' && pastDates.length > 0) {
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'btn btn-danger btn-block';
+                clearBtn.style.marginBottom = '16px';
+                clearBtn.innerHTML = '🗑️ Очистить весь архив';
+                clearBtn.onclick = clearArchive;
+                content.appendChild(clearBtn);
+            }
+            
+            if (pastDates.length === 0) {
+                content.innerHTML += '<div class="empty-message" style="text-align: center; padding: 40px 20px; color: var(--light-gray);">📦<br><br>Архив пока пуст.<br><span style="font-size: 0.9em;">Прошедшие даты автоматически попадают сюда на следующий день.</span></div>';
+                return;
+            }
+            
+            [...pastDates].reverse().forEach(date => {
+                const entries = data.schedule[date];
+                if (!entries || entries.length === 0) return;
+                const dateCard = document.createElement('div');
+                dateCard.className = 'archive-date-card';
+                dateCard.innerHTML = `<h3>📅 ${date} <span class="archive-badge">Архив</span></h3>`;
+                
+                [...entries].sort((a, b) => {
+                    if (a.shift !== b.shift) return a.shift - b.shift;
+                    return a.type.localeCompare(b.type);
+                }).forEach(entry => {
+                    const card = document.createElement('div');
+                    card.className = 'archive-employee-card';
+                    const positionLabel = typeLabels[entry.type] || entry.type;
+                    const positionClass = entry.type;
+                    const shiftLabel = shiftLabels[entry.shift] || entry.shift;
+                    const shiftTime = shiftTimes[entry.shift];
+                    let deleteBtn = currentUser && currentUser.role === 'superadmin' ? `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')" title="Удалить запись">🗑️</button>` : '';
+                    card.innerHTML = `
+                        <div class="archive-employee-info">
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;">👤 ${escapeHtml(entry.employee)}</div>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 0.85em;">
+                                <span class="employee-card-position ${positionClass}" style="font-size: 0.8em;">${positionLabel}</span>
+                                <span style="color: var(--gray);"> Смена ${shiftLabel} • ${shiftTime}</span>
+                            </div>
+                        </div>
+                        ${deleteBtn}
+                    `;
+                    dateCard.appendChild(card);
+                });
+                content.appendChild(dateCard);
+            });
+        };
+
+        window.deleteArchiveEntry = async function(id) {
+            if (!currentUser || currentUser.role !== 'superadmin') { alert('🔒 Только владелец может удалять записи из архива'); return; }
+            if (!confirm('Удалить эту запись из архива?')) return;
+            try {
+                await deleteDoc(doc(db, "schedule", id));
+                await loadAllDataFromFirebase();
+                renderArchive();
+                alert('✅ Запись удалена из архива');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.clearArchive = async function() {
+            if (!currentUser || currentUser.role !== 'superadmin') { alert('🔒 Только владелец может очищать архив'); return; }
+            if (!confirm('⚠️ Вы собираетесь удалить ВСЕ записи из архива?\n\nЭто действие нельзя отменить!')) return;
+            if (!confirm('Точно удалить все прошедшие смены? Последнее предупреждение!')) return;
+            try {
+                const dates = Object.keys(data.schedule);
+                let deletedCount = 0;
+                for (const date of dates) {
+                    if (getDateStatus(date) === 'past') {
+                        for (const entry of data.schedule[date]) {
+                            await deleteDoc(doc(db, "schedule", entry.id));
+                            deletedCount++;
+                        }
+                    }
+                }
+                await loadAllDataFromFirebase();
+                renderArchive();
+                alert(`✅ Архив очищен! Удалено записей: ${deletedCount}`);
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.renderScheduleList = function() {
+            const list = document.getElementById('scheduleList');
+            if (!list) return;
+            list.innerHTML = '';
+            const dates = getSortedDates();
+            const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
+            if (activeDates.length === 0) { list.innerHTML = '<div class="no-employees">Активных записей нет. Прошедшие смены находятся в Архиве.</div>'; return; }
+
+            if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) {
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'btn btn-danger btn-block';
+                clearBtn.style.marginBottom = '12px';
+                clearBtn.innerHTML = '🗑️ Очистить весь текущий график';
+                clearBtn.onclick = clearCurrentSchedule;
+                list.appendChild(clearBtn);
+            }
+            
+            activeDates.forEach(date => {
+                const status = getDateStatus(date);
+                data.schedule[date].forEach(entry => {
+                    const item = document.createElement('div');
+                    item.className = `schedule-item ${status === 'yesterday' ? 'yesterday' : ''}`;
+                    const badgeClass = `badge-${entry.type}`;
+                    let statusMark = status === 'today' ? ' 🔵' : (status === 'yesterday' ? ' ✓' : '');
+                    
+                    const editBtn = `<button class="btn btn-warning btn-sm" onclick="editScheduleEntry('${entry.id}')" style="margin-right:4px;">✏️</button>`;
+                    const deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
+                    
+                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`;
+                    list.appendChild(item);
+                });
+            });
+        };
+
+        window.clearCurrentSchedule = async function() {
+            if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) { alert('🔒 Недостаточно прав'); return; }
+            if (!confirm('⚠️ Вы собираетесь удалить ВСЕ записи из текущего графика (вчера, сегодня и будущие даты).\n\nАрхивные записи НЕ будут затронуты.\n\nПродолжить?')) return;
+            if (!confirm('Точно удалить все текущие смены? Последнее предупреждение!')) return;
+            try {
+                const dates = Object.keys(data.schedule);
+                let deletedCount = 0;
+                for (const date of dates) {
+                    if (getDateStatus(date) !== 'past') {
+                        for (const entry of data.schedule[date]) {
+                            await deleteDoc(doc(db, "schedule", entry.id));
+                            deletedCount++;
+                        }
+                    }
+                }
+                await loadAllDataFromFirebase();
+                renderScheduleList();
+                renderSchedule();
+                alert(`✅ Текущий график очищен! Удалено записей: ${deletedCount}`);
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.addScheduleEntry = async function() {
+            if (editingScheduleId) { alert('Сначала отмените редактирование или сохраните изменения.'); return; }
+            const dateInput = document.getElementById('adminDate').value;
+            const employee = document.getElementById('adminEmployee').value;
+            const type = document.getElementById('adminType').value;
+            const shift = document.getElementById('adminShift').value;
+            if (!dateInput || !employee) { alert('Выберите дату и сотрудника'); return; }
+            const date = formatDate(dateInput);
+            try {
+                await addDoc(collection(db, "schedule"), { date, employee, type, shift });
+                document.getElementById('adminDate').value = '';
+                document.getElementById('adminEmployee').value = '';
+                await loadAllDataFromFirebase();
+                renderScheduleList();
+                renderSchedule();
+                alert(`✅ Добавлен!\n📅 ${date}\n👤 ${employee}`);
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.editScheduleEntry = function(id) {
+            let targetEntry = null;
+            let targetDate = null;
+            for (const date in data.schedule) {
+                const found = data.schedule[date].find(e => e.id === id);
+                if (found) {
+                    targetEntry = found;
+                    targetDate = date;
+                    break;
+                }
+            }
+            if (!targetEntry) return;
+
+            editingScheduleId = id;
+            
+            const [day, month, year] = targetDate.split('.');
+            const isoDate = `${year}-${month}-${day}`;
+            
+            document.getElementById('adminDate').value = isoDate;
+            document.getElementById('adminEmployee').value = targetEntry.employee;
+            document.getElementById('adminType').value = targetEntry.type;
+            document.getElementById('adminShift').value = targetEntry.shift;
+            
+            const btn = document.getElementById('scheduleSubmitBtn');
+            btn.textContent = '💾 Сохранить изменения';
+            btn.className = 'btn btn-warning btn-block';
+            btn.onclick = updateScheduleEntry;
+            document.getElementById('scheduleFormTitle').textContent = '✏️ Редактирование записи графика';
+            
+            if (!document.getElementById('cancelEditScheduleBtn')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.id = 'cancelEditScheduleBtn';
+                cancelBtn.className = 'btn btn-secondary btn-block';
+                cancelBtn.style.marginTop = '8px';
+                cancelBtn.textContent = '✕ Отмена';
+                cancelBtn.onclick = cancelEditSchedule;
+                btn.parentNode.appendChild(cancelBtn);
+            }
+            document.getElementById('admin-schedule').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.updateScheduleEntry = async function() {
+            if (!editingScheduleId) return;
+            const dateInput = document.getElementById('adminDate').value;
+            const employee = document.getElementById('adminEmployee').value;
+            const type = document.getElementById('adminType').value;
+            const shift = document.getElementById('adminShift').value;
+            
+            if (!dateInput || !employee) { alert('Выберите дату и сотрудника'); return; }
+            const date = formatDate(dateInput);
+            
+            try {
+                await updateDoc(doc(db, "schedule", editingScheduleId), { date, employee, type, shift });
+                cancelEditSchedule();
+                await loadAllDataFromFirebase();
+                renderScheduleList();
+                renderSchedule();
+                alert('✅ Запись в графике успешно обновлена!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.cancelEditSchedule = function() {
+            editingScheduleId = null;
+            document.getElementById('adminDate').value = '';
+            document.getElementById('adminEmployee').value = '';
+            document.getElementById('adminType').value = 'kassa';
+            document.getElementById('adminShift').value = '1';
+            
+            const btn = document.getElementById('scheduleSubmitBtn');
+            btn.textContent = '➕ Добавить в график';
+            btn.className = 'btn btn-primary btn-block';
+            btn.onclick = addScheduleEntry;
+            
+            document.getElementById('scheduleFormTitle').textContent = '➕ Добавить сотрудника в график';
+            
+            const cancelBtn = document.getElementById('cancelEditScheduleBtn');
+            if (cancelBtn) cancelBtn.remove();
+        };
+
+        window.deleteScheduleEntry = async function(id) {
+            if (!confirm('Удалить запись?')) return;
+            try {
+                await deleteDoc(doc(db, "schedule", id));
+                await loadAllDataFromFirebase();
+                renderScheduleList();
+                renderSchedule();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        // --- КОНКУРСЫ ---
+        window.addContest = async function() {
+            const name = document.getElementById('contestName').value.trim();
+            const description = document.getElementById('contestDescription').value.trim();
+            const status = document.getElementById('contestStatus').value;
+            if (!name || !description) { alert('Заполните все поля'); return; }
+            try {
+                await addDoc(collection(db, "contests"), { name, description, status, intermediateResults: [], finalResult: null });
+                document.getElementById('contestName').value = '';
+                document.getElementById('contestDescription').value = '';
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+                alert('✅ Конкурс добавлен!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.deleteContest = async function(id) {
+            if (!confirm('Удалить конкурс и все результаты?')) return;
+            try {
+                await deleteDoc(doc(db, "contests", id));
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.toggleContestStatus = async function(id) {
+            const contest = data.contests.find(c => c.id === id);
+            if (!contest) return;
+            const newStatus = contest.status === 'active' ? 'finished' : 'active';
+            try {
+                await updateDoc(doc(db, "contests", id), { status: newStatus });
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.toggleResultForm = function(contestId, formType) {
+            openResultForms[contestId] = openResultForms[contestId] === formType ? null : formType;
+            renderAdminContestList();
+        };
+
+        window.saveIntermediateResult = async function(contestId) {
+            const title = document.getElementById(`intTitle_${contestId}`).value.trim();
+            const description = document.getElementById(`intDesc_${contestId}`).value.trim();
+            if (!title) { alert('Введите название этапа'); return; }
+            const contest = data.contests.find(c => c.id === contestId);
+            if (!contest) return;
+            const newResult = { id: Date.now() + '-' + Math.random().toString(36).substr(2, 9), title, description, date: Date.now() };
+            const updatedResults = [...(contest.intermediateResults || []), newResult];
+            try {
+                await updateDoc(doc(db, "contests", contestId), { intermediateResults: updatedResults });
+                openResultForms[contestId] = null;
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.saveFinalResult = async function(contestId) {
+            const winner = document.getElementById(`finalWinner_${contestId}`).value.trim();
+            const description = document.getElementById(`finalDesc_${contestId}`).value.trim();
+            if (!winner) { alert('Введите имя победителя'); return; }
+            try {
+                await updateDoc(doc(db, "contests", contestId), { finalResult: { winner, description, date: Date.now() }, status: 'finished' });
+                openResultForms[contestId] = null;
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.deleteIntermediateResult = async function(contestId, resultId) {
+            if (!confirm('Удалить результат?')) return;
+            const contest = data.contests.find(c => c.id === contestId);
+            if (!contest) return;
+            const updated = (contest.intermediateResults || []).filter(r => r.id !== resultId);
+            try {
+                await updateDoc(doc(db, "contests", contestId), { intermediateResults: updated });
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.deleteFinalResult = async function(contestId) {
+            if (!confirm('Удалить финальный результат?')) return;
+            try {
+                await updateDoc(doc(db, "contests", contestId), { finalResult: null });
+                await loadAllDataFromFirebase();
+                renderContests();
+                renderAdminContestList();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.renderContests = function() {
+            const list = document.getElementById('contestsList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (data.contests.length === 0) { list.innerHTML = '<div class="empty-message">🏆 Конкурсы пока не добавлены</div>'; return; }
+            data.contests.forEach(contest => {
+                const card = document.createElement('div');
+                card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`;
+                const statusClass = contest.status === 'active' ? 'status-active' : 'status-finished';
+                const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
+                let intermediateHtml = '';
+                if (contest.intermediateResults && contest.intermediateResults.length > 0) {
+                    intermediateHtml = `<div class="results-section"><h4>📊 Промежуточные результаты</h4>${[...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="result-item"><div class="result-item-header"><span class="result-title">${escapeHtml(r.title)}</span><span class="result-date">${formatDateTime(r.date)}</span></div>${r.description ? `<div class="result-description">${escapeHtml(r.description)}</div>` : ''}</div>`).join('')}</div>`;
+                }
+                let finalHtml = '';
+                if (contest.finalResult) {
+                    finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
+                }
+                card.innerHTML = `<span class="contest-status ${statusClass}">${statusText}</span><h3>${escapeHtml(contest.name)}</h3><div class="contest-description">${escapeHtml(contest.description)}</div>${intermediateHtml}${finalHtml}`;
+                list.appendChild(card);
+            });
+        };
+
+        window.renderAdminContestList = function() {
+            const list = document.getElementById('adminContestList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (data.contests.length === 0) { list.innerHTML = '<div class="no-employees">Конкурсы пока не добавлены</div>'; return; }
+            data.contests.forEach(contest => {
+                const item = document.createElement('div');
+                item.className = `admin-contest-item ${contest.status === 'finished' ? 'status-finished-item' : ''}`;
+                const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
+                const toggleBtnText = contest.status === 'active' ? '⏸️ Завершить' : '▶️ Возобновить';
+                let intResultsHtml = (contest.intermediateResults && contest.intermediateResults.length > 0)
+                    ? [...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="admin-result-item"><div class="admin-result-info"><strong>${escapeHtml(r.title)}</strong><small>${formatDateTime(r.date)}</small>${r.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteIntermediateResult('${contest.id}', '${r.id}')">✕</button></div>`).join('')
+                    : '<div class="no-employees">Нет промежуточных результатов</div>';
+                let finalResultHtml = contest.finalResult
+                    ? `<div class="admin-result-item final"><div class="admin-result-info"><strong>🏆 ${escapeHtml(contest.finalResult.winner)}</strong><small>${formatDateTime(contest.finalResult.date)}</small>${contest.finalResult.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(contest.finalResult.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteFinalResult('${contest.id}')">✕</button></div>`
+                    : '<div class="no-employees">Финальный результат не определён</div>';
+                let formHtml = '';
+                if (openResultForms[contest.id] === 'intermediate') {
+                    formHtml = `<div class="inline-form"><h5>📊 Новый промежуточный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название этапа"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">✕ Отмена</button></div></div>`;
+                } else if (openResultForms[contest.id] === 'final') {
+                    formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;">🏆 Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
+                }
+                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
+                list.appendChild(item);
+            });
+        };
+
+        // --- ОБУЧЕНИЕ (МАТЕРИАЛЫ) ---
+        window.openMaterialForm = function() {
+            document.getElementById('addMaterialSection').style.display = 'block';
+            document.getElementById('addMaterialSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            switchMaterialType('text');
+        };
+
+        window.cancelMaterialForm = function() {
+            document.getElementById('addMaterialSection').style.display = 'none';
+            document.getElementById('materialTitle').value = '';
+            document.getElementById('materialText').value = '';
+            document.getElementById('materialFile').value = '';
+            document.getElementById('fileInfo').textContent = '';
+            document.getElementById('fileWarning').style.display = 'none';
+            selectedFileData = null;
+        };
+
+        window.switchMaterialType = function(type) {
+            currentMaterialType = type;
+            document.getElementById('typeTextBtn').classList.toggle('active', type === 'text');
+            document.getElementById('typeFileBtn').classList.toggle('active', type === 'file');
+            document.getElementById('textForm').style.display = type === 'text' ? 'block' : 'none';
+            document.getElementById('fileForm').style.display = type === 'file' ? 'block' : 'none';
+        };
+
+        window.handleFileSelect = function(event) {
+            const file = event.target.files[0];
+            const infoEl = document.getElementById('fileInfo');
+            const warningEl = document.getElementById('fileWarning');
+            if (!file) { selectedFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return; }
+            if (file.size > MAX_FILE_SIZE) {
+                alert(`⚠️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
+                event.target.value = ''; selectedFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return;
+            }
+            warningEl.style.display = file.size > RECOMMENDED_FILE_SIZE ? 'block' : 'none';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFileData = { name: file.name, mimeType: file.type || 'application/octet-stream', size: file.size, data: e.target.result };
+                infoEl.innerHTML = `✅ Выбран: <strong>${file.name}</strong> (${formatFileSize(file.size)})`;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.saveMaterial = async function() {
+            const title = document.getElementById('materialTitle').value.trim();
+            if (!title) { alert('Введите название'); return; }
+            let material = { title, type: currentMaterialType, createdAt: Date.now() };
+            if (currentMaterialType === 'text') {
+                const text = document.getElementById('materialText').value.trim();
+                if (!text) { alert('Введите текст'); return; }
+                material.content = text; material.file = null;
+            } else {
+                if (!selectedFileData) { alert('Выберите файл'); return; }
+                material.content = null; material.file = selectedFileData;
+            }
+            try {
+                await addDoc(collection(db, "materials"), material);
+                cancelMaterialForm();
+                await loadAllDataFromFirebase();
+                renderMaterials();
+                alert('✅ Материал добавлен!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.deleteMaterial = async function(id) {
+            if (!confirm('Удалить материал?')) return;
+            try {
+                await deleteDoc(doc(db, "materials", id));
+                await loadAllDataFromFirebase();
+                renderMaterials();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.viewMaterial = function(id) {
+            const m = data.materials.find(x => x.id === id);
+            if (!m) return;
+            if (m.type === 'text') {
+                openFileViewer(m.title, null, true, m.content);
+            } else {
+                openFileViewer(m.title, m.file);
+            }
+        };
+
+        window.downloadMaterial = function(id) {
+            const m = data.materials.find(x => x.id === id);
+            if (!m || !m.file) return;
+            downloadFileFromModal(m.file.name, m.file.data);
+        };
+
+        window.renderMaterials = function() {
+            const list = document.getElementById('materialsList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (data.materials.length === 0) { list.innerHTML = '<div class="empty-message">📚 Обучающие материалы пока не добавлены.</div>'; return; }
+            data.materials.forEach(material => {
+                const card = document.createElement('div');
+                card.className = `material-card type-${material.type}`;
+                const icon = material.type === 'text' ? '📝' : (material.file ? getFileIcon(material.file.mimeType) : '📄');
+                const tagClass = material.type === 'text' ? 'tag-text' : 'tag-file';
+                const tagText = material.type === 'text' ? 'Текст' : 'Файл';
+                let previewHtml = '';
+                if (material.type === 'text') {
+                    const preview = material.content.length > 200 ? material.content.substring(0, 200) + '...' : material.content;
+                    previewHtml = `<div class="material-preview">${escapeHtml(preview)}</div>`;
+                } else if (material.file) {
+                    previewHtml = `<div class="material-file-info"><div class="file-icon-big">${getFileIcon(material.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(material.file.name)}</div><div class="file-size">${formatFileSize(material.file.size)}</div></div></div>`;
+                }
+                const actionBtn = material.type === 'text' 
+                    ? `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Читать</button>`
+                    : `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadMaterial('${material.id}')">⬇️ Скачать</button>`;
+                
+                card.innerHTML = `<div class="material-header"><div class="material-icon">${icon}</div><div class="material-title">${escapeHtml(material.title)}</div></div><div class="material-meta"><span class="material-tag ${tagClass}">${tagText}</span><span class="material-date">${formatDateTime(material.createdAt)}</span></div>${previewHtml}<div class="material-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteMaterial('${material.id}')">🗑️</button>` : ''}</div>`;
+                list.appendChild(card);
+            });
+        };
+
+        // --- ИНФОРМАЦИЯ ---
+        window.openInfoForm = function() {
+            document.getElementById('addInfoSection').style.display = 'block';
+            document.getElementById('addInfoSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            switchInfoType('text');
+        };
+
+        window.cancelInfoForm = function() {
+            document.getElementById('addInfoSection').style.display = 'none';
+            document.getElementById('infoTitle').value = '';
+            document.getElementById('infoText').value = '';
+            document.getElementById('infoFile').value = '';
+            document.getElementById('infoFileInfo').textContent = '';
+            document.getElementById('infoFileWarning').style.display = 'none';
+            selectedInfoFileData = null;
+        };
+
+        window.switchInfoType = function(type) {
+            currentInfoType = type;
+            document.getElementById('infoTypeTextBtn').classList.toggle('active', type === 'text');
+            document.getElementById('infoTypeFileBtn').classList.toggle('active', type === 'file');
+            document.getElementById('infoTextForm').style.display = type === 'text' ? 'block' : 'none';
+            document.getElementById('infoFileForm').style.display = type === 'file' ? 'block' : 'none';
+        };
+
+        window.handleInfoFileSelect = function(event) {
+            const file = event.target.files[0];
+            const infoEl = document.getElementById('infoFileInfo');
+            const warningEl = document.getElementById('infoFileWarning');
+            if (!file) { selectedInfoFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return; }
+            if (file.size > MAX_FILE_SIZE) {
+                alert(`⚠️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
+                event.target.value = ''; selectedInfoFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return;
+            }
+            warningEl.style.display = file.size > RECOMMENDED_FILE_SIZE ? 'block' : 'none';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedInfoFileData = { name: file.name, mimeType: file.type || 'application/octet-stream', size: file.size, data: e.target.result };
+                infoEl.innerHTML = `✅ Выбран: <strong>${file.name}</strong> (${formatFileSize(file.size)})`;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.saveInfo = async function() {
+            const title = document.getElementById('infoTitle').value.trim();
+            if (!title) { alert('Введите заголовок'); return; }
+            let infoItem = { title, type: currentInfoType, createdAt: Date.now() };
+            if (currentInfoType === 'text') {
+                const text = document.getElementById('infoText').value.trim();
+                if (!text) { alert('Введите текст'); return; }
+                infoItem.content = text; infoItem.file = null;
+            } else {
+                if (!selectedInfoFileData) { alert('Выберите файл'); return; }
+                infoItem.content = null; infoItem.file = selectedInfoFileData;
+            }
+            try {
+                await addDoc(collection(db, "info"), infoItem);
+                cancelInfoForm();
+                await loadAllDataFromFirebase();
+                renderInfo();
+                alert('✅ Информация добавлена!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.deleteInfo = async function(id) {
+            if (!confirm('Удалить эту информацию?')) return;
+            try {
+                await deleteDoc(doc(db, "info", id));
+                await loadAllDataFromFirebase();
+                renderInfo();
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.viewInfo = function(id) {
+            const i = data.info.find(x => x.id === id);
+            if (!i) return;
+            if (i.type === 'text') {
+                openFileViewer(i.title, null, true, i.content);
+            } else {
+                openFileViewer(i.title, i.file);
+            }
+        };
+
+        window.downloadInfo = function(id) {
+            const i = data.info.find(x => x.id === id);
+            if (!i || !i.file) return;
+            downloadFileFromModal(i.file.name, i.file.data);
+        };
+
+        window.renderInfo = function() {
+            const content = document.getElementById('infoContent');
+            if (!content) return;
+            content.innerHTML = '';
+            if (data.info.length === 0) { content.innerHTML = '<div class="empty-message">📢 Информация пока не добавлена</div>'; return; }
+            
+            data.info.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `info-card type-${item.type}`;
+                const icon = item.type === 'text' ? '📝' : (item.file ? getFileIcon(item.file.mimeType) : '📄');
+                const tagClass = item.type === 'text' ? 'tag-text' : 'tag-file';
+                const tagText = item.type === 'text' ? 'Текст' : 'Файл';
+                
+                let previewHtml = '';
+                if (item.type === 'text') {
+                    const preview = item.content.length > 200 ? item.content.substring(0, 200) + '...' : item.content;
+                    previewHtml = `<div class="info-preview">${escapeHtml(preview)}</div>`;
+                } else if (item.file) {
+                    previewHtml = `<div class="info-file-info"><div class="file-icon-big">${getFileIcon(item.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(item.file.name)}</div><div class="file-size">${formatFileSize(item.file.size)}</div></div></div>`;
+                }
+                
+                const actionBtn = item.type === 'text' 
+                    ? `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Читать</button>`
+                    : `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadInfo('${item.id}')">⬇️ Скачать</button>`;
+                
+                card.innerHTML = `
+                    <div class="info-header"><div class="info-icon">${icon}</div><div class="info-title">${escapeHtml(item.title)}</div></div>
+                    <div class="info-meta"><span class="info-tag ${tagClass}">${tagText}</span><span class="info-date">${formatDateTime(item.createdAt)}</span></div>
+                    ${previewHtml}
+                    <div class="info-actions">
+                        ${actionBtn}
+                        ${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteInfo('${item.id}')">🗑️</button>` : ''}
+                    </div>
+                `;
+                content.appendChild(card);
+            });
+        };
+
+        // --- СТАТИСТИКА ---
+        function getMyStats() {
+            if (!currentUser) return null;
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const currentMonthKey = getCurrentMonthKey();
+            
+            let myKassa = 0, myKd = 0, myZal = 0, mySklad = 0;
+            let myTotalShifts = 0, myHoursThisMonth = 0, myShiftsThisMonth = 0;
+            
+            Object.keys(data.schedule).forEach(date => {
+                const entries = data.schedule[date];
+                if (!entries) return;
+                const dateMonth = getMonthFromDate(date);
+                const isCurrentMonth = dateMonth === currentMonthKey;
+                
+                entries.forEach(entry => {
+                    if (entry.employee !== currentUser.name) return;
+                    if (entry.type === 'kassa') myKassa++;
+                    if (entry.type === 'kd') myKd++;
+                    if (entry.type === 'zal') myZal++;
+                    if (entry.type === 'sklad') mySklad++;
+                    myTotalShifts++;
+                    if (isCurrentMonth) {
+                        myHoursThisMonth += (shiftHours[entry.shift] || 0);
+                        myShiftsThisMonth++;
+                    }
+                });
+            });
+            return { kassa: myKassa, kd: myKd, zal: myZal, sklad: mySklad, totalShifts: myTotalShifts, hoursThisMonth: myHoursThisMonth, shiftsThisMonth: myShiftsThisMonth, currentMonthName: `${MONTH_NAMES_GEN[currentMonth]} ${currentYear}` };
+        }
+
+        window.renderStats = function() {
+            updateStats();
+            const content = document.getElementById('statsContent');
+            if (!content) return;
+            const totalIntermediate = data.contests.reduce((sum, c) => sum + (c.intermediateResults ? c.intermediateResults.length : 0), 0);
+            const totalFinal = data.contests.filter(c => c.finalResult).length;
+            
+            let html = `<div class="stats-grid">
+                <div class="stat-card"><div class="stat-number">${data.employees.filter(e => e.role !== 'superadmin').length}</div><div class="stat-label">Сотрудников</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.totalEntries}</div><div class="stat-label">Всего записей</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);"><div class="stat-number">${data.materials.length + data.info.length}</div><div class="stat-label">Материалов и Инфо</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);"><div class="stat-number">${data.contests.length}</div><div class="stat-label">Конкурсов</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #667eea 100%);"><div class="stat-number">${totalIntermediate}</div><div class="stat-label">Промежуточных этапов</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%);"><div class="stat-number">${totalFinal}</div><div class="stat-label">Победителей</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.kassaCount}</div><div class="stat-label">Смен на Кассе</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);"><div class="stat-number">${data.stats.kdCount}</div><div class="stat-label">Смен на КД</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);"><div class="stat-number">${data.stats.zalCount}</div><div class="stat-label">Смен в Зале</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);"><div class="stat-number">${data.stats.skladCount}</div><div class="stat-label">Смен на Складе</div></div>
+            </div>`;
+            
+            const myStats = getMyStats();
+            if (myStats) {
+                const hasAnyShifts = myStats.totalShifts > 0;
+                html += `<div class="my-stats-block">
+                    <div class="my-stats-header">
+                        <span class="my-stats-header-icon">👤</span>
+                        <div class="my-stats-header-title">${escapeHtml(currentUser.name)}</div>
+                        <div class="my-stats-header-subtitle">Ваша личная статистика</div>
+                    </div>
+                    <div class="my-stats-month-info">📅 Статистика за ${myStats.currentMonthName}</div>`;
+                if (!hasAnyShifts) {
+                    html += `<div class="my-stats-empty"><span class="my-stats-empty-icon">📭</span>У вас пока нет смен в графике.<br><span style="font-size: 0.9em; opacity: 0.8;">Как только вас добавят в график — здесь появится ваша статистика.</span></div>`;
+                } else {
+                    html += `<div class="my-stats-grid">
+                        <div class="my-stat-card"><div class="my-stat-icon">💵</div><div class="my-stat-value">${myStats.kassa}</div><div class="my-stat-label">дней на Кассе</div></div>
+                        <div class="my-stat-card"><div class="my-stat-icon">📋</div><div class="my-stat-value">${myStats.kd}</div><div class="my-stat-label">дней на КД</div></div>
+                        <div class="my-stat-card"><div class="my-stat-icon">🏬</div><div class="my-stat-value">${myStats.zal}</div><div class="my-stat-label">дней в Зале</div></div>
+                        <div class="my-stat-card"><div class="my-stat-icon">📦</div><div class="my-stat-value">${myStats.sklad}</div><div class="my-stat-label">дней на Складе</div></div>
+                        <div class="my-stat-total"><div class="my-stat-icon">📊</div><div class="my-stat-value">${myStats.totalShifts}</div><div class="my-stat-label">Всего смен за всё время</div></div>
+                        <div class="my-stat-hours"><div class="my-stat-icon">⏱️</div><div class="my-stat-value">${myStats.hoursThisMonth}</div><div class="my-stat-label">часов отработано в этом месяце (${myStats.shiftsThisMonth} смен)</div></div>
+                    </div>`;
+                }
+                html += `</div>`;
+            }
+            content.innerHTML = html;
+        };
+
+        function updateStats() {
+            let totalEntries = 0, kassaCount = 0, kdCount = 0, zalCount = 0, skladCount = 0;
+            Object.values(data.schedule).forEach(entries => {
+                entries.forEach(entry => {
+                    totalEntries++;
+                    if (entry.type === 'kassa') kassaCount++;
+                    if (entry.type === 'kd') kdCount++;
+                    if (entry.type === 'zal') zalCount++;
+                    if (entry.type === 'sklad') skladCount++;
+                });
+            });
+            data.stats.totalEntries = totalEntries;
+            data.stats.kassaCount = kassaCount;
+            data.stats.kdCount = kdCount;
+            data.stats.zalCount = zalCount;
+            data.stats.skladCount = skladCount;
+            data.stats.activeContests = data.contests.filter(c => c.status === 'active').length;
+        }
+
+        // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const [year, month, day] = dateStr.split('-');
+            return `${day}.${month}.${year}`;
+        }
+
+        function formatDateTime(timestamp) {
+            const d = new Date(timestamp);
+            return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' Б';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' КБ';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' МБ';
+        }
+
+        function getFileIcon(mimeType) {
+            if (!mimeType) return '📄';
+            if (mimeType.startsWith('image/')) return '🖼️';
+            if (mimeType.startsWith('video/')) return '🎬';
+            if (mimeType.startsWith('audio/')) return '🎵';
+            if (mimeType.includes('pdf')) return '📕';
+            if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
+            if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📗';
+            if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📙';
+            if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '🗜️';
+            return '📄';
+        }
+
+        function getSortedDates() {
+            return Object.keys(data.schedule).sort((a, b) => {
+                const [dayA, monthA, yearA] = a.split('.').map(Number);
+                const [dayB, monthB, yearB] = b.split('.').map(Number);
+                return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        window.renderAdmin = function() {
+            renderEmployeesList();
+            renderEmployeeSelect();
+            renderScheduleList();
+            renderAdminContestList();
+        };
+
+        function renderAll() {
+            renderSchedule();
+            renderMaterials();
+            renderContests();
+            renderInfo();
+            renderStats();
+            if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) renderAdmin();
+        }
+
+        window.closeModal = function() { document.getElementById('materialModal').classList.remove('open'); };
+        document.getElementById('materialModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+        window.resetAllData = async function() {
+            if (!confirm('⚠️ ВСЕ данные в облаке будут удалены! Продолжить?') || !confirm('Точно-точно? Последнее предупреждение!')) return;
+            try {
+                const collections = ["users", "schedule", "materials", "contests", "info", "settings"];
+                for (const colName of collections) {
+                    const snap = await getDocs(collection(db, colName));
+                    for (const d of snap.docs) {
+                        await deleteDoc(doc(db, colName, d.id));
+                    }
+                }
+                alert('✅ Все данные удалены');
+                doLogout();
+            } catch (e) {
+                alert('Ошибка при сбросе: ' + e.message);
+            }
+        };
+
+        autoLogin();
+    </script>
+</body>
+</html>
