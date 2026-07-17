@@ -39,6 +39,124 @@
             }
         }
 
+        /* App Header with Image Background */
+        .app-header {
+            position: relative;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            min-height: 120px;
+        }
+
+        .header-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .header-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .header-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(45, 155, 90, 0.75) 0%, rgba(255, 140, 66, 0.75) 100%);
+        }
+
+        .header-top {
+            position: relative;
+            z-index: 2;
+            padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            color: white;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+        }
+
+        .current-user-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .role-badge {
+            background: var(--gold);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+        }
+
+        .header-clock {
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+        }
+
+        .clock-time {
+            font-size: 1.3em;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+        }
+
+        .clock-date {
+            font-size: 0.8em;
+            opacity: 0.95;
+            margin-top: 2px;
+        }
+
+        .clock-separator {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
         .login-screen, .maintenance-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
         .login-screen.hidden, .maintenance-screen.hidden { display: none; }
         .login-container, .maintenance-container { background: white; border-radius: var(--radius-xl); padding: 30px 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.4s ease; text-align: center; }
@@ -57,18 +175,6 @@
         .login-error { background: #fff5f5; border-left: 3px solid var(--danger); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.85em; color: var(--danger); display: none; text-align: left; }
         .login-error.show { display: block; }
         .login-hint { background: #e7f3ff; border-left: 3px solid var(--info); padding: 10px 12px; border-radius: 6px; margin-top: 14px; font-size: 0.82em; color: #0c5460; line-height: 1.4; text-align: left; }
-        
-        .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-        .header-title h1 { font-size: 1.3em; font-weight: 700; letter-spacing: 0.5px; }
-        .header-subtitle { font-size: 0.75em; opacity: 0.85; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .current-user-badge { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 0.9em; display: inline-flex; align-items: center; gap: 4px; }
-        .role-badge { background: var(--gold); color: var(--dark); padding: 1px 6px; border-radius: 8px; font-size: 0.85em; font-weight: 700; }
-        .header-clock { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 6px 12px; border-radius: var(--radius-md); text-align: center; flex-shrink: 0; }
-        .clock-time { font-size: 1.2em; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
-        .clock-date { font-size: 0.7em; opacity: 0.9; margin-top: 1px; }
-        .clock-separator { animation: blink 1s infinite; }
-        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.3; } }
         
         .top-nav { background: white; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 99; }
         .top-nav-inner { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 0 8px; max-width: 1200px; margin: 0 auto; }
@@ -299,6 +405,23 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+            }
+            
+            .header-title {
+                text-align: center;
+            }
+            
+            .header-clock {
+                align-self: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -344,18 +467,20 @@
         </div>
     </div>
 
+    <!-- App Header with Image Background -->
     <header class="app-header">
+        <div class="header-background">
+            <img src="header-bg.jpg" alt="ДОМОВИД">
+        </div>
         <div class="header-top">
             <div class="header-title">
-                <div>
-                    <h1> ДОМОВИД</h1>
-                    <div class="header-subtitle">
-                        <span>Рабочая группа</span>
-                        <span class="current-user-badge" id="currentUserBadge" style="display:none;">
-                            👤 <span id="currentUserName"></span>
-                            <span class="role-badge" id="currentUserRole"></span>
-                        </span>
-                    </div>
+                <h1>ДОМОВИД</h1>
+                <div class="header-subtitle">
+                    <span>Рабочая группа</span>
+                    <span class="current-user-badge" id="currentUserBadge" style="display:none;">
+                        👤 <span id="currentUserName"></span>
+                        <span class="role-badge" id="currentUserRole"></span>
+                    </span>
                 </div>
             </div>
             <div class="header-clock">
@@ -422,7 +547,7 @@
         </div>
 
         <div id="plan" class="section">
-            <h2 class="section-title">📈 План на месяц</h2>
+            <h2 class="section-title"> План на месяц</h2>
             <div class="dev-block">
                 <span class="dev-icon">🚧</span>
                 <h3>Раздел в разработке</h3>
@@ -434,7 +559,7 @@
             <div id="materialsList" class="materials-list"></div>
         </div>
         <div id="contests" class="section">
-            <h2 class="section-title"> Конкурсы персонала</h2>
+            <h2 class="section-title">🏆 Конкурсы персонала</h2>
             <div id="contestsList" class="contests-list"></div>
         </div>
         <div id="info" class="section">
@@ -448,7 +573,7 @@
         <div id="admin" class="section">
             <h2 class="section-title">⚙️ Админ-панель</h2>
             <div class="admin-tabs">
-                <button class="admin-tab active" onclick="showAdminTab('schedule', this)">📅 График</button>
+                <button class="admin-tab active" onclick="showAdminTab('schedule', this)"> График</button>
                 <button class="admin-tab" onclick="showAdminTab('employees', this)">👥 Сотрудники</button>
                 <button class="admin-tab" onclick="showAdminTab('contests', this)">🏆 Конкурсы</button>
                 <button class="admin-tab" onclick="showAdminTab('materials', this)">📚 Обучение</button>
@@ -470,7 +595,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>💼 Тип работы</label>
+                            <label> Тип работы</label>
                             <select id="adminType">
                                 <option value="kassa">Касса</option>
                                 <option value="kd">КД</option>
@@ -479,7 +604,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>🕒 Смена</label>
+                            <label> Смена</label>
                             <select id="adminShift">
                                 <option value="1">Смена 9/1 (10:00 - 19:00)</option>
                                 <option value="2">Смена 9/2 (12:00 - 21:00)</option>
@@ -490,20 +615,20 @@
                     <button class="btn btn-primary btn-block" onclick="addScheduleEntry()">➕ Добавить в график</button>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title"> Текущие записи графика</div>
+                    <div class="admin-card-title">📋 Текущие записи графика</div>
                     <div id="scheduleList"></div>
                 </div>
             </div>
             <div id="admin-employees" class="admin-section">
                 <div class="admin-card">
-                    <div class="admin-card-title" id="employeeFormTitle">➕ Добавить сотрудника</div>
+                    <div class="admin-card-title" id="employeeFormTitle"> Добавить сотрудника</div>
                     <div class="form-group">
                         <label>👤 ФИО</label>
                         <input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label> Телефон (логин)</label>
+                            <label>📱 Телефон (логин)</label>
                             <input type="tel" id="newEmployeePhone" placeholder="89001234567">
                         </div>
                         <div class="form-group">
@@ -512,7 +637,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>️ Роль</label>
+                        <label>🛡️ Роль</label>
                         <select id="newEmployeeRole">
                             <option value="user">👤 Сотрудник</option>
                             <option value="admin">👑 Администратор</option>
@@ -521,7 +646,7 @@
                     <button class="btn btn-success btn-block" id="employeeSubmitBtn" onclick="addEmployee()">➕ Добавить сотрудника</button>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title">👥 Список сотрудников <span id="employeeCounter" style="background:var(--primary);color:white;padding:2px 10px;border-radius:10px;font-size:0.8em;margin-left:8px;">0</span></div>
+                    <div class="admin-card-title"> Список сотрудников <span id="employeeCounter" style="background:var(--primary);color:white;padding:2px 10px;border-radius:10px;font-size:0.8em;margin-left:8px;">0</span></div>
                     <div id="employeesList"></div>
                 </div>
             </div>
@@ -529,7 +654,7 @@
                 <div class="admin-card">
                     <div class="admin-card-title">🏆 Добавить конкурс</div>
                     <div class="form-group">
-                        <label> Название конкурса</label>
+                        <label>🏆 Название конкурса</label>
                         <input type="text" id="contestName" placeholder="Введите название конкурса">
                     </div>
                     <div class="form-group">
@@ -546,7 +671,7 @@
                     <button class="btn btn-primary btn-block" onclick="addContest()">➕ Добавить конкурс</button>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title"> Список конкурсов</div>
+                    <div class="admin-card-title">📋 Список конкурсов</div>
                     <div id="adminContestList"></div>
                 </div>
             </div>
@@ -558,7 +683,7 @@
                         <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')">📎 Файл</button>
                     </div>
                     <div class="form-group">
-                        <label>📌 Название</label>
+                        <label> Название</label>
                         <input type="text" id="materialTitle" placeholder="Например: Инструкция по работе с кассой">
                     </div>
                     <div id="textForm">
@@ -590,11 +715,11 @@
                 <div class="admin-card">
                     <div class="admin-card-title">📢 Добавить информацию</div>
                     <div class="form-group">
-                        <label> Заголовок</label>
+                        <label>📌 Заголовок</label>
                         <input type="text" id="infoTitle" placeholder="Заголовок">
                     </div>
                     <div class="form-group">
-                        <label> Текст</label>
+                        <label>📝 Текст</label>
                         <textarea id="infoText" rows="4" placeholder="Текст информации"></textarea>
                     </div>
                     <button class="btn btn-primary btn-block" onclick="addInfo()">➕ Добавить</button>
@@ -800,7 +925,7 @@
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    showLoginError(' Неверный телефон или пароль');
+                    showLoginError('❌ Неверный телефон или пароль');
                     return;
                 }
 
@@ -835,7 +960,7 @@
             document.getElementById('currentUserName').textContent = currentUser.name;
             
             let roleText = '👤 Сотрудник';
-            if (currentUser.role === 'admin') roleText = ' Админ';
+            if (currentUser.role === 'admin') roleText = '👑 Админ';
             if (currentUser.role === 'superadmin') roleText = '💎 Владелец';
             document.getElementById('currentUserRole').textContent = roleText;
             
@@ -955,7 +1080,7 @@
             btn.className = 'btn btn-success btn-block';
             btn.onclick = addEmployee;
             
-            document.getElementById('employeeFormTitle').textContent = ' Добавить сотрудника';
+            document.getElementById('employeeFormTitle').textContent = '➕ Добавить сотрудника';
             
             const cancelBtn = document.getElementById('cancelEditBtn');
             if (cancelBtn) cancelBtn.remove();
@@ -1012,10 +1137,10 @@
             visibleEmployees.forEach(emp => {
                 const item = document.createElement('div');
                 item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
-                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">👑 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
+                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge"> Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
                 const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
                 const isSelf = currentUser && currentUser.id === emp.id;
-                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">️</button>`;
+                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`;
                 const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`;
                 item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(emp.name)} ${roleBadge}</div><div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div></div>`;
                 list.appendChild(item);
@@ -1060,8 +1185,8 @@
                 item.innerHTML = `
                     <div class="employee-admin-header">
                         <div class="employee-admin-info">
-                            <div class="employee-admin-name">👑 ${escapeHtml(admin.name)}</div>
-                            <div class="employee-admin-phone">📱 ${escapeHtml(admin.phone)}</div>
+                            <div class="employee-admin-name"> ${escapeHtml(admin.name)}</div>
+                            <div class="employee-admin-phone"> ${escapeHtml(admin.phone)}</div>
                         </div>
                         <button class="btn btn-gold btn-sm" onclick="transferSuperAdmin('${admin.id}')">Передать полномочия</button>
                     </div>
@@ -1187,7 +1312,7 @@
             infoBlock.className = 'archive-info';
             infoBlock.innerHTML = `
                 <div class="archive-info-text">
-                    📦 Здесь хранятся <strong>прошедшие смены</strong>.<br>
+                     Здесь хранятся <strong>прошедшие смены</strong>.<br>
                     Даты автоматически попадают сюда на следующий день после окончания.
                 </div>
                 <div class="archive-counter">${archiveEntriesCount} записей</div>
@@ -1240,7 +1365,7 @@
                     
                     let deleteBtn = '';
                     if (currentUser && currentUser.role === 'superadmin') {
-                        deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')" title="Удалить запись">️</button>`;
+                        deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')" title="Удалить запись">🗑️</button>`;
                     }
                     
                     card.innerHTML = `
@@ -1262,7 +1387,7 @@
 
         window.deleteArchiveEntry = async function(id) {
             if (!currentUser || currentUser.role !== 'superadmin') {
-                alert('🔒 Только владелец может удалять записи из архива');
+                alert(' Только владелец может удалять записи из архива');
                 return;
             }
             if (!confirm('Удалить эту запись из архива?')) return;
@@ -1319,7 +1444,7 @@
                 const clearBtn = document.createElement('button');
                 clearBtn.className = 'btn btn-danger btn-block';
                 clearBtn.style.marginBottom = '12px';
-                clearBtn.innerHTML = '️ Очистить весь текущий график';
+                clearBtn.innerHTML = '🗑️ Очистить весь текущий график';
                 clearBtn.onclick = clearCurrentSchedule;
                 list.appendChild(clearBtn);
             }
@@ -1494,7 +1619,7 @@
             const list = document.getElementById('contestsList');
             if (!list) return;
             list.innerHTML = '';
-            if (data.contests.length === 0) { list.innerHTML = '<div class="empty-message"> Конкурсы пока не добавлены</div>'; return; }
+            if (data.contests.length === 0) { list.innerHTML = '<div class="empty-message">🏆 Конкурсы пока не добавлены</div>'; return; }
             data.contests.forEach(contest => {
                 const card = document.createElement('div');
                 card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`;
@@ -1531,11 +1656,11 @@
                     : '<div class="no-employees">Финальный результат не определён</div>';
                 let formHtml = '';
                 if (openResultForms[contest.id] === 'intermediate') {
-                    formHtml = `<div class="inline-form"><h5>📊 Новый промежуточный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название этапа"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">✕ Отмена</button></div></div>`;
+                    formHtml = `<div class="inline-form"><h5> Новый промежуточный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название этапа"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">✕ Отмена</button></div></div>`;
                 } else if (openResultForms[contest.id] === 'final') {
-                    formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;"> Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
+                    formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;">🏆 Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
                 }
-                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
+                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')"></button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
                 list.appendChild(item);
             });
         };
@@ -1544,7 +1669,7 @@
             const content = document.getElementById('infoContent');
             if (!content) return;
             content.innerHTML = '';
-            if (data.info.length === 0) { content.innerHTML = '<div class="empty-message">📢 Информация пока не добавлена</div>'; return; }
+            if (data.info.length === 0) { content.innerHTML = '<div class="empty-message"> Информация пока не добавлена</div>'; return; }
             data.info.forEach(item => {
                 const block = document.createElement('div');
                 block.className = 'info-block';
@@ -1675,7 +1800,7 @@
                             <div class="my-stat-label">дней в Зале</div>
                         </div>
                         <div class="my-stat-card">
-                            <div class="my-stat-icon">📦</div>
+                            <div class="my-stat-icon"></div>
                             <div class="my-stat-value">${myStats.sklad}</div>
                             <div class="my-stat-label">дней на Складе</div>
                         </div>
@@ -1685,7 +1810,7 @@
                             <div class="my-stat-label">Всего смен за всё время</div>
                         </div>
                         <div class="my-stat-hours">
-                            <div class="my-stat-icon">⏱️</div>
+                            <div class="my-stat-icon">️</div>
                             <div class="my-stat-value">${myStats.hoursThisMonth}</div>
                             <div class="my-stat-label">часов отработано в этом месяце (${myStats.shiftsThisMonth} смен)</div>
                         </div>
@@ -1742,9 +1867,9 @@
             if (mimeType.includes('pdf')) return '📕';
             if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
             if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📗';
-            if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '';
+            if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📙';
             if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '🗜️';
-            return '📄';
+            return '';
         }
 
         function getSortedDates() {
