@@ -39,13 +39,10 @@
         
         /* ОБНОВЛЁННАЯ ШАПКА С БАННЕРОМ */
         .app-header { 
-            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-            padding: 0;
             position: sticky; 
             top: 0; 
             z-index: 100; 
             box-shadow: var(--shadow-md);
-            border-bottom: 3px solid var(--primary);
         }
         
         .header-banner {
@@ -53,91 +50,101 @@
             width: 100%;
             height: auto;
             overflow: hidden;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
         
         .header-banner img {
             width: 100%;
             height: auto;
             display: block;
-            max-height: 180px;
+            max-height: 200px;
             object-fit: cover;
             object-position: center;
         }
         
-        .header-overlay {
+        /* Контейнер для контента поверх баннера */
+        .header-content {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to right, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 12px 16px;
+            z-index: 2;
         }
         
         .header-top { 
             display: flex; 
             justify-content: space-between; 
-            align-items: center; 
+            align-items: flex-start;
             gap: 12px;
-            padding: 12px 16px;
-            background: white;
         }
         
         .header-title h1 { 
-            font-size: 1.3em; 
+            font-size: 1.4em; 
             font-weight: 700; 
             letter-spacing: 0.5px;
-            color: var(--primary);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 4px;
         }
         
         .header-subtitle { 
-            font-size: 0.75em; 
-            color: var(--gray);
+            font-size: 0.8em; 
+            color: rgba(255,255,255,0.95);
             display: flex; 
             align-items: center; 
             gap: 6px; 
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
         
         .current-user-badge { 
-            background: rgba(102, 126, 234, 0.1); 
-            color: var(--primary);
-            padding: 2px 8px; 
-            border-radius: 10px; 
-            font-size: 0.9em; 
+            background: rgba(255,255,255,0.25); 
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 3px 10px; 
+            border-radius: 12px; 
+            font-size: 0.85em; 
             display: inline-flex; 
             align-items: center; 
-            gap: 4px; 
+            gap: 4px;
+            border: 1px solid rgba(255,255,255,0.3);
         }
         
         .role-badge { 
             background: var(--gold); 
             color: var(--dark); 
-            padding: 1px 6px; 
+            padding: 2px 8px; 
             border-radius: 8px; 
             font-size: 0.85em; 
             font-weight: 700; 
         }
         
         .header-clock { 
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
             color: white;
             padding: 8px 14px; 
             border-radius: var(--radius-md); 
             text-align: center; 
             flex-shrink: 0;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
         }
         
         .clock-time { 
-            font-size: 1.2em; 
+            font-size: 1.3em; 
             font-weight: 700; 
             font-variant-numeric: tabular-nums; 
             letter-spacing: 1px; 
         }
         
         .clock-date { 
-            font-size: 0.7em; 
+            font-size: 0.75em; 
             opacity: 0.95; 
             margin-top: 2px; 
         }
@@ -378,15 +385,22 @@
         /* Адаптивность для баннера */
         @media (max-width: 768px) {
             .header-banner img {
-                max-height: 120px;
+                max-height: 140px;
             }
-            .header-top {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
+            .header-content {
+                padding: 8px 12px;
+            }
+            .header-title h1 {
+                font-size: 1.1em;
+            }
+            .header-subtitle {
+                font-size: 0.75em;
+            }
+            .clock-time {
+                font-size: 1.1em;
             }
             .header-clock {
-                align-self: flex-end;
+                padding: 6px 10px;
             }
         }
     </style>
@@ -404,7 +418,7 @@
     <div class="login-screen hidden" id="loginScreen">
         <div class="login-container">
             <div class="login-logo">
-                <div class="login-logo-icon">🏠</div>
+                <div class="login-logo-icon"></div>
                 <h2>ДОМОВИД</h2>
                 <p>Вход в рабочую группу</p>
             </div>
@@ -430,29 +444,28 @@
     </div>
 
     <header class="app-header">
-        <!-- БАННЕР С КАРТИНКОЙ -->
         <div class="header-banner">
-            <div class="header-overlay"></div>
-            <!-- Замените src на путь к вашей картинке -->
+            <!-- Картинка баннера -->
             <img src="domovid-banner.jpg" alt="ДОМОВИД - магазины домашнего уюта">
-        </div>
-        
-        <div class="header-top">
-            <div class="header-title">
-                <div>
-                    <h1>Рабочая группа</h1>
-                    <div class="header-subtitle">
-                        <span>График и управление персоналом</span>
-                        <span class="current-user-badge" id="currentUserBadge" style="display:none;">
-                            👤 <span id="currentUserName"></span>
-                            <span class="role-badge" id="currentUserRole"></span>
-                        </span>
+            
+            <!-- Контент поверх картинки -->
+            <div class="header-content">
+                <div class="header-top">
+                    <div class="header-title">
+                        <h1>Рабочая группа</h1>
+                        <div class="header-subtitle">
+                            <span>График и управление персоналом</span>
+                            <span class="current-user-badge" id="currentUserBadge" style="display:none;">
+                                👤 <span id="currentUserName"></span>
+                                <span class="role-badge" id="currentUserRole"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="header-clock">
+                        <div class="clock-time" id="clockTime">--:--:--</div>
+                        <div class="clock-date" id="clockDate">...</div>
                     </div>
                 </div>
-            </div>
-            <div class="header-clock">
-                <div class="clock-time" id="clockTime">--:--:--</div>
-                <div class="clock-date" id="clockDate">...</div>
             </div>
         </div>
     </header>
@@ -476,7 +489,7 @@
                 <span>Обучение</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('contests', this)">
-                <span class="nav-icon"></span>
+                <span class="nav-icon">🏆</span>
                 <span>Конкурсы</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('info', this)">
@@ -530,11 +543,11 @@
             <div id="contestsList" class="contests-list"></div>
         </div>
         <div id="info" class="section">
-            <h2 class="section-title">📢 Информация</h2>
+            <h2 class="section-title"> Информация</h2>
             <div id="infoContent"></div>
         </div>
         <div id="stats" class="section">
-            <h2 class="section-title">📊 Статистика</h2>
+            <h2 class="section-title"> Статистика</h2>
             <div id="statsContent"></div>
         </div>
         <div id="admin" class="section">
@@ -562,7 +575,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>💼 Тип работы</label>
+                            <label> Тип работы</label>
                             <select id="adminType">
                                 <option value="kassa">Касса</option>
                                 <option value="kd">КД</option>
@@ -582,15 +595,15 @@
                     <button class="btn btn-primary btn-block" onclick="addScheduleEntry()">➕ Добавить в график</button>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title"> Текущие записи графика</div>
+                    <div class="admin-card-title">📋 Текущие записи графика</div>
                     <div id="scheduleList"></div>
                 </div>
             </div>
             <div id="admin-employees" class="admin-section">
                 <div class="admin-card">
-                    <div class="admin-card-title" id="employeeFormTitle">➕ Добавить сотрудника</div>
+                    <div class="admin-card-title" id="employeeFormTitle"> Добавить сотрудника</div>
                     <div class="form-group">
-                        <label>👤 ФИО</label>
+                        <label> ФИО</label>
                         <input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович">
                     </div>
                     <div class="form-row">
@@ -604,7 +617,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>️ Роль</label>
+                        <label>🛡️ Роль</label>
                         <select id="newEmployeeRole">
                             <option value="user">👤 Сотрудник</option>
                             <option value="admin">👑 Администратор</option>
@@ -629,7 +642,7 @@
                         <textarea id="contestDescription" rows="3" placeholder="Описание конкурса"></textarea>
                     </div>
                     <div class="form-group">
-                        <label> Статус</label>
+                        <label>📊 Статус</label>
                         <select id="contestStatus">
                             <option value="active">Активный</option>
                             <option value="finished">Завершен</option>
@@ -647,7 +660,7 @@
                     <div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);">📝 Новый материал</div>
                     <div class="type-switcher">
                         <button type="button" id="typeTextBtn" class="active" onclick="switchMaterialType('text')">📝 Текст</button>
-                        <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')">📎 Файл</button>
+                        <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')"> Файл</button>
                     </div>
                     <div class="form-group">
                         <label>📌 Название</label>
@@ -655,7 +668,7 @@
                     </div>
                     <div id="textForm">
                         <div class="form-group">
-                            <label> Текст материала</label>
+                            <label>📄 Текст материала</label>
                             <textarea id="materialText" rows="6" placeholder="Введите текст..."></textarea>
                         </div>
                     </div>
@@ -673,7 +686,7 @@
                     </div>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title"> Обучающие материалы</div>
+                    <div class="admin-card-title">📚 Обучающие материалы</div>
                     <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Добавляйте инструкции и файлы для обучения.</p>
                     <button class="btn btn-primary btn-block" onclick="openMaterialForm()">➕ Добавить материал</button>
                 </div>
@@ -715,7 +728,7 @@
             </div>
 
             <div class="admin-card">
-                <div class="admin-card-title">👥 Передача полномочий Владельца</div>
+                <div class="admin-card-title"> Передача полномочий Владельца</div>
                 <p style="color: var(--gray); font-size: 0.9em; margin-bottom: 12px; line-height: 1.4;">
                     Вы можете передать роль Владельца любому из текущих Администраторов. Ваша роль при этом автоматически изменится на "Администратор".
                 </p>
@@ -892,7 +905,7 @@
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    showLoginError('❌ Неверный телефон или пароль');
+                    showLoginError(' Неверный телефон или пароль');
                     return;
                 }
 
@@ -926,7 +939,7 @@
             document.getElementById('currentUserBadge').style.display = 'inline-flex';
             document.getElementById('currentUserName').textContent = currentUser.name;
             
-            let roleText = ' Сотрудник';
+            let roleText = '👤 Сотрудник';
             if (currentUser.role === 'admin') roleText = '👑 Админ';
             if (currentUser.role === 'superadmin') roleText = '💎 Владелец';
             document.getElementById('currentUserRole').textContent = roleText;
@@ -1003,7 +1016,7 @@
                 cancelBtn.id = 'cancelEditBtn';
                 cancelBtn.className = 'btn btn-secondary btn-block';
                 cancelBtn.style.marginTop = '8px';
-                cancelBtn.textContent = '✕ Отмена';
+                cancelBtn.textContent = ' Отмена';
                 cancelBtn.onclick = cancelEditEmployee;
                 btn.parentNode.appendChild(cancelBtn);
             }
@@ -1043,7 +1056,7 @@
             document.getElementById('newEmployeeRole').value = 'user';
             
             const btn = document.getElementById('employeeSubmitBtn');
-            btn.textContent = '➕ Добавить сотрудника';
+            btn.textContent = ' Добавить сотрудника';
             btn.className = 'btn btn-success btn-block';
             btn.onclick = addEmployee;
             
@@ -1104,10 +1117,10 @@
             visibleEmployees.forEach(emp => {
                 const item = document.createElement('div');
                 item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
-                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">👑 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
-                const phoneText = emp.phone ? ` ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
+                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">👑 Админ</span>' : '<span class="employee-admin-role role-user-badge"> Сотрудник</span>';
+                const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
                 const isSelf = currentUser && currentUser.id === emp.id;
-                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">️</button>`;
+                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`;
                 const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`;
                 item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(emp.name)} ${roleBadge}</div><div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div></div>`;
                 list.appendChild(item);
@@ -1133,7 +1146,7 @@
                 maintBtn.textContent = '🔴 Выключить режим технических работ';
                 maintBtn.className = 'btn btn-danger btn-block';
             } else {
-                maintBtn.textContent = ' Включить режим технических работ';
+                maintBtn.textContent = '🟡 Включить режим технических работ';
                 maintBtn.className = 'btn btn-warning btn-block';
             }
 
@@ -1165,7 +1178,7 @@
         window.toggleMaintenanceMode = async function() {
             const newMode = !data.settings.maintenanceMode;
             const confirmMsg = newMode 
-                ? '⚠️ Вы собираетесь включить режим технических работ. Обычные сотрудники и админы потеряют доступ к приложению. Продолжить?'
+                ? '️ Вы собираетесь включить режим технических работ. Обычные сотрудники и админы потеряют доступ к приложению. Продолжить?'
                 : 'Выключить режим технических работ и открыть доступ для всех?';
                 
             if (!confirm(confirmMsg)) return;
@@ -1210,7 +1223,7 @@
             const dates = getSortedDates();
             const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
             
-            if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
+            if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message"> График пока пустой.</div>'; return; }
             
             activeDates.forEach(date => {
                 const entries = data.schedule[date];
@@ -1224,7 +1237,7 @@
                 if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>';
                 else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>';
                 
-                dateCard.innerHTML = `<h3> ${date} ${statusBadge}</h3>`;
+                dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`;
                 
                 const sortedEntries = [...entries].sort((a, b) => {
                     if (a.shift !== b.shift) return a.shift - b.shift;
@@ -1290,7 +1303,7 @@
                 const clearBtn = document.createElement('button');
                 clearBtn.className = 'btn btn-danger btn-block';
                 clearBtn.style.marginBottom = '16px';
-                clearBtn.innerHTML = '🗑️ Очистить весь архив';
+                clearBtn.innerHTML = '️ Очистить весь архив';
                 clearBtn.onclick = clearArchive;
                 content.appendChild(clearBtn);
             }
@@ -1337,10 +1350,10 @@
                     
                     card.innerHTML = `
                         <div class="archive-employee-info">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;"> ${escapeHtml(entry.employee)}</div>
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;">👤 ${escapeHtml(entry.employee)}</div>
                             <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 0.85em;">
                                 <span class="employee-card-position ${positionClass}" style="font-size: 0.8em;">${positionLabel}</span>
-                                <span style="color: var(--gray);"> Смена ${shiftLabel} • ${shiftTime}</span>
+                                <span style="color: var(--gray);">🕒 Смена ${shiftLabel} • ${shiftTime}</span>
                             </div>
                         </div>
                         ${deleteBtn}
@@ -1354,7 +1367,7 @@
 
         window.deleteArchiveEntry = async function(id) {
             if (!currentUser || currentUser.role !== 'superadmin') {
-                alert('🔒 Только владелец может удалять записи из архива');
+                alert(' Только владелец может удалять записи из архива');
                 return;
             }
             if (!confirm('Удалить эту запись из архива?')) return;
@@ -1422,7 +1435,7 @@
                     const item = document.createElement('div');
                     item.className = `schedule-item ${status === 'yesterday' ? 'yesterday' : ''}`;
                     const badgeClass = `badge-${entry.type}`;
-                    let statusMark = status === 'today' ? ' ' : (status === 'yesterday' ? ' ✓' : '');
+                    let statusMark = status === 'today' ? ' 🔵' : (status === 'yesterday' ? ' ✓' : '');
                     item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
                     list.appendChild(item);
                 });
@@ -1469,7 +1482,7 @@
                 await loadAllDataFromFirebase();
                 renderScheduleList();
                 renderSchedule();
-                alert(`✅ Добавлен!\n📅 ${date}\n👤 ${employee}`);
+                alert(`✅ Добавлен!\n📅 ${date}\n ${employee}`);
             } catch (e) { alert('Ошибка: ' + e.message); }
         };
 
@@ -1591,14 +1604,14 @@
                 const card = document.createElement('div');
                 card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`;
                 const statusClass = contest.status === 'active' ? 'status-active' : 'status-finished';
-                const statusText = contest.status === 'active' ? '🟢 Активный' : ' Завершен';
+                const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
                 let intermediateHtml = '';
                 if (contest.intermediateResults && contest.intermediateResults.length > 0) {
                     intermediateHtml = `<div class="results-section"><h4>📊 Промежуточные результаты</h4>${[...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="result-item"><div class="result-item-header"><span class="result-title">${escapeHtml(r.title)}</span><span class="result-date">${formatDateTime(r.date)}</span></div>${r.description ? `<div class="result-description">${escapeHtml(r.description)}</div>` : ''}</div>`).join('')}</div>`;
                 }
                 let finalHtml = '';
                 if (contest.finalResult) {
-                    finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
+                    finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon"></div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
                 }
                 card.innerHTML = `<span class="contest-status ${statusClass}">${statusText}</span><h3>${escapeHtml(contest.name)}</h3><div class="contest-description">${escapeHtml(contest.description)}</div>${intermediateHtml}${finalHtml}`;
                 list.appendChild(card);
@@ -1613,7 +1626,7 @@
             data.contests.forEach(contest => {
                 const item = document.createElement('div');
                 item.className = `admin-contest-item ${contest.status === 'finished' ? 'status-finished-item' : ''}`;
-                const statusText = contest.status === 'active' ? '🟢 Активный' : ' Завершен';
+                const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
                 const toggleBtnText = contest.status === 'active' ? '⏸️ Завершить' : '▶️ Возобновить';
                 let intResultsHtml = (contest.intermediateResults && contest.intermediateResults.length > 0)
                     ? [...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="admin-result-item"><div class="admin-result-info"><strong>${escapeHtml(r.title)}</strong><small>${formatDateTime(r.date)}</small>${r.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteIntermediateResult('${contest.id}', '${r.id}')">✕</button></div>`).join('')
@@ -1625,7 +1638,7 @@
                 if (openResultForms[contest.id] === 'intermediate') {
                     formHtml = `<div class="inline-form"><h5>📊 Новый промежуточный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название этапа"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">✕ Отмена</button></div></div>`;
                 } else if (openResultForms[contest.id] === 'final') {
-                    formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;">🏆 Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
+                    formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;"> Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
                 }
                 item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
                 list.appendChild(item);
@@ -1745,7 +1758,7 @@
                 
                 if (!hasAnyShifts) {
                     html += `<div class="my-stats-empty">
-                        <span class="my-stats-empty-icon"></span>
+                        <span class="my-stats-empty-icon">📭</span>
                         У вас пока нет смен в графике.<br>
                         <span style="font-size: 0.9em; opacity: 0.8;">Как только вас добавят в график — здесь появится ваша статистика.</span>
                     </div>`;
@@ -1767,12 +1780,12 @@
                             <div class="my-stat-label">дней в Зале</div>
                         </div>
                         <div class="my-stat-card">
-                            <div class="my-stat-icon">📦</div>
+                            <div class="my-stat-icon"></div>
                             <div class="my-stat-value">${myStats.sklad}</div>
                             <div class="my-stat-label">дней на Складе</div>
                         </div>
                         <div class="my-stat-total">
-                            <div class="my-stat-icon">📊</div>
+                            <div class="my-stat-icon"></div>
                             <div class="my-stat-value">${myStats.totalShifts}</div>
                             <div class="my-stat-label">Всего смен за всё время</div>
                         </div>
@@ -1830,13 +1843,13 @@
             if (!mimeType) return '📄';
             if (mimeType.startsWith('image/')) return '🖼️';
             if (mimeType.startsWith('video/')) return '🎬';
-            if (mimeType.startsWith('audio/')) return '';
+            if (mimeType.startsWith('audio/')) return '🎵';
             if (mimeType.includes('pdf')) return '📕';
             if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
             if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📗';
             if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📙';
             if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '🗜️';
-            return '📄';
+            return '';
         }
 
         function getSortedDates() {
