@@ -73,7 +73,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 8px 16px 12px;
+            padding: 10px 16px 12px;
             z-index: 2;
         }
         
@@ -85,11 +85,11 @@
         }
         
         .header-title {
-            margin-top: -8px;
+            margin-top: -5px;
         }
         
         .header-title h1 { 
-            font-size: 1.5em; 
+            font-size: 1.6em; 
             font-weight: 800; 
             letter-spacing: 0.5px;
             background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%);
@@ -101,57 +101,45 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
         
-        .header-subtitle { 
-            font-size: 0.85em; 
-            color: var(--brand-green);
-            font-weight: 600;
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-            flex-wrap: wrap;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-        }
-        
         .current-user-badge { 
-            background: rgba(255,255,255,0.95); 
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.9) 100%);
             backdrop-filter: blur(10px);
             color: var(--brand-green);
-            padding: 6px 14px; 
-            border-radius: 20px; 
-            font-size: 0.9em; 
+            padding: 4px 10px; 
+            border-radius: 16px; 
+            font-size: 0.75em; 
             display: inline-flex; 
             align-items: center; 
-            gap: 6px;
+            gap: 5px;
             border: 2px solid var(--brand-orange);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
             font-weight: 600;
         }
         
         .role-badge { 
             background: linear-gradient(135deg, var(--brand-orange) 0%, var(--gold) 100%);
             color: white; 
-            padding: 3px 10px; 
-            border-radius: 12px; 
+            padding: 2px 7px; 
+            border-radius: 10px; 
             font-size: 0.85em; 
             font-weight: 700;
             box-shadow: 0 2px 4px rgba(232, 119, 34, 0.3);
         }
         
         .header-clock { 
-            background: rgba(255,255,255,0.95);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.9) 100%);
             backdrop-filter: blur(10px);
             color: var(--brand-green);
-            padding: 10px 16px; 
-            border-radius: var(--radius-lg); 
+            padding: 6px 12px; 
+            border-radius: var(--radius-md); 
             text-align: center; 
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
             border: 2px solid var(--brand-orange);
-            margin-top: auto;
         }
         
         .clock-time { 
-            font-size: 1.4em; 
+            font-size: 1.15em; 
             font-weight: 800; 
             font-variant-numeric: tabular-nums; 
             letter-spacing: 1px;
@@ -162,7 +150,7 @@
         }
         
         .clock-date { 
-            font-size: 0.8em; 
+            font-size: 0.7em; 
             color: var(--brand-orange);
             font-weight: 600;
             margin-top: 2px; 
@@ -175,7 +163,7 @@
         .fox-paw {
             display: inline-block;
             animation: pawWave 2s ease-in-out infinite;
-            margin-left: 4px;
+            margin-left: 3px;
         }
         
         @keyframes pawWave {
@@ -421,26 +409,26 @@
                 max-height: 140px;
             }
             .header-content {
-                padding: 6px 12px 10px;
+                padding: 8px 12px 10px;
             }
             .header-title {
-                margin-top: -4px;
+                margin-top: -3px;
             }
             .header-title h1 {
-                font-size: 1.2em;
-            }
-            .header-subtitle {
-                font-size: 0.8em;
-            }
-            .clock-time {
-                font-size: 1.2em;
-            }
-            .header-clock {
-                padding: 8px 12px;
+                font-size: 1.3em;
             }
             .current-user-badge {
-                font-size: 0.85em;
-                padding: 5px 12px;
+                font-size: 0.7em;
+                padding: 3px 8px;
+            }
+            .clock-time {
+                font-size: 1em;
+            }
+            .clock-date {
+                font-size: 0.65em;
+            }
+            .header-clock {
+                padding: 5px 10px;
             }
         }
     </style>
@@ -451,7 +439,7 @@
             <div class="login-logo-icon">🚧</div>
             <h2 style="color: var(--warning); margin-bottom: 12px;">Технические работы</h2>
             <p style="color: var(--gray); margin-bottom: 24px; line-height: 1.5;">Сайт временно недоступен для сотрудников и администраторов. Пожалуйста, зайдите позже.</p>
-            <button class="btn btn-secondary btn-block" onclick="doLogout()"> Выйти из аккаунта</button>
+            <button class="btn btn-secondary btn-block" onclick="doLogout()">🚪 Выйти из аккаунта</button>
         </div>
     </div>
 
@@ -493,9 +481,6 @@
                 <div class="header-top">
                     <div class="header-title">
                         <h1>Рабочая группа</h1>
-                        <div class="header-subtitle">
-                            <span>График и управление персоналом</span>
-                        </div>
                     </div>
                     <div class="header-clock">
                         <div class="clock-time" id="clockTime">--:--:--</div>
@@ -507,7 +492,7 @@
                         <span>👤</span>
                         <span id="currentUserName"></span>
                         <span class="role-badge" id="currentUserRole"></span>
-                        <span class="fox-paw"></span>
+                        <span class="fox-paw">🦊</span>
                     </div>
                 </div>
             </div>
@@ -521,7 +506,7 @@
                 <span>График</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('archive', this)">
-                <span class="nav-icon"></span>
+                <span class="nav-icon">📦</span>
                 <span>Архив</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('plan', this)">
@@ -537,11 +522,11 @@
                 <span>Конкурсы</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('info', this)">
-                <span class="nav-icon"></span>
+                <span class="nav-icon">📢</span>
                 <span>Инфо</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('stats', this)">
-                <span class="nav-icon">📊</span>
+                <span class="nav-icon"></span>
                 <span>Статистика</span>
             </button>
             <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;">
@@ -561,7 +546,7 @@
 
     <main class="app-content">
         <div id="schedule" class="section active">
-            <h2 class="section-title"> График работы</h2>
+            <h2 class="section-title">📅 График работы</h2>
             <div id="scheduleGrid" class="schedule-grid"></div>
         </div>
 
@@ -587,11 +572,11 @@
             <div id="contestsList" class="contests-list"></div>
         </div>
         <div id="info" class="section">
-            <h2 class="section-title"> Информация</h2>
+            <h2 class="section-title">📢 Информация</h2>
             <div id="infoContent"></div>
         </div>
         <div id="stats" class="section">
-            <h2 class="section-title"> Статистика</h2>
+            <h2 class="section-title">📊 Статистика</h2>
             <div id="statsContent"></div>
         </div>
         <div id="admin" class="section">
@@ -606,14 +591,14 @@
             </div>
             <div id="admin-schedule" class="admin-section active">
                 <div class="admin-card">
-                    <div class="admin-card-title">➕ Добавить сотрудника в график</div>
+                    <div class="admin-card-title"> Добавить сотрудника в график</div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>📅 Дата</label>
                             <input type="date" id="adminDate">
                         </div>
                         <div class="form-group">
-                            <label>👤 Сотрудник</label>
+                            <label> Сотрудник</label>
                             <select id="adminEmployee"><option value="">-- Выберите сотрудника --</option></select>
                         </div>
                     </div>
@@ -639,7 +624,7 @@
                     <button class="btn btn-primary btn-block" onclick="addScheduleEntry()">➕ Добавить в график</button>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title">📋 Текущие записи графика</div>
+                    <div class="admin-card-title"> Текущие записи графика</div>
                     <div id="scheduleList"></div>
                 </div>
             </div>
@@ -647,7 +632,7 @@
                 <div class="admin-card">
                     <div class="admin-card-title" id="employeeFormTitle">➕ Добавить сотрудника</div>
                     <div class="form-group">
-                        <label> ФИО</label>
+                        <label>👤 ФИО</label>
                         <input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович">
                     </div>
                     <div class="form-row">
@@ -661,16 +646,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>️ Роль</label>
+                        <label>🛡️ Роль</label>
                         <select id="newEmployeeRole">
-                            <option value="user">👤 Сотрудник</option>
+                            <option value="user"> Сотрудник</option>
                             <option value="admin">👑 Администратор</option>
                         </select>
                     </div>
                     <button class="btn btn-success btn-block" id="employeeSubmitBtn" onclick="addEmployee()">➕ Добавить сотрудника</button>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title">👥 Список сотрудников <span id="employeeCounter" style="background:var(--brand-green);color:white;padding:2px 10px;border-radius:10px;font-size:0.8em;margin-left:8px;">0</span></div>
+                    <div class="admin-card-title"> Список сотрудников <span id="employeeCounter" style="background:var(--brand-green);color:white;padding:2px 10px;border-radius:10px;font-size:0.8em;margin-left:8px;">0</span></div>
                     <div id="employeesList"></div>
                 </div>
             </div>
@@ -678,15 +663,15 @@
                 <div class="admin-card">
                     <div class="admin-card-title">🏆 Добавить конкурс</div>
                     <div class="form-group">
-                        <label>🏆 Название конкурса</label>
+                        <label> Название конкурса</label>
                         <input type="text" id="contestName" placeholder="Введите название конкурса">
                     </div>
                     <div class="form-group">
-                        <label>📝 Описание</label>
+                        <label> Описание</label>
                         <textarea id="contestDescription" rows="3" placeholder="Описание конкурса"></textarea>
                     </div>
                     <div class="form-group">
-                        <label> Статус</label>
+                        <label>📊 Статус</label>
                         <select id="contestStatus">
                             <option value="active">Активный</option>
                             <option value="finished">Завершен</option>
@@ -695,7 +680,7 @@
                     <button class="btn btn-primary btn-block" onclick="addContest()">➕ Добавить конкурс</button>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title">📋 Список конкурсов</div>
+                    <div class="admin-card-title"> Список конкурсов</div>
                     <div id="adminContestList"></div>
                 </div>
             </div>
@@ -704,7 +689,7 @@
                     <div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);">📝 Новый материал</div>
                     <div class="type-switcher">
                         <button type="button" id="typeTextBtn" class="active" onclick="switchMaterialType('text')">📝 Текст</button>
-                        <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')"> Файл</button>
+                        <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')">📎 Файл</button>
                     </div>
                     <div class="form-group">
                         <label>📌 Название</label>
@@ -712,7 +697,7 @@
                     </div>
                     <div id="textForm">
                         <div class="form-group">
-                            <label>📄 Текст материала</label>
+                            <label> Текст материала</label>
                             <textarea id="materialText" rows="6" placeholder="Введите текст..."></textarea>
                         </div>
                     </div>
@@ -720,7 +705,7 @@
                         <div class="form-group">
                             <label>📎 Загрузить файл</label>
                             <input type="file" id="materialFile" onchange="handleFileSelect(event)">
-                            <div id="fileWarning" class="file-warning" style="display: none;">️ Рекомендуется до 2 МБ.</div>
+                            <div id="fileWarning" class="file-warning" style="display: none;">⚠️ Рекомендуется до 2 МБ.</div>
                             <div id="fileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div>
                         </div>
                     </div>
@@ -743,7 +728,7 @@
                         <input type="text" id="infoTitle" placeholder="Заголовок">
                     </div>
                     <div class="form-group">
-                        <label> Текст</label>
+                        <label>📝 Текст</label>
                         <textarea id="infoText" rows="4" placeholder="Текст информации"></textarea>
                     </div>
                     <button class="btn btn-primary btn-block" onclick="addInfo()">➕ Добавить</button>
@@ -751,7 +736,7 @@
             </div>
             <div id="admin-settings" class="admin-section">
                 <div class="admin-card danger-zone">
-                    <div class="admin-card-title">️ Опасная зона</div>
+                    <div class="admin-card-title">⚠️ Опасная зона</div>
                     <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px; line-height: 1.4;">
                         Полный сброс всех данных сайта. Это действие нельзя отменить.
                     </p>
@@ -764,7 +749,7 @@
             <h2 class="section-title">👑 Панель Владельца</h2>
             
             <div class="admin-card danger-zone">
-                <div class="admin-card-title"> Режим технических работ</div>
+                <div class="admin-card-title">🚧 Режим технических работ</div>
                 <p style="color: var(--gray); font-size: 0.9em; margin-bottom: 12px; line-height: 1.4;">
                     При включении этого режима обычные сотрудники и администраторы увидят экран "Технические работы" и не смогут пользоваться приложением. Вы (как Владелец) будете иметь полный доступ.
                 </p>
@@ -965,7 +950,7 @@
                 enterApp();
             } catch (error) {
                 console.error("Ошибка входа:", error);
-                showLoginError('❌ Ошибка подключения: ' + error.message);
+                showLoginError(' Ошибка подключения: ' + error.message);
             }
         };
 
@@ -983,7 +968,7 @@
             document.getElementById('currentUserBadge').style.display = 'inline-flex';
             document.getElementById('currentUserName').textContent = currentUser.name;
             
-            let roleText = '👤 Сотрудник';
+            let roleText = ' Сотрудник';
             if (currentUser.role === 'admin') roleText = '💎 Владелец';
             if (currentUser.role === 'superadmin') roleText = '💎 Владелец';
             document.getElementById('currentUserRole').textContent = roleText;
@@ -1161,10 +1146,10 @@
             visibleEmployees.forEach(emp => {
                 const item = document.createElement('div');
                 item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
-                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">💎 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
+                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge"> Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
                 const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
                 const isSelf = currentUser && currentUser.id === emp.id;
-                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">️</button>`;
+                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`;
                 const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`;
                 item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(emp.name)} ${roleBadge}</div><div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div></div>`;
                 list.appendChild(item);
@@ -1209,7 +1194,7 @@
                 item.innerHTML = `
                     <div class="employee-admin-header">
                         <div class="employee-admin-info">
-                            <div class="employee-admin-name">👑 ${escapeHtml(admin.name)}</div>
+                            <div class="employee-admin-name"> ${escapeHtml(admin.name)}</div>
                             <div class="employee-admin-phone">📱 ${escapeHtml(admin.phone)}</div>
                         </div>
                         <button class="btn btn-gold btn-sm" onclick="transferSuperAdmin('${admin.id}')">Передать полномочия</button>
@@ -1281,7 +1266,7 @@
                 if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>';
                 else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>';
                 
-                dateCard.innerHTML = `<h3> ${date} ${statusBadge}</h3>`;
+                dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`;
                 
                 const sortedEntries = [...entries].sort((a, b) => {
                     if (a.shift !== b.shift) return a.shift - b.shift;
@@ -1300,14 +1285,14 @@
                     card.innerHTML = `
                         <div class="employee-card-header">
                             <div class="employee-card-name">
-                                👤 ${escapeHtml(entry.employee)}
+                                 ${escapeHtml(entry.employee)}
                             </div>
                             <span class="employee-card-position ${positionClass}">
                                 ${positionLabel}
                             </span>
                         </div>
                         <div class="employee-card-shift">
-                            <span class="employee-card-shift-icon"></span>
+                            <span class="employee-card-shift-icon">🕒</span>
                             <span>Смена ${shiftLabel}</span>
                             <span style="color: var(--light-gray);">•</span>
                             <span class="employee-card-time">${shiftTime}</span>
@@ -1358,7 +1343,7 @@
                 empty.style.textAlign = 'center';
                 empty.style.padding = '40px 20px';
                 empty.style.color = 'var(--light-gray)';
-                empty.innerHTML = '<br><br>Архив пока пуст.<br><span style="font-size: 0.9em;">Прошедшие даты автоматически попадают сюда на следующий день.</span>';
+                empty.innerHTML = '📦<br><br>Архив пока пуст.<br><span style="font-size: 0.9em;">Прошедшие даты автоматически попадают сюда на следующий день.</span>';
                 content.appendChild(empty);
                 return;
             }
@@ -1397,7 +1382,7 @@
                             <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;">👤 ${escapeHtml(entry.employee)}</div>
                             <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 0.85em;">
                                 <span class="employee-card-position ${positionClass}" style="font-size: 0.8em;">${positionLabel}</span>
-                                <span style="color: var(--gray);">🕒 Смена ${shiftLabel} • ${shiftTime}</span>
+                                <span style="color: var(--gray);"> Смена ${shiftLabel} • ${shiftTime}</span>
                             </div>
                         </div>
                         ${deleteBtn}
@@ -1468,7 +1453,7 @@
                 const clearBtn = document.createElement('button');
                 clearBtn.className = 'btn btn-danger btn-block';
                 clearBtn.style.marginBottom = '12px';
-                clearBtn.innerHTML = '🗑️ Очистить весь текущий график';
+                clearBtn.innerHTML = '️ Очистить весь текущий график';
                 clearBtn.onclick = clearCurrentSchedule;
                 list.appendChild(clearBtn);
             }
@@ -1648,14 +1633,14 @@
                 const card = document.createElement('div');
                 card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`;
                 const statusClass = contest.status === 'active' ? 'status-active' : 'status-finished';
-                const statusText = contest.status === 'active' ? '🟢 Активный' : ' Завершен';
+                const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
                 let intermediateHtml = '';
                 if (contest.intermediateResults && contest.intermediateResults.length > 0) {
                     intermediateHtml = `<div class="results-section"><h4>📊 Промежуточные результаты</h4>${[...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="result-item"><div class="result-item-header"><span class="result-title">${escapeHtml(r.title)}</span><span class="result-date">${formatDateTime(r.date)}</span></div>${r.description ? `<div class="result-description">${escapeHtml(r.description)}</div>` : ''}</div>`).join('')}</div>`;
                 }
                 let finalHtml = '';
                 if (contest.finalResult) {
-                    finalHtml = `<div class="results-section"><h4> Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
+                    finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
                 }
                 card.innerHTML = `<span class="contest-status ${statusClass}">${statusText}</span><h3>${escapeHtml(contest.name)}</h3><div class="contest-description">${escapeHtml(contest.description)}</div>${intermediateHtml}${finalHtml}`;
                 list.appendChild(card);
@@ -1670,7 +1655,7 @@
             data.contests.forEach(contest => {
                 const item = document.createElement('div');
                 item.className = `admin-contest-item ${contest.status === 'finished' ? 'status-finished-item' : ''}`;
-                const statusText = contest.status === 'active' ? '🟢 Активный' : ' Завершен';
+                const statusText = contest.status === 'active' ? ' Активный' : '⚫ Завершен';
                 const toggleBtnText = contest.status === 'active' ? '⏸️ Завершить' : '▶️ Возобновить';
                 let intResultsHtml = (contest.intermediateResults && contest.intermediateResults.length > 0)
                     ? [...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="admin-result-item"><div class="admin-result-info"><strong>${escapeHtml(r.title)}</strong><small>${formatDateTime(r.date)}</small>${r.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteIntermediateResult('${contest.id}', '${r.id}')">✕</button></div>`).join('')
@@ -1684,7 +1669,7 @@
                 } else if (openResultForms[contest.id] === 'final') {
                     formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;">🏆 Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
                 }
-                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
+                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')"></button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
                 list.appendChild(item);
             });
         };
@@ -1693,7 +1678,7 @@
             const content = document.getElementById('infoContent');
             if (!content) return;
             content.innerHTML = '';
-            if (data.info.length === 0) { content.innerHTML = '<div class="empty-message"> Информация пока не добавлена</div>'; return; }
+            if (data.info.length === 0) { content.innerHTML = '<div class="empty-message">📢 Информация пока не добавлена</div>'; return; }
             data.info.forEach(item => {
                 const block = document.createElement('div');
                 block.className = 'info-block';
@@ -1797,12 +1782,12 @@
                         <div class="my-stats-header-subtitle">Ваша личная статистика</div>
                     </div>
                     <div class="my-stats-month-info">
-                         Статистика за ${myStats.currentMonthName}
+                        📅 Статистика за ${myStats.currentMonthName}
                     </div>`;
                 
                 if (!hasAnyShifts) {
                     html += `<div class="my-stats-empty">
-                        <span class="my-stats-empty-icon"></span>
+                        <span class="my-stats-empty-icon">📭</span>
                         У вас пока нет смен в графике.<br>
                         <span style="font-size: 0.9em; opacity: 0.8;">Как только вас добавят в график — здесь появится ваша статистика.</span>
                     </div>`;
@@ -1819,7 +1804,7 @@
                             <div class="my-stat-label">дней на КД</div>
                         </div>
                         <div class="my-stat-card">
-                            <div class="my-stat-icon"></div>
+                            <div class="my-stat-icon">🏬</div>
                             <div class="my-stat-value">${myStats.zal}</div>
                             <div class="my-stat-label">дней в Зале</div>
                         </div>
@@ -1834,7 +1819,7 @@
                             <div class="my-stat-label">Всего смен за всё время</div>
                         </div>
                         <div class="my-stat-hours">
-                            <div class="my-stat-icon">⏱️</div>
+                            <div class="my-stat-icon">️</div>
                             <div class="my-stat-value">${myStats.hoursThisMonth}</div>
                             <div class="my-stat-label">часов отработано в этом месяце (${myStats.shiftsThisMonth} смен)</div>
                         </div>
@@ -1885,12 +1870,12 @@
 
         function getFileIcon(mimeType) {
             if (!mimeType) return '📄';
-            if (mimeType.startsWith('image/')) return '🖼️';
+            if (mimeType.startsWith('image/')) return '️';
             if (mimeType.startsWith('video/')) return '🎬';
             if (mimeType.startsWith('audio/')) return '🎵';
             if (mimeType.includes('pdf')) return '📕';
             if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
-            if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📗';
+            if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '';
             if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📙';
             if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '🗜️';
             return '📄';
@@ -2009,11 +1994,11 @@
             const list = document.getElementById('materialsList');
             if (!list) return;
             list.innerHTML = '';
-            if (data.materials.length === 0) { list.innerHTML = '<div class="empty-message">📚 Обучающие материалы пока не добавлены.</div>'; return; }
+            if (data.materials.length === 0) { list.innerHTML = '<div class="empty-message"> Обучающие материалы пока не добавлены.</div>'; return; }
             data.materials.forEach(material => {
                 const card = document.createElement('div');
                 card.className = `material-card type-${material.type}`;
-                const icon = material.type === 'text' ? '' : (material.file ? getFileIcon(material.file.mimeType) : '📄');
+                const icon = material.type === 'text' ? '📝' : (material.file ? getFileIcon(material.file.mimeType) : '📄');
                 const tagClass = material.type === 'text' ? 'tag-text' : 'tag-file';
                 const tagText = material.type === 'text' ? 'Текст' : 'Файл';
                 let previewHtml = '';
@@ -2048,7 +2033,7 @@
         }
 
         window.resetAllData = async function() {
-            if (!confirm('️ ВСЕ данные в облаке будут удалены! Продолжить?') || !confirm('Точно-точно? Последнее предупреждение!')) return;
+            if (!confirm('⚠️ ВСЕ данные в облаке будут удалены! Продолжить?') || !confirm('Точно-точно? Последнее предупреждение!')) return;
             try {
                 const collections = ["users", "schedule", "materials", "contests", "info", "settings"];
                 for (const colName of collections) {
@@ -2068,4 +2053,3 @@
     </script>
 </body>
 </html>
-
