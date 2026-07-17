@@ -267,7 +267,6 @@
         .modal-header h3 { color: var(--brand-green); font-size: 1.1em; word-break: break-word; }
         .modal-close { background: none; border: none; font-size: 1.6em; cursor: pointer; color: var(--light-gray); line-height: 1; padding: 0 4px; min-width: 38px; min-height: 38px; }
         .modal-body { padding: 18px; overflow-y: auto; flex: 1; line-height: 1.6; color: var(--dark); font-size: 0.92em; }
-        /* Стили для просмотра файлов в модальном окне */
         .modal-body img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: var(--shadow-md); }
         .modal-body iframe { width: 100%; height: 60vh; border: 1px solid var(--border); border-radius: 8px; }
         .modal-body pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); padding: 12px; border-radius: 8px; font-size: 0.9em; font-family: monospace; }
@@ -419,7 +418,7 @@
             
             <div id="admin-schedule" class="admin-section active">
                 <div class="admin-card">
-                    <div class="admin-card-title">➕ Добавить сотрудника в график</div>
+                    <div class="admin-card-title" id="scheduleFormTitle">➕ Добавить сотрудника в график</div>
                     <div class="form-row">
                         <div class="form-group"><label>📅 Дата</label><input type="date" id="adminDate"></div>
                         <div class="form-group"><label>👤 Сотрудник</label><select id="adminEmployee"><option value="">-- Выберите сотрудника --</option></select></div>
@@ -436,7 +435,7 @@
                             </select>
                         </div>
                     </div>
-                    <button class="btn btn-primary btn-block" onclick="addScheduleEntry()">➕ Добавить в график</button>
+                    <button class="btn btn-primary btn-block" id="scheduleSubmitBtn" onclick="addScheduleEntry()">➕ Добавить в график</button>
                 </div>
                 <div class="admin-card">
                     <div class="admin-card-title">📋 Текущие записи графика</div>
@@ -608,6 +607,7 @@
         let selectedInfoFileData = null;
         let openResultForms = {};
         let editingEmployeeId = null;
+        let editingScheduleId = null;
         let data = { 
             employees: [], schedule: {}, materials: [], contests: [], info: [], 
             settings: { maintenanceMode: false },
@@ -789,6 +789,7 @@
             localStorage.removeItem('domovidSession');
             currentUser = null;
             editingEmployeeId = null;
+            editingScheduleId = null;
             showLoginScreen();
             document.getElementById('loginPhone').value = '';
             document.getElementById('loginPassword').value = '';
@@ -824,11 +825,10 @@
             if (btn) btn.classList.add('active');
         };
 
-        // --- УНИВЕРСАЛЬНЫЙ ПРОСМОТРЩИК ФАЙЛОВ ---
         window.openFileViewer = function(title, fileData, isText = false, textContent = '') {
             document.getElementById('modalTitle').textContent = title;
             const body = document.getElementById('modalBody');
-            body.innerHTML = ''; // Очистка предыдущего контента
+            body.innerHTML = '';
 
             if (isText) {
                 body.innerHTML = `<pre>${escapeHtml(textContent)}</pre>`;
@@ -1239,7 +1239,11 @@
                     item.className = `schedule-item ${status === 'yesterday' ? 'yesterday' : ''}`;
                     const badgeClass = `badge-${entry.type}`;
                     let statusMark = status === 'today' ? ' 🔵' : (status === 'yesterday' ? ' ✓' : '');
-                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
+                    
+                    const editBtn = `<button class="btn btn-warning btn-sm" onclick="editScheduleEntry('${entry.id}')" style="margin-right:4px;">✏️</button>`;
+                    const deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
+                    
+                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`;
                     list.appendChild(item);
                 });
             });
@@ -1268,6 +1272,7 @@
         };
 
         window.addScheduleEntry = async function() {
+            if (editingScheduleId) { alert('Сначала отмените редактирование или сохраните изменения.'); return; }
             const dateInput = document.getElementById('adminDate').value;
             const employee = document.getElementById('adminEmployee').value;
             const type = document.getElementById('adminType').value;
@@ -1276,11 +1281,92 @@
             const date = formatDate(dateInput);
             try {
                 await addDoc(collection(db, "schedule"), { date, employee, type, shift });
+                document.getElementById('adminDate').value = '';
+                document.getElementById('adminEmployee').value = '';
                 await loadAllDataFromFirebase();
                 renderScheduleList();
                 renderSchedule();
                 alert(`✅ Добавлен!\n📅 ${date}\n👤 ${employee}`);
             } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.editScheduleEntry = function(id) {
+            let targetEntry = null;
+            let targetDate = null;
+            for (const date in data.schedule) {
+                const found = data.schedule[date].find(e => e.id === id);
+                if (found) {
+                    targetEntry = found;
+                    targetDate = date;
+                    break;
+                }
+            }
+            if (!targetEntry) return;
+
+            editingScheduleId = id;
+            
+            const [day, month, year] = targetDate.split('.');
+            const isoDate = `${year}-${month}-${day}`;
+            
+            document.getElementById('adminDate').value = isoDate;
+            document.getElementById('adminEmployee').value = targetEntry.employee;
+            document.getElementById('adminType').value = targetEntry.type;
+            document.getElementById('adminShift').value = targetEntry.shift;
+            
+            const btn = document.getElementById('scheduleSubmitBtn');
+            btn.textContent = '💾 Сохранить изменения';
+            btn.className = 'btn btn-warning btn-block';
+            btn.onclick = updateScheduleEntry;
+            document.getElementById('scheduleFormTitle').textContent = '✏️ Редактирование записи графика';
+            
+            if (!document.getElementById('cancelEditScheduleBtn')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.id = 'cancelEditScheduleBtn';
+                cancelBtn.className = 'btn btn-secondary btn-block';
+                cancelBtn.style.marginTop = '8px';
+                cancelBtn.textContent = '✕ Отмена';
+                cancelBtn.onclick = cancelEditSchedule;
+                btn.parentNode.appendChild(cancelBtn);
+            }
+            document.getElementById('admin-schedule').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.updateScheduleEntry = async function() {
+            if (!editingScheduleId) return;
+            const dateInput = document.getElementById('adminDate').value;
+            const employee = document.getElementById('adminEmployee').value;
+            const type = document.getElementById('adminType').value;
+            const shift = document.getElementById('adminShift').value;
+            
+            if (!dateInput || !employee) { alert('Выберите дату и сотрудника'); return; }
+            const date = formatDate(dateInput);
+            
+            try {
+                await updateDoc(doc(db, "schedule", editingScheduleId), { date, employee, type, shift });
+                cancelEditSchedule();
+                await loadAllDataFromFirebase();
+                renderScheduleList();
+                renderSchedule();
+                alert('✅ Запись в графике успешно обновлена!');
+            } catch (e) { alert('Ошибка: ' + e.message); }
+        };
+
+        window.cancelEditSchedule = function() {
+            editingScheduleId = null;
+            document.getElementById('adminDate').value = '';
+            document.getElementById('adminEmployee').value = '';
+            document.getElementById('adminType').value = 'kassa';
+            document.getElementById('adminShift').value = '1';
+            
+            const btn = document.getElementById('scheduleSubmitBtn');
+            btn.textContent = '➕ Добавить в график';
+            btn.className = 'btn btn-primary btn-block';
+            btn.onclick = addScheduleEntry;
+            
+            document.getElementById('scheduleFormTitle').textContent = '➕ Добавить сотрудника в график';
+            
+            const cancelBtn = document.getElementById('cancelEditScheduleBtn');
+            if (cancelBtn) cancelBtn.remove();
         };
 
         window.deleteScheduleEntry = async function(id) {
@@ -1556,7 +1642,7 @@
             });
         };
 
-        // --- ИНФОРМАЦИЯ (ОБНОВЛЕНО С ПОДДЕРЖКОЙ ФАЙЛОВ) ---
+        // --- ИНФОРМАЦИЯ ---
         window.openInfoForm = function() {
             document.getElementById('addInfoSection').style.display = 'block';
             document.getElementById('addInfoSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
