@@ -426,9 +426,17 @@
                                 <option value="revision">Ревизия</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>⏱️ Отработано часов</label>
-                            <input type="number" id="adminHours" step="0.5" min="0" max="24" placeholder="Например: 8 или 11.5" required>
+                        <div class="form-group"><label>🕒 Смена</label>
+                            <select id="adminShift" onchange="autoFillHours()">
+                                <option value="1">Смена 9/1 (10:00 - 19:00)</option>
+                                <option value="2">Смена 9/2 (12:00 - 21:00)</option>
+                                <option value="3">Смена 11 (10:00 - 21:00)</option>
+                                <option value="custom">Свой вариант</option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="form-group"><label>⏱️ Отработано часов</label>
+                        <input type="number" id="adminHours" step="0.5" min="0" max="24" placeholder="Например: 9 или 11.5">
                     </div>
                     <button class="btn btn-primary btn-block" id="scheduleSubmitBtn" onclick="addScheduleEntry()">➕ Добавить в график</button>
                 </div>
@@ -585,9 +593,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00' };
-        const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11' };
-        const shiftHours = { 1: 9, 2: 9, 3: 11 };
+        const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00', custom: 'Индивидуально' };
+        const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11', custom: 'Своя' };
+        const shiftHours = { 1: 9, 2: 9, 3: 11, custom: '' };
         const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад', revision: 'Ревизия' };
         const MAX_FILE_SIZE = 5 * 1024 * 1024;
         const RECOMMENDED_FILE_SIZE = 2 * 1024 * 1024;
@@ -607,6 +615,17 @@
             employees: [], schedule: {}, materials: [], contests: [], info: [], 
             settings: { maintenanceMode: false },
             stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } 
+        };
+
+        window.autoFillHours = function() {
+            const shift = document.getElementById('adminShift').value;
+            const hoursInput = document.getElementById('adminHours');
+            if (shiftHours[shift] !== undefined && shiftHours[shift] !== '') {
+                hoursInput.value = shiftHours[shift];
+            } else {
+                hoursInput.value = '';
+                hoursInput.focus();
+            }
         };
 
         function updateClock() {
@@ -1099,8 +1118,8 @@
                     const positionLabel = typeLabels[entry.type] || entry.type;
                     const positionClass = entry.type;
                     
-                    const timeDisplay = entry.hours ? `${entry.hours} ч.` : (shiftTimes[entry.shift] || 'Не указано');
-                    const labelDisplay = entry.hours ? 'Отработано' : `Смена ${shiftLabels[entry.shift] || entry.shift}`;
+                    const shiftLabel = shiftLabels[entry.shift] || entry.shift;
+                    const timeText = entry.hours ? `${entry.hours} ч.` : (shiftTimes[entry.shift] || 'Не указано');
                     
                     card.innerHTML = `
                         <div class="employee-card-header">
@@ -1108,10 +1127,10 @@
                             <span class="employee-card-position ${positionClass}">${positionLabel}</span>
                         </div>
                         <div class="employee-card-shift">
-                            <span class="employee-card-shift-icon">⏱️</span>
-                            <span>${labelDisplay}</span>
+                            <span class="employee-card-shift-icon">🕒</span>
+                            <span>Смена ${shiftLabel}</span>
                             <span style="color: var(--light-gray);">•</span>
-                            <span class="employee-card-time">${timeDisplay}</span>
+                            <span class="employee-card-time">${timeText}</span>
                         </div>
                     `;
                     dateCard.appendChild(card);
@@ -1166,8 +1185,8 @@
                     const positionLabel = typeLabels[entry.type] || entry.type;
                     const positionClass = entry.type;
                     
-                    const timeDisplay = entry.hours ? `${entry.hours} ч.` : (shiftTimes[entry.shift] || 'Не указано');
-                    const labelDisplay = entry.hours ? 'Отработано' : `Смена ${shiftLabels[entry.shift] || entry.shift}`;
+                    const shiftLabel = shiftLabels[entry.shift] || entry.shift;
+                    const timeText = entry.hours ? `${entry.hours} ч.` : (shiftTimes[entry.shift] || 'Не указано');
                     
                     let deleteBtn = currentUser && currentUser.role === 'superadmin' ? `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')" title="Удалить запись">🗑️</button>` : '';
                     card.innerHTML = `
@@ -1175,7 +1194,7 @@
                             <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;">👤 ${escapeHtml(entry.employee)}</div>
                             <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 0.85em;">
                                 <span class="employee-card-position ${positionClass}" style="font-size: 0.8em;">${positionLabel}</span>
-                                <span style="color: var(--gray);">⏱️ ${labelDisplay} • ${timeDisplay}</span>
+                                <span style="color: var(--gray);">🕒 Смена ${shiftLabel} • ${timeText}</span>
                             </div>
                         </div>
                         ${deleteBtn}
@@ -1243,12 +1262,13 @@
                     const badgeClass = `badge-${entry.type}`;
                     let statusMark = status === 'today' ? ' 🔵' : (status === 'yesterday' ? ' ✓' : '');
                     
-                    const timeDisplay = entry.hours ? `${entry.hours} ч.` : (shiftTimes[entry.shift] || 'Не указано');
+                    const shiftLabel = shiftLabels[entry.shift] || entry.shift;
+                    const timeText = entry.hours ? `${entry.hours} ч.` : (shiftTimes[entry.shift] || 'Не указано');
                     
                     const editBtn = `<button class="btn btn-warning btn-sm" onclick="editScheduleEntry('${entry.id}')" style="margin-right:4px;">✏️</button>`;
                     const deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
                     
-                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>⏱️ ${timeDisplay}</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`;
+                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>🕒 Смена ${shiftLabel} (${timeText})</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`;
                     list.appendChild(item);
                 });
             });
@@ -1281,6 +1301,7 @@
             const dateInput = document.getElementById('adminDate').value;
             const employee = document.getElementById('adminEmployee').value;
             const type = document.getElementById('adminType').value;
+            const shift = document.getElementById('adminShift').value;
             const hours = parseFloat(document.getElementById('adminHours').value);
             
             if (!dateInput || !employee || isNaN(hours) || hours <= 0) { 
@@ -1289,14 +1310,15 @@
             }
             const date = formatDate(dateInput);
             try {
-                await addDoc(collection(db, "schedule"), { date, employee, type, hours });
+                await addDoc(collection(db, "schedule"), { date, employee, type, shift, hours });
                 document.getElementById('adminDate').value = '';
                 document.getElementById('adminEmployee').value = '';
-                document.getElementById('adminHours').value = '';
+                document.getElementById('adminShift').value = '1';
+                document.getElementById('adminHours').value = '9';
                 await loadAllDataFromFirebase();
                 renderScheduleList();
                 renderSchedule();
-                alert(`✅ Добавлен!\n📅 ${date}\n👤 ${employee}\n⏱️ ${hours} ч.`);
+                alert(`✅ Добавлен!\n📅 ${date}\n👤 ${employee}\n🕒 Смена ${shiftLabels[shift]} (${hours} ч.)`);
             } catch (e) { alert('Ошибка: ' + e.message); }
         };
 
@@ -1321,7 +1343,8 @@
             document.getElementById('adminDate').value = isoDate;
             document.getElementById('adminEmployee').value = targetEntry.employee;
             document.getElementById('adminType').value = targetEntry.type;
-            document.getElementById('adminHours').value = targetEntry.hours || '';
+            document.getElementById('adminShift').value = targetEntry.shift || 'custom';
+            document.getElementById('adminHours').value = targetEntry.hours || (shiftHours[targetEntry.shift] || '');
             
             const btn = document.getElementById('scheduleSubmitBtn');
             btn.textContent = '💾 Сохранить изменения';
@@ -1346,6 +1369,7 @@
             const dateInput = document.getElementById('adminDate').value;
             const employee = document.getElementById('adminEmployee').value;
             const type = document.getElementById('adminType').value;
+            const shift = document.getElementById('adminShift').value;
             const hours = parseFloat(document.getElementById('adminHours').value);
             
             if (!dateInput || !employee || isNaN(hours) || hours <= 0) { 
@@ -1355,7 +1379,7 @@
             const date = formatDate(dateInput);
             
             try {
-                await updateDoc(doc(db, "schedule", editingScheduleId), { date, employee, type, hours });
+                await updateDoc(doc(db, "schedule", editingScheduleId), { date, employee, type, shift, hours });
                 cancelEditSchedule();
                 await loadAllDataFromFirebase();
                 renderScheduleList();
@@ -1369,7 +1393,8 @@
             document.getElementById('adminDate').value = '';
             document.getElementById('adminEmployee').value = '';
             document.getElementById('adminType').value = 'kassa';
-            document.getElementById('adminHours').value = '';
+            document.getElementById('adminShift').value = '1';
+            document.getElementById('adminHours').value = '9';
             
             const btn = document.getElementById('scheduleSubmitBtn');
             btn.textContent = '➕ Добавить в график';
@@ -1498,7 +1523,7 @@
                 const card = document.createElement('div');
                 card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`;
                 const statusClass = contest.status === 'active' ? 'status-active' : 'status-finished';
-                const statusText = contest.status === 'active' ? '🟢 Активный' : ' Завершен';
+                const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
                 let intermediateHtml = '';
                 if (contest.intermediateResults && contest.intermediateResults.length > 0) {
                     intermediateHtml = `<div class="results-section"><h4>📊 Промежуточные результаты</h4>${[...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="result-item"><div class="result-item-header"><span class="result-title">${escapeHtml(r.title)}</span><span class="result-date">${formatDateTime(r.date)}</span></div>${r.description ? `<div class="result-description">${escapeHtml(r.description)}</div>` : ''}</div>`).join('')}</div>`;
@@ -1804,7 +1829,7 @@
                     if (entry.type === 'kassa') myKassa++;
                     if (entry.type === 'kd') myKd++;
                     if (entry.type === 'zal') myZal++;
-                    if (entry.type === 'sklad') mySklad++;
+                    if (entry.type === 'sklad' || entry.type === 'revision') mySklad++;
                     myTotalShifts++;
                     if (isCurrentMonth) {
                         const workedHours = entry.hours ? parseFloat(entry.hours) : (shiftHours[entry.shift] || 0);
@@ -1833,7 +1858,7 @@
                 <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"><div class="stat-number">${data.stats.kassaCount}</div><div class="stat-label">Смен на Кассе</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);"><div class="stat-number">${data.stats.kdCount}</div><div class="stat-label">Смен на КД</div></div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);"><div class="stat-number">${data.stats.zalCount}</div><div class="stat-label">Смен в Зале</div></div>
-                <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);"><div class="stat-number">${data.stats.skladCount}</div><div class="stat-label">Смен на Складе</div></div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);"><div class="stat-number">${data.stats.skladCount}</div><div class="stat-label">Смен на Складе/Ревизии</div></div>
             </div>`;
             
             const myStats = getMyStats();
