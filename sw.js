@@ -5,7 +5,6 @@ const urlsToCache = [
   '/test/manifest.json'
 ];
 
-// Установка Service Worker
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -13,12 +12,11 @@ self.addEventListener('install', event => {
         console.log('✅ Кэш открыт');
         return cache.addAll(urlsToCache);
       })
-      .catch(err => console.log(' Ошибка кэширования:', err))
+      .catch(err => console.log('❌ Ошибка кэширования:', err))
   );
   self.skipWaiting();
 });
 
-// Активация Service Worker
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -35,7 +33,6 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Перехват запросов
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
