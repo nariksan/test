@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" content="#2d8b4d">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ДОМОВИД">
+    <meta name="description" content="Приложение для сотрудников сети магазинов ДОМОВИД">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <title>ДОМОВИД</title>
     <style>
         :root {
@@ -286,6 +293,29 @@
         .notification-time { color: var(--light-gray); font-size: 0.75em; margin-top: 4px; }
         .notification-actions { display: flex; gap: 4px; flex-shrink: 0; }
         
+        /* PWA Install Prompt */
+        .pwa-install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            max-width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+        .pwa-install-prompt.show { display: flex; }
+        .pwa-install-prompt-text { flex: 1; font-size: 0.9em; color: var(--dark); }
+        .pwa-install-prompt button { padding: 8px 16px; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 0.85em; }
+        .pwa-install-btn { background: var(--brand-green); color: white; }
+        .pwa-close-btn { background: var(--bg); color: var(--gray); }
+        
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
@@ -305,7 +335,7 @@
 <body>
     <div class="maintenance-screen hidden" id="maintenanceScreen">
         <div class="maintenance-container">
-            <div class="login-logo-icon">🚧</div>
+            <div class="login-logo-icon"></div>
             <h2 style="color: var(--warning); margin-bottom: 12px;">Технические работы</h2>
             <p style="color: var(--gray); margin-bottom: 24px; line-height: 1.5;">Сайт временно недоступен для сотрудников и администраторов. Пожалуйста, зайдите позже.</p>
             <button class="btn btn-secondary btn-block" onclick="doLogout()">🚪 Выйти из аккаунта</button>
@@ -321,7 +351,7 @@
             </div>
             <div class="login-form">
                 <div class="form-group">
-                    <label>🏪 Выберите отделение</label>
+                    <label> Выберите отделение</label>
                     <select id="loginBranch">
                         <option value="">Загрузка списка магазинов...</option>
                     </select>
@@ -331,13 +361,20 @@
                     <input type="tel" id="loginPhone" placeholder="89146443734" autocomplete="tel">
                 </div>
                 <div class="form-group">
-                    <label> Пароль</label>
+                    <label>🔒 Пароль</label>
                     <input type="password" id="loginPassword" placeholder="Введите пароль" autocomplete="current-password">
                 </div>
                 <button class="login-btn" onclick="doLogin()">Войти</button>
                 <div class="login-error" id="loginError"></div>
             </div>
         </div>
+    </div>
+
+    <!-- PWA Install Prompt -->
+    <div class="pwa-install-prompt" id="pwaInstallPrompt">
+        <div class="pwa-install-prompt-text"> Установите приложение ДОМОВИД для быстрого доступа</div>
+        <button class="pwa-install-btn" onclick="installPWA()">Установить</button>
+        <button class="pwa-close-btn" onclick="closePWAInstallPrompt()"></button>
     </div>
 
     <header class="app-header">
@@ -374,15 +411,15 @@
     <nav class="top-nav" id="topNav" style="display:none;">
         <div class="top-nav-inner">
             <button class="top-nav-btn active" onclick="showSection('schedule', this)"><span class="nav-icon">📅</span><span>График</span></button>
-            <button class="top-nav-btn" onclick="showSection('archive', this)"><span class="nav-icon"></span><span>Архив</span></button>
+            <button class="top-nav-btn" onclick="showSection('archive', this)"><span class="nav-icon">📦</span><span>Архив</span></button>
             <button class="top-nav-btn" onclick="showSection('plan', this)"><span class="nav-icon">📈</span><span>План</span></button>
             <button class="top-nav-btn" onclick="showSection('materials', this)"><span class="nav-icon">📚</span><span>Обучение</span></button>
             <button class="top-nav-btn" onclick="showSection('contests', this)"><span class="nav-icon">🏆</span><span>Конкурсы</span></button>
-            <button class="top-nav-btn" onclick="showSection('info', this)"><span class="nav-icon"></span><span>Инфо</span></button>
+            <button class="top-nav-btn" onclick="showSection('info', this)"><span class="nav-icon">📢</span><span>Инфо</span></button>
             <button class="top-nav-btn" onclick="showSection('stats', this)"><span class="nav-icon">📊</span><span>Статистика</span></button>
-            <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;"><span class="nav-icon">️</span><span>Админ</span></button>
+            <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;"><span class="nav-icon">⚙️</span><span>Админ</span></button>
             <button class="top-nav-btn" onclick="showSection('superadmin', this)" id="topNavSuperAdminBtn" style="display:none; color: var(--danger);"><span class="nav-icon">👑</span><span>Владелец</span></button>
-            <button class="top-nav-logout" onclick="doLogout()"><span></span><span>Выйти</span></button>
+            <button class="top-nav-logout" onclick="doLogout()"><span>🚪</span><span>Выйти</span></button>
         </div>
     </nav>
 
@@ -393,7 +430,7 @@
         </div>
 
         <div id="archive" class="section">
-            <h2 class="section-title">📦 Архив графика</h2>
+            <h2 class="section-title"> Архив графика</h2>
             <div id="archiveContent"></div>
         </div>
 
@@ -407,7 +444,7 @@
         </div>
         
         <div id="materials" class="section">
-            <h2 class="section-title"> Обучающие материалы</h2>
+            <h2 class="section-title">📚 Обучающие материалы</h2>
             <div id="materialsList" class="materials-list"></div>
         </div>
         
@@ -422,7 +459,7 @@
         </div>
         
         <div id="stats" class="section">
-            <h2 class="section-title"> Статистика</h2>
+            <h2 class="section-title">📊 Статистика</h2>
             <div id="statsContent"></div>
         </div>
         
@@ -431,18 +468,18 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" onclick="showAdminTab('schedule', this)">📅 График</button>
                 <button class="admin-tab" onclick="showAdminTab('employees', this)">👥 Сотрудники</button>
-                <button class="admin-tab" onclick="showAdminTab('contests', this)"> Конкурсы</button>
-                <button class="admin-tab" onclick="showAdminTab('materials', this)">📚 Обучение</button>
+                <button class="admin-tab" onclick="showAdminTab('contests', this)">🏆 Конкурсы</button>
+                <button class="admin-tab" onclick="showAdminTab('materials', this)"> Обучение</button>
                 <button class="admin-tab" onclick="showAdminTab('info', this)">📢 Инфо</button>
                 <button class="admin-tab" onclick="showAdminTab('settings', this)">⚙️ Настройки</button>
             </div>
             
             <div id="admin-schedule" class="admin-section active">
                 <div class="admin-card">
-                    <div class="admin-card-title" id="scheduleFormTitle">➕ Добавить сотрудника в график</div>
+                    <div class="admin-card-title" id="scheduleFormTitle"> Добавить сотрудника в график</div>
                     <div class="form-row">
                         <div class="form-group"><label>📅 Дата</label><input type="date" id="adminDate"></div>
-                        <div class="form-group"><label>👤 Сотрудник</label><select id="adminEmployee"><option value="">-- Выберите сотрудника --</option></select></div>
+                        <div class="form-group"><label> Сотрудник</label><select id="adminEmployee"><option value="">-- Выберите сотрудника --</option></select></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group"><label>💼 Тип работы</label>
@@ -450,7 +487,7 @@
                                 <option value="kassa">Касса</option><option value="kd">КД</option><option value="zal">Зал</option><option value="sklad">Склад</option>
                             </select>
                         </div>
-                        <div class="form-group"><label> Смена</label>
+                        <div class="form-group"><label>🕐 Смена</label>
                             <select id="adminShift">
                                 <option value="1">Смена 9/1 (10:00 - 19:00)</option><option value="2">Смена 9/2 (12:00 - 21:00)</option><option value="3">Смена 11 (10:00 - 21:00)</option>
                             </select>
@@ -470,14 +507,14 @@
                     <div class="form-group"><label>👤 ФИО</label><input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович"></div>
                     <div class="form-row">
                         <div class="form-group"><label>📱 Телефон (логин)</label><input type="tel" id="newEmployeePhone" placeholder="89001234567"></div>
-                        <div class="form-group"><label> Пароль</label><input type="text" id="newEmployeePassword" placeholder="Пароль для входа"></div>
+                        <div class="form-group"><label>🔒 Пароль</label><input type="text" id="newEmployeePassword" placeholder="Пароль для входа"></div>
                     </div>
                     <div class="form-group">
                         <label>💼 Должность</label>
                         <select id="newEmployeePosition">
                             <option value="">-- Выберите должность --</option>
                             <option value="director">Директор</option>
-                            <option value="admin">Администратор</option>
+                            <option value="admin_pos">Администратор</option>
                             <option value="senior_seller">Старший продавец</option>
                             <option value="cashier">Кассир</option>
                             <option value="cashier_seller">Кассир-продавец</option>
@@ -486,7 +523,7 @@
                             <option value="cleaner">Уборщица</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>️ Роль в системе</label>
+                    <div class="form-group"><label>🔑 Роль в системе</label>
                         <select id="newEmployeeRole"><option value="user">👤 Сотрудник</option><option value="admin">💎 Администратор</option></select>
                     </div>
                     <button class="btn btn-success btn-block" id="employeeSubmitBtn" onclick="addEmployee()">➕ Добавить сотрудника</button>
@@ -501,7 +538,7 @@
                 <div class="admin-card">
                     <div class="admin-card-title">🏆 Добавить конкурс</div>
                     <div class="form-group"><label>🏆 Название конкурса</label><input type="text" id="contestName" placeholder="Введите название конкурса"></div>
-                    <div class="form-group"><label> Описание</label><textarea id="contestDescription" rows="3" placeholder="Описание конкурса"></textarea></div>
+                    <div class="form-group"><label>📝 Описание</label><textarea id="contestDescription" rows="3" placeholder="Описание конкурса"></textarea></div>
                     <div class="form-group"><label>📊 Статус</label>
                         <select id="contestStatus"><option value="active">Активный</option><option value="finished">Завершен</option></select>
                     </div>
@@ -515,20 +552,20 @@
             
             <div id="admin-materials" class="admin-section">
                 <div class="admin-card" id="addMaterialSection" style="display: none; border: 2px solid var(--info);">
-                    <div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);"> Новый материал</div>
+                    <div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);">📝 Новый материал</div>
                     <div class="type-switcher">
                         <button type="button" id="typeTextBtn" class="active" onclick="switchMaterialType('text')">📝 Текст</button>
                         <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')">📎 Файл</button>
                     </div>
                     <div class="form-group"><label>📌 Название</label><input type="text" id="materialTitle" placeholder="Например: Инструкция по работе с кассой"></div>
                     <div id="textForm">
-                        <div class="form-group"><label>📄 Текст материала</label><textarea id="materialText" rows="6" placeholder="Введите текст..."></textarea></div>
+                        <div class="form-group"><label> Текст материала</label><textarea id="materialText" rows="6" placeholder="Введите текст..."></textarea></div>
                     </div>
                     <div id="fileForm" style="display: none;">
                         <div class="form-group">
-                            <label> Загрузить файл</label>
+                            <label>📎 Загрузить файл</label>
                             <input type="file" id="materialFile" onchange="handleFileSelect(event)">
-                            <div id="fileWarning" class="file-warning" style="display: none;">️ Рекомендуется до 2 МБ.</div>
+                            <div id="fileWarning" class="file-warning" style="display: none;">⚠️ Рекомендуется до 2 МБ.</div>
                             <div id="fileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div>
                         </div>
                     </div>
@@ -538,7 +575,7 @@
                     </div>
                 </div>
                 <div class="admin-card">
-                    <div class="admin-card-title"> Обучающие материалы</div>
+                    <div class="admin-card-title">📚 Обучающие материалы</div>
                     <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Добавляйте инструкции и файлы для обучения.</p>
                     <button class="btn btn-primary btn-block" onclick="openMaterialForm()">➕ Добавить материал</button>
                 </div>
@@ -548,18 +585,18 @@
                 <div class="admin-card" id="addInfoSection" style="display: none; border: 2px solid var(--warning);">
                     <div class="admin-card-title" style="color: var(--warning); border-bottom-color: var(--warning);"> Новая информация</div>
                     <div class="type-switcher">
-                        <button type="button" id="infoTypeTextBtn" class="active" onclick="switchInfoType('text')"> Текст</button>
+                        <button type="button" id="infoTypeTextBtn" class="active" onclick="switchInfoType('text')">📝 Текст</button>
                         <button type="button" id="infoTypeFileBtn" onclick="switchInfoType('file')">📎 Файл</button>
                     </div>
                     <div class="form-group"><label>📌 Заголовок</label><input type="text" id="infoTitle" placeholder="Заголовок"></div>
                     <div id="infoTextForm">
-                        <div class="form-group"><label> Текст</label><textarea id="infoText" rows="4" placeholder="Текст информации"></textarea></div>
+                        <div class="form-group"><label>📝 Текст</label><textarea id="infoText" rows="4" placeholder="Текст информации"></textarea></div>
                     </div>
                     <div id="infoFileForm" style="display: none;">
                         <div class="form-group">
                             <label>📎 Загрузить файл</label>
                             <input type="file" id="infoFile" onchange="handleInfoFileSelect(event)">
-                            <div id="infoFileWarning" class="file-warning" style="display: none;">️ Рекомендуется до 2 МБ.</div>
+                            <div id="infoFileWarning" class="file-warning" style="display: none;">⚠️ Рекомендуется до 2 МБ.</div>
                             <div id="infoFileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div>
                         </div>
                     </div>
@@ -579,7 +616,7 @@
                 <div class="admin-card danger-zone">
                     <div class="admin-card-title">️ Опасная зона</div>
                     <p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px; line-height: 1.4;">Полный сброс всех данных сайта. Это действие нельзя отменить.</p>
-                    <button class="btn btn-danger btn-block" onclick="resetAllData()">🗑️ Сбросить все данные</button>
+                    <button class="btn btn-danger btn-block" onclick="resetAllData()">️ Сбросить все данные</button>
                 </div>
             </div>
         </div>
@@ -588,7 +625,7 @@
             <h2 class="section-title">👑 Панель Владельца</h2>
             
             <div class="admin-card">
-                <div class="admin-card-title">🏪 Управление отделениями сети</div>
+                <div class="admin-card-title"> Управление отделениями сети</div>
                 <div class="form-row" style="margin-bottom: 12px;">
                     <div class="form-group">
                         <label>Название магазина</label>
@@ -613,7 +650,7 @@
                 <button class="btn btn-warning btn-block" id="maintenanceToggleBtn" onclick="toggleMaintenanceMode()">Загрузка статуса...</button>
             </div>
             <div class="admin-card">
-                <div class="admin-card-title"> Передача полномочий Владельца</div>
+                <div class="admin-card-title">👑 Передача полномочий Владельца</div>
                 <p style="color: var(--gray); font-size: 0.9em; margin-bottom: 12px; line-height: 1.4;">Вы можете передать роль Владельца любому из текущих Администраторов. Ваша роль при этом автоматически изменится на "Администратор".</p>
                 <div id="superAdminList"></div>
             </div>
@@ -633,7 +670,7 @@
     <div class="modal" id="notificationModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3> Уведомления</h3>
+                <h3>🔔 Уведомления</h3>
                 <button class="modal-close" onclick="closeNotificationModal()">×</button>
             </div>
             <div class="modal-body" id="notificationBody">
@@ -666,7 +703,7 @@
         const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад' };
         const positionLabels = {
             director: 'Директор',
-            admin: 'Администратор',
+            admin_pos: 'Администратор',
             senior_seller: 'Старший продавец',
             cashier: 'Кассир',
             cashier_seller: 'Кассир-продавец',
@@ -694,6 +731,46 @@
             settings: { maintenanceMode: false },
             stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } 
         };
+
+        // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        const installPrompt = document.getElementById('pwaInstallPrompt');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            setTimeout(() => {
+                installPrompt.classList.add('show');
+            }, 2000);
+        });
+
+        window.installPWA = async function() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+                closePWAInstallPrompt();
+            }
+        };
+
+        window.closePWAInstallPrompt = function() {
+            installPrompt.classList.remove('show');
+        };
+
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            closePWAInstallPrompt();
+        });
 
         function updateClock() {
             const now = new Date();
@@ -870,7 +947,7 @@
             const errorEl = document.getElementById('loginError');
 
             if (!branchId) {
-                showLoginError('️ Пожалуйста, выберите отделение');
+                showLoginError('⚠️ Пожалуйста, выберите отделение');
                 return;
             }
             if (!phoneInput || !password) {
@@ -939,7 +1016,7 @@
             document.getElementById('notificationBell').style.display = 'block';
             
             let roleText = '👤 Сотрудник';
-            if (currentUser.role === 'admin') roleText = ' Админ';
+            if (currentUser.role === 'admin') roleText = '💎 Админ';
             if (currentUser.role === 'superadmin') roleText = '👑 Владелец';
             document.getElementById('currentUserRole').textContent = roleText;
             
@@ -1101,7 +1178,7 @@
             const userNotifs = notifications.filter(n => n.userId === currentUser.id || n.userId === 'all');
             
             if (userNotifs.length === 0) {
-                body.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: var(--light-gray);">📭<br><br>У вас нет уведомлений</div>';
+                body.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: var(--light-gray);"><br><br>У вас нет уведомлений</div>';
                 return;
             }
 
@@ -1160,7 +1237,7 @@
                             <div class="employee-admin-name">🏪 ${escapeHtml(b.name)}</div>
                             <div class="employee-admin-phone">📍 ${escapeHtml(b.city || 'Город не указан')}</div>
                         </div>
-                        <button class="btn btn-danger btn-sm" onclick="deleteBranch('${doc.id}')">🗑️</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBranch('${doc.id}')">️</button>
                     </div>
                 `;
                 list.appendChild(div);
@@ -1280,7 +1357,7 @@
             if (password.length < 3) { alert('Пароль минимум 3 символа'); return; }
             if (!position) { alert('Выберите должность'); return; }
             const normalizedPhone = normalizePhone(phone);
-            if (data.employees.some(e => normalizePhone(e.phone) === normalizedPhone)) { alert(' Сотрудник с таким телефоном уже есть!'); return; }
+            if (data.employees.some(e => normalizePhone(e.phone) === normalizedPhone)) { alert('❌ Сотрудник с таким телефоном уже есть!'); return; }
             try {
                 await addDoc(collection(db, "users"), { name, phone, password, position, role, branchId: currentUser.branchId });
                 document.getElementById('newEmployeeName').value = '';
@@ -1317,7 +1394,7 @@
             ).join('');
             
             if (!branchOptions) {
-                alert(' Нет других отделений для перевода. Сначала создайте новое отделение.');
+                alert('❌ Нет других отделений для перевода. Сначала создайте новое отделение.');
                 return;
             }
             
@@ -1392,14 +1469,14 @@
             visibleEmployees.forEach(emp => {
                 const item = document.createElement('div');
                 item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`;
-                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">💎 Админ</span>' : '<span class="employee-admin-role role-user-badge"> Сотрудник</span>';
+                const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">💎 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>';
                 const positionText = emp.position ? `<div style="color: var(--brand-green); font-size: 0.82em; margin-top: 2px;">💼 ${positionLabels[emp.position] || emp.position}</div>` : '';
-                const phoneText = emp.phone ? ` 📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
+                const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>';
                 const isSelf = currentUser && currentUser.id === emp.id;
-                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">️</button>`;
+                const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`;
                 const transferBtn = `<button class="btn btn-info btn-sm" onclick="transferEmployee('${emp.id}')" style="margin-right:4px;" title="Перевести">🔄</button>`;
                 const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`;
-                item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(emp.name)} ${roleBadge}</div>${positionText}<div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${transferBtn}${deleteBtn}</div></div>`;
+                item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name">👤 ${escapeHtml(emp.name)} ${roleBadge}</div>${positionText}<div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${transferBtn}${deleteBtn}</div></div>`;
                 list.appendChild(item);
             });
             document.getElementById('employeeCounter').textContent = visibleEmployees.length + ' чел.';
@@ -1443,7 +1520,7 @@
                     <div class="employee-admin-header">
                         <div class="employee-admin-info">
                             <div class="employee-admin-name">👑 ${escapeHtml(admin.name)}</div>
-                            <div class="employee-admin-phone">📱 ${escapeHtml(admin.phone)}</div>
+                            <div class="employee-admin-phone"> ${escapeHtml(admin.phone)}</div>
                         </div>
                         <button class="btn btn-gold btn-sm" onclick="transferSuperAdmin('${admin.id}')">Передать полномочия</button>
                     </div>
@@ -1455,7 +1532,7 @@
         window.toggleMaintenanceMode = async function() {
             const newMode = !data.settings.maintenanceMode;
             const confirmMsg = newMode 
-                ? '️ Вы собираетесь включить режим технических работ. Обычные сотрудники и админы потеряют доступ к приложению. Продолжить?'
+                ? '⚠️ Вы собираетесь включить режим технических работ. Обычные сотрудники и админы потеряют доступ к приложению. Продолжить?'
                 : 'Выключить режим технических работ и открыть доступ для всех?';
             if (!confirm(confirmMsg)) return;
             try {
@@ -1469,7 +1546,7 @@
         window.transferSuperAdmin = async function(targetId) {
             const targetAdmin = data.employees.find(e => e.id === targetId);
             if (!targetAdmin) return;
-            if (!confirm(`️ ВЫ УВЕРЕНЫ?\n\nВы собираетесь передать роль Владельца пользователю "${targetAdmin.name}".\nВаша роль будет изменена на "Администратор".\n\nЭто действие нельзя отменить через интерфейс.`)) return;
+            if (!confirm(`⚠️ ВЫ УВЕРЕНЫ?\n\nВы собираетесь передать роль Владельца пользователю "${targetAdmin.name}".\nВаша роль будет изменена на "Администратор".\n\nЭто действие нельзя отменить через интерфейс.`)) return;
             try {
                 await updateDoc(doc(db, "users", currentUser.id), { role: 'admin' });
                 await updateDoc(doc(db, "users", targetId), { role: 'superadmin' });
@@ -1488,7 +1565,7 @@
             grid.innerHTML = '';
             const dates = getSortedDates();
             const activeDates = dates.filter(d => getDateStatus(d) !== 'past');
-            if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message">📅 График пока пустой.</div>'; return; }
+            if (activeDates.length === 0) { grid.innerHTML = '<div class="empty-message"> График пока пустой.</div>'; return; }
             
             activeDates.forEach(date => {
                 const entries = data.schedule[date];
@@ -1519,7 +1596,7 @@
                             <span class="employee-card-position ${positionClass}">${positionLabel}</span>
                         </div>
                         <div class="employee-card-shift">
-                            <span class="employee-card-shift-icon"></span>
+                            <span class="employee-card-shift-icon">🕐</span>
                             <span>Смена ${shiftLabel}</span>
                             <span style="color: var(--light-gray);">•</span>
                             <span class="employee-card-time">${shiftTime}</span>
@@ -1576,13 +1653,13 @@
                     const positionClass = entry.type;
                     const shiftLabel = shiftLabels[entry.shift] || entry.shift;
                     const shiftTime = shiftTimes[entry.shift];
-                    let deleteBtn = currentUser && currentUser.role === 'superadmin' ? `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')" title="Удалить запись">️</button>` : '';
+                    let deleteBtn = currentUser && currentUser.role === 'superadmin' ? `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')" title="Удалить запись">🗑️</button>` : '';
                     card.innerHTML = `
                         <div class="archive-employee-info">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;"> ${escapeHtml(entry.employee)}</div>
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 4px;">👤 ${escapeHtml(entry.employee)}</div>
                             <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 0.85em;">
                                 <span class="employee-card-position ${positionClass}" style="font-size: 0.8em;">${positionLabel}</span>
-                                <span style="color: var(--gray);"> Смена ${shiftLabel} • ${shiftTime}</span>
+                                <span style="color: var(--gray);">🕐 Смена ${shiftLabel} • ${shiftTime}</span>
                             </div>
                         </div>
                         ${deleteBtn}
@@ -1594,7 +1671,7 @@
         };
 
         window.deleteArchiveEntry = async function(id) {
-            if (!currentUser || currentUser.role !== 'superadmin') { alert(' Только владелец может удалять записи из архива'); return; }
+            if (!currentUser || currentUser.role !== 'superadmin') { alert('🔒 Только владелец может удалять записи из архива'); return; }
             if (!confirm('Удалить эту запись из архива?')) return;
             try {
                 await deleteDoc(doc(db, "schedule", id));
@@ -1605,7 +1682,7 @@
         };
 
         window.clearArchive = async function() {
-            if (!currentUser || currentUser.role !== 'superadmin') { alert(' Только владелец может очищать архив'); return; }
+            if (!currentUser || currentUser.role !== 'superadmin') { alert('🔒 Только владелец может очищать архив'); return; }
             if (!confirm('⚠️ Вы собираетесь удалить ВСЕ записи из архива?\n\nЭто действие нельзя отменить!')) return;
             if (!confirm('Точно удалить все прошедшие смены? Последнее предупреждение!')) return;
             try {
@@ -1650,10 +1727,10 @@
                     const badgeClass = `badge-${entry.type}`;
                     let statusMark = status === 'today' ? ' 🔵' : (status === 'yesterday' ? ' ✓' : '');
                     
-                    const editBtn = `<button class="btn btn-warning btn-sm" onclick="editScheduleEntry('${entry.id}')" style="margin-right:4px;">️</button>`;
+                    const editBtn = `<button class="btn btn-warning btn-sm" onclick="editScheduleEntry('${entry.id}')" style="margin-right:4px;">✏️</button>`;
                     const deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`;
                     
-                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span> ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`;
+                    item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftLabels[entry.shift] || entry.shift}</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`;
                     list.appendChild(item);
                 });
             });
@@ -1769,7 +1846,7 @@
                 if (emp) {
                     await createNotification(
                         emp.id,
-                        ' Изменение в графике',
+                        '🔄 Изменение в графике',
                         `Ваша смена изменена на ${date} (${typeLabels[type]}, смена ${shiftLabels[shift]}, ${shiftTimes[shift]})`,
                         'schedule'
                     );
@@ -1817,7 +1894,7 @@
                     if (emp) {
                         await createNotification(
                             emp.id,
-                            '📅 Удаление смены из графика',
+                            ' Удаление смены из графика',
                             `Ваша смена на ${targetEntry.date} (${typeLabels[targetEntry.type]}) была удалена`,
                             'schedule'
                         );
@@ -1943,7 +2020,7 @@
                 }
                 let finalHtml = '';
                 if (contest.finalResult) {
-                    finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon"></div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
+                    finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`;
                 }
                 card.innerHTML = `<span class="contest-status ${statusClass}">${statusText}</span><h3>${escapeHtml(contest.name)}</h3><div class="contest-description">${escapeHtml(contest.description)}</div>${intermediateHtml}${finalHtml}`;
                 list.appendChild(card);
@@ -1958,7 +2035,7 @@
             data.contests.forEach(contest => {
                 const item = document.createElement('div');
                 item.className = `admin-contest-item ${contest.status === 'finished' ? 'status-finished-item' : ''}`;
-                const statusText = contest.status === 'active' ? '🟢 Активный' : ' Завершен';
+                const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен';
                 const toggleBtnText = contest.status === 'active' ? '⏸️ Завершить' : '▶️ Возобновить';
                 let intResultsHtml = (contest.intermediateResults && contest.intermediateResults.length > 0)
                     ? [...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="admin-result-item"><div class="admin-result-info"><strong>${escapeHtml(r.title)}</strong><small>${formatDateTime(r.date)}</small>${r.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteIntermediateResult('${contest.id}', '${r.id}')">✕</button></div>`).join('')
@@ -1968,11 +2045,11 @@
                     : '<div class="no-employees">Финальный результат не определён</div>';
                 let formHtml = '';
                 if (openResultForms[contest.id] === 'intermediate') {
-                    formHtml = `<div class="inline-form"><h5>📊 Новый промежуточный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название этапа"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">✕ Отмена</button></div></div>`;
+                    formHtml = `<div class="inline-form"><h5>📊 Новый промежуточный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название этапа"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')"> Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">✕ Отмена</button></div></div>`;
                 } else if (openResultForms[contest.id] === 'final') {
                     formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;">🏆 Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий (необязательно)"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">✕ Отмена</button></div></div>`;
                 }
-                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5> Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
+                item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}', 'intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}', 'final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`;
                 list.appendChild(item);
             });
         };
@@ -2008,7 +2085,7 @@
             const warningEl = document.getElementById('fileWarning');
             if (!file) { selectedFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return; }
             if (file.size > MAX_FILE_SIZE) {
-                alert(`️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
+                alert(`⚠️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
                 event.target.value = ''; selectedFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return;
             }
             warningEl.style.display = file.size > RECOMMENDED_FILE_SIZE ? 'block' : 'none';
@@ -2070,7 +2147,7 @@
             const list = document.getElementById('materialsList');
             if (!list) return;
             list.innerHTML = '';
-            if (data.materials.length === 0) { list.innerHTML = '<div class="empty-message"> Обучающие материалы пока не добавлены.</div>'; return; }
+            if (data.materials.length === 0) { list.innerHTML = '<div class="empty-message">📚 Обучающие материалы пока не добавлены.</div>'; return; }
             data.materials.forEach(material => {
                 const card = document.createElement('div');
                 card.className = `material-card type-${material.type}`;
@@ -2124,7 +2201,7 @@
             const warningEl = document.getElementById('infoFileWarning');
             if (!file) { selectedInfoFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return; }
             if (file.size > MAX_FILE_SIZE) {
-                alert(`️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
+                alert(`⚠️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
                 event.target.value = ''; selectedInfoFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return;
             }
             warningEl.style.display = file.size > RECOMMENDED_FILE_SIZE ? 'block' : 'none';
@@ -2191,7 +2268,7 @@
             data.info.forEach(item => {
                 const card = document.createElement('div');
                 card.className = `info-card type-${item.type}`;
-                const icon = item.type === 'text' ? '📝' : (item.file ? getFileIcon(item.file.mimeType) : '📄');
+                const icon = item.type === 'text' ? '📝' : (item.file ? getFileIcon(item.file.mimeType) : '');
                 const tagClass = item.type === 'text' ? 'tag-text' : 'tag-file';
                 const tagText = item.type === 'text' ? 'Текст' : 'Файл';
                 
@@ -2284,15 +2361,15 @@
                     </div>
                     <div class="my-stats-month-info"> Статистика за ${myStats.currentMonthName}</div>`;
                 if (!hasAnyShifts) {
-                    html += `<div class="my-stats-empty"><span class="my-stats-empty-icon">📭</span>У вас пока нет смен в графике.<br><span style="font-size: 0.9em; opacity: 0.8;">Как только вас добавят в график — здесь появится ваша статистика.</span></div>`;
+                    html += `<div class="my-stats-empty"><span class="my-stats-empty-icon"></span>У вас пока нет смен в графике.<br><span style="font-size: 0.9em; opacity: 0.8;">Как только вас добавят в график — здесь появится ваша статистика.</span></div>`;
                 } else {
                     html += `<div class="my-stats-grid">
-                        <div class="my-stat-card"><div class="my-stat-icon"></div><div class="my-stat-value">${myStats.kassa}</div><div class="my-stat-label">дней на Кассе</div></div>
+                        <div class="my-stat-card"><div class="my-stat-icon">💵</div><div class="my-stat-value">${myStats.kassa}</div><div class="my-stat-label">дней на Кассе</div></div>
                         <div class="my-stat-card"><div class="my-stat-icon">📋</div><div class="my-stat-value">${myStats.kd}</div><div class="my-stat-label">дней на КД</div></div>
-                        <div class="my-stat-card"><div class="my-stat-icon"></div><div class="my-stat-value">${myStats.zal}</div><div class="my-stat-label">дней в Зале</div></div>
+                        <div class="my-stat-card"><div class="my-stat-icon">🏬</div><div class="my-stat-value">${myStats.zal}</div><div class="my-stat-label">дней в Зале</div></div>
                         <div class="my-stat-card"><div class="my-stat-icon">📦</div><div class="my-stat-value">${myStats.sklad}</div><div class="my-stat-label">дней на Складе</div></div>
                         <div class="my-stat-total"><div class="my-stat-icon">📊</div><div class="my-stat-value">${myStats.totalShifts}</div><div class="my-stat-label">Всего смен за всё время</div></div>
-                        <div class="my-stat-hours"><div class="my-stat-icon">️</div><div class="my-stat-value">${myStats.hoursThisMonth}</div><div class="my-stat-label">часов отработано в этом месяце (${myStats.shiftsThisMonth} смен)</div></div>
+                        <div class="my-stat-hours"><div class="my-stat-icon">⏱️</div><div class="my-stat-value">${myStats.hoursThisMonth}</div><div class="my-stat-label">часов отработано в этом месяце (${myStats.shiftsThisMonth} смен)</div></div>
                     </div>`;
                 }
                 html += `</div>`;
@@ -2338,16 +2415,16 @@
         }
 
         function getFileIcon(mimeType) {
-            if (!mimeType) return '';
+            if (!mimeType) return '📄';
             if (mimeType.startsWith('image/')) return '🖼️';
-            if (mimeType.startsWith('video/')) return '';
-            if (mimeType.startsWith('audio/')) return '🎵';
+            if (mimeType.startsWith('video/')) return '🎬';
+            if (mimeType.startsWith('audio/')) return '';
             if (mimeType.includes('pdf')) return '📕';
             if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
-            if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📗';
-            if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📙';
+            if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '';
+            if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '';
             if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '🗜️';
-            return '';
+            return '📄';
         }
 
         function getSortedDates() {
