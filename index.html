@@ -9,38 +9,65 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f7f3; color: #2c3e2d; min-height: 100vh; }
         
+        /* ========== ШАПКА ========== */
         header {
             background: linear-gradient(135deg, #4a7c3a, #6ba84f);
             color: white;
-            padding: 20px 40px;
+            padding: 15px 20px;
+            position: relative;
+        }
+        
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             gap: 15px;
+            margin-bottom: 10px;
         }
-        .logo { font-size: 28px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .logo-icon { font-size: 36px; }
         
-        .site-clock {
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+        
+        .header-clock {
             background: rgba(255,255,255,0.15);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            white-space: nowrap;
+            backdrop-filter: blur(4px);
         }
-        .site-clock .clock-time { font-weight: 700; }
+        .header-clock .time { font-weight: 700; font-variant-numeric: tabular-nums; }
         
-        .auth-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .auth-buttons {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
         .btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             transition: all 0.2s;
+            white-space: nowrap;
         }
         .btn-primary { background: white; color: #4a7c3a; }
         .btn-primary:hover { background: #f0f0f0; transform: translateY(-2px); }
@@ -49,41 +76,66 @@
         .btn-accent { background: #e67e22; color: white; }
         .btn-accent:hover { background: #d35400; }
         .btn-danger { background: #e74c3c; color: white; }
-        .btn-danger:hover { background: #c0392b; }
         .btn-small { padding: 6px 12px; font-size: 12px; }
         .btn-admin { background: #f39c12; color: white; }
         
-        nav {
-            background: white;
-            padding: 15px 40px;
+        .user-info {
             display: flex;
+            align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            border-bottom: 3px solid #4a7c3a;
+            font-size: 14px;
         }
+        .user-info span { font-weight: 600; }
+        .owner-badge {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        /* ========== НАВИГАЦИЯ ========== */
+        nav {
+            background: white;
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            border-bottom: 3px solid #4a7c3a;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        nav::-webkit-scrollbar { display: none; }
+        
         .nav-btn {
-            padding: 10px 18px;
+            padding: 8px 14px;
             background: #f4f7f3;
             border: 2px solid transparent;
-            border-radius: 8px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             color: #2c3e2d;
             transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .nav-btn:hover { background: #e8efe4; }
         .nav-btn.active { background: #4a7c3a; color: white; border-color: #4a7c3a; }
         
-        main { padding: 30px 40px; max-width: 1400px; margin: 0 auto; }
+        main { padding: 20px; max-width: 1400px; margin: 0 auto; }
+        
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 10px;
         }
-        .section-title { font-size: 28px; color: #2c3e2d; }
+        .section-title { font-size: 24px; color: #2c3e2d; }
+        
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -93,13 +145,13 @@
             gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 20px;
-            padding: 12px 16px;
+            padding: 12px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
         .filter-btn {
-            padding: 8px 16px;
+            padding: 8px 14px;
             background: #f4f7f3;
             border: 2px solid transparent;
             border-radius: 20px;
@@ -116,7 +168,7 @@
         .filter-btn.active { background: #4a7c3a; color: white; border-color: #4a7c3a; }
         .filter-btn .count {
             background: rgba(0,0,0,0.1);
-            padding: 2px 8px;
+            padding: 2px 6px;
             border-radius: 10px;
             font-size: 11px;
             font-weight: bold;
@@ -125,26 +177,26 @@
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 15px;
         }
         .card {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transition: all 0.2s;
             border-left: 4px solid #4a7c3a;
         }
         .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
-        .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
-        .card-title { font-size: 18px; font-weight: bold; color: #2c3e2d; flex: 1; }
+        .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
+        .card-title { font-size: 16px; font-weight: bold; color: #2c3e2d; flex: 1; }
         .card-type {
-            font-size: 11px;
+            font-size: 10px;
             padding: 3px 8px;
             border-radius: 12px;
             font-weight: bold;
             text-transform: uppercase;
-            margin-left: 10px;
+            margin-left: 8px;
         }
         .type-buy { background: #e3f2fd; color: #1976d2; }
         .type-sell { background: #ffebee; color: #c62828; }
@@ -153,24 +205,24 @@
         .type-kind { background: #fce4ec; color: #c2185b; }
         .type-event { background: #ede7f6; color: #5e35b1; }
         .type-ride { background: #e0f2f1; color: #00695c; }
-        .card-body { color: #555; font-size: 14px; line-height: 1.5; margin: 10px 0; }
+        .card-body { color: #555; font-size: 13px; line-height: 1.5; margin: 8px 0; }
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
-            padding-top: 12px;
+            margin-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid #eee;
-            font-size: 13px;
+            font-size: 12px;
             color: #888;
         }
-        .card-price { font-size: 16px; font-weight: bold; color: #4a7c3a; }
+        .card-price { font-size: 15px; font-weight: bold; color: #4a7c3a; }
         .card-author { font-weight: 600; color: #2c3e2d; }
         .card-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            padding-top: 12px;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 1px solid #f0f0f0;
         }
         .card-actions .btn { flex: 1; }
@@ -183,13 +235,14 @@
             z-index: 10000;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         .modal-overlay.active { display: flex; }
         .modal {
             background: white;
             border-radius: 12px;
-            padding: 30px;
-            width: 90%;
+            padding: 25px;
+            width: 100%;
             max-width: 450px;
             max-height: 90vh;
             overflow-y: auto;
@@ -197,14 +250,14 @@
         }
         .modal-close {
             position: absolute;
-            top: 15px; right: 15px;
+            top: 12px; right: 12px;
             background: none;
             border: none;
             font-size: 24px;
             cursor: pointer;
             color: #888;
         }
-        .modal h2 { margin-bottom: 20px; color: #2c3e2d; }
+        .modal h2 { margin-bottom: 20px; color: #2c3e2d; font-size: 22px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
         .form-group input, .form-group textarea, .form-group select {
@@ -224,31 +277,17 @@
         .form-switch a { color: #4a7c3a; cursor: pointer; font-weight: 600; }
         .form-error { color: #c62828; font-size: 13px; margin-top: 10px; display: none; }
         
-        .user-info { display: flex; align-items: center; gap: 12px; color: white; flex-wrap: wrap; }
-        .user-info span { font-weight: 600; }
-        .owner-badge {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .hidden { display: none !important; }
-        .empty-state { text-align: center; padding: 60px 20px; color: #888; }
-        .empty-state-icon { font-size: 60px; margin-bottom: 15px; }
-        
         .reg-method-switcher {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
             background: #f4f7f3;
-            padding: 5px;
+            padding: 4px;
             border-radius: 10px;
         }
         .reg-method-btn {
             flex: 1;
-            padding: 10px;
+            padding: 8px;
             background: transparent;
             border: none;
             border-radius: 8px;
@@ -265,7 +304,7 @@
         .form-hint {
             background: #e8f5e9;
             border-left: 3px solid #4a7c3a;
-            padding: 10px 12px;
+            padding: 10px;
             border-radius: 6px;
             font-size: 13px;
             color: #2e7d32;
@@ -276,25 +315,111 @@
             border-left-color: #e67e22;
             color: #e65100;
         }
-        .field-hint { font-size: 12px; color: #888; margin-top: 4px; }
+        .field-hint { font-size: 11px; color: #888; margin-top: 4px; }
         .required-mark { color: #c62828; }
         
+        .hidden { display: none !important; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #888; }
+        .empty-state-icon { font-size: 48px; margin-bottom: 10px; }
+        
+        /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
         @media (max-width: 600px) {
-            header { flex-direction: column; padding: 15px 20px; }
-            main, nav { padding: 20px; }
+            header {
+                padding: 12px 15px;
+            }
+            
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .logo-block {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .logo-icon { font-size: 28px; }
+            .logo-text { font-size: 20px; }
+            
+            .header-clock {
+                text-align: center;
+                font-size: 11px;
+                padding: 4px 10px;
+                align-self: center;
+            }
+            
+            .auth-buttons {
+                justify-content: center;
+            }
+            
+            .user-info {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            nav {
+                padding: 8px 10px;
+                gap: 6px;
+            }
+            
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            main {
+                padding: 15px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .filter-bar {
+                padding: 10px;
+                gap: 6px;
+            }
+            
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .modal {
+                padding: 20px 15px;
+            }
+        }
+        
+        /* Очень маленькие экраны */
+        @media (max-width: 360px) {
+            .logo-text { font-size: 18px; }
+            .logo-icon { font-size: 24px; }
+            .btn { padding: 7px 12px; font-size: 12px; }
+            .nav-btn { padding: 5px 10px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="display: flex; flex-direction: column; gap: 6px;">
-        <div class="logo">
-            <span class="logo-icon"></span>
-            <span>СНТ Изабелла</span>
+    <div class="header-top">
+        <div class="logo-block">
+            <span class="logo-icon">🏡</span>
+            <span class="logo-text">СНТ Изабелла</span>
         </div>
-        <div class="site-clock">
-            🕐 <span id="siteClock">—</span>
+        <div class="header-clock">
+            🕐 <span id="siteClock"><span class="time">—</span></span>
         </div>
     </div>
     <div id="authButtons" class="auth-buttons">
@@ -310,7 +435,7 @@
 </header>
 
 <nav>
-    <button class="nav-btn active" data-section="market">🛒 Куплю / Продам / Отдам</button>
+    <button class="nav-btn active" data-section="market"> Куплю / Продам / Отдам</button>
     <button class="nav-btn" data-section="services">🔧 Услуги</button>
     <button class="nav-btn" data-section="kind">💝 Добрые дела</button>
     <button class="nav-btn" data-section="events">🎉 События</button>
@@ -325,8 +450,8 @@
         </div>
         <div class="filter-bar" id="marketFilterBar">
             <button class="filter-btn active" data-filter="all" onclick="setMarketFilter('all')">📋 Все <span class="count" id="countAll">0</span></button>
-            <button class="filter-btn" data-filter="buy" onclick="setMarketFilter('buy')">🛍️ Куплю <span class="count" id="countBuy">0</span></button>
-            <button class="filter-btn" data-filter="sell" onclick="setMarketFilter('sell')">💰 Продам <span class="count" id="countSell">0</span></button>
+            <button class="filter-btn" data-filter="buy" onclick="setMarketFilter('buy')">️ Куплю <span class="count" id="countBuy">0</span></button>
+            <button class="filter-btn" data-filter="sell" onclick="setMarketFilter('sell')"> Продам <span class="count" id="countSell">0</span></button>
             <button class="filter-btn" data-filter="give" onclick="setMarketFilter('give')"> Отдам <span class="count" id="countGive">0</span></button>
         </div>
         <div id="marketCards" class="cards-grid"></div>
@@ -365,7 +490,7 @@
     </section>
 </main>
 
-<!-- Модалка: Вход -->
+<!-- Модалки (те же самые что и раньше) -->
 <div id="loginModal" class="modal-overlay">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('loginModal')">×</button>
@@ -389,7 +514,6 @@
     </div>
 </div>
 
-<!-- Модалка: Регистрация -->
 <div id="registerModal" class="modal-overlay">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('registerModal')">×</button>
@@ -426,7 +550,6 @@
     </div>
 </div>
 
-<!-- Модалка: Объявление -->
 <div id="postModal" class="modal-overlay">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('postModal')">×</button>
@@ -470,31 +593,29 @@
     </div>
 </div>
 
-<!-- Модалка: Админ -->
 <div id="adminModal" class="modal-overlay">
-    <div class="modal" style="max-width: 800px;">
+    <div class="modal" style="max-width: 600px;">
         <button class="modal-close" onclick="closeModal('adminModal')">×</button>
         <h2>️ Панель управления</h2>
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
-            <div style="background: #f4f7f3; padding: 15px; border-radius: 10px; text-align: center;">
-                <div style="font-size: 28px; font-weight: bold; color: #4a7c3a;" id="statUsers">0</div>
-                <div style="font-size: 12px; color: #666;">Пользователей</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
+            <div style="background: #f4f7f3; padding: 12px; border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: bold; color: #4a7c3a;" id="statUsers">0</div>
+                <div style="font-size: 11px; color: #666;">Пользователей</div>
             </div>
-            <div style="background: #f4f7f3; padding: 15px; border-radius: 10px; text-align: center;">
-                <div style="font-size: 28px; font-weight: bold; color: #4a7c3a;" id="statPosts">0</div>
-                <div style="font-size: 12px; color: #666;">Объявлений</div>
+            <div style="background: #f4f7f3; padding: 12px; border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: bold; color: #4a7c3a;" id="statPosts">0</div>
+                <div style="font-size: 11px; color: #666;">Объявлений</div>
             </div>
         </div>
-        <h3 style="margin-bottom: 15px;"> Участники</h3>
-        <div id="usersTableBody" style="max-height: 300px; overflow-y: auto;"></div>
+        <h3 style="margin-bottom: 12px; font-size: 16px;">Участники</h3>
+        <div id="usersTableBody" style="max-height: 250px; overflow-y: auto;"></div>
     </div>
 </div>
 
 <script>
-// ========== ГЛОБАЛЬНОЕ СОСТОЯНИЕ ==========
+// Весь JavaScript остаётся таким же как в предыдущей версии
 const ADMIN_PHONE = 'admin';
 const ADMIN_PASSWORD = 'admin';
-const MARKET_LIFETIME = 30 * 24 * 60 * 60 * 1000;
 
 const state = {
     currentUser: null,
@@ -506,9 +627,7 @@ const state = {
     regMethod: 'phone'
 };
 
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
 function initApp() {
-    // Загрузка из localStorage
     const savedUser = localStorage.getItem('current_user');
     if (savedUser) state.currentUser = JSON.parse(savedUser);
     
@@ -518,7 +637,6 @@ function initApp() {
     const savedPosts = localStorage.getItem('posts');
     state.posts = savedPosts ? JSON.parse(savedPosts) : [];
     
-    // Создаём админа
     if (!state.users.some(u => u.isAdmin)) {
         state.users.push({
             phone: ADMIN_PHONE,
@@ -531,7 +649,6 @@ function initApp() {
         localStorage.setItem('users', JSON.stringify(state.users));
     }
     
-    // Демо-данные
     if (state.posts.length === 0) {
         const now = new Date().toISOString();
         state.posts = [
@@ -548,18 +665,16 @@ function initApp() {
     switchRegMethod('phone');
 }
 
-// ========== ЧАСЫ ==========
 function updateClock() {
     const now = new Date();
     const time = now.toLocaleTimeString('ru-RU');
     const date = now.toLocaleDateString('ru-RU');
     const el = document.getElementById('siteClock');
-    if (el) el.innerHTML = `${date} <span class="clock-time">${time}</span>`;
+    if (el) el.innerHTML = `${date} <span class="time">${time}</span>`;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ========== НАВИГАЦИЯ ==========
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -569,7 +684,6 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     });
 });
 
-// ========== МОДАЛКИ ==========
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) {
     document.getElementById(id).classList.remove('active');
@@ -582,7 +696,6 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
     o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); });
 });
 
-// ========== РЕГИСТРАЦИЯ ==========
 function switchRegMethod(method) {
     state.regMethod = method;
     document.querySelectorAll('.reg-method-btn').forEach(btn => {
@@ -640,7 +753,6 @@ function handleRegister(e) {
     e.target.reset();
 }
 
-// ========== ВХОД ==========
 function handleLogin(e) {
     e.preventDefault();
     const loginId = document.getElementById('loginId').value.trim();
@@ -696,7 +808,6 @@ function updateAuthUI() {
     }
 }
 
-// ========== ОБЪЯВЛЕНИЯ ==========
 function openPostModal(type) {
     if (!state.currentUser) {
         alert('Нужно войти');
@@ -707,13 +818,7 @@ function openPostModal(type) {
     state.currentPostType = type;
     state.editingPostId = null;
     
-    const titles = {
-        market: 'Новое объявление',
-        service: 'Услуга',
-        kind: 'Доброе дело',
-        event: 'Событие',
-        ride: 'Поездка'
-    };
+    const titles = { market: 'Новое объявление', service: 'Услуга', kind: 'Доброе дело', event: 'Событие', ride: 'Поездка' };
     document.getElementById('postModalTitle').textContent = titles[type];
     document.getElementById('postSubmitBtn').textContent = 'Опубликовать';
     
@@ -772,7 +877,6 @@ function handlePost(e) {
     e.target.reset();
 }
 
-// ========== РЕНДЕРИНГ ==========
 function renderAllSections() {
     renderMarketSection();
     renderSection('services', p => p.type === 'service');
@@ -798,7 +902,7 @@ function renderMarketSection() {
     
     const container = document.getElementById('marketCards');
     if (items.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon"></div><p>Пока пусто</p></div>';
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Пока пусто</p></div>';
     } else {
         container.innerHTML = items.slice().reverse().map(p => renderCard(p)).join('');
     }
@@ -902,7 +1006,6 @@ function deletePost(id) {
     renderAllSections();
 }
 
-// ========== АДМИН ==========
 function openAdminPanel() {
     if (!state.currentUser?.isAdmin) return;
     
@@ -931,7 +1034,6 @@ function deleteUser(phone) {
     openAdminPanel();
 }
 
-// ========== ЗАПУСК ==========
 initApp();
 </script>
 
