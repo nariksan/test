@@ -13,109 +13,135 @@
         header {
             background: linear-gradient(135deg, #4a7c3a, #6ba84f);
             color: white;
-            padding: 15px 20px;
-            position: relative;
+            padding: 12px 15px;
         }
         
-        .header-top {
+        .header-main {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .logo-block {
             display: flex;
             align-items: center;
-            gap: 10px;
-            flex: 1;
+            gap: 8px;
         }
         
         .logo-icon {
-            font-size: 32px;
-            flex-shrink: 0;
+            font-size: 28px;
         }
         
         .logo-text {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
-            line-height: 1.2;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .header-clock {
             background: rgba(255,255,255,0.15);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             white-space: nowrap;
-            backdrop-filter: blur(4px);
         }
         .header-clock .time { font-weight: 700; font-variant-numeric: tabular-nums; }
         
         .auth-buttons {
             display: flex;
-            gap: 8px;
-            flex-shrink: 0;
+            gap: 6px;
         }
         
         .btn {
-            padding: 8px 16px;
+            padding: 6px 12px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             transition: all 0.2s;
             white-space: nowrap;
         }
         .btn-primary { background: white; color: #4a7c3a; }
-        .btn-primary:hover { background: #f0f0f0; transform: translateY(-2px); }
-        .btn-secondary { background: transparent; color: white; border: 2px solid white; }
+        .btn-primary:hover { background: #f0f0f0; }
+        .btn-secondary { background: transparent; color: white; border: 1.5px solid white; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); }
         .btn-accent { background: #e67e22; color: white; }
         .btn-accent:hover { background: #d35400; }
         .btn-danger { background: #e74c3c; color: white; }
-        .btn-small { padding: 6px 12px; font-size: 12px; }
+        .btn-small { padding: 5px 10px; font-size: 11px; }
         .btn-admin { background: #f39c12; color: white; }
         
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            font-size: 14px;
+            font-size: 13px;
         }
         .user-info span { font-weight: 600; }
         .owner-badge {
             background: linear-gradient(135deg, #f39c12, #e67e22);
             color: white;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
             font-weight: bold;
         }
+        
+        /* ========== БЫСТРЫЕ РАЗДЕЛЫ ========== */
+        .quick-sections {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 8px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .quick-sections::-webkit-scrollbar { display: none; }
+        
+        .quick-btn {
+            flex-shrink: 0;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .quick-btn:hover { background: rgba(255,255,255,0.25); }
+        .quick-btn.active { background: white; color: #4a7c3a; }
         
         /* ========== НАВИГАЦИЯ ========== */
         nav {
             background: white;
-            padding: 10px 15px;
+            padding: 8px 12px;
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            border-bottom: 3px solid #4a7c3a;
+            gap: 6px;
             overflow-x: auto;
+            border-bottom: 3px solid #4a7c3a;
             -webkit-overflow-scrolling: touch;
         }
         nav::-webkit-scrollbar { display: none; }
         
         .nav-btn {
-            padding: 8px 14px;
+            padding: 6px 12px;
             background: #f4f7f3;
             border: 2px solid transparent;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             color: #2c3e2d;
             transition: all 0.2s;
             white-space: nowrap;
@@ -124,17 +150,17 @@
         .nav-btn:hover { background: #e8efe4; }
         .nav-btn.active { background: #4a7c3a; color: white; border-color: #4a7c3a; }
         
-        main { padding: 20px; max-width: 1400px; margin: 0 auto; }
+        main { padding: 15px; max-width: 1400px; margin: 0 auto; }
         
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
             gap: 10px;
         }
-        .section-title { font-size: 24px; color: #2c3e2d; }
+        .section-title { font-size: 20px; color: #2c3e2d; }
         
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s; }
@@ -142,61 +168,59 @@
         
         .filter-bar {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
-            padding: 12px;
+            margin-bottom: 15px;
+            padding: 10px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
         .filter-btn {
-            padding: 8px 14px;
+            padding: 6px 12px;
             background: #f4f7f3;
             border: 2px solid transparent;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #555;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
         .filter-btn:hover { background: #e8efe4; }
         .filter-btn.active { background: #4a7c3a; color: white; border-color: #4a7c3a; }
         .filter-btn .count {
             background: rgba(0,0,0,0.1);
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 11px;
+            padding: 1px 5px;
+            border-radius: 8px;
+            font-size: 10px;
             font-weight: bold;
         }
         
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
         .card {
             background: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: all 0.2s;
-            border-left: 4px solid #4a7c3a;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border-left: 3px solid #4a7c3a;
         }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
-        .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
-        .card-title { font-size: 16px; font-weight: bold; color: #2c3e2d; flex: 1; }
+        .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 6px; }
+        .card-title { font-size: 15px; font-weight: bold; color: #2c3e2d; flex: 1; }
         .card-type {
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 12px;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
             font-weight: bold;
             text-transform: uppercase;
-            margin-left: 8px;
+            margin-left: 6px;
         }
         .type-buy { background: #e3f2fd; color: #1976d2; }
         .type-sell { background: #ffebee; color: #c62828; }
@@ -205,24 +229,30 @@
         .type-kind { background: #fce4ec; color: #c2185b; }
         .type-event { background: #ede7f6; color: #5e35b1; }
         .type-ride { background: #e0f2f1; color: #00695c; }
-        .card-body { color: #555; font-size: 13px; line-height: 1.5; margin: 8px 0; }
+        .card-body { color: #555; font-size: 13px; line-height: 1.4; margin: 6px 0; }
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 12px;
-            padding-top: 10px;
+            margin-top: 10px;
+            padding-top: 8px;
             border-top: 1px solid #eee;
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
         }
-        .card-price { font-size: 15px; font-weight: bold; color: #4a7c3a; }
+        .card-price { font-size: 14px; font-weight: bold; color: #4a7c3a; }
         .card-author { font-weight: 600; color: #2c3e2d; }
+        .card-time {
+            font-size: 11px;
+            color: #e67e22;
+            font-weight: 600;
+            margin-top: 6px;
+        }
         .card-actions {
             display: flex;
             gap: 6px;
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px solid #f0f0f0;
         }
         .card-actions .btn { flex: 1; }
@@ -235,224 +265,152 @@
             z-index: 10000;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
         }
         .modal-overlay.active { display: flex; }
         .modal {
             background: white;
-            border-radius: 12px;
-            padding: 25px;
+            border-radius: 10px;
+            padding: 20px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
         }
         .modal-close {
             position: absolute;
-            top: 12px; right: 12px;
+            top: 10px; right: 10px;
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 22px;
             cursor: pointer;
             color: #888;
         }
-        .modal h2 { margin-bottom: 20px; color: #2c3e2d; font-size: 22px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        .modal h2 { margin-bottom: 15px; color: #2c3e2d; font-size: 18px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; }
         .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 8px 10px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 13px;
         }
         .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: #4a7c3a;
         }
-        .form-group textarea { resize: vertical; min-height: 80px; }
-        .form-submit { width: 100%; padding: 12px; margin-top: 10px; }
-        .form-switch { text-align: center; margin-top: 15px; font-size: 14px; color: #666; }
+        .form-group textarea { resize: vertical; min-height: 60px; }
+        .form-submit { width: 100%; padding: 10px; margin-top: 8px; }
+        .form-switch { text-align: center; margin-top: 12px; font-size: 13px; color: #666; }
         .form-switch a { color: #4a7c3a; cursor: pointer; font-weight: 600; }
-        .form-error { color: #c62828; font-size: 13px; margin-top: 10px; display: none; }
+        .form-error { color: #c62828; font-size: 12px; margin-top: 8px; display: none; }
         
         .reg-method-switcher {
             display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 6px;
+            margin-bottom: 12px;
             background: #f4f7f3;
-            padding: 4px;
-            border-radius: 10px;
+            padding: 3px;
+            border-radius: 8px;
         }
         .reg-method-btn {
             flex: 1;
-            padding: 8px;
+            padding: 6px;
             background: transparent;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #666;
         }
         .reg-method-btn.active {
             background: white;
             color: #4a7c3a;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .form-hint {
             background: #e8f5e9;
             border-left: 3px solid #4a7c3a;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 13px;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
             color: #2e7d32;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .form-hint.warning {
             background: #fff3e0;
             border-left-color: #e67e22;
             color: #e65100;
         }
-        .field-hint { font-size: 11px; color: #888; margin-top: 4px; }
+        .field-hint { font-size: 10px; color: #888; margin-top: 3px; }
         .required-mark { color: #c62828; }
         
         .hidden { display: none !important; }
-        .empty-state { text-align: center; padding: 40px 20px; color: #888; }
-        .empty-state-icon { font-size: 48px; margin-bottom: 10px; }
+        .empty-state { text-align: center; padding: 30px 15px; color: #888; }
+        .empty-state-icon { font-size: 40px; margin-bottom: 8px; }
         
-        /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
-        @media (max-width: 600px) {
-            header {
-                padding: 12px 15px;
-            }
-            
-            .header-top {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            
-            .logo-block {
-                justify-content: center;
-                text-align: center;
-            }
-            
-            .logo-icon { font-size: 28px; }
-            .logo-text { font-size: 20px; }
-            
-            .header-clock {
-                text-align: center;
-                font-size: 11px;
-                padding: 4px 10px;
-                align-self: center;
-            }
-            
-            .auth-buttons {
-                justify-content: center;
-            }
-            
-            .user-info {
-                justify-content: center;
-                text-align: center;
-            }
-            
-            nav {
-                padding: 8px 10px;
-                gap: 6px;
-            }
-            
-            .nav-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-            
-            main {
-                padding: 15px;
-            }
-            
-            .section-title {
-                font-size: 20px;
-            }
-            
-            .section-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            
-            .filter-bar {
-                padding: 10px;
-                gap: 6px;
-            }
-            
-            .filter-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-            
-            .modal {
-                padding: 20px 15px;
-            }
-        }
-        
-        /* Очень маленькие экраны */
-        @media (max-width: 360px) {
-            .logo-text { font-size: 18px; }
-            .logo-icon { font-size: 24px; }
-            .btn { padding: 7px 12px; font-size: 12px; }
-            .nav-btn { padding: 5px 10px; font-size: 11px; }
+        @media (min-width: 600px) {
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-top">
+    <div class="header-main">
         <div class="logo-block">
-            <span class="logo-icon">🏡</span>
+            <span class="logo-icon"></span>
             <span class="logo-text">СНТ Изабелла</span>
         </div>
-        <div class="header-clock">
-            🕐 <span id="siteClock"><span class="time">—</span></span>
+        <div class="header-right">
+            <div class="header-clock">
+                🕐 <span id="siteClock"><span class="time">—</span></span>
+            </div>
+            <div id="authButtons" class="auth-buttons">
+                <button class="btn btn-secondary" onclick="openModal('loginModal')">Войти</button>
+                <button class="btn btn-primary" onclick="openModal('registerModal')">Регистрация</button>
+            </div>
+            <div id="userInfo" class="user-info hidden">
+                <span id="ownerBadge" class="owner-badge hidden">👑</span>
+                <span id="currentUserDisplay"></span>
+                <button id="adminPanelBtn" class="btn btn-admin btn-small hidden" onclick="openAdminPanel()">⚙️</button>
+                <button class="btn btn-secondary" onclick="logout()">Выйти</button>
+            </div>
         </div>
     </div>
-    <div id="authButtons" class="auth-buttons">
-        <button class="btn btn-secondary" onclick="openModal('loginModal')">Войти</button>
-        <button class="btn btn-primary" onclick="openModal('registerModal')">Регистрация</button>
-    </div>
-    <div id="userInfo" class="user-info hidden">
-        <span id="ownerBadge" class="owner-badge hidden">👑 Владелец</span>
-        <span>👤 <span id="currentUserDisplay"></span></span>
-        <button id="adminPanelBtn" class="btn btn-admin btn-small hidden" onclick="openAdminPanel()">⚙️ Панель</button>
-        <button class="btn btn-secondary" onclick="logout()">Выйти</button>
+    
+    <!-- Быстрые разделы -->
+    <div class="quick-sections">
+        <button class="quick-btn active" onclick="quickNav('market')">🛒 Куплю/Продам</button>
+        <button class="quick-btn" onclick="quickNav('services')">🔧 Услуги</button>
+        <button class="quick-btn" onclick="quickNav('kind')">💝 Добрые дела</button>
+        <button class="quick-btn" onclick="quickNav('events')">🎉 События</button>
+        <button class="quick-btn" onclick="quickNav('rides')">🚗 Еду в город</button>
     </div>
 </header>
 
 <nav>
-    <button class="nav-btn active" data-section="market"> Куплю / Продам / Отдам</button>
+    <button class="nav-btn active" data-section="market">🛒 Куплю / Продам / Отдам</button>
     <button class="nav-btn" data-section="services">🔧 Услуги</button>
     <button class="nav-btn" data-section="kind">💝 Добрые дела</button>
     <button class="nav-btn" data-section="events">🎉 События</button>
-    <button class="nav-btn" data-section="rides">🚗 Еду в город</button>
+    <button class="nav-btn" data-section="rides"> Еду в город</button>
 </nav>
 
 <main>
     <section id="market" class="section active">
         <div class="section-header">
             <h2 class="section-title">Куплю / Продам / Отдам</h2>
-            <button class="btn btn-accent" onclick="openPostModal('market')">+ Добавить объявление</button>
+            <button class="btn btn-accent" onclick="openPostModal('market')">+ Добавить</button>
         </div>
         <div class="filter-bar" id="marketFilterBar">
-            <button class="filter-btn active" data-filter="all" onclick="setMarketFilter('all')">📋 Все <span class="count" id="countAll">0</span></button>
-            <button class="filter-btn" data-filter="buy" onclick="setMarketFilter('buy')">️ Куплю <span class="count" id="countBuy">0</span></button>
-            <button class="filter-btn" data-filter="sell" onclick="setMarketFilter('sell')"> Продам <span class="count" id="countSell">0</span></button>
-            <button class="filter-btn" data-filter="give" onclick="setMarketFilter('give')"> Отдам <span class="count" id="countGive">0</span></button>
+            <button class="filter-btn active" data-filter="all" onclick="setMarketFilter('all')"> Все <span class="count" id="countAll">0</span></button>
+            <button class="filter-btn" data-filter="buy" onclick="setMarketFilter('buy')">🛍️ Куплю <span class="count" id="countBuy">0</span></button>
+            <button class="filter-btn" data-filter="sell" onclick="setMarketFilter('sell')">💰 Продам <span class="count" id="countSell">0</span></button>
+            <button class="filter-btn" data-filter="give" onclick="setMarketFilter('give')">🎁 Отдам <span class="count" id="countGive">0</span></button>
         </div>
         <div id="marketCards" class="cards-grid"></div>
     </section>
@@ -460,7 +418,7 @@
     <section id="services" class="section">
         <div class="section-header">
             <h2 class="section-title">Услуги</h2>
-            <button class="btn btn-accent" onclick="openPostModal('service')">+ Предложить услугу</button>
+            <button class="btn btn-accent" onclick="openPostModal('service')">+ Предложить</button>
         </div>
         <div id="servicesCards" class="cards-grid"></div>
     </section>
@@ -476,7 +434,7 @@
     <section id="events" class="section">
         <div class="section-header">
             <h2 class="section-title">События</h2>
-            <button class="btn btn-accent" onclick="openPostModal('event')">+ Добавить событие</button>
+            <button class="btn btn-accent" onclick="openPostModal('event')">+ Добавить</button>
         </div>
         <div id="eventsCards" class="cards-grid"></div>
     </section>
@@ -484,31 +442,34 @@
     <section id="rides" class="section">
         <div class="section-header">
             <h2 class="section-title">Еду в город</h2>
-            <button class="btn btn-accent" onclick="openPostModal('ride')">+ Предложить место</button>
+            <button class="btn btn-accent" onclick="openPostModal('ride')">+ Добавить</button>
+        </div>
+        <div class="form-hint warning" style="margin-bottom: 15px;">
+            ⏰ <strong>Важно:</strong> объявления удаляются через 5 минут после времени выезда
         </div>
         <div id="ridesCards" class="cards-grid"></div>
     </section>
 </main>
 
-<!-- Модалки (те же самые что и раньше) -->
+<!-- Модалки -->
 <div id="loginModal" class="modal-overlay">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('loginModal')">×</button>
-        <h2>Вход в аккаунт</h2>
-        <div class="form-hint">💡 Войдите по телефону или номеру участка</div>
+        <h2>Вход</h2>
+        <div class="form-hint">💡 Телефон или номер участка</div>
         <form onsubmit="handleLogin(event)">
             <div class="form-group">
-                <label>Телефон или номер участка</label>
+                <label>Телефон или участок</label>
                 <input type="text" id="loginId" placeholder="+7... или 42" required>
             </div>
             <div class="form-group">
                 <label>Пароль</label>
-                <input type="password" id="loginPassword" placeholder="Введите пароль" required>
+                <input type="password" id="loginPassword" placeholder="Пароль" required>
             </div>
             <div id="loginError" class="form-error"></div>
             <button type="submit" class="btn btn-primary form-submit">Войти</button>
             <div class="form-switch">
-                Нет аккаунта? <a onclick="switchModal('loginModal','registerModal')">Зарегистрироваться</a>
+                Нет аккаунта? <a onclick="switchModal('loginModal','registerModal')">Регистрация</a>
             </div>
         </form>
     </div>
@@ -519,32 +480,32 @@
         <button class="modal-close" onclick="closeModal('registerModal')">×</button>
         <h2>Регистрация</h2>
         <div class="reg-method-switcher">
-            <button type="button" class="reg-method-btn active" data-method="phone" onclick="switchRegMethod('phone')">📱 По телефону</button>
-            <button type="button" class="reg-method-btn" data-method="plot" onclick="switchRegMethod('plot')">🏡 По участку</button>
+            <button type="button" class="reg-method-btn active" data-method="phone" onclick="switchRegMethod('phone')">📱 Телефон</button>
+            <button type="button" class="reg-method-btn" data-method="plot" onclick="switchRegMethod('plot')">🏡 Участок</button>
         </div>
-        <div id="hintPhone" class="form-hint">📱 Укажите телефон для входа. Имя и участок — по желанию.</div>
-        <div id="hintPlot" class="form-hint hidden"> Укажите номер участка и имя. Телефон — по желанию.</div>
+        <div id="hintPhone" class="form-hint">📱 Телефон для входа. Имя и участок — по желанию.</div>
+        <div id="hintPlot" class="form-hint hidden">🏡 Участок и имя обязательны. Телефон — по желанию.</div>
         <form onsubmit="handleRegister(event)">
             <div class="form-group" id="phoneGroup">
-                <label>Номер телефона <span id="phoneRequiredMark" class="required-mark">*</span></label>
+                <label>Телефон <span id="phoneRequiredMark" class="required-mark">*</span></label>
                 <input type="tel" id="regPhone" placeholder="+7 (___) ___-__-__">
             </div>
             <div class="form-group" id="plotGroup">
-                <label>Номер участка <span id="plotOptionalMark">(необязательно)</span></label>
+                <label>Участок <span id="plotOptionalMark">(необязательно)</span></label>
                 <input type="text" id="regPlot" placeholder="42">
             </div>
             <div class="form-group" id="nameGroup">
-                <label>Ваше имя <span id="nameOptionalMark">(необязательно)</span></label>
-                <input type="text" id="regName" placeholder="Как к вам обращаться">
+                <label>Имя <span id="nameOptionalMark">(необязательно)</span></label>
+                <input type="text" id="regName" placeholder="Как обращаться">
             </div>
             <div class="form-group">
                 <label>Пароль <span class="required-mark">*</span></label>
-                <input type="password" id="regPassword" placeholder="Минимум 4 символа" required minlength="4">
+                <input type="password" id="regPassword" placeholder="Мин. 4 символа" required minlength="4">
             </div>
             <div id="registerError" class="form-error"></div>
             <button type="submit" class="btn btn-primary form-submit">Зарегистрироваться</button>
             <div class="form-switch">
-                Уже есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a>
+                Есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a>
             </div>
         </form>
     </div>
@@ -577,16 +538,17 @@
             </div>
             <div class="form-group" id="dateGroup">
                 <label>Дата и время</label>
-                <input type="text" id="postDate" placeholder="20.07.2026, 10:00">
+                <input type="text" id="postDate" placeholder="Сегодня, 10:00">
+                <div class="field-hint" id="dateHint">Например: Сегодня, 10:00 или 20.07, 14:30</div>
             </div>
             <div class="form-group" id="seatsGroup">
-                <label>Мест</label>
+                <label>Свободно мест</label>
                 <input type="number" id="postSeats" min="1" max="10" value="1">
             </div>
             <div class="form-group">
                 <label>Контакт <span class="required-mark">*</span></label>
                 <input type="tel" id="postContact" required>
-                <div class="field-hint" id="contactHint">Введите номер для связи</div>
+                <div class="field-hint" id="contactHint">Для связи</div>
             </div>
             <button type="submit" class="btn btn-primary form-submit" id="postSubmitBtn">Опубликовать</button>
         </form>
@@ -594,28 +556,28 @@
 </div>
 
 <div id="adminModal" class="modal-overlay">
-    <div class="modal" style="max-width: 600px;">
+    <div class="modal" style="max-width: 500px;">
         <button class="modal-close" onclick="closeModal('adminModal')">×</button>
-        <h2>️ Панель управления</h2>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
-            <div style="background: #f4f7f3; padding: 12px; border-radius: 8px; text-align: center;">
-                <div style="font-size: 24px; font-weight: bold; color: #4a7c3a;" id="statUsers">0</div>
-                <div style="font-size: 11px; color: #666;">Пользователей</div>
+        <h2>⚙️ Панель</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+            <div style="background: #f4f7f3; padding: 10px; border-radius: 6px; text-align: center;">
+                <div style="font-size: 20px; font-weight: bold; color: #4a7c3a;" id="statUsers">0</div>
+                <div style="font-size: 10px; color: #666;">Пользователей</div>
             </div>
-            <div style="background: #f4f7f3; padding: 12px; border-radius: 8px; text-align: center;">
-                <div style="font-size: 24px; font-weight: bold; color: #4a7c3a;" id="statPosts">0</div>
-                <div style="font-size: 11px; color: #666;">Объявлений</div>
+            <div style="background: #f4f7f3; padding: 10px; border-radius: 6px; text-align: center;">
+                <div style="font-size: 20px; font-weight: bold; color: #4a7c3a;" id="statPosts">0</div>
+                <div style="font-size: 10px; color: #666;">Объявлений</div>
             </div>
         </div>
-        <h3 style="margin-bottom: 12px; font-size: 16px;">Участники</h3>
-        <div id="usersTableBody" style="max-height: 250px; overflow-y: auto;"></div>
+        <h3 style="margin-bottom: 10px; font-size: 14px;">Участники</h3>
+        <div id="usersTableBody" style="max-height: 200px; overflow-y: auto;"></div>
     </div>
 </div>
 
 <script>
-// Весь JavaScript остаётся таким же как в предыдущей версии
 const ADMIN_PHONE = 'admin';
 const ADMIN_PASSWORD = 'admin';
+const RIDE_GRACE = 5 * 60 * 1000; // 5 минут
 
 const state = {
     currentUser: null,
@@ -650,19 +612,76 @@ function initApp() {
     }
     
     if (state.posts.length === 0) {
-        const now = new Date().toISOString();
+        const now = new Date();
+        const rideTime = new Date(now.getTime() + 60 * 60 * 1000); // +1 час
+        
         state.posts = [
-            { id: 1, type: 'market', marketType: 'sell', title: 'Саженцы яблони', description: 'Сорт Антоновка', price: 500, author: 'Иван', authorPhone: '+79001112233', plot: '12', contact: '+79001112233', createdAt: now },
-            { id: 2, type: 'market', marketType: 'give', title: 'Горшки для цветов', description: 'Отдам даром', price: 0, author: 'Мария', authorPhone: '+79002223344', plot: '42', contact: '+79002223344', createdAt: now },
-            { id: 3, type: 'service', title: 'Покос травы', description: 'Кошу триммером', price: 500, author: 'Сергей', authorPhone: '+79003334455', plot: '7', contact: '+79003334455', createdAt: now },
-            { id: 4, type: 'event', title: 'Собрание', description: '25 июля в 18:00', author: 'Правление', authorPhone: '+79005556677', contact: '+79005556677', createdAt: now }
+            { id: 1, type: 'market', marketType: 'sell', title: 'Саженцы яблони', description: 'Сорт Антоновка, 2-летки', price: 500, author: 'Иван', authorPhone: '+79001112233', plot: '12', contact: '+79001112233', createdAt: now.toISOString() },
+            { id: 2, type: 'market', marketType: 'give', title: 'Горшки для цветов', description: 'Отдам даром, разные размеры', price: 0, author: 'Мария', authorPhone: '+79002223344', plot: '42', contact: '+79002223344', createdAt: now.toISOString() },
+            { id: 3, type: 'ride', title: 'Еду в город', description: 'Могу захватить с собой 2 человек', seats: 2, author: 'Алексей', authorPhone: '+79007778899', plot: '23', contact: '+79007778899', date: formatRideDate(rideTime), createdAt: now.toISOString() }
         ];
         localStorage.setItem('posts', JSON.stringify(state.posts));
     }
     
+    cleanupOldPosts();
     updateAuthUI();
     renderAllSections();
     switchRegMethod('phone');
+    
+    // Автоудаление каждую минуту
+    setInterval(() => {
+        if (cleanupOldPosts()) renderAllSections();
+    }, 60 * 1000);
+}
+
+function formatRideDate(date) {
+    const today = new Date();
+    const isToday = date.toDateString() === today.toDateString();
+    const timeStr = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+    return isToday ? `Сегодня, ${timeStr}` : `${date.getDate()}.${(date.getMonth()+1).toString().padStart(2,'0')}, ${timeStr}`;
+}
+
+function parseRideDate(dateStr) {
+    if (!dateStr) return null;
+    const str = dateStr.toLowerCase().trim();
+    const today = new Date();
+    
+    if (str.includes('сегодня')) {
+        const timeMatch = str.match(/(\d{1,2}):(\d{2})/);
+        if (timeMatch) {
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), parseInt(timeMatch[1]), parseInt(timeMatch[2]));
+        }
+    }
+    
+    const dateMatch = str.match(/(\d{1,2})\.(\d{1,2}).*?(\d{1,2}):(\d{2})/);
+    if (dateMatch) {
+        const day = parseInt(dateMatch[1]);
+        const month = parseInt(dateMatch[2]) - 1;
+        const hour = parseInt(dateMatch[3]);
+        const min = parseInt(dateMatch[4]);
+        return new Date(today.getFullYear(), month, day, hour, min);
+    }
+    
+    return null;
+}
+
+function cleanupOldPosts() {
+    const now = Date.now();
+    const before = state.posts.length;
+    
+    state.posts = state.posts.filter(p => {
+        if (p.type === 'ride') {
+            const rideDate = parseRideDate(p.date);
+            if (rideDate) {
+                return (rideDate.getTime() + RIDE_GRACE) > now;
+            }
+        }
+        return true;
+    });
+    
+    const removed = before - state.posts.length;
+    if (removed > 0) localStorage.setItem('posts', JSON.stringify(state.posts));
+    return removed > 0;
 }
 
 function updateClock() {
@@ -675,12 +694,28 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+function quickNav(section) {
+    document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    
+    const navBtn = document.querySelector(`.nav-btn[data-section="${section}"]`);
+    if (navBtn) navBtn.classList.add('active');
+    document.getElementById(section).classList.add('active');
+}
+
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.section).classList.add('active');
+        
+        document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+        const quickBtn = document.querySelector(`.quick-btn[onclick*="${btn.dataset.section}"]`);
+        if (quickBtn) quickBtn.classList.add('active');
     });
 });
 
@@ -818,7 +853,7 @@ function openPostModal(type) {
     state.currentPostType = type;
     state.editingPostId = null;
     
-    const titles = { market: 'Новое объявление', service: 'Услуга', kind: 'Доброе дело', event: 'Событие', ride: 'Поездка' };
+    const titles = { market: 'Объявление', service: 'Услуга', kind: 'Доброе дело', event: 'Событие', ride: 'Поездка' };
     document.getElementById('postModalTitle').textContent = titles[type];
     document.getElementById('postSubmitBtn').textContent = 'Опубликовать';
     
@@ -946,15 +981,17 @@ function renderCard(p) {
         if (p.type === 'ride') priceBlock = `<span class="card-price">Мест: ${p.seats || 1}</span>`;
     }
     
-    const plot = p.plot ? `уч. ${p.plot}` : '';
-    const authorLine = `${p.author || 'Аноним'} ${plot ? '· ' + plot : ''}`;
+    const plot = p.plot ? `· уч.${p.plot}` : '';
+    const authorLine = `${p.author || 'Аноним'} ${plot}`;
     
     const isOwner = state.currentUser && (state.currentUser.isAdmin || p.authorPhone === state.currentUser.phone);
     const actions = isOwner ? `
         <div class="card-actions">
-            <button class="btn btn-primary btn-small" onclick="editPost(${p.id})">✏️ Изменить</button>
-            <button class="btn btn-danger btn-small" onclick="deletePost(${p.id})">🗑️ Удалить</button>
+            <button class="btn btn-primary btn-small" onclick="editPost(${p.id})">✏️</button>
+            <button class="btn btn-danger btn-small" onclick="deletePost(${p.id})">🗑️</button>
         </div>` : '';
+    
+    const timeInfo = p.type === 'ride' && p.date ? `<div class="card-time">⏰ ${p.date}</div>` : '';
     
     return `
         <div class="card">
@@ -963,12 +1000,12 @@ function renderCard(p) {
                 <span class="card-type ${typeClass}">${typeLabel}</span>
             </div>
             <div class="card-body">${escapeHtml(p.description)}</div>
-            ${p.date ? `<div style="font-size:13px;color:#888;">📅 ${escapeHtml(p.date)}</div>` : ''}
+            ${timeInfo}
             <div class="card-footer">
                 <span class="card-author">👤 ${escapeHtml(authorLine)}</span>
                 ${priceBlock}
             </div>
-            <div style="margin-top:10px;font-size:13px;">📞 ${escapeHtml(p.contact)}</div>
+            <div style="margin-top:8px;font-size:12px;">📞 ${escapeHtml(p.contact)}</div>
             ${actions}
         </div>`;
 }
@@ -1014,13 +1051,13 @@ function openAdminPanel() {
     
     const tbody = document.getElementById('usersTableBody');
     tbody.innerHTML = state.users.map(u => `
-        <div style="padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+        <div style="padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
             <div>
                 <strong>${escapeHtml(u.name || u.phone || u.plot)}</strong>
-                ${u.isAdmin ? '<span style="background:#f39c12;color:white;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:8px;">Владелец</span>' : ''}
-                <div style="font-size:12px;color:#888;">${escapeHtml(u.phone)} ${u.plot ? '· уч.' + u.plot : ''}</div>
+                ${u.isAdmin ? '<span style="background:#f39c12;color:white;padding:1px 6px;border-radius:8px;font-size:9px;margin-left:6px;">Владелец</span>' : ''}
+                <div style="font-size:10px;color:#888;">${escapeHtml(u.phone)} ${u.plot ? '· уч.' + u.plot : ''}</div>
             </div>
-            ${!u.isAdmin && state.currentUser.phone !== u.phone ? `<button class="btn btn-danger btn-small" onclick="deleteUser('${u.phone}')">Удалить</button>` : ''}
+            ${!u.isAdmin && state.currentUser.phone !== u.phone ? `<button class="btn btn-danger btn-small" onclick="deleteUser('${u.phone}')">🗑️</button>` : ''}
         </div>
     `).join('');
     
@@ -1028,7 +1065,7 @@ function openAdminPanel() {
 }
 
 function deleteUser(phone) {
-    if (!confirm('Удалить пользователя?')) return;
+    if (!confirm('Удалить?')) return;
     state.users = state.users.filter(u => u.phone !== phone);
     localStorage.setItem('users', JSON.stringify(state.users));
     openAdminPanel();
