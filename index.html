@@ -2,27 +2,13 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СНТ Изабелла</title>
-    
-    <!-- PWA мета-теги -->
     <meta name="theme-color" content="#4a7c3a">
-    <meta name="description" content="Сайт садоводческого товарищества Изабелла">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="СНТ Изабелла">
-    
-    <!-- Иконки для разных устройств -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%234a7c3a'/%3E%3Cpath d='M96 40 L150 90 L150 150 L42 150 L42 90 Z' fill='white'/%3E%3Crect x='80' y='110' width='32' height='40' fill='%234a7c3a'/%3E%3C/svg%3E">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%234a7c3a'/%3E%3Cpath d='M96 40 L150 90 L150 150 L42 150 L42 90 Z' fill='white'/%3E%3Crect x='80' y='110' width='32' height='40' fill='%234a7c3a'/%3E%3C/svg%3E">
-    
-    <!-- PWA манифест -->
-    <link rel="manifest" href="manifest.json">
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f7f3; color: #2c3e2d; min-height: 100vh; }
-
+        
         header {
             background: linear-gradient(135deg, #4a7c3a, #6ba84f);
             color: white;
@@ -30,11 +16,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             flex-wrap: wrap;
             gap: 15px;
         }
-        .logo-block { display: flex; flex-direction: column; gap: 6px; }
         .logo { font-size: 28px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
         .logo-icon { font-size: 36px; }
         
@@ -45,15 +29,8 @@
             font-size: 13px;
             font-weight: 500;
             color: white;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.2);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
         }
-        .site-clock .clock-icon { font-size: 14px; }
-        .site-clock .clock-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+        .site-clock .clock-time { font-weight: 700; }
         
         .auth-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn {
@@ -75,17 +52,7 @@
         .btn-danger:hover { background: #c0392b; }
         .btn-small { padding: 6px 12px; font-size: 12px; }
         .btn-admin { background: #f39c12; color: white; }
-        .btn-admin:hover { background: #d68910; }
         
-        /* Кнопка установки PWA */
-        .btn-install {
-            background: #2196F3;
-            color: white;
-            display: none;
-        }
-        .btn-install:hover { background: #1976D2; }
-        .btn-install.visible { display: inline-flex; align-items: center; gap: 6px; }
-
         nav {
             background: white;
             padding: 15px 40px;
@@ -106,7 +73,7 @@
         }
         .nav-btn:hover { background: #e8efe4; }
         .nav-btn.active { background: #4a7c3a; color: white; border-color: #4a7c3a; }
-
+        
         main { padding: 30px 40px; max-width: 1400px; margin: 0 auto; }
         .section-header {
             display: flex;
@@ -120,7 +87,7 @@
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        
         .filter-bar {
             display: flex;
             gap: 8px;
@@ -154,8 +121,7 @@
             font-size: 11px;
             font-weight: bold;
         }
-        .filter-btn.active .count { background: rgba(255,255,255,0.25); }
-
+        
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -168,7 +134,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transition: all 0.2s;
             border-left: 4px solid #4a7c3a;
-            position: relative;
         }
         .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
         .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
@@ -201,17 +166,6 @@
         }
         .card-price { font-size: 16px; font-weight: bold; color: #4a7c3a; }
         .card-author { font-weight: 600; color: #2c3e2d; }
-        
-        .card-lifetime {
-            font-size: 11px;
-            color: #888;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .card-lifetime.soon { color: #e67e22; font-weight: 600; }
-        
         .card-actions {
             display: flex;
             gap: 8px;
@@ -220,7 +174,7 @@
             border-top: 1px solid #f0f0f0;
         }
         .card-actions .btn { flex: 1; }
-
+        
         .modal-overlay {
             display: none;
             position: fixed;
@@ -241,7 +195,6 @@
             overflow-y: auto;
             position: relative;
         }
-        .modal.modal-wide { max-width: 800px; }
         .modal-close {
             position: absolute;
             top: 15px; right: 15px;
@@ -260,17 +213,30 @@
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
-            transition: border 0.2s;
         }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: #4a7c3a;
         }
         .form-group textarea { resize: vertical; min-height: 80px; }
         .form-submit { width: 100%; padding: 12px; margin-top: 10px; }
         .form-switch { text-align: center; margin-top: 15px; font-size: 14px; color: #666; }
-        .form-switch a { color: #4a7c3a; cursor: pointer; font-weight: 600; text-decoration: underline; }
+        .form-switch a { color: #4a7c3a; cursor: pointer; font-weight: 600; }
         .form-error { color: #c62828; font-size: 13px; margin-top: 10px; display: none; }
+        
+        .user-info { display: flex; align-items: center; gap: 12px; color: white; flex-wrap: wrap; }
+        .user-info span { font-weight: 600; }
+        .owner-badge {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .hidden { display: none !important; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #888; }
+        .empty-state-icon { font-size: 60px; margin-bottom: 15px; }
         
         .reg-method-switcher {
             display: flex;
@@ -290,14 +256,12 @@
             font-size: 13px;
             font-weight: 600;
             color: #666;
-            transition: all 0.2s;
         }
         .reg-method-btn.active {
             background: white;
             color: #4a7c3a;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
         .form-hint {
             background: #e8f5e9;
             border-left: 3px solid #4a7c3a;
@@ -306,252 +270,41 @@
             font-size: 13px;
             color: #2e7d32;
             margin-bottom: 15px;
-            line-height: 1.4;
         }
-        .form-hint strong { color: #1b5e20; }
-        .form-hint-icon { margin-right: 6px; }
         .form-hint.warning {
             background: #fff3e0;
             border-left-color: #e67e22;
             color: #e65100;
         }
-        .form-hint.warning strong { color: #bf360c; }
-        
-        .field-hint {
-            font-size: 12px;
-            color: #888;
-            margin-top: 4px;
-            font-style: italic;
-        }
+        .field-hint { font-size: 12px; color: #888; margin-top: 4px; }
         .required-mark { color: #c62828; }
-        .optional-mark { color: #888; font-weight: normal; font-size: 12px; }
-        .field-optional { opacity: 0.75; }
-        .field-optional input { background: #fafafa; }
-
-        .user-info { display: flex; align-items: center; gap: 12px; color: white; flex-wrap: wrap; }
-        .user-info span { font-weight: 600; }
-        .owner-badge {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(243,156,18,0.4);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes glow {
-            from { box-shadow: 0 2px 6px rgba(243,156,18,0.4); }
-            to { box-shadow: 0 2px 12px rgba(243,156,18,0.8); }
-        }
-        .hidden { display: none !important; }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
-        .empty-state-icon { font-size: 60px; margin-bottom: 15px; }
-
-        .admin-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #f4f7f3, #e8efe4);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border-left: 4px solid #4a7c3a;
-        }
-        .stat-value { font-size: 28px; font-weight: bold; color: #4a7c3a; }
-        .stat-label { font-size: 12px; color: #666; text-transform: uppercase; margin-top: 4px; }
-
-        .maintenance-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            background: #fff3e0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 4px solid #e67e22;
-        }
-        .maintenance-toggle.active {
-            background: #ffebee;
-            border-left-color: #c62828;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .3s;
-            border-radius: 26px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-        input:checked + .slider { background-color: #e67e22; }
-        input:checked + .slider:before { transform: translateX(24px); }
-
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-        }
-        .users-table th {
-            background: #4a7c3a;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-        .users-table td {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
-        }
-        .users-table tr:last-child td { border-bottom: none; }
-        .users-table tr:hover { background: #f9fbf8; }
-        .user-badge-admin {
-            background: #f39c12;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .maintenance-screen {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, #2c3e2d, #4a7c3a);
-            color: white;
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
-        .maintenance-screen.active { display: flex; }
-        .maintenance-content { max-width: 500px; }
-        .maintenance-icon { font-size: 100px; margin-bottom: 20px; animation: wobble 2s ease-in-out infinite; }
-        @keyframes wobble {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
-        }
-        .maintenance-title { font-size: 36px; margin-bottom: 15px; }
-        .maintenance-text { font-size: 18px; opacity: 0.9; line-height: 1.5; margin-bottom: 30px; }
-        .maintenance-admin-login {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        .maintenance-admin-login a {
-            color: #f39c12;
-            cursor: pointer;
-            text-decoration: underline;
-            font-weight: 600;
-        }
-
-        .maintenance-banner {
-            background: linear-gradient(135deg, #e67e22, #d35400);
-            color: white;
-            padding: 10px 40px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 14px;
-            display: none;
-        }
-        .maintenance-banner.active { display: block; }
-
+        
         @media (max-width: 600px) {
-            header { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            header { flex-direction: column; padding: 15px 20px; }
             main, nav { padding: 20px; }
-            .section-title { font-size: 22px; }
-            .filter-bar { padding: 10px; }
-            .filter-btn { padding: 6px 12px; font-size: 12px; }
-            .users-table { font-size: 12px; }
-            .users-table th, .users-table td { padding: 8px; }
-            .reg-method-switcher { flex-direction: column; }
-            .site-clock { font-size: 12px; padding: 5px 10px; }
         }
     </style>
 </head>
 <body>
 
-<div id="maintenanceScreen" class="maintenance-screen">
-    <div class="maintenance-content">
-        <div class="maintenance-icon">🔧</div>
-        <h1 class="maintenance-title">Сайт на обслуживании</h1>
-        <p class="maintenance-text">
-            Мы проводим технические работы.<br>
-            Скоро всё заработает! Приносим извинения за временные неудобства.
-        </p>
-        <div class="maintenance-admin-login">
-            <p style="font-size: 13px; opacity: 0.8; margin-bottom: 8px;">Вход для владельца:</p>
-            <a onclick="openModal('loginModal')">Войти как администратор</a>
-        </div>
-    </div>
-</div>
-
-<div id="maintenanceBanner" class="maintenance-banner">
-    ⚠️ Режим технических работ ВКЛЮЧЁН
-</div>
-
 <header>
-    <div class="logo-block">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
         <div class="logo">
-            <span class="logo-icon">🏡</span>
+            <span class="logo-icon"></span>
             <span>СНТ Изабелла</span>
         </div>
         <div class="site-clock">
-            <span class="clock-icon">🕐</span>
-            <span id="siteClock">—</span>
+            🕐 <span id="siteClock">—</span>
         </div>
     </div>
     <div id="authButtons" class="auth-buttons">
         <button class="btn btn-secondary" onclick="openModal('loginModal')">Войти</button>
         <button class="btn btn-primary" onclick="openModal('registerModal')">Регистрация</button>
-        <button id="installBtn" class="btn btn-install" onclick="installPWA()">📱 Установить приложение</button>
     </div>
     <div id="userInfo" class="user-info hidden">
         <span id="ownerBadge" class="owner-badge hidden">👑 Владелец</span>
         <span>👤 <span id="currentUserDisplay"></span></span>
-        <button id="adminPanelBtn" class="btn btn-admin btn-small hidden" onclick="openAdminPanel()">⚙️ Панель управления</button>
+        <button id="adminPanelBtn" class="btn btn-admin btn-small hidden" onclick="openAdminPanel()">⚙️ Панель</button>
         <button class="btn btn-secondary" onclick="logout()">Выйти</button>
     </div>
 </header>
@@ -574,7 +327,7 @@
             <button class="filter-btn active" data-filter="all" onclick="setMarketFilter('all')">📋 Все <span class="count" id="countAll">0</span></button>
             <button class="filter-btn" data-filter="buy" onclick="setMarketFilter('buy')">🛍️ Куплю <span class="count" id="countBuy">0</span></button>
             <button class="filter-btn" data-filter="sell" onclick="setMarketFilter('sell')">💰 Продам <span class="count" id="countSell">0</span></button>
-            <button class="filter-btn" data-filter="give" onclick="setMarketFilter('give')">🎁 Отдам <span class="count" id="countGive">0</span></button>
+            <button class="filter-btn" data-filter="give" onclick="setMarketFilter('give')"> Отдам <span class="count" id="countGive">0</span></button>
         </div>
         <div id="marketCards" class="cards-grid"></div>
     </section>
@@ -608,49 +361,578 @@
             <h2 class="section-title">Еду в город</h2>
             <button class="btn btn-accent" onclick="openPostModal('ride')">+ Предложить место</button>
         </div>
-        <div class="form-hint warning" style="margin-bottom: 20px;">
-            <span class="form-hint-icon">⏰</span>
-            <strong>Обратите внимание:</strong> объявления удаляются через 5 минут после указанного времени выезда.
-        </div>
         <div id="ridesCards" class="cards-grid"></div>
     </section>
 </main>
 
-<!-- Модалки и скрипты остаются такими же, как в предыдущей версии -->
-<!-- ... (весь HTML модалок из предыдущего кода) ... -->
+<!-- Модалка: Вход -->
+<div id="loginModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+        <h2>Вход в аккаунт</h2>
+        <div class="form-hint">💡 Войдите по телефону или номеру участка</div>
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Телефон или номер участка</label>
+                <input type="text" id="loginId" placeholder="+7... или 42" required>
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="loginPassword" placeholder="Введите пароль" required>
+            </div>
+            <div id="loginError" class="form-error"></div>
+            <button type="submit" class="btn btn-primary form-submit">Войти</button>
+            <div class="form-switch">
+                Нет аккаунта? <a onclick="switchModal('loginModal','registerModal')">Зарегистрироваться</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Модалка: Регистрация -->
+<div id="registerModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('registerModal')">×</button>
+        <h2>Регистрация</h2>
+        <div class="reg-method-switcher">
+            <button type="button" class="reg-method-btn active" data-method="phone" onclick="switchRegMethod('phone')">📱 По телефону</button>
+            <button type="button" class="reg-method-btn" data-method="plot" onclick="switchRegMethod('plot')">🏡 По участку</button>
+        </div>
+        <div id="hintPhone" class="form-hint">📱 Укажите телефон для входа. Имя и участок — по желанию.</div>
+        <div id="hintPlot" class="form-hint hidden"> Укажите номер участка и имя. Телефон — по желанию.</div>
+        <form onsubmit="handleRegister(event)">
+            <div class="form-group" id="phoneGroup">
+                <label>Номер телефона <span id="phoneRequiredMark" class="required-mark">*</span></label>
+                <input type="tel" id="regPhone" placeholder="+7 (___) ___-__-__">
+            </div>
+            <div class="form-group" id="plotGroup">
+                <label>Номер участка <span id="plotOptionalMark">(необязательно)</span></label>
+                <input type="text" id="regPlot" placeholder="42">
+            </div>
+            <div class="form-group" id="nameGroup">
+                <label>Ваше имя <span id="nameOptionalMark">(необязательно)</span></label>
+                <input type="text" id="regName" placeholder="Как к вам обращаться">
+            </div>
+            <div class="form-group">
+                <label>Пароль <span class="required-mark">*</span></label>
+                <input type="password" id="regPassword" placeholder="Минимум 4 символа" required minlength="4">
+            </div>
+            <div id="registerError" class="form-error"></div>
+            <button type="submit" class="btn btn-primary form-submit">Зарегистрироваться</button>
+            <div class="form-switch">
+                Уже есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Модалка: Объявление -->
+<div id="postModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('postModal')">×</button>
+        <h2 id="postModalTitle">Новое объявление</h2>
+        <form onsubmit="handlePost(event)">
+            <div class="form-group" id="marketTypeGroup">
+                <label>Тип</label>
+                <select id="postMarketType">
+                    <option value="sell">Продам</option>
+                    <option value="buy">Куплю</option>
+                    <option value="give">Отдам</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Заголовок</label>
+                <input type="text" id="postTitle" required maxlength="80">
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="postDescription" required></textarea>
+            </div>
+            <div class="form-group" id="priceGroup">
+                <label>Цена (₽)</label>
+                <input type="number" id="postPrice" min="0" placeholder="0 — бесплатно">
+            </div>
+            <div class="form-group" id="dateGroup">
+                <label>Дата и время</label>
+                <input type="text" id="postDate" placeholder="20.07.2026, 10:00">
+            </div>
+            <div class="form-group" id="seatsGroup">
+                <label>Мест</label>
+                <input type="number" id="postSeats" min="1" max="10" value="1">
+            </div>
+            <div class="form-group">
+                <label>Контакт <span class="required-mark">*</span></label>
+                <input type="tel" id="postContact" required>
+                <div class="field-hint" id="contactHint">Введите номер для связи</div>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit" id="postSubmitBtn">Опубликовать</button>
+        </form>
+    </div>
+</div>
+
+<!-- Модалка: Админ -->
+<div id="adminModal" class="modal-overlay">
+    <div class="modal" style="max-width: 800px;">
+        <button class="modal-close" onclick="closeModal('adminModal')">×</button>
+        <h2>️ Панель управления</h2>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
+            <div style="background: #f4f7f3; padding: 15px; border-radius: 10px; text-align: center;">
+                <div style="font-size: 28px; font-weight: bold; color: #4a7c3a;" id="statUsers">0</div>
+                <div style="font-size: 12px; color: #666;">Пользователей</div>
+            </div>
+            <div style="background: #f4f7f3; padding: 15px; border-radius: 10px; text-align: center;">
+                <div style="font-size: 28px; font-weight: bold; color: #4a7c3a;" id="statPosts">0</div>
+                <div style="font-size: 12px; color: #666;">Объявлений</div>
+            </div>
+        </div>
+        <h3 style="margin-bottom: 15px;"> Участники</h3>
+        <div id="usersTableBody" style="max-height: 300px; overflow-y: auto;"></div>
+    </div>
+</div>
 
 <script>
-// Весь JavaScript из предыдущей версии остаётся таким же
-// ... (весь JS код из предыдущего ответа) ...
+// ========== ГЛОБАЛЬНОЕ СОСТОЯНИЕ ==========
+const ADMIN_PHONE = 'admin';
+const ADMIN_PASSWORD = 'admin';
+const MARKET_LIFETIME = 30 * 24 * 60 * 60 * 1000;
 
-// ========== PWA: Установка приложения ==========
-let deferredPrompt = null;
-const installBtn = document.getElementById('installBtn');
+const state = {
+    currentUser: null,
+    users: [],
+    posts: [],
+    currentPostType: 'market',
+    editingPostId: null,
+    marketFilter: 'all',
+    regMethod: 'phone'
+};
 
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.classList.add('visible');
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
+function initApp() {
+    // Загрузка из localStorage
+    const savedUser = localStorage.getItem('current_user');
+    if (savedUser) state.currentUser = JSON.parse(savedUser);
+    
+    const savedUsers = localStorage.getItem('users');
+    state.users = savedUsers ? JSON.parse(savedUsers) : [];
+    
+    const savedPosts = localStorage.getItem('posts');
+    state.posts = savedPosts ? JSON.parse(savedPosts) : [];
+    
+    // Создаём админа
+    if (!state.users.some(u => u.isAdmin)) {
+        state.users.push({
+            phone: ADMIN_PHONE,
+            plot: '',
+            name: 'Владелец',
+            password: ADMIN_PASSWORD,
+            isAdmin: true,
+            createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('users', JSON.stringify(state.users));
+    }
+    
+    // Демо-данные
+    if (state.posts.length === 0) {
+        const now = new Date().toISOString();
+        state.posts = [
+            { id: 1, type: 'market', marketType: 'sell', title: 'Саженцы яблони', description: 'Сорт Антоновка', price: 500, author: 'Иван', authorPhone: '+79001112233', plot: '12', contact: '+79001112233', createdAt: now },
+            { id: 2, type: 'market', marketType: 'give', title: 'Горшки для цветов', description: 'Отдам даром', price: 0, author: 'Мария', authorPhone: '+79002223344', plot: '42', contact: '+79002223344', createdAt: now },
+            { id: 3, type: 'service', title: 'Покос травы', description: 'Кошу триммером', price: 500, author: 'Сергей', authorPhone: '+79003334455', plot: '7', contact: '+79003334455', createdAt: now },
+            { id: 4, type: 'event', title: 'Собрание', description: '25 июля в 18:00', author: 'Правление', authorPhone: '+79005556677', contact: '+79005556677', createdAt: now }
+        ];
+        localStorage.setItem('posts', JSON.stringify(state.posts));
+    }
+    
+    updateAuthUI();
+    renderAllSections();
+    switchRegMethod('phone');
+}
+
+// ========== ЧАСЫ ==========
+function updateClock() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('ru-RU');
+    const date = now.toLocaleDateString('ru-RU');
+    const el = document.getElementById('siteClock');
+    if (el) el.innerHTML = `${date} <span class="clock-time">${time}</span>`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ========== НАВИГАЦИЯ ==========
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.section).classList.add('active');
+    });
 });
 
-function installPWA() {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-            console.log('PWA установлено');
-        }
-        deferredPrompt = null;
-        installBtn.classList.remove('visible');
+// ========== МОДАЛКИ ==========
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    const err = document.getElementById(id.replace('Modal','Error'));
+    if (err) { err.style.display = 'none'; err.textContent = ''; }
+}
+function switchModal(from, to) { closeModal(from); openModal(to); }
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); });
+});
+
+// ========== РЕГИСТРАЦИЯ ==========
+function switchRegMethod(method) {
+    state.regMethod = method;
+    document.querySelectorAll('.reg-method-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.method === method);
     });
+    
+    document.getElementById('hintPhone').classList.toggle('hidden', method !== 'phone');
+    document.getElementById('hintPlot').classList.toggle('hidden', method !== 'plot');
+    
+    const phoneInput = document.getElementById('regPhone');
+    const plotInput = document.getElementById('regPlot');
+    const nameInput = document.getElementById('regName');
+    
+    if (method === 'phone') {
+        phoneInput.required = true;
+        plotInput.required = false;
+        nameInput.required = false;
+        document.getElementById('phoneRequiredMark').style.display = 'inline';
+        document.getElementById('plotOptionalMark').style.display = 'inline';
+        document.getElementById('nameOptionalMark').style.display = 'inline';
+    } else {
+        phoneInput.required = false;
+        plotInput.required = true;
+        nameInput.required = true;
+        document.getElementById('phoneRequiredMark').style.display = 'none';
+        document.getElementById('plotOptionalMark').style.display = 'none';
+        document.getElementById('nameOptionalMark').style.display = 'none';
+    }
 }
 
-// Регистрируем Service Worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('✅ Service Worker зарегистрирован'))
-        .catch(err => console.log('❌ Ошибка регистрации SW:', err));
+function handleRegister(e) {
+    e.preventDefault();
+    const phone = document.getElementById('regPhone').value.trim();
+    const plot = document.getElementById('regPlot').value.trim();
+    const name = document.getElementById('regName').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const err = document.getElementById('registerError');
+    
+    if (state.users.some(u => u.phone === phone || u.plot === plot)) {
+        err.textContent = 'Пользователь уже существует';
+        err.style.display = 'block';
+        return;
+    }
+    
+    const newUser = { phone, plot, name, password, isAdmin: false, createdAt: new Date().toISOString() };
+    state.users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(state.users));
+    
+    state.currentUser = { phone, plot, name, isAdmin: false };
+    localStorage.setItem('current_user', JSON.stringify(state.currentUser));
+    
+    closeModal('registerModal');
+    updateAuthUI();
+    renderAllSections();
+    e.target.reset();
 }
+
+// ========== ВХОД ==========
+function handleLogin(e) {
+    e.preventDefault();
+    const loginId = document.getElementById('loginId').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const err = document.getElementById('loginError');
+    
+    const user = state.users.find(u => u.phone === loginId || u.plot === loginId);
+    
+    if (!user || user.password !== password) {
+        err.textContent = 'Неверный логин или пароль';
+        err.style.display = 'block';
+        return;
+    }
+    
+    state.currentUser = { phone: user.phone, plot: user.plot, name: user.name, isAdmin: user.isAdmin };
+    localStorage.setItem('current_user', JSON.stringify(state.currentUser));
+    
+    closeModal('loginModal');
+    updateAuthUI();
+    renderAllSections();
+    e.target.reset();
+}
+
+function logout() {
+    state.currentUser = null;
+    localStorage.removeItem('current_user');
+    updateAuthUI();
+    renderAllSections();
+}
+
+function updateAuthUI() {
+    const auth = document.getElementById('authButtons');
+    const info = document.getElementById('userInfo');
+    const display = document.getElementById('currentUserDisplay');
+    const badge = document.getElementById('ownerBadge');
+    const adminBtn = document.getElementById('adminPanelBtn');
+    
+    if (state.currentUser) {
+        auth.classList.add('hidden');
+        info.classList.remove('hidden');
+        display.textContent = state.currentUser.name || state.currentUser.phone || state.currentUser.plot;
+        
+        if (state.currentUser.isAdmin) {
+            badge.classList.remove('hidden');
+            adminBtn.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+            adminBtn.classList.add('hidden');
+        }
+    } else {
+        auth.classList.remove('hidden');
+        info.classList.add('hidden');
+    }
+}
+
+// ========== ОБЪЯВЛЕНИЯ ==========
+function openPostModal(type) {
+    if (!state.currentUser) {
+        alert('Нужно войти');
+        openModal('loginModal');
+        return;
+    }
+    
+    state.currentPostType = type;
+    state.editingPostId = null;
+    
+    const titles = {
+        market: 'Новое объявление',
+        service: 'Услуга',
+        kind: 'Доброе дело',
+        event: 'Событие',
+        ride: 'Поездка'
+    };
+    document.getElementById('postModalTitle').textContent = titles[type];
+    document.getElementById('postSubmitBtn').textContent = 'Опубликовать';
+    
+    document.getElementById('marketTypeGroup').style.display = type === 'market' ? 'block' : 'none';
+    document.getElementById('priceGroup').style.display = (type === 'market' || type === 'service') ? 'block' : 'none';
+    document.getElementById('dateGroup').style.display = (type === 'event' || type === 'ride') ? 'block' : 'none';
+    document.getElementById('seatsGroup').style.display = type === 'ride' ? 'block' : 'none';
+    
+    const contactInput = document.getElementById('postContact');
+    if (state.currentUser.phone) {
+        contactInput.value = state.currentUser.phone;
+    } else {
+        contactInput.value = '';
+    }
+    
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postDescription').value = '';
+    document.getElementById('postPrice').value = '';
+    document.getElementById('postDate').value = '';
+    document.getElementById('postSeats').value = '1';
+    
+    openModal('postModal');
+}
+
+function handlePost(e) {
+    e.preventDefault();
+    const type = state.currentPostType;
+    
+    const postData = {
+        type,
+        title: document.getElementById('postTitle').value.trim(),
+        description: document.getElementById('postDescription').value.trim(),
+        contact: document.getElementById('postContact').value.trim(),
+        author: state.currentUser.name || state.currentUser.phone || state.currentUser.plot,
+        authorPhone: state.currentUser.phone || '',
+        plot: state.currentUser.plot || '',
+        createdAt: new Date().toISOString()
+    };
+    
+    if (type === 'market') postData.marketType = document.getElementById('postMarketType').value;
+    if (type === 'market' || type === 'service') postData.price = parseInt(document.getElementById('postPrice').value) || 0;
+    if (type === 'event' || type === 'ride') postData.date = document.getElementById('postDate').value.trim();
+    if (type === 'ride') postData.seats = parseInt(document.getElementById('postSeats').value) || 1;
+    
+    if (state.editingPostId) {
+        const idx = state.posts.findIndex(p => p.id === state.editingPostId);
+        if (idx !== -1) state.posts[idx] = { ...state.posts[idx], ...postData };
+    } else {
+        postData.id = Date.now();
+        state.posts.push(postData);
+    }
+    
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+    closeModal('postModal');
+    renderAllSections();
+    e.target.reset();
+}
+
+// ========== РЕНДЕРИНГ ==========
+function renderAllSections() {
+    renderMarketSection();
+    renderSection('services', p => p.type === 'service');
+    renderSection('kind', p => p.type === 'kind');
+    renderSection('events', p => p.type === 'event');
+    renderSection('rides', p => p.type === 'ride');
+}
+
+function renderMarketSection() {
+    const counts = { all: 0, buy: 0, sell: 0, give: 0 };
+    state.posts.filter(p => p.type === 'market').forEach(p => {
+        counts.all++;
+        if (counts[p.marketType] !== undefined) counts[p.marketType]++;
+    });
+    
+    document.getElementById('countAll').textContent = counts.all;
+    document.getElementById('countBuy').textContent = counts.buy;
+    document.getElementById('countSell').textContent = counts.sell;
+    document.getElementById('countGive').textContent = counts.give;
+    
+    let items = state.posts.filter(p => p.type === 'market');
+    if (state.marketFilter !== 'all') items = items.filter(p => p.marketType === state.marketFilter);
+    
+    const container = document.getElementById('marketCards');
+    if (items.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon"></div><p>Пока пусто</p></div>';
+    } else {
+        container.innerHTML = items.slice().reverse().map(p => renderCard(p)).join('');
+    }
+}
+
+function setMarketFilter(filter) {
+    state.marketFilter = filter;
+    document.querySelectorAll('#marketFilterBar .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+    });
+    renderMarketSection();
+}
+
+function renderSection(sectionId, filterFn) {
+    const items = state.posts.filter(filterFn).slice().reverse();
+    const container = document.getElementById(sectionId + 'Cards');
+    
+    if (items.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Пока пусто</p></div>';
+    } else {
+        container.innerHTML = items.map(p => renderCard(p)).join('');
+    }
+}
+
+function renderCard(p) {
+    const types = {
+        market: { sell: ['type-sell', 'Продам'], buy: ['type-buy', 'Куплю'], give: ['type-give', 'Отдам'] },
+        service: ['type-service', 'Услуга'],
+        kind: ['type-kind', 'Добро'],
+        event: ['type-event', 'Событие'],
+        ride: ['type-ride', 'Попутка']
+    };
+    
+    let typeClass, typeLabel, priceBlock = '';
+    if (p.type === 'market') {
+        [typeClass, typeLabel] = types.market[p.marketType] || types.market.sell;
+        priceBlock = p.price > 0 ? `<span class="card-price">${p.price} ₽</span>` : '<span class="card-price">Бесплатно</span>';
+    } else {
+        [typeClass, typeLabel] = types[p.type];
+        if (p.type === 'service' && p.price) priceBlock = `<span class="card-price">от ${p.price} ₽</span>`;
+        if (p.type === 'ride') priceBlock = `<span class="card-price">Мест: ${p.seats || 1}</span>`;
+    }
+    
+    const plot = p.plot ? `уч. ${p.plot}` : '';
+    const authorLine = `${p.author || 'Аноним'} ${plot ? '· ' + plot : ''}`;
+    
+    const isOwner = state.currentUser && (state.currentUser.isAdmin || p.authorPhone === state.currentUser.phone);
+    const actions = isOwner ? `
+        <div class="card-actions">
+            <button class="btn btn-primary btn-small" onclick="editPost(${p.id})">✏️ Изменить</button>
+            <button class="btn btn-danger btn-small" onclick="deletePost(${p.id})">🗑️ Удалить</button>
+        </div>` : '';
+    
+    return `
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">${escapeHtml(p.title)}</div>
+                <span class="card-type ${typeClass}">${typeLabel}</span>
+            </div>
+            <div class="card-body">${escapeHtml(p.description)}</div>
+            ${p.date ? `<div style="font-size:13px;color:#888;">📅 ${escapeHtml(p.date)}</div>` : ''}
+            <div class="card-footer">
+                <span class="card-author">👤 ${escapeHtml(authorLine)}</span>
+                ${priceBlock}
+            </div>
+            <div style="margin-top:10px;font-size:13px;">📞 ${escapeHtml(p.contact)}</div>
+            ${actions}
+        </div>`;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function editPost(id) {
+    const post = state.posts.find(p => p.id === id);
+    if (!post) return;
+    
+    state.editingPostId = id;
+    state.currentPostType = post.type;
+    
+    document.getElementById('postModalTitle').textContent = 'Редактировать';
+    document.getElementById('postSubmitBtn').textContent = 'Сохранить';
+    
+    if (post.type === 'market') document.getElementById('postMarketType').value = post.marketType;
+    document.getElementById('postTitle').value = post.title;
+    document.getElementById('postDescription').value = post.description;
+    document.getElementById('postContact').value = post.contact;
+    if (post.price) document.getElementById('postPrice').value = post.price;
+    if (post.date) document.getElementById('postDate').value = post.date;
+    if (post.seats) document.getElementById('postSeats').value = post.seats;
+    
+    openModal('postModal');
+}
+
+function deletePost(id) {
+    if (!confirm('Удалить?')) return;
+    state.posts = state.posts.filter(p => p.id !== id);
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+    renderAllSections();
+}
+
+// ========== АДМИН ==========
+function openAdminPanel() {
+    if (!state.currentUser?.isAdmin) return;
+    
+    document.getElementById('statUsers').textContent = state.users.length;
+    document.getElementById('statPosts').textContent = state.posts.length;
+    
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = state.users.map(u => `
+        <div style="padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>${escapeHtml(u.name || u.phone || u.plot)}</strong>
+                ${u.isAdmin ? '<span style="background:#f39c12;color:white;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:8px;">Владелец</span>' : ''}
+                <div style="font-size:12px;color:#888;">${escapeHtml(u.phone)} ${u.plot ? '· уч.' + u.plot : ''}</div>
+            </div>
+            ${!u.isAdmin && state.currentUser.phone !== u.phone ? `<button class="btn btn-danger btn-small" onclick="deleteUser('${u.phone}')">Удалить</button>` : ''}
+        </div>
+    `).join('');
+    
+    openModal('adminModal');
+}
+
+function deleteUser(phone) {
+    if (!confirm('Удалить пользователя?')) return;
+    state.users = state.users.filter(u => u.phone !== phone);
+    localStorage.setItem('users', JSON.stringify(state.users));
+    openAdminPanel();
+}
+
+// ========== ЗАПУСК ==========
+initApp();
 </script>
 
 </body>
