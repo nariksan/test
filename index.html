@@ -9,7 +9,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f7f3; color: #2c3e2d; min-height: 100vh; }
         
-        /* ========== ШАПКА ========== */
         header {
             background: linear-gradient(135deg, #4a7c3a, #6ba84f);
             color: white;
@@ -18,7 +17,7 @@
         
         .header-top {
             display: flex;
-            justify-content: space-between; /* Разносит левую и правую части по краям */
+            justify-content: space-between;
             align-items: center;
             gap: 10px;
             margin-bottom: 8px;
@@ -96,7 +95,6 @@
             font-weight: bold;
         }
         
-        /* ========== НАВИГАЦИЯ ========== */
         nav {
             background: white;
             padding: 8px 12px;
@@ -185,6 +183,7 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.06);
             border-left: 3px solid #4a7c3a;
         }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
         .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 6px; }
         .card-title { font-size: 15px; font-weight: bold; color: #2c3e2d; flex: 1; }
         .card-type {
@@ -201,7 +200,8 @@
         .type-service { background: #fff3e0; color: #ef6c00; }
         .type-kind { background: #fce4ec; color: #c2185b; }
         .type-event { background: #ede7f6; color: #5e35b1; }
-        .type-ride { background: #e0f2f1; color: #00695c; }
+        .type-ride-offer { background: #e0f2f1; color: #00695c; }
+        .type-ride-ask { background: #fff3e0; color: #e65100; }
         .card-body { color: #555; font-size: 13px; line-height: 1.4; margin: 6px 0; }
         .card-footer {
             display: flex;
@@ -329,7 +329,6 @@
         .empty-state { text-align: center; padding: 30px 15px; color: #888; }
         .empty-state-icon { font-size: 40px; margin-bottom: 8px; }
         
-        /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
         @media (min-width: 600px) {
             .cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
             .header-left { flex-direction: row; align-items: center; gap: 20px; }
@@ -350,7 +349,7 @@
     <div class="header-top">
         <div class="header-left">
             <div class="logo-block">
-                <span class="logo-icon">🏡</span>
+                <span class="logo-icon"></span>
                 <span class="logo-text">СНТ Изабелла</span>
             </div>
             <div id="authButtons" class="auth-buttons">
@@ -358,7 +357,7 @@
                 <button class="btn btn-primary" onclick="openModal('registerModal')">Регистрация</button>
             </div>
             <div id="userInfo" class="user-info hidden">
-                <span id="ownerBadge" class="owner-badge hidden">👑</span>
+                <span id="ownerBadge" class="owner-badge hidden"></span>
                 <span id="currentUserDisplay"></span>
                 <button id="adminPanelBtn" class="btn btn-admin btn-small hidden" onclick="openAdminPanel()">⚙️</button>
                 <button class="btn btn-secondary" onclick="logout()">Выйти</button>
@@ -422,10 +421,15 @@
     <section id="rides" class="section">
         <div class="section-header">
             <h2 class="section-title">Еду в город</h2>
-            <button class="btn btn-accent" onclick="openPostModal('ride')">+ Предложить место</button>
+            <button class="btn btn-accent" onclick="openPostModal('ride')">+ Добавить</button>
+        </div>
+        <div class="filter-bar" id="rideFilterBar">
+            <button class="filter-btn active" data-ride-filter="all" onclick="setRideFilter('all')">Все <span class="count" id="countRideAll">0</span></button>
+            <button class="filter-btn" data-ride-filter="offer" onclick="setRideFilter('offer')"> Еду в город <span class="count" id="countRideOffer">0</span></button>
+            <button class="filter-btn" data-ride-filter="ask" onclick="setRideFilter('ask')">🙋 Кто поедет? <span class="count" id="countRideAsk">0</span></button>
         </div>
         <div class="form-hint warning" style="margin-bottom: 15px;">
-            ⏰ <strong>Важно:</strong> объявление автоматически удалится через 5 минут после указанного времени выезда.
+            ⏰ <strong>Важно:</strong> объявление автоматически удалится через 5 минут после указанного времени.
         </div>
         <div id="ridesCards" class="cards-grid"></div>
     </section>
@@ -506,6 +510,16 @@
                     <option value="give">Отдам</option>
                 </select>
             </div>
+            
+            <!-- Выбор типа для раздела "Еду в город" -->
+            <div class="form-group hidden" id="rideTypeGroup">
+                <label>Тип объявления <span class="required-mark">*</span></label>
+                <select id="postRideType" onchange="updateRideForm()">
+                    <option value="offer"> Еду в город (предлагаю место)</option>
+                    <option value="ask"> Кто поедет в город? (ищу попутку)</option>
+                </select>
+            </div>
+            
             <div class="form-group">
                 <label>Заголовок</label>
                 <input type="text" id="postTitle" required maxlength="80">
@@ -521,7 +535,7 @@
             
             <!-- Умный выбор времени для раздела "Еду в город" -->
             <div class="form-group hidden" id="rideTimeGroup">
-                <label>Когда выезд? <span class="required-mark">*</span></label>
+                <label>Когда? <span class="required-mark">*</span></label>
                 <select id="rideTimePreset" onchange="toggleCustomRideTime()">
                     <option value="30">Через 30 минут</option>
                     <option value="60">Через 1 час</option>
@@ -581,6 +595,7 @@ const state = {
     currentPostType: 'market',
     editingPostId: null,
     marketFilter: 'all',
+    rideFilter: 'all',
     regMethod: 'phone'
 };
 
@@ -608,12 +623,12 @@ function initApp() {
     
     if (state.posts.length === 0) {
         const now = new Date();
-        const rideDeleteTime = new Date(now.getTime() + 90 * 60000); // Тестовое объявление удалится через 1.5 часа
+        const rideDeleteTime = new Date(now.getTime() + 90 * 60000);
         
         state.posts = [
             { id: 1, type: 'market', marketType: 'sell', title: 'Саженцы яблони', description: 'Сорт Антоновка, 2-летки', price: 500, author: 'Иван', authorPhone: '+79001112233', plot: '12', contact: '+79001112233', createdAt: now.toISOString() },
-            { id: 2, type: 'market', marketType: 'give', title: 'Горшки для цветов', description: 'Отдам даром, разные размеры', price: 0, author: 'Мария', authorPhone: '+79002223344', plot: '42', contact: '+79002223344', createdAt: now.toISOString() },
-            { id: 3, type: 'ride', title: 'Еду в город', description: 'Еду в 10:00, могли бы меня захватить? Осталось 2 места.', seats: 2, author: 'Алексей', authorPhone: '+79007778899', plot: '23', contact: '+79007778899', departureTimeStr: 'Сегодня, 10:00', deleteAt: rideDeleteTime.getTime(), createdAt: now.toISOString() }
+            { id: 2, type: 'ride', rideType: 'offer', title: 'Еду в город', description: 'Еду сегодня в 10:00, могу захватить 2 человек с лёгким грузом.', seats: 2, author: 'Алексей', authorPhone: '+79007778899', plot: '23', contact: '+79007778899', departureTimeStr: 'Сегодня, 10:00', deleteAt: rideDeleteTime.getTime(), createdAt: now.toISOString() },
+            { id: 3, type: 'ride', rideType: 'ask', title: 'Кто поедет в город?', description: 'Нужно срочно в город за продуктами. Кто едет сегодня вечером? Могу оплатить бензин.', author: 'Мария', authorPhone: '+79002223344', plot: '42', contact: '+79002223344', departureTimeStr: 'Сегодня, 18:00', deleteAt: rideDeleteTime.getTime(), createdAt: now.toISOString() }
         ];
         localStorage.setItem('posts', JSON.stringify(state.posts));
     }
@@ -623,19 +638,16 @@ function initApp() {
     renderAllSections();
     switchRegMethod('phone');
     
-    // Проверка удаления каждую минуту
     setInterval(() => {
         if (cleanupOldPosts()) renderAllSections();
     }, 60 * 1000);
 }
 
-// Переключение поля "Свое время"
 function toggleCustomRideTime() {
     const preset = document.getElementById('rideTimePreset').value;
     const customInput = document.getElementById('rideCustomTime');
     if (preset === 'custom') {
         customInput.classList.remove('hidden');
-        // Устанавливаем время по умолчанию: сейчас + 1 час
         const now = new Date();
         now.setHours(now.getHours() + 1);
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -645,15 +657,27 @@ function toggleCustomRideTime() {
     }
 }
 
-// Умная очистка старых объявлений
+function updateRideForm() {
+    const rideType = document.getElementById('postRideType').value;
+    const seatsGroup = document.getElementById('seatsGroup');
+    const descInput = document.getElementById('postDescription');
+    
+    if (rideType === 'offer') {
+        seatsGroup.classList.remove('hidden');
+        descInput.placeholder = 'Например: Еду сегодня в 10:00, могу захватить 2 человек с лёгким грузом.';
+    } else {
+        seatsGroup.classList.add('hidden');
+        descInput.placeholder = 'Например: Нужен кто-то, кто едет сегодня вечером в город. Могу оплатить бензин.';
+    }
+}
+
 function cleanupOldPosts() {
     const now = Date.now();
     const before = state.posts.length;
     
     state.posts = state.posts.filter(p => {
-        // Для раздела "Еду в город" проверяем точное время удаления
         if (p.type === 'ride' && p.deleteAt) {
-            return now < p.deleteAt; // Оставляем только те, где текущее время МЕНЬШЕ времени удаления
+            return now < p.deleteAt;
         }
         return true;
     });
@@ -823,20 +847,18 @@ function openPostModal(type) {
     document.getElementById('postModalTitle').textContent = titles[type];
     document.getElementById('postSubmitBtn').textContent = 'Опубликовать';
     
-    // Показываем/скрываем нужные поля
     document.getElementById('marketTypeGroup').classList.toggle('hidden', type !== 'market');
+    document.getElementById('rideTypeGroup').classList.toggle('hidden', type !== 'ride');
     document.getElementById('priceGroup').classList.toggle('hidden', type !== 'market' && type !== 'service');
     document.getElementById('rideTimeGroup').classList.toggle('hidden', type !== 'ride');
     document.getElementById('eventDateGroup').classList.toggle('hidden', type !== 'event');
     document.getElementById('seatsGroup').classList.toggle('hidden', type !== 'ride');
     
-    // Сброс и настройка полей времени для "Еду в город"
     if (type === 'ride') {
+        document.getElementById('postRideType').value = 'offer';
+        updateRideForm();
         document.getElementById('rideTimePreset').value = '30';
         toggleCustomRideTime();
-        document.getElementById('postDescription').placeholder = 'Например: Еду сегодня в 10:00, могли бы меня захватить? Осталось 2 места.';
-    } else {
-        document.getElementById('postDescription').placeholder = '';
     }
     
     const contactInput = document.getElementById('postContact');
@@ -869,8 +891,9 @@ function handlePost(e) {
     if (type === 'market') postData.marketType = document.getElementById('postMarketType').value;
     if (type === 'market' || type === 'service') postData.price = parseInt(document.getElementById('postPrice').value) || 0;
     
-    // Логика времени для "Еду в город"
     if (type === 'ride') {
+        postData.rideType = document.getElementById('postRideType').value;
+        
         const preset = document.getElementById('rideTimePreset').value;
         const now = new Date();
         let departureTime;
@@ -883,15 +906,17 @@ function handlePost(e) {
             departureTime = new Date(document.getElementById('rideCustomTime').value);
         }
         
-        // Время удаления = время выезда + 5 минут
         const deleteAt = new Date(departureTime.getTime() + 5 * 60000);
         
         postData.departureTimeStr = departureTime.toLocaleString('ru-RU', {day: 'numeric', month: 'numeric', hour: '2-digit', minute:'2-digit'});
-        postData.deleteAt = deleteAt.getTime(); // Сохраняем точный timestamp для автоудаления
+        postData.deleteAt = deleteAt.getTime();
+        
+        if (postData.rideType === 'offer') {
+            postData.seats = parseInt(document.getElementById('postSeats').value) || 1;
+        }
     }
     
     if (type === 'event') postData.date = document.getElementById('postDate').value.trim();
-    if (type === 'ride') postData.seats = parseInt(document.getElementById('postSeats').value) || 1;
     
     if (state.editingPostId) {
         const idx = state.posts.findIndex(p => p.id === state.editingPostId);
@@ -912,7 +937,7 @@ function renderAllSections() {
     renderSection('services', p => p.type === 'service');
     renderSection('kind', p => p.type === 'kind');
     renderSection('events', p => p.type === 'event');
-    renderSection('rides', p => p.type === 'ride');
+    renderRideSection();
 }
 
 function renderMarketSection() {
@@ -946,6 +971,39 @@ function setMarketFilter(filter) {
     renderMarketSection();
 }
 
+function renderRideSection() {
+    const counts = { all: 0, offer: 0, ask: 0 };
+    state.posts.filter(p => p.type === 'ride').forEach(p => {
+        counts.all++;
+        if (p.rideType === 'offer') counts.offer++;
+        if (p.rideType === 'ask') counts.ask++;
+    });
+    
+    document.getElementById('countRideAll').textContent = counts.all;
+    document.getElementById('countRideOffer').textContent = counts.offer;
+    document.getElementById('countRideAsk').textContent = counts.ask;
+    
+    let items = state.posts.filter(p => p.type === 'ride');
+    if (state.rideFilter !== 'all') {
+        items = items.filter(p => p.rideType === state.rideFilter);
+    }
+    
+    const container = document.getElementById('ridesCards');
+    if (items.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Пока пусто</p></div>';
+    } else {
+        container.innerHTML = items.slice().reverse().map(p => renderCard(p)).join('');
+    }
+}
+
+function setRideFilter(filter) {
+    state.rideFilter = filter;
+    document.querySelectorAll('#rideFilterBar .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.rideFilter === filter);
+    });
+    renderRideSection();
+}
+
 function renderSection(sectionId, filterFn) {
     const items = state.posts.filter(filterFn).slice().reverse();
     const container = document.getElementById(sectionId + 'Cards');
@@ -958,22 +1016,26 @@ function renderSection(sectionId, filterFn) {
 }
 
 function renderCard(p) {
-    const types = {
-        market: { sell: ['type-sell', 'Продам'], buy: ['type-buy', 'Куплю'], give: ['type-give', 'Отдам'] },
-        service: ['type-service', 'Услуга'],
-        kind: ['type-kind', 'Добро'],
-        event: ['type-event', 'Событие'],
-        ride: ['type-ride', 'Попутка']
-    };
-    
     let typeClass, typeLabel, priceBlock = '';
+    
     if (p.type === 'market') {
-        [typeClass, typeLabel] = types.market[p.marketType] || types.market.sell;
+        const types = { sell: ['type-sell', 'Продам'], buy: ['type-buy', 'Куплю'], give: ['type-give', 'Отдам'] };
+        [typeClass, typeLabel] = types[p.marketType] || types.sell;
         priceBlock = p.price > 0 ? `<span class="card-price">${p.price} ₽</span>` : '<span class="card-price">Бесплатно</span>';
-    } else {
-        [typeClass, typeLabel] = types[p.type];
-        if (p.type === 'service' && p.price) priceBlock = `<span class="card-price">от ${p.price} ₽</span>`;
-        if (p.type === 'ride') priceBlock = `<span class="card-price">Мест: ${p.seats || 1}</span>`;
+    } else if (p.type === 'service') {
+        typeClass = 'type-service'; typeLabel = 'Услуга';
+        if (p.price) priceBlock = `<span class="card-price">от ${p.price} ₽</span>`;
+    } else if (p.type === 'kind') {
+        typeClass = 'type-kind'; typeLabel = 'Добро';
+    } else if (p.type === 'event') {
+        typeClass = 'type-event'; typeLabel = 'Событие';
+    } else if (p.type === 'ride') {
+        if (p.rideType === 'offer') {
+            typeClass = 'type-ride-offer'; typeLabel = 'Еду';
+            priceBlock = `<span class="card-price">Мест: ${p.seats || 1}</span>`;
+        } else {
+            typeClass = 'type-ride-ask'; typeLabel = 'Ищу';
+        }
     }
     
     const plot = p.plot ? `· уч.${p.plot}` : '';
@@ -986,8 +1048,7 @@ function renderCard(p) {
             <button class="btn btn-danger btn-small" onclick="deletePost(${p.id})">🗑️</button>
         </div>` : '';
     
-    // Специальный индикатор времени для раздела "Еду в город"
-    const timeInfo = p.type === 'ride' && p.departureTimeStr ? `<div class="card-time">🚗 Выезд: ${p.departureTimeStr}</div>` : '';
+    const timeInfo = p.type === 'ride' && p.departureTimeStr ? `<div class="card-time"> ${p.departureTimeStr}</div>` : '';
     
     return `
         <div class="card">
@@ -1022,12 +1083,17 @@ function editPost(id) {
     document.getElementById('postSubmitBtn').textContent = 'Сохранить';
     
     document.getElementById('marketTypeGroup').classList.toggle('hidden', post.type !== 'market');
+    document.getElementById('rideTypeGroup').classList.toggle('hidden', post.type !== 'ride');
     document.getElementById('priceGroup').classList.toggle('hidden', post.type !== 'market' && post.type !== 'service');
     document.getElementById('rideTimeGroup').classList.toggle('hidden', post.type !== 'ride');
     document.getElementById('eventDateGroup').classList.toggle('hidden', post.type !== 'event');
     document.getElementById('seatsGroup').classList.toggle('hidden', post.type !== 'ride');
     
     if (post.type === 'market') document.getElementById('postMarketType').value = post.marketType;
+    if (post.type === 'ride') {
+        document.getElementById('postRideType').value = post.rideType || 'offer';
+        updateRideForm();
+    }
     document.getElementById('postTitle').value = post.title;
     document.getElementById('postDescription').value = post.description;
     document.getElementById('postContact').value = post.contact;
@@ -1059,7 +1125,7 @@ function openAdminPanel() {
                 ${u.isAdmin ? '<span style="background:#f39c12;color:white;padding:1px 6px;border-radius:8px;font-size:9px;margin-left:6px;">Владелец</span>' : ''}
                 <div style="font-size:10px;color:#888;">${escapeHtml(u.phone)} ${u.plot ? '· уч.' + u.plot : ''}</div>
             </div>
-            ${!u.isAdmin && state.currentUser.phone !== u.phone ? `<button class="btn btn-danger btn-small" onclick="deleteUser('${u.phone}')">🗑️</button>` : ''}
+            ${!u.isAdmin && state.currentUser.phone !== u.phone ? `<button class="btn btn-danger btn-small" onclick="deleteUser('${u.phone}')">️</button>` : ''}
         </div>
     `).join('');
     
