@@ -6,18 +6,17 @@
     <title>СНТ Изабелла</title>
     <meta name="theme-color" content="#4a7c3a">
     
-    <!-- ========== PWA META TAGS ========== -->
+    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="СНТ Изабелла">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <!-- ===================================== -->
 
     <style>
-        /* ... ВСТАВЬТЕ СЮДА ВЕСЬ ВАШ ПРЕЖНИЙ CSS БЕЗ ИЗМЕНЕНИЙ ... */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f7f3; color: #2c3e2d; min-height: 100vh; }
+        
         header { background: linear-gradient(135deg, #4a7c3a, #6ba84f); color: white; padding: 12px 15px; }
         .header-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
         .header-left { display: flex; flex-direction: column; gap: 6px; flex: 1; }
@@ -28,6 +27,7 @@
         .header-right { flex-shrink: 0; }
         .header-clock { background: rgba(255,255,255,0.15); padding: 5px 10px; border-radius: 12px; font-size: 11px; white-space: nowrap; text-align: right; }
         .header-clock .time { font-weight: 700; font-variant-numeric: tabular-nums; }
+        
         .btn { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
         .btn-primary { background: white; color: #4a7c3a; }
         .btn-primary:hover { background: #f0f0f0; }
@@ -38,25 +38,30 @@
         .btn-danger { background: #e74c3c; color: white; }
         .btn-small { padding: 5px 10px; font-size: 11px; }
         .btn-admin { background: #f39c12; color: white; }
+        
         .user-info { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; }
         .user-info span { font-weight: 600; }
         .owner-badge { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; }
+        
         nav { background: white; padding: 8px 12px; display: flex; gap: 6px; overflow-x: auto; border-bottom: 3px solid #4a7c3a; -webkit-overflow-scrolling: touch; }
         nav::-webkit-scrollbar { display: none; }
         .nav-btn { padding: 6px 12px; background: #f4f7f3; border: 2px solid transparent; border-radius: 16px; cursor: pointer; font-size: 12px; color: #2c3e2d; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
         .nav-btn:hover { background: #e8efe4; }
         .nav-btn.active { background: #4a7c3a; color: white; border-color: #4a7c3a; }
+        
         main { padding: 15px; max-width: 1400px; margin: 0 auto; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .section-title { font-size: 20px; color: #2c3e2d; }
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px; padding: 10px; background: white; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
         .filter-btn { padding: 6px 12px; background: #f4f7f3; border: 2px solid transparent; border-radius: 16px; cursor: pointer; font-size: 12px; font-weight: 600; color: #555; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .filter-btn:hover { background: #e8efe4; }
         .filter-btn.active { background: #4a7c3a; color: white; border-color: #4a7c3a; }
         .filter-btn .count { background: rgba(0,0,0,0.1); padding: 1px 5px; border-radius: 8px; font-size: 10px; font-weight: bold; }
+        
         .cards-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .card { background: white; border-radius: 10px; padding: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border-left: 3px solid #4a7c3a; }
         .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 6px; }
@@ -76,6 +81,7 @@
         .card-time { font-size: 12px; color: #e67e22; font-weight: 700; margin-top: 6px; background: #fff3e0; display: inline-block; padding: 3px 8px; border-radius: 6px; }
         .card-actions { display: flex; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0; }
         .card-actions .btn { flex: 1; }
+        
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center; padding: 15px; }
         .modal-overlay.active { display: flex; }
         .modal { background: white; border-radius: 10px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -90,6 +96,7 @@
         .form-switch { text-align: center; margin-top: 12px; font-size: 13px; color: #666; }
         .form-switch a { color: #4a7c3a; cursor: pointer; font-weight: 600; }
         .form-error { color: #c62828; font-size: 12px; margin-top: 8px; display: none; }
+        
         .reg-method-switcher { display: flex; gap: 6px; margin-bottom: 12px; background: #f4f7f3; padding: 3px; border-radius: 8px; }
         .reg-method-btn { flex: 1; padding: 6px; background: transparent; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; color: #666; }
         .reg-method-btn.active { background: white; color: #4a7c3a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -97,32 +104,23 @@
         .form-hint.warning { background: #fff3e0; border-left-color: #e67e22; color: #e65100; }
         .field-hint { font-size: 10px; color: #888; margin-top: 3px; }
         .required-mark { color: #c62828; }
+        
         .hidden { display: none !important; }
         .empty-state { text-align: center; padding: 30px 15px; color: #888; }
         .empty-state-icon { font-size: 40px; margin-bottom: 8px; }
+
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: #4a7c3a; }
         input:checked + .slider:before { transform: translateX(20px); }
+        
         .admin-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px; }
         .admin-row.danger { background: #fff5f5; border: 1px solid #fed7d7; }
         .admin-row-label { font-size: 13px; font-weight: 600; color: #2c3e2d; }
         .admin-row-desc { font-size: 11px; color: #666; margin-top: 2px; }
-        @media (min-width: 600px) {
-            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-            .header-left { flex-direction: row; align-items: center; gap: 20px; }
-            .auth-buttons { margin-left: 10px; }
-        }
-        @media (max-width: 380px) {
-            .logo-text { font-size: 18px; }
-            .logo-icon { font-size: 22px; }
-            .btn { padding: 5px 8px; font-size: 11px; }
-            .header-clock { font-size: 10px; padding: 4px 8px; }
-        }
-        
-        /* Стиль для кнопки установки PWA */
+
         #installPwaBtn {
             background: #4a7c3a;
             color: white;
@@ -138,16 +136,23 @@
             box-shadow: 0 2px 8px rgba(74, 124, 58, 0.3);
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        @media (min-width: 600px) {
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .header-left { flex-direction: row; align-items: center; gap: 20px; }
+            .auth-buttons { margin-left: 10px; }
+        }
+        @media (max-width: 380px) {
+            .logo-text { font-size: 18px; }
+            .logo-icon { font-size: 22px; }
+            .btn { padding: 5px 8px; font-size: 11px; }
+            .header-clock { font-size: 10px; padding: 4px 8px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Заглушка технических работ -->
 <div id="maintenanceOverlay" class="modal-overlay" style="z-index: 99999; background: #f4f7f3; display: none; flex-direction: column; text-align: center; padding: 20px;">
     <div style="font-size: 60px; margin-bottom: 20px;">🚧</div>
     <h2 style="color: #2c3e2d; margin-bottom: 10px;">Сайт на технических работах</h2>
@@ -165,10 +170,7 @@
                 <span class="logo-icon">🏡</span>
                 <span class="logo-text">СНТ Изабелла</span>
             </div>
-            
-            <!-- КНОПКА УСТАНОВКИ PWA (появится, если браузер поддерживает) -->
-            <button id="installPwaBtn" class="hidden" onclick="installPWA()">📲 Установить приложение</button>
-
+            <button id="installPwaBtn" class="hidden" onclick="installPWA()">📲 Установить</button>
             <div id="authButtons" class="auth-buttons">
                 <button class="btn btn-secondary" onclick="openModal('loginModal')">Войти</button>
                 <button class="btn btn-primary" onclick="openModal('registerModal')">Регистрация</button>
@@ -247,71 +249,701 @@
     </section>
 </main>
 
-<!-- Модалки (Вход, Регистрация, Объявление, Админ) - оставлены без изменений для экономии места, они полностью рабочие из предыдущего кода -->
-<!-- (Вставьте сюда весь блок модальных окон из предыдущего ответа: loginModal, registerModal, postModal, adminModal) -->
-<!-- Для краткости я не дублирую их HTML, он остается ровно таким же, как в предыдущем сообщении. -->
+<div id="loginModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+        <h2>Вход</h2>
+        <div class="form-hint">💡 Телефон или номер участка</div>
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Телефон или участок</label>
+                <input type="text" id="loginId" placeholder="+7... или 42" required>
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="loginPassword" placeholder="Пароль" required>
+            </div>
+            <div id="loginError" class="form-error"></div>
+            <button type="submit" class="btn btn-primary form-submit">Войти</button>
+            <div class="form-switch">Нет аккаунта? <a onclick="switchModal('loginModal','registerModal')">Регистрация</a></div>
+        </form>
+    </div>
+</div>
 
+<div id="registerModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('registerModal')">×</button>
+        <h2>Регистрация</h2>
+        <div class="reg-method-switcher">
+            <button type="button" class="reg-method-btn active" data-method="phone" onclick="switchRegMethod('phone')">📱 Телефон</button>
+            <button type="button" class="reg-method-btn" data-method="plot" onclick="switchRegMethod('plot')">🏡 Участок</button>
+        </div>
+        <div id="hintPhone" class="form-hint">📱 Телефон для входа. Имя и участок — по желанию.</div>
+        <div id="hintPlot" class="form-hint hidden">🏡 Участок и имя обязательны. Телефон — по желанию.</div>
+        <form onsubmit="handleRegister(event)">
+            <div class="form-group" id="phoneGroup">
+                <label>Телефон <span id="phoneRequiredMark" class="required-mark">*</span></label>
+                <input type="tel" id="regPhone" placeholder="+7 (___) ___-__-__">
+            </div>
+            <div class="form-group" id="plotGroup">
+                <label>Участок <span id="plotOptionalMark">(необязательно)</span></label>
+                <input type="text" id="regPlot" placeholder="42">
+            </div>
+            <div class="form-group" id="nameGroup">
+                <label>Имя <span id="nameOptionalMark">(необязательно)</span></label>
+                <input type="text" id="regName" placeholder="Как обращаться">
+            </div>
+            <div class="form-group">
+                <label>Пароль <span class="required-mark">*</span></label>
+                <input type="password" id="regPassword" placeholder="Мин. 4 символа" required minlength="4">
+            </div>
+            <div id="registerError" class="form-error"></div>
+            <button type="submit" class="btn btn-primary form-submit">Зарегистрироваться</button>
+            <div class="form-switch">Есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a></div>
+        </form>
+    </div>
+</div>
+
+<div id="postModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('postModal')">×</button>
+        <h2 id="postModalTitle">Новое объявление</h2>
+        <form onsubmit="handlePost(event)">
+            <div class="form-group" id="marketTypeGroup">
+                <label>Тип</label>
+                <select id="postMarketType">
+                    <option value="sell">Продам</option>
+                    <option value="buy">Куплю</option>
+                    <option value="give">Отдам</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Заголовок</label>
+                <input type="text" id="postTitle" required maxlength="80">
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="postDescription" required></textarea>
+            </div>
+            <div class="form-group" id="priceGroup">
+                <label>Цена (₽)</label>
+                <input type="number" id="postPrice" min="0" placeholder="0 — бесплатно">
+            </div>
+            <div class="form-group hidden" id="rideTimeGroup">
+                <label>Когда выезд? <span class="required-mark">*</span></label>
+                <select id="rideTimePreset" onchange="toggleCustomRideTime()">
+                    <option value="30">Через 30 минут</option>
+                    <option value="60">Через 1 час</option>
+                    <option value="custom">Указать свое время</option>
+                </select>
+                <input type="datetime-local" id="rideCustomTime" class="hidden" style="margin-top: 8px;">
+                <div class="field-hint">Объявление удалится через 5 минут после этого времени.</div>
+            </div>
+            <div class="form-group hidden" id="eventDateGroup">
+                <label>Дата и время события</label>
+                <input type="text" id="postDate" placeholder="Сегодня, 10:00 или 20.07, 14:30">
+            </div>
+            <div class="form-group hidden" id="seatsGroup">
+                <label>Свободно мест</label>
+                <input type="number" id="postSeats" min="1" max="10" value="1">
+            </div>
+            <div class="form-group">
+                <label>Контакт <span class="required-mark">*</span></label>
+                <input type="tel" id="postContact" required>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit" id="postSubmitBtn">Опубликовать</button>
+        </form>
+    </div>
+</div>
+
+<div id="adminModal" class="modal-overlay">
+    <div class="modal" style="max-width: 500px;">
+        <button class="modal-close" onclick="closeModal('adminModal')">×</button>
+        <h2>⚙️ Панель управления</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+            <div style="background: #f4f7f3; padding: 10px; border-radius: 6px; text-align: center;">
+                <div style="font-size: 20px; font-weight: bold; color: #4a7c3a;" id="statUsers">0</div>
+                <div style="font-size: 10px; color: #666;">Пользователей</div>
+            </div>
+            <div style="background: #f4f7f3; padding: 10px; border-radius: 6px; text-align: center;">
+                <div style="font-size: 20px; font-weight: bold; color: #4a7c3a;" id="statPosts">0</div>
+                <div style="font-size: 10px; color: #666;">Объявлений</div>
+            </div>
+        </div>
+        <div style="margin-top: 15px; border-top: 2px solid #eee; padding-top: 15px;">
+            <h3 style="margin-bottom: 12px; font-size: 14px; color: #2c3e2d;">⚙️ Управление разделами</h3>
+            <div class="admin-row">
+                <div>
+                    <div class="admin-row-label">🚗 Раздел "Еду в город"</div>
+                    <div class="admin-row-desc">Показывать пользователям или скрыть в разработку</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="ridesEnabledToggle" onchange="toggleRidesSection(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="admin-row danger">
+                <div>
+                    <div class="admin-row-label" style="color: #c62828;">🚧 Технические работы</div>
+                    <div class="admin-row-desc">Скрыть сайт от всех, кроме администратора</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="maintenanceToggle" onchange="toggleMaintenanceMode(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <h3 style="margin: 15px 0 10px; font-size: 14px;">Участники</h3>
+        <div id="usersTableBody" style="max-height: 200px; overflow-y: auto;"></div>
+    </div>
+</div>
 
 <script>
-// ... ВСТАВЬТЕ СЮДА ВЕСЬ ВАШ ПРЕЖНИЙ JS КОД ...
-// (Начиная с const ADMIN_PHONE = 'admin'; и до initApp();)
+const ADMIN_PHONE = 'admin';
+const ADMIN_PASSWORD = 'admin';
 
-// ========== НОВЫЙ PWA КОД ==========
+const state = {
+    currentUser: null,
+    users: [],
+    posts: [],
+    currentPostType: 'market',
+    editingPostId: null,
+    marketFilter: 'all',
+    regMethod: 'phone',
+    maintenanceMode: localStorage.getItem('maintenanceMode') === 'true',
+    ridesEnabled: localStorage.getItem('ridesEnabled') === 'true'
+};
 
-// 1. Регистрация Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('Service Worker зарегистрирован:', registration);
-            })
-            .catch(error => {
-                console.log('Ошибка регистрации Service Worker:', error);
-            });
-    });
+function initApp() {
+    const savedUser = localStorage.getItem('current_user');
+    if (savedUser) state.currentUser = JSON.parse(savedUser);
+    
+    const savedUsers = localStorage.getItem('users');
+    state.users = savedUsers ? JSON.parse(savedUsers) : [];
+    
+    const savedPosts = localStorage.getItem('posts');
+    state.posts = savedPosts ? JSON.parse(savedPosts) : [];
+    
+    if (!state.users.some(u => u.isAdmin)) {
+        state.users.push({
+            phone: ADMIN_PHONE, plot: '', name: 'Владелец',
+            password: ADMIN_PASSWORD, isAdmin: true,
+            createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('users', JSON.stringify(state.users));
+    }
+    
+    if (state.posts.length === 0) {
+        const now = new Date();
+        state.posts = [
+            { id: 1, type: 'market', marketType: 'sell', title: 'Саженцы яблони', description: 'Сорт Антоновка, 2-летки', price: 500, author: 'Иван', authorPhone: '+79001112233', plot: '12', contact: '+79001112233', createdAt: now.toISOString() },
+            { id: 2, type: 'market', marketType: 'give', title: 'Горшки для цветов', description: 'Отдам даром, разные размеры', price: 0, author: 'Мария', authorPhone: '+79002223344', plot: '42', contact: '+79002223344', createdAt: now.toISOString() }
+        ];
+        localStorage.setItem('posts', JSON.stringify(state.posts));
+    }
+    
+    cleanupOldPosts();
+    checkMaintenanceMode();
+    updateAuthUI();
+    renderAllSections();
+    switchRegMethod('phone');
+    
+    setInterval(() => {
+        if (cleanupOldPosts()) renderAllSections();
+    }, 60 * 1000);
 }
 
-// 2. Логика кнопки "Установить приложение"
+function checkMaintenanceMode() {
+    const overlay = document.getElementById('maintenanceOverlay');
+    const adminBypass = document.getElementById('adminBypass');
+    
+    if (state.maintenanceMode) {
+        overlay.style.display = 'flex';
+        if (state.currentUser && state.currentUser.isAdmin) {
+            adminBypass.classList.remove('hidden');
+        } else {
+            adminBypass.classList.add('hidden');
+        }
+    } else {
+        overlay.style.display = 'none';
+    }
+}
+
+function toggleRidesSection(isEnabled) {
+    state.ridesEnabled = isEnabled;
+    localStorage.setItem('ridesEnabled', isEnabled);
+    renderRidesSection();
+    alert(isEnabled ? '✅ Раздел "Еду в город" теперь доступен!' : '🚧 Раздел "Еду в город" переведён в режим разработки.');
+}
+
+function toggleMaintenanceMode(isEnabled) {
+    state.maintenanceMode = isEnabled;
+    localStorage.setItem('maintenanceMode', isEnabled);
+    checkMaintenanceMode();
+    alert(isEnabled ? '🚧 Сайт переведён в режим технических работ.' : '✅ Сайт снова доступен для всех.');
+}
+
+function toggleCustomRideTime() {
+    const preset = document.getElementById('rideTimePreset').value;
+    const customInput = document.getElementById('rideCustomTime');
+    if (preset === 'custom') {
+        customInput.classList.remove('hidden');
+        const now = new Date();
+        now.setHours(now.getHours() + 1);
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        customInput.value = now.toISOString().slice(0, 16);
+    } else {
+        customInput.classList.add('hidden');
+    }
+}
+
+function cleanupOldPosts() {
+    const now = Date.now();
+    const before = state.posts.length;
+    state.posts = state.posts.filter(p => {
+        if (p.type === 'ride' && p.deleteAt) return now < p.deleteAt;
+        return true;
+    });
+    if (before !== state.posts.length) {
+        localStorage.setItem('posts', JSON.stringify(state.posts));
+        return true;
+    }
+    return false;
+}
+
+function updateClock() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
+    const date = now.toLocaleDateString('ru-RU', {day: '2-digit', month: '2-digit'});
+    const el = document.getElementById('siteClock');
+    if (el) el.innerHTML = `${date} <span class="time">${time}</span>`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.section).classList.add('active');
+    });
+});
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    const err = document.getElementById(id.replace('Modal','Error'));
+    if (err) { err.style.display = 'none'; err.textContent = ''; }
+}
+function switchModal(from, to) { closeModal(from); openModal(to); }
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); });
+});
+
+function switchRegMethod(method) {
+    state.regMethod = method;
+    document.querySelectorAll('.reg-method-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.method === method);
+    });
+    document.getElementById('hintPhone').classList.toggle('hidden', method !== 'phone');
+    document.getElementById('hintPlot').classList.toggle('hidden', method !== 'plot');
+    const phoneInput = document.getElementById('regPhone');
+    const plotInput = document.getElementById('regPlot');
+    const nameInput = document.getElementById('regName');
+    if (method === 'phone') {
+        phoneInput.required = true; plotInput.required = false; nameInput.required = false;
+        document.getElementById('phoneRequiredMark').style.display = 'inline';
+        document.getElementById('plotOptionalMark').style.display = 'inline';
+        document.getElementById('nameOptionalMark').style.display = 'inline';
+    } else {
+        phoneInput.required = false; plotInput.required = true; nameInput.required = true;
+        document.getElementById('phoneRequiredMark').style.display = 'none';
+        document.getElementById('plotOptionalMark').style.display = 'none';
+        document.getElementById('nameOptionalMark').style.display = 'none';
+    }
+}
+
+function handleRegister(e) {
+    e.preventDefault();
+    const phone = document.getElementById('regPhone').value.trim();
+    const plot = document.getElementById('regPlot').value.trim();
+    const name = document.getElementById('regName').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const err = document.getElementById('registerError');
+    
+    const phoneExists = phone && state.users.some(u => u.phone === phone);
+    const plotExists = plot && state.users.some(u => u.plot === plot);
+    
+    if (phoneExists || plotExists) {
+        err.textContent = 'Пользователь с таким телефоном или участком уже существует';
+        err.style.display = 'block';
+        return;
+    }
+    
+    state.users.push({ phone, plot, name, password, isAdmin: false, createdAt: new Date().toISOString() });
+    localStorage.setItem('users', JSON.stringify(state.users));
+    state.currentUser = { phone, plot, name, isAdmin: false };
+    localStorage.setItem('current_user', JSON.stringify(state.currentUser));
+    
+    closeModal('registerModal');
+    updateAuthUI();
+    checkMaintenanceMode();
+    renderAllSections();
+    e.target.reset();
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const loginId = document.getElementById('loginId').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const err = document.getElementById('loginError');
+    const user = state.users.find(u => u.phone === loginId || u.plot === loginId);
+    
+    if (!user || user.password !== password) {
+        err.textContent = 'Неверный логин или пароль';
+        err.style.display = 'block';
+        return;
+    }
+    
+    state.currentUser = { phone: user.phone, plot: user.plot, name: user.name, isAdmin: user.isAdmin };
+    localStorage.setItem('current_user', JSON.stringify(state.currentUser));
+    closeModal('loginModal');
+    updateAuthUI();
+    checkMaintenanceMode();
+    renderAllSections();
+    e.target.reset();
+}
+
+function logout() {
+    state.currentUser = null;
+    localStorage.removeItem('current_user');
+    updateAuthUI();
+    checkMaintenanceMode();
+    renderAllSections();
+}
+
+function updateAuthUI() {
+    const auth = document.getElementById('authButtons');
+    const info = document.getElementById('userInfo');
+    const display = document.getElementById('currentUserDisplay');
+    const badge = document.getElementById('ownerBadge');
+    const adminBtn = document.getElementById('adminPanelBtn');
+    
+    if (state.currentUser) {
+        auth.classList.add('hidden');
+        info.classList.remove('hidden');
+        display.textContent = state.currentUser.name || state.currentUser.phone || state.currentUser.plot;
+        if (state.currentUser.isAdmin) {
+            badge.classList.remove('hidden');
+            adminBtn.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+            adminBtn.classList.add('hidden');
+        }
+    } else {
+        auth.classList.remove('hidden');
+        info.classList.add('hidden');
+    }
+}
+
+function openPostModal(type) {
+    if (!state.currentUser) {
+        alert('Нужно войти');
+        openModal('loginModal');
+        return;
+    }
+    state.currentPostType = type;
+    state.editingPostId = null;
+    const titles = { market: 'Объявление', service: 'Услуга', kind: 'Доброе дело', event: 'Событие', ride: 'Поездка в город' };
+    document.getElementById('postModalTitle').textContent = titles[type];
+    document.getElementById('postSubmitBtn').textContent = 'Опубликовать';
+    
+    document.getElementById('marketTypeGroup').classList.toggle('hidden', type !== 'market');
+    document.getElementById('priceGroup').classList.toggle('hidden', type !== 'market' && type !== 'service');
+    document.getElementById('rideTimeGroup').classList.toggle('hidden', type !== 'ride');
+    document.getElementById('eventDateGroup').classList.toggle('hidden', type !== 'event');
+    document.getElementById('seatsGroup').classList.toggle('hidden', type !== 'ride');
+    
+    if (type === 'ride') {
+        document.getElementById('rideTimePreset').value = '30';
+        toggleCustomRideTime();
+    }
+    
+    document.getElementById('postContact').value = state.currentUser.phone || '';
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postDescription').value = '';
+    document.getElementById('postPrice').value = '';
+    document.getElementById('postDate').value = '';
+    document.getElementById('postSeats').value = '1';
+    
+    openModal('postModal');
+}
+
+function handlePost(e) {
+    e.preventDefault();
+    const type = state.currentPostType;
+    const postData = {
+        type,
+        title: document.getElementById('postTitle').value.trim(),
+        description: document.getElementById('postDescription').value.trim(),
+        contact: document.getElementById('postContact').value.trim(),
+        author: state.currentUser.name || state.currentUser.phone || state.currentUser.plot,
+        authorPhone: state.currentUser.phone || '',
+        plot: state.currentUser.plot || '',
+        createdAt: new Date().toISOString()
+    };
+    
+    if (type === 'market') postData.marketType = document.getElementById('postMarketType').value;
+    if (type === 'market' || type === 'service') postData.price = parseInt(document.getElementById('postPrice').value) || 0;
+    
+    if (type === 'ride') {
+        const preset = document.getElementById('rideTimePreset').value;
+        const now = new Date();
+        let departureTime;
+        if (preset === '30') departureTime = new Date(now.getTime() + 30 * 60000);
+        else if (preset === '60') departureTime = new Date(now.getTime() + 60 * 60000);
+        else departureTime = new Date(document.getElementById('rideCustomTime').value);
+        
+        postData.departureTimeStr = departureTime.toLocaleString('ru-RU', {day: 'numeric', month: 'numeric', hour: '2-digit', minute:'2-digit'});
+        postData.deleteAt = new Date(departureTime.getTime() + 5 * 60000).getTime();
+    }
+    
+    if (type === 'event') postData.date = document.getElementById('postDate').value.trim();
+    if (type === 'ride') postData.seats = parseInt(document.getElementById('postSeats').value) || 1;
+    
+    if (state.editingPostId) {
+        const idx = state.posts.findIndex(p => p.id === state.editingPostId);
+        if (idx !== -1) state.posts[idx] = { ...state.posts[idx], ...postData };
+    } else {
+        postData.id = Date.now();
+        state.posts.push(postData);
+    }
+    
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+    closeModal('postModal');
+    renderAllSections();
+    e.target.reset();
+}
+
+function renderAllSections() {
+    renderMarketSection();
+    renderSection('services', p => p.type === 'service');
+    renderSection('kind', p => p.type === 'kind');
+    renderSection('events', p => p.type === 'event');
+    renderRidesSection();
+}
+
+function renderMarketSection() {
+    const counts = { all: 0, buy: 0, sell: 0, give: 0 };
+    state.posts.filter(p => p.type === 'market').forEach(p => {
+        counts.all++;
+        if (counts[p.marketType] !== undefined) counts[p.marketType]++;
+    });
+    document.getElementById('countAll').textContent = counts.all;
+    document.getElementById('countBuy').textContent = counts.buy;
+    document.getElementById('countSell').textContent = counts.sell;
+    document.getElementById('countGive').textContent = counts.give;
+    
+    let items = state.posts.filter(p => p.type === 'market');
+    if (state.marketFilter !== 'all') items = items.filter(p => p.marketType === state.marketFilter);
+    
+    const container = document.getElementById('marketCards');
+    if (items.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Пока пусто</p></div>';
+    } else {
+        container.innerHTML = items.slice().reverse().map(p => renderCard(p)).join('');
+    }
+}
+
+function setMarketFilter(filter) {
+    state.marketFilter = filter;
+    document.querySelectorAll('#marketFilterBar .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+    });
+    renderMarketSection();
+}
+
+function renderSection(sectionId, filterFn) {
+    const items = state.posts.filter(filterFn).slice().reverse();
+    const container = document.getElementById(sectionId + 'Cards');
+    if (items.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Пока пусто</p></div>';
+    } else {
+        container.innerHTML = items.map(p => renderCard(p)).join('');
+    }
+}
+
+function renderRidesSection() {
+    const container = document.getElementById('ridesCards');
+    const addBtn = document.querySelector('#rides .section-header .btn-accent');
+    const navBtn = document.querySelector('.nav-btn[data-section="rides"]');
+    
+    if (!state.ridesEnabled) {
+        if (navBtn) navBtn.innerHTML = '🛠️ Еду в город';
+        if (addBtn) addBtn.style.display = 'none';
+        container.innerHTML = `
+            <div class="empty-state" style="padding: 40px 15px;">
+                <div class="empty-state-icon">🚧</div>
+                <h3 style="color: #2c3e2d; margin-bottom: 8px;">Раздел в разработке</h3>
+                <p style="color: #666;">Простите, данный раздел пока в разработке.<br>Администрация СНТ работает над его запуском.</p>
+            </div>`;
+    } else {
+        if (navBtn) navBtn.innerHTML = '🚗 Еду в город';
+        if (addBtn) addBtn.style.display = 'inline-block';
+        const items = state.posts.filter(p => p.type === 'ride').slice().reverse();
+        if (items.length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Пока нет предложений о поездках</p></div>';
+        } else {
+            container.innerHTML = items.map(p => renderCard(p)).join('');
+        }
+    }
+}
+
+function renderCard(p) {
+    const types = {
+        market: { sell: ['type-sell', 'Продам'], buy: ['type-buy', 'Куплю'], give: ['type-give', 'Отдам'] },
+        service: ['type-service', 'Услуга'],
+        kind: ['type-kind', 'Добро'],
+        event: ['type-event', 'Событие'],
+        ride: ['type-ride', 'Попутка']
+    };
+    let typeClass, typeLabel, priceBlock = '';
+    if (p.type === 'market') {
+        [typeClass, typeLabel] = types.market[p.marketType] || types.market.sell;
+        priceBlock = p.price > 0 ? `<span class="card-price">${p.price} ₽</span>` : '<span class="card-price">Бесплатно</span>';
+    } else {
+        [typeClass, typeLabel] = types[p.type];
+        if (p.type === 'service' && p.price) priceBlock = `<span class="card-price">от ${p.price} ₽</span>`;
+        if (p.type === 'ride') priceBlock = `<span class="card-price">Мест: ${p.seats || 1}</span>`;
+    }
+    const plot = p.plot ? `· уч.${p.plot}` : '';
+    const authorLine = `${p.author || 'Аноним'} ${plot}`;
+    const isOwner = state.currentUser && (state.currentUser.isAdmin || p.authorPhone === state.currentUser.phone);
+    const actions = isOwner ? `
+        <div class="card-actions">
+            <button class="btn btn-primary btn-small" onclick="editPost(${p.id})">✏️</button>
+            <button class="btn btn-danger btn-small" onclick="deletePost(${p.id})">🗑️</button>
+        </div>` : '';
+    const timeInfo = p.type === 'ride' && p.departureTimeStr ? `<div class="card-time">🚗 Выезд: ${p.departureTimeStr}</div>` : '';
+    
+    return `
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">${escapeHtml(p.title)}</div>
+                <span class="card-type ${typeClass}">${typeLabel}</span>
+            </div>
+            <div class="card-body">${escapeHtml(p.description)}</div>
+            ${timeInfo}
+            <div class="card-footer">
+                <span class="card-author">👤 ${escapeHtml(authorLine)}</span>
+                ${priceBlock}
+            </div>
+            <div style="margin-top:8px;font-size:12px;">📞 ${escapeHtml(p.contact)}</div>
+            ${actions}
+        </div>`;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function editPost(id) {
+    const post = state.posts.find(p => p.id === id);
+    if (!post) return;
+    state.editingPostId = id;
+    state.currentPostType = post.type;
+    document.getElementById('postModalTitle').textContent = 'Редактировать';
+    document.getElementById('postSubmitBtn').textContent = 'Сохранить';
+    document.getElementById('marketTypeGroup').classList.toggle('hidden', post.type !== 'market');
+    document.getElementById('priceGroup').classList.toggle('hidden', post.type !== 'market' && post.type !== 'service');
+    document.getElementById('rideTimeGroup').classList.toggle('hidden', post.type !== 'ride');
+    document.getElementById('eventDateGroup').classList.toggle('hidden', post.type !== 'event');
+    document.getElementById('seatsGroup').classList.toggle('hidden', post.type !== 'ride');
+    if (post.type === 'market') document.getElementById('postMarketType').value = post.marketType;
+    document.getElementById('postTitle').value = post.title;
+    document.getElementById('postDescription').value = post.description;
+    document.getElementById('postContact').value = post.contact;
+    if (post.price) document.getElementById('postPrice').value = post.price;
+    if (post.date) document.getElementById('postDate').value = post.date;
+    if (post.seats) document.getElementById('postSeats').value = post.seats;
+    openModal('postModal');
+}
+
+function deletePost(id) {
+    if (!confirm('Удалить?')) return;
+    state.posts = state.posts.filter(p => p.id !== id);
+    localStorage.setItem('posts', JSON.stringify(state.posts));
+    renderAllSections();
+}
+
+function openAdminPanel() {
+    if (!state.currentUser?.isAdmin) return;
+    document.getElementById('statUsers').textContent = state.users.length;
+    document.getElementById('statPosts').textContent = state.posts.length;
+    document.getElementById('ridesEnabledToggle').checked = state.ridesEnabled;
+    document.getElementById('maintenanceToggle').checked = state.maintenanceMode;
+    
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = state.users.map(u => `
+        <div style="padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+            <div>
+                <strong>${escapeHtml(u.name || u.phone || u.plot)}</strong>
+                ${u.isAdmin ? '<span style="background:#f39c12;color:white;padding:1px 6px;border-radius:8px;font-size:9px;margin-left:6px;">Владелец</span>' : ''}
+                <div style="font-size:10px;color:#888;">${escapeHtml(u.phone)} ${u.plot ? '· уч.' + u.plot : ''}</div>
+            </div>
+            ${!u.isAdmin && state.currentUser.phone !== u.phone ? `<button class="btn btn-danger btn-small" onclick="deleteUser('${u.phone}')">🗑️</button>` : ''}
+        </div>
+    `).join('');
+    openModal('adminModal');
+}
+
+function deleteUser(phone) {
+    if (!confirm('Удалить?')) return;
+    state.users = state.users.filter(u => u.phone !== phone);
+    localStorage.setItem('users', JSON.stringify(state.users));
+    openAdminPanel();
+}
+
+// ========== PWA ==========
 let deferredPrompt;
 const installBtn = document.getElementById('installPwaBtn');
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Предотвращаем автоматическое появление подсказки браузера
     e.preventDefault();
-    // Сохраняем событие, чтобы вызвать его позже по клику на кнопку
     deferredPrompt = e;
-    // Показываем нашу кастомную кнопку установки
-    if (installBtn) {
-        installBtn.classList.remove('hidden');
-    }
+    if (installBtn) installBtn.classList.remove('hidden');
 });
 
-// Обработчик клика по кнопке установки
 function installPWA() {
     if (deferredPrompt) {
-        // Показываем нативное окно установки браузера
         deferredPrompt.prompt();
-        // Ждем реакции пользователя
         deferredPrompt.userChoice.then((choiceResult) => {
             if (choiceResult.outcome === 'accepted') {
-                console.log('Пользователь установил PWA');
-                // Скрываем кнопку после успешной установки
                 if (installBtn) installBtn.classList.add('hidden');
-            } else {
-                console.log('Пользователь отменил установку');
             }
             deferredPrompt = null;
         });
     }
 }
 
-// Скрываем кнопку, если приложение уже установлено или событие недоступно
 window.addEventListener('appinstalled', () => {
     if (installBtn) installBtn.classList.add('hidden');
     deferredPrompt = null;
 });
 
-// Запуск приложения (ваша исходная функция)
+// Регистрация Service Worker (работает только на HTTPS или localhost)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('SW зарегистрирован:', reg))
+            .catch(err => console.log('SW не зарегистрирован (это нормально при открытии файла локально):', err));
+    });
+}
+
+// Запуск
 initApp();
 </script>
 
