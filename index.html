@@ -12,11 +12,8 @@
 <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <title>ДОМОВИД</title>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
-
 <style>
 :root {
 --primary: #667eea; --primary-dark: #5568d3; --secondary: #764ba2;
@@ -78,65 +75,6 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 .section.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .section-title { font-size: 1.4em; font-weight: 700; color: var(--brand-green); margin-bottom: 14px; }
-
-/* === МЕССЕНДЖЕР === */
-.messenger-container { display: grid; grid-template-columns: 320px 1fr; gap: 16px; height: calc(100vh - 250px); background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); overflow: hidden; }
-.chat-list { border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--bg); }
-.chat-list-header { padding: 16px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.chat-list-header h3 { font-size: 1.1em; color: var(--dark); }
-.chat-search { padding: 12px; }
-.chat-search input { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.9em; }
-.chats { flex: 1; overflow-y: auto; }
-.chat-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.2s; display: flex; gap: 12px; align-items: center; }
-.chat-item:hover { background: white; }
-.chat-item.active { background: white; border-left: 3px solid var(--brand-green); }
-.chat-item.unread { background: #e3f2fd; }
-.chat-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--brand-green), var(--brand-orange)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2em; flex-shrink: 0; }
-.chat-avatar.group { background: linear-gradient(135deg, var(--info), var(--primary)); }
-.chat-info { flex: 1; min-width: 0; }
-.chat-name { font-weight: 600; color: var(--dark); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
-.chat-time { font-size: 0.75em; color: var(--light-gray); }
-.chat-last-message { font-size: 0.85em; color: var(--gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chat-badge { background: var(--danger); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.7em; margin-left: 8px; }
-.chat-window { display: flex; flex-direction: column; }
-.chat-header { padding: 16px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
-.chat-header-info { flex: 1; }
-.chat-header-name { font-weight: 700; color: var(--dark); }
-.chat-header-status { font-size: 0.8em; color: var(--success); }
-.messages { flex: 1; overflow-y: auto; padding: 16px; background: var(--bg); }
-.message { margin-bottom: 16px; display: flex; gap: 8px; }
-.message.own { flex-direction: row-reverse; }
-.message-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--brand-green), var(--brand-orange)); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9em; font-weight: 600; flex-shrink: 0; }
-.message-content { max-width: 70%; }
-.message-bubble { padding: 10px 14px; border-radius: var(--radius-lg); background: white; box-shadow: var(--shadow-sm); }
-.message.own .message-bubble { background: var(--brand-green); color: white; }
-.message-text { line-height: 1.4; word-break: break-word; }
-.message-time { font-size: 0.75em; color: var(--light-gray); margin-top: 4px; }
-.message.own .message-time { color: rgba(255,255,255,0.8); text-align: right; }
-.message-file { margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.05); border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px; font-size: 0.85em; }
-.message.own .message-file { background: rgba(255,255,255,0.2); }
-.message-input-area { padding: 16px; background: white; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
-.message-input { flex: 1; }
-.message-input input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-xl); font-size: 0.95em; }
-.message-actions { display: flex; gap: 8px; }
-.btn-icon { width: 40px; height: 40px; border: none; border-radius: 50%; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2em; transition: all 0.2s; }
-.btn-icon:hover { background: var(--brand-green); color: white; }
-.btn-send { background: var(--brand-green); color: white; }
-.empty-chat { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--light-gray); text-align: center; padding: 40px; }
-.empty-chat-icon { font-size: 4em; margin-bottom: 16px; opacity: 0.5; }
-.new-chat-btn { padding: 12px 16px; background: var(--brand-green); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-.new-chat-btn:hover { background: var(--brand-orange); }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
-.modal.open { display: flex; }
-.modal-content { background: white; border-radius: var(--radius-xl); max-width: 500px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
-.modal-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.modal-header h3 { color: var(--brand-green); font-size: 1.1em; }
-.modal-close { background: none; border: none; font-size: 1.6em; cursor: pointer; color: var(--light-gray); }
-.modal-body { padding: 18px; overflow-y: auto; flex: 1; }
-.file-upload { border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
-.file-upload:hover { border-color: var(--brand-green); background: var(--bg); }
-.file-upload input { display: none; }
-
 .plan-tabs { display: flex; gap: 4px; overflow-x: auto; background: white; padding: 6px; border-radius: var(--radius-lg); margin-bottom: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); scrollbar-width: none; }
 .plan-tabs::-webkit-scrollbar { display: none; }
 .plan-tab { flex-shrink: 0; padding: 10px 16px; border: none; background: transparent; color: var(--gray); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 0.85em; transition: all 0.2s; white-space: nowrap; min-height: 42px; }
@@ -342,6 +280,16 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 .inline-form { background: #e7f3ff; padding: 12px; border-radius: var(--radius-sm); margin-top: 8px; border: 1px dashed #0066cc; }
 .inline-form h5 { color: #0066cc; margin-bottom: 8px; font-size: 0.85em; }
 .inline-form-actions { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
+.modal.open { display: flex; }
+.modal-content { background: white; border-radius: var(--radius-xl); max-width: 700px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+.modal-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.modal-header h3 { color: var(--brand-green); font-size: 1.1em; word-break: break-word; }
+.modal-close { background: none; border: none; font-size: 1.6em; cursor: pointer; color: var(--light-gray); line-height: 1; padding: 0 4px; min-width: 38px; min-height: 38px; }
+.modal-body { padding: 18px; overflow-y: auto; flex: 1; line-height: 1.6; color: var(--dark); font-size: 0.92em; }
+.modal-body img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: var(--shadow-md); }
+.modal-body iframe { width: 100%; height: 60vh; border: 1px solid var(--border); border-radius: 8px; }
+.modal-body pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); padding: 12px; border-radius: 8px; font-size: 0.9em; font-family: monospace; }
 .notification-bell { position: relative; cursor: pointer; background: none; border: none; font-size: 1.5em; padding: 8px; color: var(--brand-green); z-index: 101; }
 .notification-bell:hover { color: var(--brand-orange); }
 .notification-badge { position: absolute; top: 0; right: 0; background: var(--danger); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7em; font-weight: 700; display: flex; align-items: center; justify-content: center; }
@@ -376,11 +324,10 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 .admin-plan-item-title { font-weight: 700; color: var(--dark); font-size: 0.95em; }
 .admin-plan-item-subtitle { font-size: 0.82em; color: var(--gray); margin-top: 2px; }
 .admin-plan-item-actions { display: flex; gap: 4px; flex-shrink: 0; }
-@media (max-width: 968px) {
-    .messenger-container { grid-template-columns: 1fr; }
-    .chat-list { display: none; }
-    .chat-list.mobile-show { display: flex; }
-    .chat-window.mobile-hide { display: none; }
+@media (max-width: 480px) {
+.employee-row { grid-template-columns: 35px 1fr; gap: 8px; padding: 8px; }
+.employee-settings { grid-template-columns: 1fr 1fr; gap: 6px; }
+.employee-select { font-size: 0.8em; padding: 5px 6px; }
 }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -406,11 +353,10 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <button class="btn btn-secondary btn-block" onclick="doLogout()">🚪 Выйти из аккаунта</button>
 </div>
 </div>
-
 <div class="login-screen hidden" id="loginScreen">
 <div class="login-container">
 <div class="login-logo">
-<div class="login-logo-icon"></div>
+<div class="login-logo-icon">🏠</div>
 <h2>ДОМОВИД</h2>
 <p>Вход в рабочую группу</p>
 </div>
@@ -423,7 +369,6 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 </div>
 </div>
 </div>
-
 <header class="app-header">
 <div class="header-banner">
 <img src="domovid-banner.jpg" alt="ДОМОВИД">
@@ -439,26 +384,23 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 </div>
 </div>
 </header>
-
 <nav class="top-nav" id="topNav" style="display:none;">
 <div class="top-nav-inner">
 <button class="top-nav-btn active" onclick="showSection('schedule', this)"><span class="nav-icon">📅</span><span>График</span></button>
 <button class="top-nav-btn" onclick="showSection('archive', this)"><span class="nav-icon">📦</span><span>Архив</span></button>
 <button class="top-nav-btn" onclick="showSection('plan', this)"><span class="nav-icon">📈</span><span>План</span></button>
-<button class="top-nav-btn" onclick="showSection('messenger', this)"><span class="nav-icon">💬</span><span>Мессенджер</span></button>
+<button class="top-nav-btn" onclick="window.open('messenger.html', '_blank')"><span class="nav-icon"></span><span>Мессенджер</span></button>
 <button class="top-nav-btn" onclick="showSection('materials', this)"><span class="nav-icon">📚</span><span>Обучение</span></button>
 <button class="top-nav-btn" onclick="showSection('contests', this)"><span class="nav-icon">🏆</span><span>Конкурсы</span></button>
 <button class="top-nav-btn" onclick="showSection('info', this)"><span class="nav-icon">📢</span><span>Инфо</span></button>
 <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;"><span class="nav-icon">⚙️</span><span>Админ</span></button>
 <button class="top-nav-btn" onclick="showSection('superadmin', this)" id="topNavSuperAdminBtn" style="display:none; color: var(--danger);"><span class="nav-icon">👑</span><span>Владелец</span></button>
-<button class="top-nav-logout" onclick="doLogout()"><span>🚪</span><span>Выйти</span></button>
+<button class="top-nav-logout" onclick="doLogout()"><span></span><span>Выйти</span></button>
 </div>
 </nav>
-
 <main class="app-content">
 <div id="schedule" class="section active"><h2 class="section-title">📅 График работы</h2><div id="scheduleGrid" class="schedule-grid"></div></div>
 <div id="archive" class="section"><h2 class="section-title">📦 Архив графика</h2><div id="archiveContent"></div></div>
-
 <div id="plan" class="section">
 <h2 class="section-title">📈 План</h2>
 <div class="plan-tabs">
@@ -470,57 +412,11 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <div id="plan-events" class="plan-section"><div id="eventsPlanContent"></div></div>
 <div id="plan-revisions" class="plan-section"><div id="revisionsPlanContent"></div></div>
 </div>
-
-<!-- МЕССЕНДЖЕР -->
-<div id="messenger" class="section">
-<h2 class="section-title"> Мессенджер</h2>
-<div class="messenger-container">
-<div class="chat-list" id="chatList">
-<div class="chat-list-header">
-<h3>Чаты</h3>
-<button class="new-chat-btn" onclick="openNewChatModal()">➕ Новый чат</button>
-</div>
-<div class="chat-search">
-<input type="text" placeholder="🔍 Поиск чатов..." id="chatSearch" oninput="filterChats()">
-</div>
-<div class="chats" id="chatsList"></div>
-</div>
-<div class="chat-window" id="chatWindow">
-<div class="empty-chat" id="emptyChat">
-<div class="empty-chat-icon">💬</div>
-<h3>Выберите чат</h3>
-<p>Выберите чат из списка слева или создайте новый</p>
-</div>
-<div id="activeChat" style="display: none; height: 100%; flex-direction: column;">
-<div class="chat-header">
-<div class="chat-avatar" id="chatAvatar">A</div>
-<div class="chat-header-info">
-<div class="chat-header-name" id="chatHeaderName">Имя чата</div>
-<div class="chat-header-status" id="chatHeaderStatus"></div>
-</div>
-</div>
-<div class="messages" id="messagesContainer"></div>
-<div class="message-input-area">
-<div class="message-input">
-<input type="text" id="messageInput" placeholder="Введите сообщение..." onkeypress="handleMessageKeyPress(event)">
-</div>
-<div class="message-actions">
-<button class="btn-icon" onclick="document.getElementById('fileInput').click()" title="Прикрепить файл"></button>
-<input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)">
-<button class="btn-icon btn-send" onclick="sendMessage()"></button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
 <div id="materials" class="section"><h2 class="section-title">📚 Обучающие материалы</h2><div id="materialsList" class="materials-list"></div></div>
-<div id="contests" class="section"><h2 class="section-title"> Конкурсы персонала</h2><div id="contestsList" class="contests-list"></div></div>
+<div id="contests" class="section"><h2 class="section-title">🏆 Конкурсы персонала</h2><div id="contestsList" class="contests-list"></div></div>
 <div id="info" class="section"><h2 class="section-title">📢 Информация</h2><div id="infoContent" class="info-list"></div></div>
-
 <div id="admin" class="section">
-<h2 class="section-title">⚙️ Админ-панель</h2>
+<h2 class="section-title">️ Админ-панель</h2>
 <div class="admin-tabs">
 <button class="admin-tab active" onclick="showAdminTab('schedule', this)">📅 График</button>
 <button class="admin-tab" onclick="showAdminTab('employees', this)">👥 Сотрудники</button>
@@ -530,70 +426,64 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <button class="admin-tab" onclick="showAdminTab('info', this)">📢 Инфо</button>
 <button class="admin-tab" onclick="showAdminTab('settings', this)">⚙️ Настройки</button>
 </div>
-
 <div id="admin-schedule" class="admin-section active">
 <div class="admin-card">
 <div class="admin-card-title" id="scheduleFormTitle">➕ Добавить сотрудников в график</div>
 <div class="form-group"><label>📅 Дата</label><input type="date" id="adminDate"></div>
 <div class="form-group">
-    <label>👥 Сотрудники с индивидуальными настройками</label>
-    <div id="employeesIndividualList" class="employees-container"><p style="color: var(--gray); text-align: center; padding: 20px;">Загрузка...</p></div>
-    <div id="selectedEmployeesCount"></div>
+<label>👥 Сотрудники с индивидуальными настройками</label>
+<div id="employeesIndividualList" class="employees-container"><p style="color: var(--gray); text-align: center; padding: 20px;">Загрузка...</p></div>
+<div id="selectedEmployeesCount"></div>
 </div>
 <button class="btn btn-primary btn-block" id="scheduleSubmitBtn" onclick="addIndividualScheduleEntries()" style="margin-top: 12px;">➕ Добавить выбранных в график</button>
 </div>
 <div class="admin-card"><div class="admin-card-title">📋 Текущие записи графика</div><div id="scheduleList"></div></div>
 </div>
-
 <div id="admin-employees" class="admin-section">
 <div class="admin-card">
 <div class="admin-card-title" id="employeeFormTitle">➕ Добавить сотрудника</div>
-<div class="form-group"><label>👤 ФИО</label><input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович"></div>
+<div class="form-group"><label> ФИО</label><input type="text" id="newEmployeeName" placeholder="Иванов Иван Иванович"></div>
 <div class="form-row">
 <div class="form-group"><label>📱 Телефон</label><input type="tel" id="newEmployeePhone" placeholder="89001234567"></div>
 <div class="form-group"><label>🔒 Пароль</label><input type="text" id="newEmployeePassword" placeholder="Пароль"></div>
 </div>
 <div class="form-group"><label>💼 Должность</label><select id="newEmployeePosition"><option value="">-- Выберите --</option><option value="director">Директор</option><option value="admin">Администратор</option><option value="senior_seller">Старший продавец</option><option value="cashier">Кассир</option><option value="cashier_seller">Продавец-кассир</option><option value="storekeeper">Кладовщик</option><option value="controller">Контролер</option><option value="cleaner">Уборщица</option></select></div>
-<div class="form-group"><label> Роль</label><select id="newEmployeeRole"><option value="user">👤 Сотрудник</option><option value="admin"> Администратор</option></select></div>
+<div class="form-group"><label>👤 Роль</label><select id="newEmployeeRole"><option value="user">👤 Сотрудник</option><option value="admin">💎 Администратор</option></select></div>
 <button class="btn btn-success btn-block" id="employeeSubmitBtn" onclick="addEmployee()">➕ Добавить сотрудника</button>
 </div>
 <div class="admin-card"><div class="admin-card-title">👥 Список сотрудников <span id="employeeCounter" style="background:var(--brand-green);color:white;padding:2px 10px;border-radius:10px;font-size:0.8em;margin-left:8px;">0</span></div><div id="employeesList"></div></div>
 </div>
-
 <div id="admin-plan" class="admin-section">
 <div class="admin-card">
 <div class="admin-card-title" id="financialPlanFormTitle">💰 Добавить финансовый план</div>
 <div class="form-group"><label>📅 Месяц и год</label><input type="month" id="financialPlanMonth"></div>
 <div class="form-group"><label>💰 Целевая сумма (руб)</label><input type="number" id="financialPlanTarget" placeholder="1000000"></div>
-<div class="form-group"><label>📊 Текущая выручка (руб)</label><input type="number" id="financialPlanCurrent" placeholder="500000"></div>
+<div class="form-group"><label> Текущая выручка (руб)</label><input type="number" id="financialPlanCurrent" placeholder="500000"></div>
 <button class="btn btn-primary btn-block" id="financialPlanSubmitBtn" onclick="saveFinancialPlan()">💾 Сохранить план</button>
 </div>
 <div class="admin-card"><div class="admin-card-title">📋 Список финансовых планов</div><div id="financialPlansList"></div></div>
-
 <div class="admin-card">
 <div class="admin-card-title" id="eventFormTitle">🎉 Добавить мероприятие</div>
-<div class="form-group"><label>📌 Название</label><input type="text" id="eventTitle" placeholder="Название"></div>
+<div class="form-group"><label> Название</label><input type="text" id="eventTitle" placeholder="Название"></div>
 <div class="form-group"><label>📅 Дата начала</label><input type="date" id="eventStartDate"></div>
 <div class="form-group"><label>📅 Дата окончания</label><input type="date" id="eventEndDate"></div>
 <div class="form-group"><label>📝 Описание</label><textarea id="eventDescription" rows="3" placeholder="Описание"></textarea></div>
 <div class="form-group"><label>👤 Ответственный</label><input type="text" id="eventResponsible" placeholder="ФИО"></div>
 <div class="form-group"><label>📊 Статус</label><select id="eventStatus"><option value="planned">Запланировано</option><option value="active">Активно</option><option value="finished">Завершено</option></select></div>
-<button class="btn btn-primary btn-block" id="eventSubmitBtn" onclick="saveEvent()"> Сохранить мероприятие</button>
+<button class="btn btn-primary btn-block" id="eventSubmitBtn" onclick="saveEvent()">💾 Сохранить мероприятие</button>
 </div>
 <div class="admin-card"><div class="admin-card-title">📋 Список мероприятий</div><div id="eventsList"></div></div>
-
 <div class="admin-card">
 <div class="admin-card-title" id="revisionFormTitle">🔍 Добавить ревизию</div>
 <div class="form-group"><label>📌 Название</label><input type="text" id="revisionTitle" placeholder="Название"></div>
 <div class="form-group"><label>📅 Дата</label><input type="date" id="revisionDate"></div>
-<div class="form-group"><label>🏢 Отдел/зона</label><input type="text" id="revisionDepartment" placeholder="Отдел"></div>
-<div class="form-group"><label>👤 Ответственный</label><input type="text" id="revisionResponsible" placeholder="ФИО"></div>
-<div class="form-group"><label>📊 Статус</label><select id="revisionStatus"><option value="planned">Запланировано</option><option value="progress">В процессе</option><option value="completed">Завершено</option></select></div>
+<div class="form-group"><label> Отдел/зона</label><input type="text" id="revisionDepartment" placeholder="Отдел"></div>
+<div class="form-group"><label> Ответственный</label><input type="text" id="revisionResponsible" placeholder="ФИО"></div>
+<div class="form-group"><label> Статус</label><select id="revisionStatus"><option value="planned">Запланировано</option><option value="progress">В процессе</option><option value="completed">Завершено</option></select></div>
 <button class="btn btn-primary btn-block" id="revisionSubmitBtn" onclick="saveRevision()"> Сохранить ревизию</button>
 </div>
 <div class="admin-card"><div class="admin-card-title">📋 Список ревизий</div><div id="revisionsList"></div></div>
 </div>
-
 <div id="admin-contests" class="admin-section">
 <div class="admin-card">
 <div class="admin-card-title">🏆 Добавить конкурс</div>
@@ -604,25 +494,23 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 </div>
 <div class="admin-card"><div class="admin-card-title">📋 Список конкурсов</div><div id="adminContestList"></div></div>
 </div>
-
 <div id="admin-materials" class="admin-section">
 <div class="admin-card" id="addMaterialSection" style="display: none; border: 2px solid var(--info);">
-<div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);"> Новый материал</div>
+<div class="admin-card-title" style="color: var(--info); border-bottom-color: var(--info);">📝 Новый материал</div>
 <div class="type-switcher">
 <button type="button" id="typeTextBtn" class="active" onclick="switchMaterialType('text')">📝 Текст</button>
 <button type="button" id="typeFileBtn" onclick="switchMaterialType('file')">📎 Файл</button>
 </div>
 <div class="form-group"><label>📌 Название</label><input type="text" id="materialTitle" placeholder="Название"></div>
-<div id="textForm"><div class="form-group"><label>📄 Текст</label><textarea id="materialText" rows="6" placeholder="Текст..."></textarea></div></div>
+<div id="textForm"><div class="form-group"><label> Текст</label><textarea id="materialText" rows="6" placeholder="Текст..."></textarea></div></div>
 <div id="fileForm" style="display: none;"><div class="form-group"><label>📎 Файл</label><input type="file" id="materialFile" onchange="handleFileSelect(event)"><div id="fileWarning" class="file-warning" style="display: none;">⚠️ Рекомендуется до 2 МБ.</div><div id="fileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div></div></div>
 <div style="display: flex; gap: 6px; flex-wrap: wrap;"><button class="btn btn-success" id="materialSaveBtn" style="flex:1;" onclick="saveMaterial()">💾 Сохранить</button><button class="btn btn-danger" style="flex:1;" onclick="cancelMaterialForm()">✕ Отмена</button></div>
 </div>
 <div class="admin-card"><div class="admin-card-title">📚 Обучающие материалы</div><button class="btn btn-primary btn-block" onclick="openMaterialForm()">➕ Добавить материал</button></div>
 </div>
-
 <div id="admin-info" class="admin-section">
 <div class="admin-card" id="addInfoSection" style="display: none; border: 2px solid var(--warning);">
-<div class="admin-card-title" style="color: var(--warning); border-bottom-color: var(--warning);"> Новая информация</div>
+<div class="admin-card-title" style="color: var(--warning); border-bottom-color: var(--warning);">📢 Новая информация</div>
 <div class="type-switcher">
 <button type="button" id="infoTypeTextBtn" class="active" onclick="switchInfoType('text')">📝 Текст</button>
 <button type="button" id="infoTypeFileBtn" onclick="switchInfoType('file')"> Файл</button>
@@ -632,16 +520,14 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <div id="infoFileForm" style="display: none;"><div class="form-group"><label>📎 Файл</label><input type="file" id="infoFile" onchange="handleInfoFileSelect(event)"><div id="infoFileWarning" class="file-warning" style="display: none;">⚠️ Рекомендуется до 2 МБ.</div><div id="infoFileInfo" style="margin-top: 8px; color: var(--gray); font-size: 0.82em;"></div></div></div>
 <div style="display: flex; gap: 6px; flex-wrap: wrap;"><button class="btn btn-success" id="infoSaveBtn" style="flex:1;" onclick="saveInfo()">💾 Сохранить</button><button class="btn btn-danger" style="flex:1;" onclick="cancelInfoForm()">✕ Отмена</button></div>
 </div>
-<div class="admin-card"><div class="admin-card-title">📢 Информация</div><button class="btn btn-primary btn-block" onclick="openInfoForm()">➕ Добавить информацию</button></div>
+<div class="admin-card"><div class="admin-card-title"> Информация</div><button class="btn btn-primary btn-block" onclick="openInfoForm()">➕ Добавить информацию</button></div>
 </div>
-
 <div id="admin-settings" class="admin-section">
 <div class="admin-card danger-zone"><div class="admin-card-title">⚠️ Опасная зона</div><p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Полный сброс всех данных. Это действие нельзя отменить.</p><button class="btn btn-danger btn-block" onclick="resetAllData()">🗑️ Сбросить все данные</button></div>
 </div>
 </div>
-
 <div id="superadmin" class="section">
-<h2 class="section-title"> Панель Владельца</h2>
+<h2 class="section-title">👑 Панель Владельца</h2>
 <div class="admin-card">
 <div class="admin-card-title">🏪 Управление отделениями</div>
 <div class="form-row" style="margin-bottom: 12px;">
@@ -653,111 +539,87 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <div id="branchesList" style="margin-top: 16px;"></div>
 </div>
 <div class="admin-card">
+<div class="admin-card-title">📈 Управление разделами Плана</div>
+<p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Включите или выключите разделы. Если выключено — сотрудники увидят "Раздел временно недоступен".</p>
+<div class="form-group"><label style="display: flex; align-items: center; gap: 10px; cursor: pointer;"><input type="checkbox" id="planFinancialEnabled" style="width: 20px; height: 20px;" onchange="togglePlanSection('financial')"><span>💰 Финансовый план</span></label></div>
+<div class="form-group"><label style="display: flex; align-items: center; gap: 10px; cursor: pointer;"><input type="checkbox" id="planEventsEnabled" style="width: 20px; height: 20px;" onchange="togglePlanSection('events')"><span> Мероприятия</span></label></div>
+<div class="form-group"><label style="display: flex; align-items: center; gap: 10px; cursor: pointer;"><input type="checkbox" id="planRevisionsEnabled" style="width: 20px; height: 20px;" onchange="togglePlanSection('revisions')"><span>🔍 Ревизии</span></label></div>
+</div>
+<div class="admin-card danger-zone">
+<div class="admin-card-title"> Режим технических работ</div>
+<button class="btn btn-warning btn-block" id="maintenanceToggleBtn" onclick="toggleMaintenanceMode()">Загрузка...</button>
+</div>
+<div class="admin-card">
 <div class="admin-card-title">👑 Передача полномочий</div>
 <div id="superAdminList"></div>
 </div>
 </div>
 </main>
-
-<!-- Модальное окно для нового чата -->
-<div class="modal" id="newChatModal">
-<div class="modal-content">
-<div class="modal-header">
-<h3>💬 Новый чат</h3>
-<button class="modal-close" onclick="closeNewChatModal()">×</button>
-</div>
-<div class="modal-body">
-<div class="form-group">
-<label>Название чата</label>
-<input type="text" id="newChatName" placeholder="Например: Отдел продаж">
-</div>
-<div class="form-group">
-<label>Участники</label>
-<div id="newChatParticipants" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px;">
-</div>
-</div>
-<button class="btn btn-primary btn-block" onclick="createNewChat()">Создать чат</button>
-</div>
-</div>
-</div>
-
+<div class="modal" id="materialModal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle">Название</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body" id="modalBody"></div></div></div>
 <div class="modal" id="notificationModal"><div class="modal-content"><div class="modal-header"><h3>🔔 Уведомления</h3><button class="modal-close" onclick="closeNotificationModal()">×</button></div><div class="modal-body" id="notificationBody"></div></div></div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js";
-
+import { getFirestore, collection, query, where, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = {
-  apiKey: "AIzaSyDTHWwfpt059YCSt5YI9Aou1n1GjHxgQ6s",
-  authDomain: "domovidi.firebaseapp.com",
-  projectId: "domovidi",
-  storageBucket: "domovidi.firebasestorage.app",
-  messagingSenderId: "261930585857",
-  appId: "1:261930585857:web:856cf36981d8e0c2d51500"
+apiKey: "AIzaSyDTHWwfpt059YCSt5YI9Aou1n1GjHxgQ6s",
+authDomain: "domovidi.firebaseapp.com",
+projectId: "domovidi",
+storageBucket: "domovidi.firebasestorage.app",
+messagingSenderId: "261930585857",
+appId: "1:261930585857:web:856cf36981d8e0c2d51500"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
-
 let messaging = null;
 const VAPID_KEY = 'BBsJfPwst1lXUHBZ-G_9xr2vjDgUX--jv5MGge-7zi-N-YaFz-vbPKnOf3rJ1t9eFm-3LA97CdPyhX2joxW1kho';
-
-// === НАСТРОЙКИ TELEGRAM УВЕДОМЛЕНИЙ ===
-const TELEGRAM_BOT_TOKEN = 'ТВОЙ_НОВЫЙ_ТОКЕН';
+const TELEGRAM_BOT_TOKEN = '8621033780:AAH2vk1S2--2QMfuyuinH2Y5-y2FdmjCRb4';
 const TELEGRAM_CHAT_ID = '-1003909177664';
-
 async function sendTelegramScheduleUpdate(datesArray) {
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID || TELEGRAM_BOT_TOKEN.includes('ТВОЙ_НОВЫЙ')) return;
-    const currentBranch = data.branches.find(b => b.id === currentUser.branchId);
-    const branchName = currentBranch ? currentBranch.name : 'Неизвестное отделение';
-    const datesString = datesArray.join(', ');
-    const text = `📅 Изменение/добавления в графике!\n🏢 Отделение: ${branchName}\n🗓 Даты: ${datesString}`;
-    try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text })
-        });
-    } catch (error) {
-        console.error('Ошибка отправки в Telegram:', error);
-    }
+if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID || TELEGRAM_BOT_TOKEN.includes('ТВОЙ_НОВЫЙ')) return;
+const currentBranch = data.branches.find(b => b.id === currentUser.branchId);
+const branchName = currentBranch ? currentBranch.name : 'Неизвестное отделение';
+const datesString = datesArray.join(', ');
+const text = `📅 Изменение/добавления в графике!\n🏢 Отделение: ${branchName}\n🗓 Даты: ${datesString}`;
+try {
+await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text })
+});
+} catch (error) {
+console.error('Ошибка отправки в Telegram:', error);
 }
-
+}
 async function initializeFirebaseMessaging() {
-  if (!('serviceWorker' in navigator)) return;
-  try {
-    const messagingApp = firebase.initializeApp(firebaseConfig, 'messaging-app');
-    messaging = firebase.messaging(messagingApp);
-    const permission = Notification.permission;
-    if (permission === 'default') showNotificationPermissionButton();
-    else if (permission === 'granted') await registerForPushNotifications();
-  } catch (error) { console.error('❌ Ошибка FCM:', error); }
+if (!('serviceWorker' in navigator)) return;
+try {
+const messagingApp = firebase.initializeApp(firebaseConfig, 'messaging-app');
+messaging = firebase.messaging(messagingApp);
+const permission = Notification.permission;
+if (permission === 'default') showNotificationPermissionButton();
+else if (permission === 'granted') await registerForPushNotifications();
+} catch (error) { console.error('❌ Ошибка FCM:', error); }
 }
-
 function showNotificationPermissionButton() {
-  if (localStorage.getItem('notificationHintClosed') === 'true') return;
-  const hint = document.createElement('div');
-  hint.id = 'notificationHint';
-  hint.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:white;padding:20px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.2);z-index:9998;text-align:center;max-width:90%;width:320px;';
-  hint.innerHTML = '<div style="font-size:2.5em;margin-bottom:12px;">🔔</div><div style="font-weight:700;font-size:1.1em;margin-bottom:8px;">Включите уведомления</div><button onclick="window.requestNotificationPermission()" style="background:#2d8b4d;color:white;border:none;padding:12px 24px;border-radius:10px;font-weight:600;cursor:pointer;width:100%;margin-bottom:8px;">Разрешить</button><button onclick="window.closeNotificationHint()" style="background:transparent;border:none;color:#999;cursor:pointer;">Не сейчас</button>';
-  document.body.appendChild(hint);
-  setTimeout(() => { hint.style.display = 'block'; }, 2000);
+if (localStorage.getItem('notificationHintClosed') === 'true') return;
+const hint = document.createElement('div');
+hint.id = 'notificationHint';
+hint.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:white;padding:20px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.2);z-index:9998;text-align:center;max-width:90%;width:320px;';
+hint.innerHTML = '<div style="font-size:2.5em;margin-bottom:12px;">🔔</div><div style="font-weight:700;font-size:1.1em;margin-bottom:8px;">Включите уведомления</div><button onclick="window.requestNotificationPermission()" style="background:#2d8b4d;color:white;border:none;padding:12px 24px;border-radius:10px;font-weight:600;cursor:pointer;width:100%;margin-bottom:8px;">Разрешить</button><button onclick="window.closeNotificationHint()" style="background:transparent;border:none;color:#999;cursor:pointer;">Не сейчас</button>';
+document.body.appendChild(hint);
+setTimeout(() => { hint.style.display = 'block'; }, 2000);
 }
 window.closeNotificationHint = function() { const hint = document.getElementById('notificationHint'); if (hint) { hint.style.display = 'none'; setTimeout(() => hint.remove(), 300); localStorage.setItem('notificationHintClosed', 'true'); } };
 window.requestNotificationPermission = async function() { try { const permission = await Notification.requestPermission(); if (permission === 'granted') { await registerForPushNotifications(); window.closeNotificationHint(); alert('✅ Уведомления включены!'); } else { alert('⚠️ Разрешение не получено'); window.closeNotificationHint(); } } catch (error) { alert('❌ Ошибка'); } };
-
 async function registerForPushNotifications() {
-    if (!currentUser || !messaging) return;
-    try {
-        if (!window.swRegistration) window.swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: './', updateViaCache: 'none' });
-        await navigator.serviceWorker.ready;
-        const token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: window.swRegistration });
-        if (token) { localStorage.setItem('fcmToken', token); try { await updateDoc(doc(db, "users", currentUser.id), { messagingToken: token, messagingTokenUpdatedAt: Date.now() }); } catch (e) {} }
-    } catch (error) { console.error('❌ Ошибка push:', error); }
+if (!currentUser || !messaging) return;
+try {
+if (!window.swRegistration) window.swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: './', updateViaCache: 'none' });
+await navigator.serviceWorker.ready;
+const token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: window.swRegistration });
+if (token) { localStorage.setItem('fcmToken', token); try { await updateDoc(doc(db, "users", currentUser.id), { messagingToken: token, messagingTokenUpdatedAt: Date.now() }); } catch (e) {} }
+} catch (error) { console.error('❌ Ошибка push:', error); }
 }
-
 const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00', custom: '' };
 const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11', custom: 'Другое' };
 const shiftHours = { 1: 9, 2: 9, 3: 11, custom: 0 };
@@ -768,7 +630,6 @@ const RECOMMENDED_FILE_SIZE = 2 * 1024 * 1024;
 const MONTH_NAMES = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 const MONTH_NAMES_GEN = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 const WEEKDAY_NAMES = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-
 let currentUser = null;
 let currentMaterialType = 'text';
 let selectedFileData = null;
@@ -783,787 +644,478 @@ let editingRevisionId = null;
 let notifications = [];
 let planSettings = { financial: true, events: true, revisions: true };
 let data = { employees: [], schedule: {}, materials: [], contests: [], info: [], branches: [], plans: { financial: [], events: [], revisions: [] }, settings: { maintenanceMode: false }, stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } };
-let chats = [];
-let currentChatId = null;
-let messagesUnsubscribe = null;
-
 function updateClock() { const now = new Date(); const dateStr = `${WEEKDAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`; const timeStr = `${String(now.getHours()).padStart(2, '0')}<span class="clock-separator">:</span>${String(now.getMinutes()).padStart(2, '0')}<span class="clock-separator">:</span>${String(now.getSeconds()).padStart(2, '0')}`; document.getElementById('clockDate').textContent = dateStr; document.getElementById('clockTime').innerHTML = timeStr; }
 updateClock();
 setInterval(updateClock, 1000);
-
 function getDateStatus(dateStr) { const [day, month, year] = dateStr.split('.').map(Number); const date = new Date(year, month - 1, day); const today = new Date(); today.setHours(0, 0, 0, 0); date.setHours(0, 0, 0, 0); const diffDays = Math.round((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)); if (diffDays === 0) return 'today'; if (diffDays === -1) return 'yesterday'; if (diffDays < -1) return 'past'; return 'future'; }
 function getCurrentMonthKey() { const now = new Date(); return `${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`; }
 function getMonthFromDate(dateStr) { const parts = dateStr.split('.'); if (parts.length !== 3) return null; return `${parts[1]}.${parts[2]}`; }
-
 async function cleanupOldData() {
-    if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) return;
-    try {
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const scheduleQuery = query(collection(db, "schedule"), where("branchId", "==", currentUser.branchId));
-        const scheduleSnap = await getDocs(scheduleQuery);
-        let deletedArchiveCount = 0;
-        for (const d of scheduleSnap.docs) {
-            const entry = d.data();
-            if (entry.date) {
-                const [day, month, year] = entry.date.split('.').map(Number);
-                const entryDate = new Date(year, month - 1, day);
-                const diffDays = Math.round((now - entryDate) / (1000 * 60 * 60 * 24));
-                if (diffDays > 15) {
-                    await deleteDoc(doc(db, "schedule", d.id));
-                    deletedArchiveCount++;
-                }
-            }
-        }
-        const eventsQuery = query(collection(db, "plans"), where("type", "==", "event"), where("branchId", "==", currentUser.branchId));
-        const eventsSnap = await getDocs(eventsQuery);
-        let deletedEventsCount = 0;
-        for (const d of eventsSnap.docs) {
-            const event = d.data();
-            if (event.endDate) {
-                const endDate = new Date(event.endDate);
-                const diffDays = Math.round((now - endDate) / (1000 * 60 * 60 * 24));
-                if (diffDays > 5) {
-                    await deleteDoc(doc(db, "plans", d.id));
-                    deletedEventsCount++;
-                }
-            }
-        }
-        const revisionsQuery = query(collection(db, "plans"), where("type", "==", "revision"), where("branchId", "==", currentUser.branchId));
-        const revisionsSnap = await getDocs(revisionsQuery);
-        let deletedRevisionsCount = 0;
-        for (const d of revisionsSnap.docs) {
-            const revision = d.data();
-            if (revision.date) {
-                const revisionDate = new Date(revision.date);
-                const diffDays = Math.round((now - revisionDate) / (1000 * 60 * 60 * 24));
-                if (diffDays > 5) {
-                    await deleteDoc(doc(db, "plans", d.id));
-                    deletedRevisionsCount++;
-                }
-            }
-        }
-        if (deletedArchiveCount > 0 || deletedEventsCount > 0 || deletedRevisionsCount > 0) {
-            console.log(`🧹 Очистка: удалено ${deletedArchiveCount} архивных записей, ${deletedEventsCount} мероприятий, ${deletedRevisionsCount} ревизий`);
-        }
-    } catch (e) {
-        console.error('Ошибка очистки:', e);
-    }
+if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) return;
+try {
+const now = new Date();
+now.setHours(0, 0, 0, 0);
+const scheduleQuery = query(collection(db, "schedule"), where("branchId", "==", currentUser.branchId));
+const scheduleSnap = await getDocs(scheduleQuery);
+let deletedArchiveCount = 0;
+for (const d of scheduleSnap.docs) {
+const entry = d.data();
+if (entry.date) {
+const [day, month, year] = entry.date.split('.').map(Number);
+const entryDate = new Date(year, month - 1, day);
+const diffDays = Math.round((now - entryDate) / (1000 * 60 * 60 * 24));
+if (diffDays > 15) {
+await deleteDoc(doc(db, "schedule", d.id));
+deletedArchiveCount++;
 }
-
+}
+}
+const eventsQuery = query(collection(db, "plans"), where("type", "==", "event"), where("branchId", "==", currentUser.branchId));
+const eventsSnap = await getDocs(eventsQuery);
+let deletedEventsCount = 0;
+for (const d of eventsSnap.docs) {
+const event = d.data();
+if (event.endDate) {
+const endDate = new Date(event.endDate);
+const diffDays = Math.round((now - endDate) / (1000 * 60 * 60 * 24));
+if (diffDays > 5) {
+await deleteDoc(doc(db, "plans", d.id));
+deletedEventsCount++;
+}
+}
+}
+const revisionsQuery = query(collection(db, "plans"), where("type", "==", "revision"), where("branchId", "==", currentUser.branchId));
+const revisionsSnap = await getDocs(revisionsQuery);
+let deletedRevisionsCount = 0;
+for (const d of revisionsSnap.docs) {
+const revision = d.data();
+if (revision.date) {
+const revisionDate = new Date(revision.date);
+const diffDays = Math.round((now - revisionDate) / (1000 * 60 * 60 * 24));
+if (diffDays > 5) {
+await deleteDoc(doc(db, "plans", d.id));
+deletedRevisionsCount++;
+}
+}
+}
+if (deletedArchiveCount > 0 || deletedEventsCount > 0 || deletedRevisionsCount > 0) {
+console.log(`🧹 Очистка: удалено ${deletedArchiveCount} архивных записей, ${deletedEventsCount} мероприятий, ${deletedRevisionsCount} ревизий`);
+}
+} catch (e) {
+console.error('Ошибка очистки:', e);
+}
+}
 async function loadBranchesToLogin() { const select = document.getElementById('loginBranch'); if (!select) return; try { const branchesSnap = await getDocs(collection(db, "branches")); select.innerHTML = '<option value="">-- Выберите отделение --</option>'; if (branchesSnap.empty) { select.innerHTML = '<option value="">Нет отделений</option>'; return; } branchesSnap.docs.forEach(doc => { const branch = doc.data(); const option = document.createElement('option'); option.value = doc.id; option.textContent = branch.name + (branch.city ? ` (${branch.city})` : ''); select.appendChild(option); }); } catch (e) { console.error("Ошибка:", e); select.innerHTML = '<option value="">Ошибка</option>'; } }
-
-async function loadAllDataFromFirebase() { 
-    try { 
-        const branchFilter = [where("branchId", "==", currentUser.branchId)]; 
-        const usersSnap = await getDocs(query(collection(db, "users"), ...branchFilter)); 
-        data.employees = usersSnap.docs.map(d => ({ id: d.id, ...d.data() })); 
-        data.schedule = {}; 
-        const scheduleSnap = await getDocs(query(collection(db, "schedule"), ...branchFilter)); 
-        scheduleSnap.docs.forEach(d => { const entry = d.data(); if (!data.schedule[entry.date]) data.schedule[entry.date] = []; data.schedule[entry.date].push({ id: d.id, ...entry }); }); 
-        data.materials = (await getDocs(query(collection(db, "materials"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() })); 
-        data.contests = (await getDocs(query(collection(db, "contests"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() })); 
-        data.info = (await getDocs(query(collection(db, "info"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() })); 
-        data.branches = (await getDocs(collection(db, "branches"))).docs.map(d => ({ id: d.id, ...d.data() })); 
-        const settingsDoc = await getDoc(doc(db, "settings", "global")); 
-        data.settings = settingsDoc.exists() ? settingsDoc.data() : { maintenanceMode: false };
-        const planSettingsDoc = await getDoc(doc(db, "settings", "planSettings"));
-        if (planSettingsDoc.exists()) planSettings = planSettingsDoc.data();
-        data.plans = { financial: [], events: [], revisions: [] };
-        data.plans.financial = (await getDocs(query(collection(db, "plans"), where("type", "==", "financial"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
-        data.plans.events = (await getDocs(query(collection(db, "plans"), where("type", "==", "event"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
-        data.plans.revisions = (await getDocs(query(collection(db, "plans"), where("type", "==", "revision"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
-        await cleanupOldData();
-        updateStats(); 
-    } catch (error) { console.error("Ошибка загрузки:", error); alert("Не удалось загрузить данные: " + error.message); } 
+async function loadAllDataFromFirebase() {
+try {
+const branchFilter = [where("branchId", "==", currentUser.branchId)];
+const usersSnap = await getDocs(query(collection(db, "users"), ...branchFilter));
+data.employees = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+data.schedule = {};
+const scheduleSnap = await getDocs(query(collection(db, "schedule"), ...branchFilter));
+scheduleSnap.docs.forEach(d => { const entry = d.data(); if (!data.schedule[entry.date]) data.schedule[entry.date] = []; data.schedule[entry.date].push({ id: d.id, ...entry }); });
+data.materials = (await getDocs(query(collection(db, "materials"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
+data.contests = (await getDocs(query(collection(db, "contests"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
+data.info = (await getDocs(query(collection(db, "info"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
+data.branches = (await getDocs(collection(db, "branches"))).docs.map(d => ({ id: d.id, ...d.data() }));
+const settingsDoc = await getDoc(doc(db, "settings", "global"));
+data.settings = settingsDoc.exists() ? settingsDoc.data() : { maintenanceMode: false };
+const planSettingsDoc = await getDoc(doc(db, "settings", "planSettings"));
+if (planSettingsDoc.exists()) planSettings = planSettingsDoc.data();
+data.plans = { financial: [], events: [], revisions: [] };
+data.plans.financial = (await getDocs(query(collection(db, "plans"), where("type", "==", "financial"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
+data.plans.events = (await getDocs(query(collection(db, "plans"), where("type", "==", "event"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
+data.plans.revisions = (await getDocs(query(collection(db, "plans"), where("type", "==", "revision"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
+await cleanupOldData();
+updateStats();
+} catch (error) { console.error("Ошибка загрузки:", error); alert("Не удалось загрузить данные: " + error.message); }
 }
-
 async function loadNotifications() { try { const notifSnap = await getDocs(query(collection(db, "notifications"), where("branchId", "==", currentUser.branchId))); notifications = notifSnap.docs.map(d => ({ id: d.id, ...d.data() })); notifications.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); updateNotificationBadge(); } catch (e) {} }
 function updateNotificationBadge() { const badge = document.getElementById('notificationBadge'); const bell = document.getElementById('notificationBell'); if (!badge || !bell) return; const unreadCount = notifications.filter(n => !n.read && n.userId === currentUser.id).length; if (unreadCount > 0) { badge.textContent = unreadCount; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
 function normalizePhone(phone) { return (phone || '').replace(/\D/g, ''); }
 function showLoginScreen() { currentUser = null; document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('maintenanceScreen').classList.add('hidden'); document.getElementById('topNav').style.display = 'none'; }
 function showLoginError(msg) { const el = document.getElementById('loginError'); el.textContent = msg; el.classList.add('show'); }
-
 async function autoLogin() { const sessionStr = localStorage.getItem('domovidSession'); if (sessionStr) { try { const session = JSON.parse(sessionStr); const userSnap = await getDoc(doc(db, "users", session.id)); if (userSnap.exists()) { const userData = userSnap.data(); currentUser = { id: session.id, name: userData.name, phone: userData.phone, role: userData.role, branchId: session.branchId || userData.branchId }; await loadAllDataFromFirebase(); await loadNotifications(); setTimeout(() => initializeFirebaseMessaging(), 2000); enterApp(); return; } } catch (e) { localStorage.removeItem('domovidSession'); } } showLoginScreen(); }
-
-window.doLogin = async function() { const branchId = document.getElementById('loginBranch').value; const phoneInput = document.getElementById('loginPhone').value.trim(); const password = document.getElementById('loginPassword').value; const errorEl = document.getElementById('loginError'); if (!branchId) { showLoginError('⚠️ Выберите отделение'); return; } if (!phoneInput || !password) { showLoginError('Введите телефон и пароль'); return; } const phone = normalizePhone(phoneInput); errorEl.textContent = 'Проверка...'; errorEl.classList.add('show'); try { const q = query(collection(db, "users"), where("phone", "==", phone), where("password", "==", password)); const querySnapshot = await getDocs(q); if (querySnapshot.empty) { showLoginError('❌ Неверный телефон или пароль'); return; } const userData = querySnapshot.docs[0].data(); const userId = querySnapshot.docs[0].id; if (userData.role !== 'superadmin' && userData.branchId !== branchId) { showLoginError(' Сотрудник не числится в отделении'); return; } if (!userData.branchId) await updateDoc(doc(db, "users", userId), { branchId: branchId }); currentUser = { id: userId, name: userData.name, phone: userData.phone, role: userData.role, branchId: branchId }; localStorage.setItem('domovidSession', JSON.stringify({ id: userId, branchId: branchId })); await loadAllDataFromFirebase(); await loadNotifications(); setTimeout(() => initializeFirebaseMessaging(), 2000); errorEl.classList.remove('show'); enterApp(); } catch (error) { showLoginError('❌ Ошибка: ' + error.message); } };
-
+window.doLogin = async function() { const branchId = document.getElementById('loginBranch').value; const phoneInput = document.getElementById('loginPhone').value.trim(); const password = document.getElementById('loginPassword').value; const errorEl = document.getElementById('loginError'); if (!branchId) { showLoginError('⚠️ Выберите отделение'); return; } if (!phoneInput || !password) { showLoginError('Введите телефон и пароль'); return; } const phone = normalizePhone(phoneInput); errorEl.textContent = 'Проверка...'; errorEl.classList.add('show'); try { const q = query(collection(db, "users"), where("phone", "==", phone), where("password", "==", password)); const querySnapshot = await getDocs(q); if (querySnapshot.empty) { showLoginError('❌ Неверный телефон или пароль'); return; } const userData = querySnapshot.docs[0].data(); const userId = querySnapshot.docs[0].id; if (userData.role !== 'superadmin' && userData.branchId !== branchId) { showLoginError('❌ Сотрудник не числится в отделении'); return; } if (!userData.branchId) await updateDoc(doc(db, "users", userId), { branchId: branchId }); currentUser = { id: userId, name: userData.name, phone: userData.phone, role: userData.role, branchId: branchId }; localStorage.setItem('domovidSession', JSON.stringify({ id: userId, branchId: branchId })); await loadAllDataFromFirebase(); await loadNotifications(); setTimeout(() => initializeFirebaseMessaging(), 2000); errorEl.classList.remove('show'); enterApp(); } catch (error) { showLoginError('❌ Ошибка: ' + error.message); } };
 function enterApp() { if (data.settings.maintenanceMode && currentUser.role !== 'superadmin') { document.getElementById('loginScreen').classList.add('hidden'); document.getElementById('maintenanceScreen').classList.remove('hidden'); document.getElementById('topNav').style.display = 'none'; return; } document.getElementById('loginScreen').classList.add('hidden'); document.getElementById('maintenanceScreen').classList.add('hidden'); document.getElementById('topNav').style.display = 'block'; document.getElementById('currentUserBadge').style.display = 'inline-flex'; document.getElementById('currentUserName').textContent = currentUser.name; document.getElementById('notificationBell').style.display = 'block'; let roleText = '👤 Сотрудник'; if (currentUser.role === 'admin') roleText = '💎 Админ'; if (currentUser.role === 'superadmin') roleText = '👑 Владелец'; document.getElementById('currentUserRole').textContent = roleText; const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin'; document.getElementById('topNavAdminBtn').style.display = isAdmin ? '' : 'none'; document.getElementById('topNavSuperAdminBtn').style.display = (currentUser.role === 'superadmin') ? '' : 'none'; if (!isAdmin && document.getElementById('admin').classList.contains('active')) showSection('schedule', document.querySelector('.top-nav-btn')); renderAll(); }
-
-window.doLogout = function() { if (!confirm('Выйти?')) return; localStorage.removeItem('domovidSession'); currentUser = null; editingEmployeeId = null; editingScheduleId = null; editingFinancialPlanId = null; editingEventId = null; editingRevisionId = null; notifications = []; if (messagesUnsubscribe) messagesUnsubscribe(); showLoginScreen(); document.getElementById('loginPhone').value = ''; document.getElementById('loginPassword').value = ''; document.getElementById('loginError').classList.remove('show'); };
-
-window.showSection = function(sectionId, btn) { if ((sectionId === 'admin' || sectionId === 'superadmin') && (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin'))) { alert(' Доступ запрещён'); return; } document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(sectionId).classList.add('active'); document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active')); if (btn && btn.classList) btn.classList.add('active'); if (sectionId === 'schedule') renderSchedule(); if (sectionId === 'archive') renderArchive(); if (sectionId === 'plan') renderPlan(); if (sectionId === 'messenger') renderMessenger(); if (sectionId === 'materials') renderMaterials(); if (sectionId === 'contests') renderContests(); if (sectionId === 'info') renderInfo(); if (sectionId === 'admin') renderAdmin(); if (sectionId === 'superadmin') renderSuperAdminPanel(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-
+window.doLogout = function() { if (!confirm('Выйти?')) return; localStorage.removeItem('domovidSession'); currentUser = null; editingEmployeeId = null; editingScheduleId = null; editingFinancialPlanId = null; editingEventId = null; editingRevisionId = null; notifications = []; showLoginScreen(); document.getElementById('loginPhone').value = ''; document.getElementById('loginPassword').value = ''; document.getElementById('loginError').classList.remove('show'); };
+window.showSection = function(sectionId, btn) { if ((sectionId === 'admin' || sectionId === 'superadmin') && (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin'))) { alert('🔒 Доступ запрещён'); return; } document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(sectionId).classList.add('active'); document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active')); if (btn && btn.classList) btn.classList.add('active'); if (sectionId === 'schedule') renderSchedule(); if (sectionId === 'archive') renderArchive(); if (sectionId === 'plan') renderPlan(); if (sectionId === 'materials') renderMaterials(); if (sectionId === 'contests') renderContests(); if (sectionId === 'info') renderInfo(); if (sectionId === 'admin') renderAdmin(); if (sectionId === 'superadmin') renderSuperAdminPanel(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 window.showAdminTab = function(tabName, btn) { document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active')); document.getElementById('admin-' + tabName).classList.add('active'); if (btn) btn.classList.add('active'); };
 window.showPlanTab = function(tabName, btn) { document.querySelectorAll('.plan-section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active')); document.getElementById('plan-' + tabName).classList.add('active'); if (btn) btn.classList.add('active'); };
-
 window.openFileViewer = function(title, fileData, isText = false, textContent = '') { document.getElementById('modalTitle').textContent = title; const body = document.getElementById('modalBody'); body.innerHTML = ''; if (isText) body.innerHTML = `<pre>${escapeHtml(textContent)}</pre>`; else if (fileData) { const mimeType = fileData.mimeType || 'application/octet-stream'; const dataUrl = fileData.data; if (mimeType.startsWith('image/')) body.innerHTML = `<img src="${dataUrl}">`; else if (mimeType.includes('pdf')) body.innerHTML = `<iframe src="${dataUrl}"></iframe>`; else body.innerHTML = `<div style="text-align:center;padding:20px;"><div style="font-size:4em;">${getFileIcon(mimeType)}</div><button class="btn btn-warning" onclick="downloadFileFromModal('${escapeHtml(fileData.name)}','${dataUrl}')">⬇️ Скачать</button></div>`; } document.getElementById('materialModal').classList.add('open'); };
 window.downloadFileFromModal = function(filename, dataUrl) { const link = document.createElement('a'); link.href = dataUrl; link.download = filename; document.body.appendChild(link); link.click(); document.body.removeChild(link); };
-
 window.openNotifications = async function() { await loadNotifications(); renderNotifications(); document.getElementById('notificationModal').classList.add('open'); };
 window.closeNotificationModal = function() { document.getElementById('notificationModal').classList.remove('open'); };
 window.markNotificationRead = async function(notifId) { try { await updateDoc(doc(db, "notifications", notifId), { read: true }); const notif = notifications.find(n => n.id === notifId); if (notif) notif.read = true; updateNotificationBadge(); renderNotifications(); } catch (e) {} };
 window.markAllNotificationsRead = async function() { try { const unreadNotifs = notifications.filter(n => !n.read && n.userId === currentUser.id); for (const notif of unreadNotifs) { await updateDoc(doc(db, "notifications", notif.id), { read: true }); notif.read = true; } updateNotificationBadge(); renderNotifications(); } catch (e) {} };
 window.createNotification = async function(userId, title, message, type = 'general') { try { await addDoc(collection(db, "notifications"), { branchId: currentUser.branchId, userId: userId, title: title, message: message, type: type, createdAt: Date.now(), read: false, createdBy: currentUser.name }); await loadNotifications(); } catch (e) {} };
-
 function renderNotifications() {
-  const body = document.getElementById('notificationBody'); if (!body) return;
-  const userNotifs = notifications.filter(n => n.userId === currentUser.id || n.userId === 'all');
-  if (userNotifs.length === 0) { body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📭<br><br>Нет уведомлений</div>'; return; }
-  let html = '';
-  if (userNotifs.some(n => !n.read)) html += `<button class="btn btn-info btn-block" onclick="markAllNotificationsRead()" style="margin-bottom:12px;">✅ Отметить все прочитанными</button>`;
-  userNotifs.forEach(notif => {
-    const typeClass = notif.type === 'schedule' ? 'type-schedule' : (notif.type === 'transfer' ? 'type-transfer' : 'type-general');
-    const unreadClass = notif.read ? '' : 'unread';
-    html += `<div class="notification-item ${unreadClass} ${typeClass}"><div class="notification-content"><div class="notification-title">${escapeHtml(notif.title)}</div><div class="notification-message">${escapeHtml(notif.message)}</div><div class="notification-time"> ${formatDateTime(notif.createdAt)}${notif.createdBy ? ` • ${escapeHtml(notif.createdBy)}` : ''}</div></div>${!notif.read ? `<div class="notification-actions"><button class="btn btn-sm btn-info" onclick="markNotificationRead('${notif.id}')">✓</button></div>` : ''}</div>`;
-  });
-  body.innerHTML = html;
+const body = document.getElementById('notificationBody'); if (!body) return;
+const userNotifs = notifications.filter(n => n.userId === currentUser.id || n.userId === 'all');
+if (userNotifs.length === 0) { body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📭<br><br>Нет уведомлений</div>'; return; }
+let html = '';
+if (userNotifs.some(n => !n.read)) html += `<button class="btn btn-info btn-block" onclick="markAllNotificationsRead()" style="margin-bottom:12px;">✅ Отметить все прочитанными</button>`;
+userNotifs.forEach(notif => {
+const typeClass = notif.type === 'schedule' ? 'type-schedule' : (notif.type === 'transfer' ? 'type-transfer' : 'type-general');
+const unreadClass = notif.read ? '' : 'unread';
+html += `<div class="notification-item ${unreadClass} ${typeClass}"><div class="notification-content"><div class="notification-title">${escapeHtml(notif.title)}</div><div class="notification-message">${escapeHtml(notif.message)}</div><div class="notification-time">📅 ${formatDateTime(notif.createdAt)}${notif.createdBy ? ` • ${escapeHtml(notif.createdBy)}` : ''}</div></div>${!notif.read ? `<div class="notification-actions"><button class="btn btn-sm btn-info" onclick="markNotificationRead('${notif.id}')">✓</button></div>` : ''}</div>`;
+});
+body.innerHTML = html;
 }
-
-// === МЕССЕНДЖЕР ===
-async function renderMessenger() {
-    await loadChats();
-    renderChatsList();
-}
-
-async function loadChats() {
-    const chatsQuery = query(collection(db, "chats"), where("participants", "array-contains", currentUser.id));
-    const chatsSnap = await getDocs(chatsQuery);
-    chats = chatsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-    chats.sort((a, b) => (b.lastMessageAt || 0) - (a.lastMessageAt || 0));
-}
-
-function renderChatsList() {
-    const container = document.getElementById('chatsList');
-    if (!container) return;
-    
-    if (chats.length === 0) {
-        container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">💬<br><br>Нет чатов<br><small>Создайте новый чат</small></div>';
-        return;
-    }
-    
-    container.innerHTML = chats.map(chat => {
-        const isGroup = chat.isGroup || false;
-        const avatar = isGroup ? '👥' : (chat.participantName || '?')[0].toUpperCase();
-        const avatarClass = isGroup ? 'group' : '';
-        const name = isGroup ? chat.name : chat.participantName;
-        const unreadCount = chat.unreadCount || 0;
-        const lastMsg = chat.lastMessage || 'Нет сообщений';
-        const time = chat.lastMessageAt ? formatMessageTime(chat.lastMessageAt) : '';
-        
-        return `<div class="chat-item ${currentChatId === chat.id ? 'active' : ''} ${unreadCount > 0 ? 'unread' : ''}" onclick="openChat('${chat.id}')">
-            <div class="chat-avatar ${avatarClass}">${avatar}</div>
-            <div class="chat-info">
-                <div class="chat-name">
-                    ${escapeHtml(name)}
-                    ${unreadCount > 0 ? `<span class="chat-badge">${unreadCount}</span>` : ''}
-                </div>
-                <div class="chat-last-message">${escapeHtml(lastMsg)}</div>
-                <div class="chat-time">${time}</div>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-async function openChat(chatId) {
-    currentChatId = chatId;
-    const chat = chats.find(c => c.id === chatId);
-    if (!chat) return;
-    
-    document.getElementById('emptyChat').style.display = 'none';
-    document.getElementById('activeChat').style.display = 'flex';
-    
-    const isGroup = chat.isGroup || false;
-    const avatar = isGroup ? '👥' : (chat.participantName || '?')[0].toUpperCase();
-    document.getElementById('chatAvatar').textContent = avatar;
-    document.getElementById('chatHeaderName').textContent = isGroup ? chat.name : chat.participantName;
-    document.getElementById('chatHeaderStatus').textContent = isGroup ? `${chat.participantsCount || 0} участников` : 'Личный чат';
-    
-    renderChatsList();
-    loadMessages(chatId);
-}
-
-function loadMessages(chatId) {
-    if (messagesUnsubscribe) messagesUnsubscribe();
-    
-    const messagesQuery = query(
-        collection(db, `chats/${chatId}/messages`),
-        orderBy('createdAt', 'asc'),
-        limit(50)
-    );
-    
-    messagesUnsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-        const container = document.getElementById('messagesContainer');
-        if (!container) return;
-        
-        const messages = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        
-        container.innerHTML = messages.map(msg => {
-            const isOwn = msg.senderId === currentUser.id;
-            const sender = data.employees.find(e => e.id === msg.senderId);
-            const senderName = sender ? sender.name.split(' ')[0] : 'Unknown';
-            const avatar = senderName[0].toUpperCase();
-            
-            return `<div class="message ${isOwn ? 'own' : ''}">
-                <div class="message-avatar">${avatar}</div>
-                <div class="message-content">
-                    <div class="message-bubble">
-                        ${!isOwn && chats.find(c => c.id === chatId)?.isGroup ? `<div style="font-size:0.8em;margin-bottom:4px;opacity:0.8;">${senderName}</div>` : ''}
-                        <div class="message-text">${escapeHtml(msg.text || '')}</div>
-                        ${msg.fileUrl ? `<div class="message-file">📎 <a href="${msg.fileUrl}" target="_blank" style="color:inherit;text-decoration:underline;">${escapeHtml(msg.fileName || 'Файл')}</a></div>` : ''}
-                        <div class="message-time">${formatMessageTime(msg.createdAt)}</div>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-        
-        container.scrollTop = container.scrollHeight;
-        
-        markMessagesAsRead(chatId);
-    });
-}
-
-async function markMessagesAsRead(chatId) {
-    const chat = chats.find(c => c.id === chatId);
-    if (!chat || chat.isGroup) return;
-    
-    const unreadRef = doc(db, `chats/${chatId}/unread/${currentUser.id}`);
-    await setDoc(unreadRef, { count: 0 }, { merge: true });
-}
-
-async function sendMessage() {
-    const input = document.getElementById('messageInput');
-    const text = input.value.trim();
-    if (!text && !selectedFileData) return;
-    if (!currentChatId) return;
-    
-    const messageData = {
-        senderId: currentUser.id,
-        senderName: currentUser.name,
-        text: text,
-        createdAt: Date.now(),
-        read: false
-    };
-    
-    if (selectedFileData) {
-        try {
-            const fileRef = ref(storage, `chat_files/${currentChatId}/${Date.now()}_${selectedFileData.name}`);
-            await uploadBytes(fileRef, selectedFileData.file);
-            messageData.fileUrl = await getDownloadURL(fileRef);
-            messageData.fileName = selectedFileData.name;
-        } catch (e) {
-            alert('Ошибка загрузки файла: ' + e.message);
-            return;
-        }
-    }
-    
-    await addDoc(collection(db, `chats/${currentChatId}/messages`), messageData);
-    
-    await updateDoc(doc(db, "chats", currentChatId), {
-        lastMessage: text || ' Файл',
-        lastMessageAt: Date.now()
-    });
-    
-    input.value = '';
-    selectedFileData = null;
-    
-    if (messagesUnsubscribe) messagesUnsubscribe();
-    loadMessages(currentChatId);
-    loadChats();
-    renderChatsList();
-}
-
-function handleMessageKeyPress(event) {
-    if (event.key === 'Enter') {
-        sendMessage();
-    }
-}
-
-function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > MAX_FILE_SIZE) {
-        alert(`Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`);
-        return;
-    }
-    selectedFileData = { file, name: file.name };
-}
-
-function openNewChatModal() {
-    const modal = document.getElementById('newChatModal');
-    const participantsContainer = document.getElementById('newChatParticipants');
-    
-    participantsContainer.innerHTML = data.employees
-        .filter(e => e.id !== currentUser.id)
-        .map(emp => `
-            <label style="display:flex;align-items:center;gap:8px;padding:8px;cursor:pointer;">
-                <input type="checkbox" value="${emp.id}" data-name="${emp.name}">
-                <span>${emp.name}</span>
-            </label>
-        `).join('');
-    
-    modal.classList.add('open');
-}
-
-function closeNewChatModal() {
-    document.getElementById('newChatModal').classList.remove('open');
-}
-
-async function createNewChat() {
-    const name = document.getElementById('newChatName').value.trim();
-    const checkboxes = document.querySelectorAll('#newChatParticipants input[type="checkbox"]:checked');
-    
-    if (!name) {
-        alert('Введите название чата');
-        return;
-    }
-    
-    if (checkboxes.length === 0) {
-        alert('Выберите хотя бы одного участника');
-        return;
-    }
-    
-    const participants = Array.from(checkboxes).map(cb => cb.value);
-    participants.push(currentUser.id);
-    
-    const chatData = {
-        name,
-        isGroup: true,
-        participants,
-        participantsCount: participants.length,
-        createdBy: currentUser.id,
-        createdAt: Date.now(),
-        lastMessage: '',
-        lastMessageAt: 0
-    };
-    
-    const chatRef = await addDoc(collection(db, "chats"), chatData);
-    
-    closeNewChatModal();
-    document.getElementById('newChatName').value = '';
-    
-    await loadChats();
-    renderChatsList();
-    openChat(chatRef.id);
-}
-
-function filterChats() {
-    const search = document.getElementById('chatSearch').value.toLowerCase();
-    const items = document.querySelectorAll('.chat-item');
-    
-    items.forEach(item => {
-        const name = item.querySelector('.chat-name').textContent.toLowerCase();
-        item.style.display = name.includes(search) ? 'flex' : 'none';
-    });
-}
-
-function formatMessageTime(timestamp) {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diff = now - date;
-    
-    if (diff < 60000) return 'только что';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)} мин назад`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)} ч назад`;
-    
-    return `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-}
-
 window.togglePlanSection = async function(section) {
-    const checkbox = document.getElementById(`plan${section.charAt(0).toUpperCase() + section.slice(1)}Enabled`);
-    planSettings[section] = checkbox.checked;
-    try { await setDoc(doc(db, "settings", "planSettings"), planSettings, { merge: true }); alert(`✅ Раздел ${checkbox.checked ? 'включен' : 'выключен'}`); } catch (e) { alert('Ошибка: ' + e.message); }
+const checkbox = document.getElementById(`plan${section.charAt(0).toUpperCase() + section.slice(1)}Enabled`);
+planSettings[section] = checkbox.checked;
+try { await setDoc(doc(db, "settings", "planSettings"), planSettings, { merge: true }); alert(`✅ Раздел ${checkbox.checked ? 'включен' : 'выключен'}`); } catch (e) { alert('Ошибка: ' + e.message); }
 };
-
 window.renderPlan = function() { renderFinancialPlan(); renderEventsPlan(); renderRevisionsPlan(); };
-
 window.renderFinancialPlan = function() {
-    const container = document.getElementById('financialPlanContent'); if (!container) return;
-    if (!planSettings.financial) { container.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon">💰</span><h3>Раздел временно недоступен</h3><p>Финансовый план отключен</p></div>`; return; }
-    if (data.plans.financial.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);"><br><br>Финансовый план не добавлен</div>'; return; }
-    const currentPlan = data.plans.financial[0];
-    const progress = currentPlan.target > 0 ? Math.round((currentPlan.current / currentPlan.target) * 100) : 0;
-    const remaining = currentPlan.target - currentPlan.current;
-    container.innerHTML = `<div class="financial-plan-card"><div class="financial-plan-header"><div><div class="financial-plan-title">💰 Финансовый план</div><div class="financial-plan-month">${currentPlan.month || 'Текущий месяц'}</div></div></div><div class="financial-plan-amount">${currentPlan.current.toLocaleString('ru-RU')} ₽</div><div class="financial-plan-progress"><div class="financial-plan-progress-bar" style="width:${Math.min(progress,100)}%">${progress}%</div></div><div class="financial-plan-stats"><div class="financial-stat"><div class="financial-stat-value">${currentPlan.target.toLocaleString('ru-RU')} ₽</div><div class="financial-stat-label">Цель</div></div><div class="financial-stat"><div class="financial-stat-value">${remaining > 0 ? remaining.toLocaleString('ru-RU') : '0'} ₽</div><div class="financial-stat-label">Осталось</div></div></div></div>`;
+const container = document.getElementById('financialPlanContent'); if (!container) return;
+if (!planSettings.financial) { container.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon">💰</span><h3>Раздел временно недоступен</h3><p>Финансовый план отключен</p></div>`; return; }
+if (data.plans.financial.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);"><br><br>Финансовый план не добавлен</div>'; return; }
+const currentPlan = data.plans.financial[0];
+const progress = currentPlan.target > 0 ? Math.round((currentPlan.current / currentPlan.target) * 100) : 0;
+const remaining = currentPlan.target - currentPlan.current;
+container.innerHTML = `<div class="financial-plan-card"><div class="financial-plan-header"><div><div class="financial-plan-title">💰 Финансовый план</div><div class="financial-plan-month">${currentPlan.month || 'Текущий месяц'}</div></div></div><div class="financial-plan-amount">${currentPlan.current.toLocaleString('ru-RU')} ₽</div><div class="financial-plan-progress"><div class="financial-plan-progress-bar" style="width:${Math.min(progress,100)}%">${progress}%</div></div><div class="financial-plan-stats"><div class="financial-stat"><div class="financial-stat-value">${currentPlan.target.toLocaleString('ru-RU')} ₽</div><div class="financial-stat-label">Цель</div></div><div class="financial-stat"><div class="financial-stat-value">${remaining > 0 ? remaining.toLocaleString('ru-RU') : '0'} ₽</div><div class="financial-stat-label">Осталось</div></div></div></div>`;
 };
-
 window.renderEventsPlan = function() {
-    const container = document.getElementById('eventsPlanContent'); if (!container) return;
-    if (!planSettings.events) { container.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon">🎉</span><h3>Раздел временно недоступен</h3><p>Мероприятия отключены</p></div>`; return; }
-    if (data.plans.events.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">🎉<br><br>Мероприятия не добавлены</div>'; return; }
-    let html = '';
-    data.plans.events.forEach(event => {
-        const statusClass = event.status || 'planned';
-        const statusText = statusClass === 'active' ? 'Активно' : statusClass === 'finished' ? 'Завершено' : 'Запланировано';
-        html += `<div class="event-card status-${statusClass}"><div class="event-header"><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-date">📅 ${event.startDate || ''} ${event.endDate ? '- ' + event.endDate : ''}</div></div><span class="event-status ${statusClass}">${statusText}</span></div>${event.description ? `<div class="event-description">${escapeHtml(event.description)}</div>` : ''}${event.responsible ? `<div class="event-responsible">👤 ${escapeHtml(event.responsible)}</div>` : ''}</div>`;
-    });
-    container.innerHTML = html;
+const container = document.getElementById('eventsPlanContent'); if (!container) return;
+if (!planSettings.events) { container.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon"></span><h3>Раздел временно недоступен</h3><p>Мероприятия отключены</p></div>`; return; }
+if (data.plans.events.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">🎉<br><br>Мероприятия не добавлены</div>'; return; }
+let html = '';
+data.plans.events.forEach(event => {
+const statusClass = event.status || 'planned';
+const statusText = statusClass === 'active' ? 'Активно' : statusClass === 'finished' ? 'Завершено' : 'Запланировано';
+html += `<div class="event-card status-${statusClass}"><div class="event-header"><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-date">📅 ${event.startDate || ''} ${event.endDate ? '- ' + event.endDate : ''}</div></div><span class="event-status ${statusClass}">${statusText}</span></div>${event.description ? `<div class="event-description">${escapeHtml(event.description)}</div>` : ''}${event.responsible ? `<div class="event-responsible">👤 ${escapeHtml(event.responsible)}</div>` : ''}</div>`;
+});
+container.innerHTML = html;
 };
-
 window.renderRevisionsPlan = function() {
-    const container = document.getElementById('revisionsPlanContent'); if (!container) return;
-    if (!planSettings.revisions) { container.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon">🔍</span><h3>Раздел временно недоступен</h3><p>Ревизии отключены</p></div>`; return; }
-    if (data.plans.revisions.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">🔍<br><br>Ревизии не добавлены</div>'; return; }
-    let html = '';
-    data.plans.revisions.forEach(revision => {
-        const statusClass = revision.status || 'planned';
-        const statusText = statusClass === 'progress' ? 'В процессе' : statusClass === 'completed' ? 'Завершено' : 'Запланировано';
-        html += `<div class="revision-card status-${statusClass}"><div class="revision-header"><div><div class="revision-title">${escapeHtml(revision.title)}</div><div class="revision-date">📅 ${revision.date || ''}</div></div><span class="revision-status ${statusClass}">${statusText}</span></div>${revision.department ? `<div class="revision-department">🏢 ${escapeHtml(revision.department)}</div>` : ''}${revision.responsible ? `<div class="revision-responsible"> ${escapeHtml(revision.responsible)}</div>` : ''}</div>`;
-    });
-    container.innerHTML = html;
+const container = document.getElementById('revisionsPlanContent'); if (!container) return;
+if (!planSettings.revisions) { container.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon">🔍</span><h3>Раздел временно недоступен</h3><p>Ревизии отключены</p></div>`; return; }
+if (data.plans.revisions.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);"><br><br>Ревизии не добавлены</div>'; return; }
+let html = '';
+data.plans.revisions.forEach(revision => {
+const statusClass = revision.status || 'planned';
+const statusText = statusClass === 'progress' ? 'В процессе' : statusClass === 'completed' ? 'Завершено' : 'Запланировано';
+html += `<div class="revision-card status-${statusClass}"><div class="revision-header"><div><div class="revision-title">${escapeHtml(revision.title)}</div><div class="revision-date">📅 ${revision.date || ''}</div></div><span class="revision-status ${statusClass}">${statusText}</span></div>${revision.department ? `<div class="revision-department">🏢 ${escapeHtml(revision.department)}</div>` : ''}${revision.responsible ? `<div class="revision-responsible">👤 ${escapeHtml(revision.responsible)}</div>` : ''}</div>`;
+});
+container.innerHTML = html;
 };
-
 window.saveFinancialPlan = async function() {
-    const month = document.getElementById('financialPlanMonth').value;
-    const target = parseFloat(document.getElementById('financialPlanTarget').value);
-    const current = parseFloat(document.getElementById('financialPlanCurrent').value) || 0;
-    if (!month || !target) { alert('Заполните месяц и целевую сумму'); return; }
-    const btn = document.getElementById('financialPlanSubmitBtn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `<span class="spinner"></span> Сохранение...`;
-    btn.disabled = true;
-    try {
-        const planData = { type: 'financial', month, target, current, branchId: currentUser.branchId, updatedAt: Date.now() };
-        if (editingFinancialPlanId) {
-            await updateDoc(doc(db, "plans", editingFinancialPlanId), planData);
-            editingFinancialPlanId = null;
-            document.getElementById('financialPlanFormTitle').textContent = '💰 Добавить финансовый план';
-            document.getElementById('financialPlanSubmitBtn').textContent = '💾 Сохранить план';
-            alert('✅ План обновлён!');
-        } else {
-            planData.createdAt = Date.now();
-            await addDoc(collection(db, "plans"), planData);
-            alert('✅ План добавлен!');
-        }
-        document.getElementById('financialPlanMonth').value = '';
-        document.getElementById('financialPlanTarget').value = '';
-        document.getElementById('financialPlanCurrent').value = '';
-        await loadAllDataFromFirebase();
-        renderFinancialPlansList();
-    } catch (e) { alert('Ошибка: ' + e.message); }
-    finally { btn.innerHTML = originalText; btn.disabled = false; }
+const month = document.getElementById('financialPlanMonth').value;
+const target = parseFloat(document.getElementById('financialPlanTarget').value);
+const current = parseFloat(document.getElementById('financialPlanCurrent').value) || 0;
+if (!month || !target) { alert('Заполните месяц и целевую сумму'); return; }
+const btn = document.getElementById('financialPlanSubmitBtn');
+const originalText = btn.innerHTML;
+btn.innerHTML = `<span class="spinner"></span> Сохранение...`;
+btn.disabled = true;
+try {
+const planData = { type: 'financial', month, target, current, branchId: currentUser.branchId, updatedAt: Date.now() };
+if (editingFinancialPlanId) {
+await updateDoc(doc(db, "plans", editingFinancialPlanId), planData);
+editingFinancialPlanId = null;
+document.getElementById('financialPlanFormTitle').textContent = '💰 Добавить финансовый план';
+document.getElementById('financialPlanSubmitBtn').textContent = '💾 Сохранить план';
+alert('✅ План обновлён!');
+} else {
+planData.createdAt = Date.now();
+await addDoc(collection(db, "plans"), planData);
+alert('✅ План добавлен!');
+}
+document.getElementById('financialPlanMonth').value = '';
+document.getElementById('financialPlanTarget').value = '';
+document.getElementById('financialPlanCurrent').value = '';
+await loadAllDataFromFirebase();
+renderFinancialPlansList();
+} catch (e) { alert('Ошибка: ' + e.message); }
+finally { btn.innerHTML = originalText; btn.disabled = false; }
 };
-
 window.editFinancialPlan = function(id) {
-    const plan = data.plans.financial.find(p => p.id === id);
-    if (!plan) return;
-    editingFinancialPlanId = id;
-    document.getElementById('financialPlanMonth').value = plan.month || '';
-    document.getElementById('financialPlanTarget').value = plan.target || '';
-    document.getElementById('financialPlanCurrent').value = plan.current || 0;
-    document.getElementById('financialPlanFormTitle').textContent = '✏️ Редактировать финансовый план';
-    document.getElementById('financialPlanSubmitBtn').textContent = '💾 Обновить план';
-    document.getElementById('admin-plan').scrollIntoView({ behavior: 'smooth' });
+const plan = data.plans.financial.find(p => p.id === id);
+if (!plan) return;
+editingFinancialPlanId = id;
+document.getElementById('financialPlanMonth').value = plan.month || '';
+document.getElementById('financialPlanTarget').value = plan.target || '';
+document.getElementById('financialPlanCurrent').value = plan.current || 0;
+document.getElementById('financialPlanFormTitle').textContent = '✏️ Редактировать финансовый план';
+document.getElementById('financialPlanSubmitBtn').textContent = '💾 Обновить план';
+document.getElementById('admin-plan').scrollIntoView({ behavior: 'smooth' });
 };
-
 window.deleteFinancialPlan = async function(id) {
-    if (!confirm('Удалить финансовый план?')) return;
-    try {
-        await deleteDoc(doc(db, "plans", id));
-        if (editingFinancialPlanId === id) {
-            editingFinancialPlanId = null;
-            document.getElementById('financialPlanFormTitle').textContent = '💰 Добавить финансовый план';
-            document.getElementById('financialPlanSubmitBtn').textContent = '💾 Сохранить план';
-            document.getElementById('financialPlanMonth').value = '';
-            document.getElementById('financialPlanTarget').value = '';
-            document.getElementById('financialPlanCurrent').value = '';
-        }
-        await loadAllDataFromFirebase();
-        renderFinancialPlansList();
-        alert('✅ Удалено');
-    } catch (e) { alert('Ошибка: ' + e.message); }
+if (!confirm('Удалить финансовый план?')) return;
+try {
+await deleteDoc(doc(db, "plans", id));
+if (editingFinancialPlanId === id) {
+editingFinancialPlanId = null;
+document.getElementById('financialPlanFormTitle').textContent = '💰 Добавить финансовый план';
+document.getElementById('financialPlanSubmitBtn').textContent = '💾 Сохранить план';
+document.getElementById('financialPlanMonth').value = '';
+document.getElementById('financialPlanTarget').value = '';
+document.getElementById('financialPlanCurrent').value = '';
+}
+await loadAllDataFromFirebase();
+renderFinancialPlansList();
+alert('✅ Удалено');
+} catch (e) { alert('Ошибка: ' + e.message); }
 };
-
 window.renderFinancialPlansList = function() {
-    const container = document.getElementById('financialPlansList');
-    if (!container) return;
-    if (data.plans.financial.length === 0) { container.innerHTML = '<div class="no-employees">Планы не добавлены</div>'; return; }
-    let html = '';
-    data.plans.financial.forEach(plan => {
-        const progress = plan.target > 0 ? Math.round((plan.current / plan.target) * 100) : 0;
-        html += `<div class="admin-plan-item financial"><div class="admin-plan-item-info"><div class="admin-plan-item-title">💰 ${plan.month || 'Без даты'}</div><div class="admin-plan-item-subtitle">Цель: ${plan.target.toLocaleString('ru-RU')} ₽ • Текущая: ${plan.current.toLocaleString('ru-RU')} ₽ (${progress}%)</div></div><div class="admin-plan-item-actions"><button class="btn btn-warning btn-sm" onclick="editFinancialPlan('${plan.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteFinancialPlan('${plan.id}')">🗑️</button></div></div>`;
-    });
-    container.innerHTML = html;
+const container = document.getElementById('financialPlansList');
+if (!container) return;
+if (data.plans.financial.length === 0) { container.innerHTML = '<div class="no-employees">Планы не добавлены</div>'; return; }
+let html = '';
+data.plans.financial.forEach(plan => {
+const progress = plan.target > 0 ? Math.round((plan.current / plan.target) * 100) : 0;
+html += `<div class="admin-plan-item financial"><div class="admin-plan-item-info"><div class="admin-plan-item-title">💰 ${plan.month || 'Без даты'}</div><div class="admin-plan-item-subtitle">Цель: ${plan.target.toLocaleString('ru-RU')} ₽ • Текущая: ${plan.current.toLocaleString('ru-RU')} ₽ (${progress}%)</div></div><div class="admin-plan-item-actions"><button class="btn btn-warning btn-sm" onclick="editFinancialPlan('${plan.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteFinancialPlan('${plan.id}')">🗑️</button></div></div>`;
+});
+container.innerHTML = html;
 };
-
 window.saveEvent = async function() {
-    const title = document.getElementById('eventTitle').value.trim();
-    const startDate = document.getElementById('eventStartDate').value;
-    const endDate = document.getElementById('eventEndDate').value;
-    const description = document.getElementById('eventDescription').value.trim();
-    const responsible = document.getElementById('eventResponsible').value.trim();
-    const status = document.getElementById('eventStatus').value;
-    if (!title || !startDate) { alert('Заполните название и дату начала'); return; }
-    const btn = document.getElementById('eventSubmitBtn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `<span class="spinner"></span> Сохранение...`;
-    btn.disabled = true;
-    try {
-        const eventData = { type: 'event', title, startDate, endDate, description, responsible, status, branchId: currentUser.branchId, updatedAt: Date.now() };
-        if (editingEventId) {
-            await updateDoc(doc(db, "plans", editingEventId), eventData);
-            editingEventId = null;
-            document.getElementById('eventFormTitle').textContent = ' Добавить мероприятие';
-            document.getElementById('eventSubmitBtn').textContent = '💾 Сохранить мероприятие';
-            alert('✅ Мероприятие обновлено!');
-        } else {
-            eventData.createdAt = Date.now();
-            await addDoc(collection(db, "plans"), eventData);
-            alert('✅ Мероприятие добавлено!');
-        }
-        document.getElementById('eventTitle').value = '';
-        document.getElementById('eventStartDate').value = '';
-        document.getElementById('eventEndDate').value = '';
-        document.getElementById('eventDescription').value = '';
-        document.getElementById('eventResponsible').value = '';
-        await loadAllDataFromFirebase();
-        renderEventsList();
-    } catch (e) { alert('Ошибка: ' + e.message); }
-    finally { btn.innerHTML = originalText; btn.disabled = false; }
+const title = document.getElementById('eventTitle').value.trim();
+const startDate = document.getElementById('eventStartDate').value;
+const endDate = document.getElementById('eventEndDate').value;
+const description = document.getElementById('eventDescription').value.trim();
+const responsible = document.getElementById('eventResponsible').value.trim();
+const status = document.getElementById('eventStatus').value;
+if (!title || !startDate) { alert('Заполните название и дату начала'); return; }
+const btn = document.getElementById('eventSubmitBtn');
+const originalText = btn.innerHTML;
+btn.innerHTML = `<span class="spinner"></span> Сохранение...`;
+btn.disabled = true;
+try {
+const eventData = { type: 'event', title, startDate, endDate, description, responsible, status, branchId: currentUser.branchId, updatedAt: Date.now() };
+if (editingEventId) {
+await updateDoc(doc(db, "plans", editingEventId), eventData);
+editingEventId = null;
+document.getElementById('eventFormTitle').textContent = '🎉 Добавить мероприятие';
+document.getElementById('eventSubmitBtn').textContent = '💾 Сохранить мероприятие';
+alert('✅ Мероприятие обновлено!');
+} else {
+eventData.createdAt = Date.now();
+await addDoc(collection(db, "plans"), eventData);
+alert('✅ Мероприятие добавлено!');
+}
+document.getElementById('eventTitle').value = '';
+document.getElementById('eventStartDate').value = '';
+document.getElementById('eventEndDate').value = '';
+document.getElementById('eventDescription').value = '';
+document.getElementById('eventResponsible').value = '';
+await loadAllDataFromFirebase();
+renderEventsList();
+} catch (e) { alert('Ошибка: ' + e.message); }
+finally { btn.innerHTML = originalText; btn.disabled = false; }
 };
-
 window.editEvent = function(id) {
-    const event = data.plans.events.find(e => e.id === id);
-    if (!event) return;
-    editingEventId = id;
-    document.getElementById('eventTitle').value = event.title || '';
-    document.getElementById('eventStartDate').value = event.startDate || '';
-    document.getElementById('eventEndDate').value = event.endDate || '';
-    document.getElementById('eventDescription').value = event.description || '';
-    document.getElementById('eventResponsible').value = event.responsible || '';
-    document.getElementById('eventStatus').value = event.status || 'planned';
-    document.getElementById('eventFormTitle').textContent = '✏️ Редактировать мероприятие';
-    document.getElementById('eventSubmitBtn').textContent = '💾 Обновить мероприятие';
-    document.getElementById('admin-plan').scrollIntoView({ behavior: 'smooth' });
+const event = data.plans.events.find(e => e.id === id);
+if (!event) return;
+editingEventId = id;
+document.getElementById('eventTitle').value = event.title || '';
+document.getElementById('eventStartDate').value = event.startDate || '';
+document.getElementById('eventEndDate').value = event.endDate || '';
+document.getElementById('eventDescription').value = event.description || '';
+document.getElementById('eventResponsible').value = event.responsible || '';
+document.getElementById('eventStatus').value = event.status || 'planned';
+document.getElementById('eventFormTitle').textContent = '✏️ Редактировать мероприятие';
+document.getElementById('eventSubmitBtn').textContent = '💾 Обновить мероприятие';
+document.getElementById('admin-plan').scrollIntoView({ behavior: 'smooth' });
 };
-
 window.deleteEvent = async function(id) {
-    if (!confirm('Удалить мероприятие?')) return;
-    try {
-        await deleteDoc(doc(db, "plans", id));
-        if (editingEventId === id) {
-            editingEventId = null;
-            document.getElementById('eventFormTitle').textContent = '🎉 Добавить мероприятие';
-            document.getElementById('eventSubmitBtn').textContent = '💾 Сохранить мероприятие';
-            document.getElementById('eventTitle').value = '';
-            document.getElementById('eventStartDate').value = '';
-            document.getElementById('eventEndDate').value = '';
-            document.getElementById('eventDescription').value = '';
-            document.getElementById('eventResponsible').value = '';
-        }
-        await loadAllDataFromFirebase();
-        renderEventsList();
-        alert('✅ Удалено');
-    } catch (e) { alert('Ошибка: ' + e.message); }
+if (!confirm('Удалить мероприятие?')) return;
+try {
+await deleteDoc(doc(db, "plans", id));
+if (editingEventId === id) {
+editingEventId = null;
+document.getElementById('eventFormTitle').textContent = '🎉 Добавить мероприятие';
+document.getElementById('eventSubmitBtn').textContent = '💾 Сохранить мероприятие';
+document.getElementById('eventTitle').value = '';
+document.getElementById('eventStartDate').value = '';
+document.getElementById('eventEndDate').value = '';
+document.getElementById('eventDescription').value = '';
+document.getElementById('eventResponsible').value = '';
+}
+await loadAllDataFromFirebase();
+renderEventsList();
+alert('✅ Удалено');
+} catch (e) { alert('Ошибка: ' + e.message); }
 };
-
 window.renderEventsList = function() {
-    const container = document.getElementById('eventsList');
-    if (!container) return;
-    if (data.plans.events.length === 0) { container.innerHTML = '<div class="no-employees">Мероприятия не добавлены</div>'; return; }
-    let html = '';
-    data.plans.events.forEach(event => {
-        const statusText = event.status === 'active' ? '🟢 Активно' : event.status === 'finished' ? '⚫ Завершено' : '🟡 Запланировано';
-        html += `<div class="admin-plan-item event"><div class="admin-plan-item-info"><div class="admin-plan-item-title">🎉 ${escapeHtml(event.title)}</div><div class="admin-plan-item-subtitle">📅 ${event.startDate || ''} ${event.endDate ? '- ' + event.endDate : ''} • ${statusText}</div></div><div class="admin-plan-item-actions"><button class="btn btn-warning btn-sm" onclick="editEvent('${event.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteEvent('${event.id}')">🗑️</button></div></div>`;
-    });
-    container.innerHTML = html;
+const container = document.getElementById('eventsList');
+if (!container) return;
+if (data.plans.events.length === 0) { container.innerHTML = '<div class="no-employees">Мероприятия не добавлены</div>'; return; }
+let html = '';
+data.plans.events.forEach(event => {
+const statusText = event.status === 'active' ? '🟢 Активно' : event.status === 'finished' ? '⚫ Завершено' : ' Запланировано';
+html += `<div class="admin-plan-item event"><div class="admin-plan-item-info"><div class="admin-plan-item-title"> ${escapeHtml(event.title)}</div><div class="admin-plan-item-subtitle">📅 ${event.startDate || ''} ${event.endDate ? '- ' + event.endDate : ''} • ${statusText}</div></div><div class="admin-plan-item-actions"><button class="btn btn-warning btn-sm" onclick="editEvent('${event.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteEvent('${event.id}')">🗑️</button></div></div>`;
+});
+container.innerHTML = html;
 };
-
 window.saveRevision = async function() {
-    const title = document.getElementById('revisionTitle').value.trim();
-    const date = document.getElementById('revisionDate').value;
-    const department = document.getElementById('revisionDepartment').value.trim();
-    const responsible = document.getElementById('revisionResponsible').value.trim();
-    const status = document.getElementById('revisionStatus').value;
-    if (!title || !date) { alert('Заполните название и дату'); return; }
-    const btn = document.getElementById('revisionSubmitBtn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `<span class="spinner"></span> Сохранение...`;
-    btn.disabled = true;
-    try {
-        const revisionData = { type: 'revision', title, date, department, responsible, status, branchId: currentUser.branchId, updatedAt: Date.now() };
-        if (editingRevisionId) {
-            await updateDoc(doc(db, "plans", editingRevisionId), revisionData);
-            editingRevisionId = null;
-            document.getElementById('revisionFormTitle').textContent = '🔍 Добавить ревизию';
-            document.getElementById('revisionSubmitBtn').textContent = '💾 Сохранить ревизию';
-            alert('✅ Ревизия обновлена!');
-        } else {
-            revisionData.createdAt = Date.now();
-            await addDoc(collection(db, "plans"), revisionData);
-            alert('✅ Ревизия добавлена!');
-        }
-        document.getElementById('revisionTitle').value = '';
-        document.getElementById('revisionDate').value = '';
-        document.getElementById('revisionDepartment').value = '';
-        document.getElementById('revisionResponsible').value = '';
-        await loadAllDataFromFirebase();
-        renderRevisionsList();
-    } catch (e) { alert('Ошибка: ' + e.message); }
-    finally { btn.innerHTML = originalText; btn.disabled = false; }
+const title = document.getElementById('revisionTitle').value.trim();
+const date = document.getElementById('revisionDate').value;
+const department = document.getElementById('revisionDepartment').value.trim();
+const responsible = document.getElementById('revisionResponsible').value.trim();
+const status = document.getElementById('revisionStatus').value;
+if (!title || !date) { alert('Заполните название и дату'); return; }
+const btn = document.getElementById('revisionSubmitBtn');
+const originalText = btn.innerHTML;
+btn.innerHTML = `<span class="spinner"></span> Сохранение...`;
+btn.disabled = true;
+try {
+const revisionData = { type: 'revision', title, date, department, responsible, status, branchId: currentUser.branchId, updatedAt: Date.now() };
+if (editingRevisionId) {
+await updateDoc(doc(db, "plans", editingRevisionId), revisionData);
+editingRevisionId = null;
+document.getElementById('revisionFormTitle').textContent = '🔍 Добавить ревизию';
+document.getElementById('revisionSubmitBtn').textContent = '💾 Сохранить ревизию';
+alert('✅ Ревизия обновлена!');
+} else {
+revisionData.createdAt = Date.now();
+await addDoc(collection(db, "plans"), revisionData);
+alert('✅ Ревизия добавлена!');
+}
+document.getElementById('revisionTitle').value = '';
+document.getElementById('revisionDate').value = '';
+document.getElementById('revisionDepartment').value = '';
+document.getElementById('revisionResponsible').value = '';
+await loadAllDataFromFirebase();
+renderRevisionsList();
+} catch (e) { alert('Ошибка: ' + e.message); }
+finally { btn.innerHTML = originalText; btn.disabled = false; }
 };
-
 window.editRevision = function(id) {
-    const revision = data.plans.revisions.find(r => r.id === id);
-    if (!revision) return;
-    editingRevisionId = id;
-    document.getElementById('revisionTitle').value = revision.title || '';
-    document.getElementById('revisionDate').value = revision.date || '';
-    document.getElementById('revisionDepartment').value = revision.department || '';
-    document.getElementById('revisionResponsible').value = revision.responsible || '';
-    document.getElementById('revisionStatus').value = revision.status || 'planned';
-    document.getElementById('revisionFormTitle').textContent = '✏️ Редактировать ревизию';
-    document.getElementById('revisionSubmitBtn').textContent = ' Обновить ревизию';
-    document.getElementById('admin-plan').scrollIntoView({ behavior: 'smooth' });
+const revision = data.plans.revisions.find(r => r.id === id);
+if (!revision) return;
+editingRevisionId = id;
+document.getElementById('revisionTitle').value = revision.title || '';
+document.getElementById('revisionDate').value = revision.date || '';
+document.getElementById('revisionDepartment').value = revision.department || '';
+document.getElementById('revisionResponsible').value = revision.responsible || '';
+document.getElementById('revisionStatus').value = revision.status || 'planned';
+document.getElementById('revisionFormTitle').textContent = '✏️ Редактировать ревизию';
+document.getElementById('revisionSubmitBtn').textContent = ' Обновить ревизию';
+document.getElementById('admin-plan').scrollIntoView({ behavior: 'smooth' });
 };
-
 window.deleteRevision = async function(id) {
-    if (!confirm('Удалить ревизию?')) return;
-    try {
-        await deleteDoc(doc(db, "plans", id));
-        if (editingRevisionId === id) {
-            editingRevisionId = null;
-            document.getElementById('revisionFormTitle').textContent = ' Добавить ревизию';
-            document.getElementById('revisionSubmitBtn').textContent = ' Сохранить ревизию';
-            document.getElementById('revisionTitle').value = '';
-            document.getElementById('revisionDate').value = '';
-            document.getElementById('revisionDepartment').value = '';
-            document.getElementById('revisionResponsible').value = '';
-        }
-        await loadAllDataFromFirebase();
-        renderRevisionsList();
-        alert('✅ Удалено');
-    } catch (e) { alert('Ошибка: ' + e.message); }
+if (!confirm('Удалить ревизию?')) return;
+try {
+await deleteDoc(doc(db, "plans", id));
+if (editingRevisionId === id) {
+editingRevisionId = null;
+document.getElementById('revisionFormTitle').textContent = ' Добавить ревизию';
+document.getElementById('revisionSubmitBtn').textContent = '💾 Сохранить ревизию';
+document.getElementById('revisionTitle').value = '';
+document.getElementById('revisionDate').value = '';
+document.getElementById('revisionDepartment').value = '';
+document.getElementById('revisionResponsible').value = '';
+}
+await loadAllDataFromFirebase();
+renderRevisionsList();
+alert('✅ Удалено');
+} catch (e) { alert('Ошибка: ' + e.message); }
 };
-
 window.renderRevisionsList = function() {
-    const container = document.getElementById('revisionsList');
-    if (!container) return;
-    if (data.plans.revisions.length === 0) { container.innerHTML = '<div class="no-employees">Ревизии не добавлены</div>'; return; }
-    let html = '';
-    data.plans.revisions.forEach(revision => {
-        const statusText = revision.status === 'progress' ? '🔵 В процессе' : revision.status === 'completed' ? '✅ Завершено' : '🟡 Запланировано';
-        html += `<div class="admin-plan-item revision"><div class="admin-plan-item-info"><div class="admin-plan-item-title">🔍 ${escapeHtml(revision.title)}</div><div class="admin-plan-item-subtitle">📅 ${revision.date || ''} • ${revision.department ? ' ' + escapeHtml(revision.department) + ' • ' : ''}${statusText}</div></div><div class="admin-plan-item-actions"><button class="btn btn-warning btn-sm" onclick="editRevision('${revision.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteRevision('${revision.id}')">🗑️</button></div></div>`;
-    });
-    container.innerHTML = html;
+const container = document.getElementById('revisionsList');
+if (!container) return;
+if (data.plans.revisions.length === 0) { container.innerHTML = '<div class="no-employees">Ревизии не добавлены</div>'; return; }
+let html = '';
+data.plans.revisions.forEach(revision => {
+const statusText = revision.status === 'progress' ? '🔵 В процессе' : revision.status === 'completed' ? '✅ Завершено' : '🟡 Запланировано';
+html += `<div class="admin-plan-item revision"><div class="admin-plan-item-info"><div class="admin-plan-item-title">🔍 ${escapeHtml(revision.title)}</div><div class="admin-plan-item-subtitle"> ${revision.date || ''} • ${revision.department ? '🏢 ' + escapeHtml(revision.department) + ' • ' : ''}${statusText}</div></div><div class="admin-plan-item-actions"><button class="btn btn-warning btn-sm" onclick="editRevision('${revision.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteRevision('${revision.id}')">🗑️</button></div></div>`;
+});
+container.innerHTML = html;
 };
-
 window.renderEmployeeIndividualList = function() {
-    const container = document.getElementById('employeesIndividualList'); if (!container) return;
-    container.innerHTML = '';
-    const employees = data.employees.filter(e => e.role !== 'superadmin');
-    if (employees.length === 0) { container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px;">Сотрудники не найдены</p>'; return; }
-    employees.forEach(emp => {
-        const row = document.createElement('div');
-        row.className = 'employee-row';
-        row.dataset.employeeId = emp.id;
-        row.innerHTML = `<input type="checkbox" class="employee-checkbox" id="emp_cb_${emp.id}" value="${emp.id}" data-name="${emp.name}" onchange="toggleEmployeeRow('${emp.id}')"><div><div class="employee-name">${escapeHtml(emp.name)}</div><div class="employee-settings"><select class="employee-select" id="emp_type_${emp.id}"><option value="kassa">Касса</option><option value="kd">КД</option><option value="zal">Зал</option><option value="sklad">Склад</option><option value="reviziya">Ревизия</option><option value="-">-</option></select><select class="employee-select" id="emp_shift_${emp.id}" onchange="toggleEmployeeCustomShift('${emp.id}')"><option value="1">Смена 9/1</option><option value="2">Смена 9/2</option><option value="3">Смена 11</option><option value="custom">Другое время</option></select></div><div id="emp_custom_shift_${emp.id}" style="display:none;margin-top:8px;padding:8px;background:#f0f0f0;border-radius:6px;"><div style="display:flex;gap:6px;align-items:center;"><input type="time" id="emp_custom_start_${emp.id}" style="flex:1;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:0.85em;"><span style="color:var(--gray);">—</span><input type="time" id="emp_custom_end_${emp.id}" style="flex:1;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:0.85em;"></div></div></div>`;
-        container.appendChild(row);
-    });
-    updateSelectedCount();
+const container = document.getElementById('employeesIndividualList'); if (!container) return;
+container.innerHTML = '';
+const employees = data.employees.filter(e => e.role !== 'superadmin');
+if (employees.length === 0) { container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px;">Сотрудники не найдены</p>'; return; }
+employees.forEach(emp => {
+const row = document.createElement('div');
+row.className = 'employee-row';
+row.dataset.employeeId = emp.id;
+row.innerHTML = `<input type="checkbox" class="employee-checkbox" id="emp_cb_${emp.id}" value="${emp.id}" data-name="${emp.name}" onchange="toggleEmployeeRow('${emp.id}')"><div><div class="employee-name">${escapeHtml(emp.name)}</div><div class="employee-settings"><select class="employee-select" id="emp_type_${emp.id}"><option value="kassa">Касса</option><option value="kd">КД</option><option value="zal">Зал</option><option value="sklad">Склад</option><option value="reviziya">Ревизия</option><option value="-">-</option></select><select class="employee-select" id="emp_shift_${emp.id}" onchange="toggleEmployeeCustomShift('${emp.id}')"><option value="1">Смена 9/1</option><option value="2">Смена 9/2</option><option value="3">Смена 11</option><option value="custom">Другое время</option></select></div><div id="emp_custom_shift_${emp.id}" style="display:none;margin-top:8px;padding:8px;background:#f0f0f0;border-radius:6px;"><div style="display:flex;gap:6px;align-items:center;"><input type="time" id="emp_custom_start_${emp.id}" style="flex:1;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:0.85em;"><span style="color:var(--gray);">—</span><input type="time" id="emp_custom_end_${emp.id}" style="flex:1;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:0.85em;"></div></div></div>`;
+container.appendChild(row);
+});
+updateSelectedCount();
 };
-
 window.toggleEmployeeRow = function(empId) { const row = document.querySelector(`.employee-row[data-employee-id="${empId}"]`); const checkbox = document.querySelector(`#emp_cb_${empId}`); if (checkbox.checked) row.classList.add('selected'); else row.classList.remove('selected'); updateSelectedCount(); };
 window.toggleEmployeeCustomShift = function(empId) { const shiftSelect = document.getElementById(`emp_shift_${empId}`); const customBlock = document.getElementById(`emp_custom_shift_${empId}`); customBlock.style.display = shiftSelect.value === 'custom' ? 'block' : 'none'; };
 function updateSelectedCount() { const count = document.querySelectorAll('.employee-checkbox:checked').length; const countEl = document.getElementById('selectedEmployeesCount'); if (countEl) countEl.textContent = count > 0 ? `✅ Выбрано: ${count} ${getEmployeeWord(count)}` : ''; }
 function getEmployeeWord(count) { if (count === 1) return 'сотрудник'; if (count >= 2 && count <= 4) return 'сотрудника'; return 'сотрудников'; }
 function getEmployeeCustomShiftTime(empId) { const start = document.getElementById(`emp_custom_start_${empId}`).value; const end = document.getElementById(`emp_custom_end_${empId}`).value; if (start && end) return `${start} - ${end}`; return 'Не указано'; }
-
 window.addIndividualScheduleEntries = async function() {
-    if (editingScheduleId) { alert('Сначала отмените редактирование'); return; }
-    const dateInput = document.getElementById('adminDate').value;
-    if (!dateInput) { alert('⚠️ Выберите дату'); return; }
-    const checkboxes = document.querySelectorAll('.employee-checkbox:checked');
-    if (checkboxes.length === 0) { alert('⚠️ Выберите сотрудника'); return; }
-    const date = formatDate(dateInput);
-    const btn = document.getElementById('scheduleSubmitBtn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `<span class="spinner"></span> Добавление...`;
-    btn.disabled = true;
-    let successCount = 0;
-    const promises = [];
-    checkboxes.forEach(cb => {
-        const empId = cb.value; const empName = cb.dataset.name;
-        const type = document.getElementById(`emp_type_${empId}`).value;
-        const shift = document.getElementById(`emp_shift_${empId}`).value;
-        const customShiftTime = shift === 'custom' ? getEmployeeCustomShiftTime(empId) : '';
-        const entryData = { date, employee: empName, employeeId: empId, type, shift, customShiftTime, branchId: currentUser.branchId };
-        const p = addDoc(collection(db, "schedule"), entryData).then(() => { successCount++; const shiftDisplay = shift === 'custom' ? customShiftTime : 'смена ' + shiftLabels[shift]; return window.createNotification(empId, '📅 Новая смена', `Вам назначена смена на ${date} (${typeLabels[type]}, ${shiftDisplay})`, 'schedule'); }).catch(e => console.error("Ошибка", e));
-        promises.push(p);
-    });
-    try {
-        await Promise.all(promises);
-        
-        sendTelegramScheduleUpdate([formatDate(dateInput)]);
-
-        document.getElementById('adminDate').value = '';
-        document.querySelectorAll('.employee-checkbox').forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('selected'); });
-        updateSelectedCount();
-        await loadAllDataFromFirebase();
-        renderScheduleList(); renderSchedule();
-        alert(`✅ Добавлено ${successCount} ${getEmployeeWord(successCount)}!`);
-    } catch (e) { alert('Ошибка: ' + e.message); }
-    finally { btn.innerHTML = originalText; btn.disabled = false; }
+if (editingScheduleId) { alert('Сначала отмените редактирование'); return; }
+const dateInput = document.getElementById('adminDate').value;
+if (!dateInput) { alert('⚠️ Выберите дату'); return; }
+const checkboxes = document.querySelectorAll('.employee-checkbox:checked');
+if (checkboxes.length === 0) { alert('⚠️ Выберите сотрудника'); return; }
+const date = formatDate(dateInput);
+const btn = document.getElementById('scheduleSubmitBtn');
+const originalText = btn.innerHTML;
+btn.innerHTML = `<span class="spinner"></span> Добавление...`;
+btn.disabled = true;
+let successCount = 0;
+const promises = [];
+checkboxes.forEach(cb => {
+const empId = cb.value; const empName = cb.dataset.name;
+const type = document.getElementById(`emp_type_${empId}`).value;
+const shift = document.getElementById(`emp_shift_${empId}`).value;
+const customShiftTime = shift === 'custom' ? getEmployeeCustomShiftTime(empId) : '';
+const entryData = { date, employee: empName, employeeId: empId, type, shift, customShiftTime, branchId: currentUser.branchId };
+const p = addDoc(collection(db, "schedule"), entryData).then(() => { successCount++; const shiftDisplay = shift === 'custom' ? customShiftTime : 'смена ' + shiftLabels[shift]; return window.createNotification(empId, '📅 Новая смена', `Вам назначена смена на ${date} (${typeLabels[type]}, ${shiftDisplay})`, 'schedule'); }).catch(e => console.error("Ошибка", e));
+promises.push(p);
+});
+try {
+await Promise.all(promises);
+sendTelegramScheduleUpdate([formatDate(dateInput)]);
+document.getElementById('adminDate').value = '';
+document.querySelectorAll('.employee-checkbox').forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('selected'); });
+updateSelectedCount();
+await loadAllDataFromFirebase();
+renderScheduleList(); renderSchedule();
+alert(`✅ Добавлено ${successCount} ${getEmployeeWord(successCount)}!`);
+} catch (e) { alert('Ошибка: ' + e.message); }
+finally { btn.innerHTML = originalText; btn.disabled = false; }
 };
-
 window.editEmployee = function(id) { const emp = data.employees.find(e => e.id === id); if (!emp) return; editingEmployeeId = id; document.getElementById('newEmployeeName').value = emp.name; document.getElementById('newEmployeePhone').value = emp.phone; document.getElementById('newEmployeePassword').value = emp.password; document.getElementById('newEmployeePosition').value = emp.position || ''; document.getElementById('newEmployeeRole').value = emp.role; const btn = document.getElementById('employeeSubmitBtn'); btn.textContent = '💾 Сохранить'; btn.className = 'btn btn-warning btn-block'; btn.onclick = updateEmployee; document.getElementById('employeeFormTitle').textContent = '✏️ Редактирование'; if (!document.getElementById('cancelEditBtn')) { const cancelBtn = document.createElement('button'); cancelBtn.id = 'cancelEditBtn'; cancelBtn.className = 'btn btn-secondary btn-block'; cancelBtn.style.marginTop = '8px'; cancelBtn.textContent = '✕ Отмена'; cancelBtn.onclick = cancelEditEmployee; btn.parentNode.appendChild(cancelBtn); } document.getElementById('admin-employees').scrollIntoView({ behavior: 'smooth' }); };
-
-window.updateEmployee = async function() { if (!editingEmployeeId) return; const name = document.getElementById('newEmployeeName').value.trim(); const phone = document.getElementById('newEmployeePhone').value.trim(); const password = document.getElementById('newEmployeePassword').value; const position = document.getElementById('newEmployeePosition').value; const role = document.getElementById('newEmployeeRole').value; if (!name || !phone || !password) { alert('Заполните все поля'); return; } if (password.length < 3) { alert('Пароль минимум 3 символа'); return; } const normalizedPhone = normalizePhone(phone); const phoneExists = data.employees.some(e => e.id !== editingEmployeeId && normalizePhone(e.phone) === normalizedPhone); if (phoneExists) { alert(' Телефон уже используется!'); return; } try { await updateDoc(doc(db, "users", editingEmployeeId), { name, phone, password, position, role, branchId: currentUser.branchId }); cancelEditEmployee(); await loadAllDataFromFirebase(); renderEmployeesList(); renderEmployeeIndividualList(); alert('✅ Обновлено!'); } catch (e) { alert('Ошибка: ' + e.message); } };
-
-window.cancelEditEmployee = function() { editingEmployeeId = null; document.getElementById('newEmployeeName').value = ''; document.getElementById('newEmployeePhone').value = ''; document.getElementById('newEmployeePassword').value = ''; document.getElementById('newEmployeePosition').value = ''; document.getElementById('newEmployeeRole').value = 'user'; const btn = document.getElementById('employeeSubmitBtn'); btn.textContent = ' Добавить сотрудника'; btn.className = 'btn btn-success btn-block'; btn.onclick = addEmployee; document.getElementById('employeeFormTitle').textContent = '➕ Добавить сотрудника'; const cancelBtn = document.getElementById('cancelEditBtn'); if (cancelBtn) cancelBtn.remove(); };
-
+window.updateEmployee = async function() { if (!editingEmployeeId) return; const name = document.getElementById('newEmployeeName').value.trim(); const phone = document.getElementById('newEmployeePhone').value.trim(); const password = document.getElementById('newEmployeePassword').value; const position = document.getElementById('newEmployeePosition').value; const role = document.getElementById('newEmployeeRole').value; if (!name || !phone || !password) { alert('Заполните все поля'); return; } if (password.length < 3) { alert('Пароль минимум 3 символа'); return; } const normalizedPhone = normalizePhone(phone); const phoneExists = data.employees.some(e => e.id !== editingEmployeeId && normalizePhone(e.phone) === normalizedPhone); if (phoneExists) { alert('❌ Телефон уже используется!'); return; } try { await updateDoc(doc(db, "users", editingEmployeeId), { name, phone, password, position, role, branchId: currentUser.branchId }); cancelEditEmployee(); await loadAllDataFromFirebase(); renderEmployeesList(); renderEmployeeIndividualList(); alert('✅ Обновлено!'); } catch (e) { alert('Ошибка: ' + e.message); } };
+window.cancelEditEmployee = function() { editingEmployeeId = null; document.getElementById('newEmployeeName').value = ''; document.getElementById('newEmployeePhone').value = ''; document.getElementById('newEmployeePassword').value = ''; document.getElementById('newEmployeePosition').value = ''; document.getElementById('newEmployeeRole').value = 'user'; const btn = document.getElementById('employeeSubmitBtn'); btn.textContent = '➕ Добавить сотрудника'; btn.className = 'btn btn-success btn-block'; btn.onclick = addEmployee; document.getElementById('employeeFormTitle').textContent = '➕ Добавить сотрудника'; const cancelBtn = document.getElementById('cancelEditBtn'); if (cancelBtn) cancelBtn.remove(); };
 window.addEmployee = async function() { if (editingEmployeeId) { alert('Сначала отмените редактирование'); return; } const name = document.getElementById('newEmployeeName').value.trim(); const phone = document.getElementById('newEmployeePhone').value.trim(); const password = document.getElementById('newEmployeePassword').value; const position = document.getElementById('newEmployeePosition').value; const role = document.getElementById('newEmployeeRole').value; if (!name || !phone || !password) { alert('Заполните все поля'); return; } if (password.length < 3) { alert('Пароль минимум 3 символа'); return; } if (!position) { alert('Выберите должность'); return; } const normalizedPhone = normalizePhone(phone); if (data.employees.some(e => normalizePhone(e.phone) === normalizedPhone)) { alert('❌ Сотрудник уже есть!'); return; } const btn = document.getElementById('employeeSubmitBtn'); const originalText = btn.innerHTML; btn.innerHTML = `<span class="spinner"></span> Добавление...`; btn.disabled = true; try { await addDoc(collection(db, "users"), { name, phone, password, position, role, branchId: currentUser.branchId }); document.getElementById('newEmployeeName').value = ''; document.getElementById('newEmployeePhone').value = ''; document.getElementById('newEmployeePassword').value = ''; document.getElementById('newEmployeePosition').value = ''; await loadAllDataFromFirebase(); renderEmployeesList(); renderEmployeeIndividualList(); alert('✅ Добавлен!'); } catch (e) { alert('Ошибка: ' + e.message); } finally { btn.innerHTML = originalText; btn.disabled = false; } };
-
 window.deleteEmployee = async function(id) { const emp = data.employees.find(e => e.id === id); if (!emp) return; if (currentUser && currentUser.id === emp.id) { alert('⛔ Нельзя удалить свой аккаунт!'); return; } if (!confirm(`Удалить "${emp.name}"?`)) return; try { await deleteDoc(doc(db, "users", id)); if (editingEmployeeId === id) cancelEditEmployee(); await loadAllDataFromFirebase(); renderEmployeesList(); renderEmployeeIndividualList(); } catch (e) { alert('Ошибка: ' + e.message); } };
-
-window.transferEmployee = function(id) { const emp = data.employees.find(e => e.id === id); if (!emp) return; const branchOptions = data.branches.filter(b => b.id !== currentUser.branchId).map(b => `<option value="${b.id}">${escapeHtml(b.name)}${b.city ? ' (' + escapeHtml(b.city) + ')' : ''}</option>`).join(''); if (!branchOptions) { alert('❌ Нет других отделений'); return; } const modal = document.createElement('div'); modal.className = 'modal open'; modal.id = 'transferModal'; modal.innerHTML = `<div class="modal-content"><div class="modal-header"><h3>🔄 Перевод</h3><button class="modal-close" onclick="closeTransferModal()">×</button></div><div class="modal-body"><p style="margin-bottom:12px;">Перевод: <strong>${escapeHtml(emp.name)}</strong></p><div class="form-group"><label>Отделение:</label><select id="transferBranchSelect"><option value="">-- Выберите --</option>${branchOptions}</select></div><button class="btn btn-primary btn-block" onclick="confirmTransferEmployee('${emp.id}')">🔄 Перевести</button></div></div>`; document.body.appendChild(modal); };
+window.transferEmployee = function(id) { const emp = data.employees.find(e => e.id === id); if (!emp) return; const branchOptions = data.branches.filter(b => b.id !== currentUser.branchId).map(b => `<option value="${b.id}">${escapeHtml(b.name)}${b.city ? ' (' + escapeHtml(b.city) + ')' : ''}</option>`).join(''); if (!branchOptions) { alert(' Нет других отделений'); return; } const modal = document.createElement('div'); modal.className = 'modal open'; modal.id = 'transferModal'; modal.innerHTML = `<div class="modal-content"><div class="modal-header"><h3>🔄 Перевод</h3><button class="modal-close" onclick="closeTransferModal()">×</button></div><div class="modal-body"><p style="margin-bottom:12px;">Перевод: <strong>${escapeHtml(emp.name)}</strong></p><div class="form-group"><label>Отделение:</label><select id="transferBranchSelect"><option value="">-- Выберите --</option>${branchOptions}</select></div><button class="btn btn-primary btn-block" onclick="confirmTransferEmployee('${emp.id}')">🔄 Перевести</button></div></div>`; document.body.appendChild(modal); };
 window.closeTransferModal = function() { const modal = document.getElementById('transferModal'); if (modal) modal.remove(); };
-window.confirmTransferEmployee = async function(empId) { const targetBranchId = document.getElementById('transferBranchSelect').value; if (!targetBranchId) { alert('Выберите отделение'); return; } const emp = data.employees.find(e => e.id === empId); const targetBranch = data.branches.find(b => b.id === targetBranchId); if (!confirm(`Перевести ${emp.name} в "${targetBranch.name}"?`)) return; try { await updateDoc(doc(db, "users", empId), { branchId: targetBranchId }); await window.createNotification(empId, ' Перевод', `Вы переведены в "${targetBranch.name}"`, 'transfer'); alert('✅ Переведен!'); closeTransferModal(); await loadAllDataFromFirebase(); renderEmployeesList(); } catch (e) { alert('Ошибка: ' + e.message); } };
-
-window.renderEmployeesList = function() { const list = document.getElementById('employeesList'); if (!list) return; list.innerHTML = ''; const visibleEmployees = data.employees.filter(e => e.role !== 'superadmin'); if (visibleEmployees.length === 0) { list.innerHTML = '<div class="no-employees">Список пуст</div>'; return; } visibleEmployees.forEach(emp => { const item = document.createElement('div'); item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`; const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">💎 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>'; const positionText = emp.position ? `<div style="color:var(--brand-green);font-size:0.82em;margin-top:2px;">💼 ${positionLabels[emp.position] || emp.position}</div>` : ''; const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>'; const isSelf = currentUser && currentUser.id === emp.id; const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`; const transferBtn = `<button class="btn btn-info btn-sm" onclick="transferEmployee('${emp.id}')" style="margin-right:4px;"></button>`; const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`; item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name">👤 ${escapeHtml(emp.name)} ${roleBadge}</div>${positionText}<div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${transferBtn}${deleteBtn}</div></div>`; list.appendChild(item); }); document.getElementById('employeeCounter').textContent = visibleEmployees.length + ' чел.'; };
-
+window.confirmTransferEmployee = async function(empId) { const targetBranchId = document.getElementById('transferBranchSelect').value; if (!targetBranchId) { alert('Выберите отделение'); return; } const emp = data.employees.find(e => e.id === empId); const targetBranch = data.branches.find(b => b.id === targetBranchId); if (!confirm(`Перевести ${emp.name} в "${targetBranch.name}"?`)) return; try { await updateDoc(doc(db, "users", empId), { branchId: targetBranchId }); await window.createNotification(empId, '🔄 Перевод', `Вы переведены в "${targetBranch.name}"`, 'transfer'); alert('✅ Переведен!'); closeTransferModal(); await loadAllDataFromFirebase(); renderEmployeesList(); } catch (e) { alert('Ошибка: ' + e.message); } };
+window.renderEmployeesList = function() { const list = document.getElementById('employeesList'); if (!list) return; list.innerHTML = ''; const visibleEmployees = data.employees.filter(e => e.role !== 'superadmin'); if (visibleEmployees.length === 0) { list.innerHTML = '<div class="no-employees">Список пуст</div>'; return; } visibleEmployees.forEach(emp => { const item = document.createElement('div'); item.className = `employee-admin-item ${emp.role === 'admin' ? 'role-admin' : ''}`; const roleBadge = emp.role === 'admin' ? '<span class="employee-admin-role role-admin-badge">💎 Админ</span>' : '<span class="employee-admin-role role-user-badge">👤 Сотрудник</span>'; const positionText = emp.position ? `<div style="color:var(--brand-green);font-size:0.82em;margin-top:2px;">💼 ${positionLabels[emp.position] || emp.position}</div>` : ''; const phoneText = emp.phone ? `📱 ${escapeHtml(emp.phone)}` : '<em style="color:#999;">телефон не указан</em>'; const isSelf = currentUser && currentUser.id === emp.id; const editBtn = `<button class="btn btn-warning btn-sm" onclick="editEmployee('${emp.id}')" style="margin-right:4px;">✏️</button>`; const transferBtn = `<button class="btn btn-info btn-sm" onclick="transferEmployee('${emp.id}')" style="margin-right:4px;">🔄</button>`; const deleteBtn = isSelf ? '<button class="btn btn-sm" style="background:#e9ecef;color:#999;" disabled>Вы</button>' : `<button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">🗑️</button>`; item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(emp.name)} ${roleBadge}</div>${positionText}<div class="employee-admin-phone">${phoneText}</div></div><div style="display:flex;gap:4px;">${editBtn}${transferBtn}${deleteBtn}</div></div>`; list.appendChild(item); }); document.getElementById('employeeCounter').textContent = visibleEmployees.length + ' чел.'; };
 window.renderSuperAdminPanel = function() {
-  renderBranchesList();
-  const maintBtn = document.getElementById('maintenanceToggleBtn');
-  if (data.settings.maintenanceMode) { maintBtn.textContent = ' Выключить тех. работы'; maintBtn.className = 'btn btn-danger btn-block'; } else { maintBtn.textContent = ' Включить тех. работы'; maintBtn.className = 'btn btn-warning btn-block'; }
-  const list = document.getElementById('superAdminList'); list.innerHTML = '';
-  const admins = data.employees.filter(e => e.role === 'admin');
-  if (admins.length === 0) { list.innerHTML = '<div class="no-employees">Нет администраторов</div>'; return; }
-  admins.forEach(admin => { const item = document.createElement('div'); item.className = 'employee-admin-item role-admin'; item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name">👑 ${escapeHtml(admin.name)}</div><div class="employee-admin-phone">📱 ${escapeHtml(admin.phone)}</div></div><button class="btn btn-gold btn-sm" onclick="transferSuperAdmin('${admin.id}')">Передать полномочия</button></div>`; list.appendChild(item); });
+renderBranchesList();
+document.getElementById('planFinancialEnabled').checked = planSettings.financial;
+document.getElementById('planEventsEnabled').checked = planSettings.events;
+document.getElementById('planRevisionsEnabled').checked = planSettings.revisions;
+const maintBtn = document.getElementById('maintenanceToggleBtn');
+if (data.settings.maintenanceMode) { maintBtn.textContent = ' Выключить тех. работы'; maintBtn.className = 'btn btn-danger btn-block'; } else { maintBtn.textContent = '🟡 Включить тех. работы'; maintBtn.className = 'btn btn-warning btn-block'; }
+const list = document.getElementById('superAdminList'); list.innerHTML = '';
+const admins = data.employees.filter(e => e.role === 'admin');
+if (admins.length === 0) { list.innerHTML = '<div class="no-employees">Нет администраторов</div>'; return; }
+admins.forEach(admin => { const item = document.createElement('div'); item.className = 'employee-admin-item role-admin'; item.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name"> ${escapeHtml(admin.name)}</div><div class="employee-admin-phone">📱 ${escapeHtml(admin.phone)}</div></div><button class="btn btn-gold btn-sm" onclick="transferSuperAdmin('${admin.id}')">Передать полномочия</button></div>`; list.appendChild(item); });
 };
-
 window.toggleMaintenanceMode = async function() { const newMode = !data.settings.maintenanceMode; if (!confirm(newMode ? 'Включить тех. работы?' : 'Выключить?')) return; try { await setDoc(doc(db, "settings", "global"), { maintenanceMode: newMode }, { merge: true }); data.settings.maintenanceMode = newMode; renderSuperAdminPanel(); alert(newMode ? '✅ Включено' : '✅ Выключено'); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.transferSuperAdmin = async function(targetId) { const targetAdmin = data.employees.find(e => e.id === targetId); if (!targetAdmin) return; if (!confirm(`Передать роль "${targetAdmin.name}"?`)) return; try { await updateDoc(doc(db, "users", currentUser.id), { role: 'admin' }); await updateDoc(doc(db, "users", targetId), { role: 'superadmin' }); currentUser.role = 'admin'; alert(`✅ Передано!`); await loadAllDataFromFirebase(); renderAll(); showSection('admin', document.querySelector('.top-nav-btn')); } catch (e) { alert('Ошибка: ' + e.message); } };
-
 window.addNewBranch = async function() { const name = document.getElementById('newBranchName').value.trim(); const city = document.getElementById('newBranchCity').value.trim(); if (!name) { alert('Введите название'); return; } const btn = document.getElementById('branchSubmitBtn'); const originalText = btn.innerHTML; btn.innerHTML = `<span class="spinner"></span> Создание...`; btn.disabled = true; try { await addDoc(collection(db, "branches"), { name, city, createdAt: Date.now() }); document.getElementById('newBranchName').value = ''; document.getElementById('newBranchCity').value = ''; alert('✅ Отделение создано!'); loadBranchesToLogin(); renderBranchesList(); } catch (e) { alert('Ошибка: ' + e.message); } finally { btn.innerHTML = originalText; btn.disabled = false; } };
-
 window.renderBranchesList = async function() { const list = document.getElementById('branchesList'); if (!list) return; const branchesSnap = await getDocs(collection(db, "branches")); list.innerHTML = ''; branchesSnap.docs.forEach(doc => { const b = doc.data(); const div = document.createElement('div'); div.className = 'employee-admin-item'; div.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name">🏪 ${escapeHtml(b.name)}</div><div class="employee-admin-phone">📍 ${escapeHtml(b.city || 'Город не указан')}</div></div><button class="btn btn-danger btn-sm" onclick="deleteBranch('${doc.id}')">🗑️</button></div>`; list.appendChild(div); }); };
 window.deleteBranch = async function(id) { if (!confirm('Удалить отделение?')) return; try { await deleteDoc(doc(db, "branches", id)); renderBranchesList(); loadBranchesToLogin(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.migrateOldData = async function() { if (!confirm('⚠️ Привязать старых сотрудников к текущему отделению?')) return; try { const usersSnap = await getDocs(collection(db, "users")); for (const d of usersSnap.docs) { if (!d.data().branchId) await updateDoc(doc(db, "users", d.id), { branchId: currentUser.branchId }); } const scheduleSnap = await getDocs(collection(db, "schedule")); for (const d of scheduleSnap.docs) { if (!d.data().branchId) await updateDoc(doc(db, "schedule", d.id), { branchId: currentUser.branchId }); } alert('✅ Мигрировано!'); await loadAllDataFromFirebase(); renderAll(); } catch (e) { alert('Ошибка: ' + e.message); } };
-
-window.renderSchedule = function() { const grid = document.getElementById('scheduleGrid'); if (!grid) return; grid.innerHTML = ''; const dates = getSortedDates(); const activeDates = dates.filter(d => getDateStatus(d) !== 'past'); if (activeDates.length === 0) { grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📭 График пустой</div>'; return; } activeDates.forEach(date => { const entries = data.schedule[date]; if (!entries || entries.length === 0) return; const status = getDateStatus(date); const dateCard = document.createElement('div'); dateCard.className = `date-card ${status}`; let statusBadge = ''; if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>'; else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>'; else if (status === 'future') { const [day, month, year] = date.split('.').map(Number); const dateObj = new Date(year, month - 1, day); const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0,0,0,0); dateObj.setHours(0,0,0,0); if (dateObj.getTime() === tomorrow.getTime()) statusBadge = '<span class="tomorrow-badge">Завтра</span>'; } dateCard.innerHTML = `<h3> ${date} ${statusBadge}</h3>`; [...entries].sort((a, b) => { if (a.shift !== b.shift) return a.shift - b.shift; return a.type.localeCompare(b.type); }).forEach(entry => { const card = document.createElement('div'); card.className = `employee-schedule-card ${entry.type}`; const positionLabel = typeLabels[entry.type] || entry.type; const positionClass = entry.type; const shiftLabel = shiftLabels[entry.shift] || entry.shift; const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Не указано') : shiftTimes[entry.shift]; card.innerHTML = `<div class="employee-card-header"><div class="employee-card-name">👤 ${escapeHtml(entry.employee)}</div><span class="employee-card-position ${positionClass}">${positionLabel}</span></div><div class="employee-card-shift"><span class="employee-card-shift-icon"></span><span>Смена ${shiftLabel}</span><span style="color:var(--light-gray);">•</span><span class="employee-card-time">${shiftTime}</span></div>`; dateCard.appendChild(card); }); grid.appendChild(dateCard); }); };
-
-window.renderArchive = function() { const content = document.getElementById('archiveContent'); if (!content) return; content.innerHTML = ''; const dates = getSortedDates(); const pastDates = dates.filter(d => getDateStatus(d) === 'past'); let archiveEntriesCount = 0; pastDates.forEach(d => { if (data.schedule[d]) archiveEntriesCount += data.schedule[d].length; }); const infoBlock = document.createElement('div'); infoBlock.className = 'archive-info'; infoBlock.innerHTML = `<div class="archive-info-text">📦 Прошедшие смены (удаляются через 15 дней)</div><div class="archive-counter">${archiveEntriesCount} записей</div>`; content.appendChild(infoBlock); if (currentUser && currentUser.role === 'superadmin' && pastDates.length > 0) { const clearBtn = document.createElement('button'); clearBtn.className = 'btn btn-danger btn-block'; clearBtn.style.marginBottom = '16px'; clearBtn.innerHTML = '🗑️ Очистить архив'; clearBtn.onclick = clearArchive; content.appendChild(clearBtn); } if (pastDates.length === 0) { content.innerHTML += '<div style="text-align:center;padding:40px;color:var(--light-gray);">📦<br><br>Архив пуст</div>'; return; } [...pastDates].reverse().forEach(date => { const entries = data.schedule[date]; if (!entries || entries.length === 0) return; const dateCard = document.createElement('div'); dateCard.className = 'archive-date-card'; dateCard.innerHTML = `<h3> ${date} <span class="archive-badge">Архив</span></h3>`; [...entries].sort((a, b) => { if (a.shift !== b.shift) return a.shift - b.shift; return a.type.localeCompare(b.type); }).forEach(entry => { const card = document.createElement('div'); card.className = 'archive-employee-card'; const positionLabel = typeLabels[entry.type] || entry.type; const positionClass = entry.type; const shiftLabel = shiftLabels[entry.shift] || entry.shift; const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Не указано') : shiftTimes[entry.shift]; let deleteBtn = currentUser && currentUser.role === 'superadmin' ? `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')">🗑️</button>` : ''; card.innerHTML = `<div class="archive-employee-info"><div style="font-weight:700;color:var(--dark);margin-bottom:4px;">👤 ${escapeHtml(entry.employee)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:0.85em;"><span class="employee-card-position ${positionClass}" style="font-size:0.8em;">${positionLabel}</span><span style="color:var(--gray);">🕐 Смена ${shiftLabel} • ${shiftTime}</span></div></div>${deleteBtn}`; dateCard.appendChild(card); }); content.appendChild(dateCard); }); };
-
+window.renderSchedule = function() { const grid = document.getElementById('scheduleGrid'); if (!grid) return; grid.innerHTML = ''; const dates = getSortedDates(); const activeDates = dates.filter(d => getDateStatus(d) !== 'past'); if (activeDates.length === 0) { grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📭 График пустой</div>'; return; } activeDates.forEach(date => { const entries = data.schedule[date]; if (!entries || entries.length === 0) return; const status = getDateStatus(date); const dateCard = document.createElement('div'); dateCard.className = `date-card ${status}`; let statusBadge = ''; if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>'; else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>'; else if (status === 'future') { const [day, month, year] = date.split('.').map(Number); const dateObj = new Date(year, month - 1, day); const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0,0,0,0); dateObj.setHours(0,0,0,0); if (dateObj.getTime() === tomorrow.getTime()) statusBadge = '<span class="tomorrow-badge">Завтра</span>'; } dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`; [...entries].sort((a, b) => { if (a.shift !== b.shift) return a.shift - b.shift; return a.type.localeCompare(b.type); }).forEach(entry => { const card = document.createElement('div'); card.className = `employee-schedule-card ${entry.type}`; const positionLabel = typeLabels[entry.type] || entry.type; const positionClass = entry.type; const shiftLabel = shiftLabels[entry.shift] || entry.shift; const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Не указано') : shiftTimes[entry.shift]; card.innerHTML = `<div class="employee-card-header"><div class="employee-card-name">👤 ${escapeHtml(entry.employee)}</div><span class="employee-card-position ${positionClass}">${positionLabel}</span></div><div class="employee-card-shift"><span class="employee-card-shift-icon">🕐</span><span>Смена ${shiftLabel}</span><span style="color:var(--light-gray);">•</span><span class="employee-card-time">${shiftTime}</span></div>`; dateCard.appendChild(card); }); grid.appendChild(dateCard); }); };
+window.renderArchive = function() { const content = document.getElementById('archiveContent'); if (!content) return; content.innerHTML = ''; const dates = getSortedDates(); const pastDates = dates.filter(d => getDateStatus(d) === 'past'); let archiveEntriesCount = 0; pastDates.forEach(d => { if (data.schedule[d]) archiveEntriesCount += data.schedule[d].length; }); const infoBlock = document.createElement('div'); infoBlock.className = 'archive-info'; infoBlock.innerHTML = `<div class="archive-info-text">📦 Прошедшие смены (удаляются через 15 дней)</div><div class="archive-counter">${archiveEntriesCount} записей</div>`; content.appendChild(infoBlock); if (currentUser && currentUser.role === 'superadmin' && pastDates.length > 0) { const clearBtn = document.createElement('button'); clearBtn.className = 'btn btn-danger btn-block'; clearBtn.style.marginBottom = '16px'; clearBtn.innerHTML = '🗑️ Очистить архив'; clearBtn.onclick = clearArchive; content.appendChild(clearBtn); } if (pastDates.length === 0) { content.innerHTML += '<div style="text-align:center;padding:40px;color:var(--light-gray);">📦<br><br>Архив пуст</div>'; return; } [...pastDates].reverse().forEach(date => { const entries = data.schedule[date]; if (!entries || entries.length === 0) return; const dateCard = document.createElement('div'); dateCard.className = 'archive-date-card'; dateCard.innerHTML = `<h3>📅 ${date} <span class="archive-badge">Архив</span></h3>`; [...entries].sort((a, b) => { if (a.shift !== b.shift) return a.shift - b.shift; return a.type.localeCompare(b.type); }).forEach(entry => { const card = document.createElement('div'); card.className = 'archive-employee-card'; const positionLabel = typeLabels[entry.type] || entry.type; const positionClass = entry.type; const shiftLabel = shiftLabels[entry.shift] || entry.shift; const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Не указано') : shiftTimes[entry.shift]; let deleteBtn = currentUser && currentUser.role === 'superadmin' ? `<button class="btn btn-danger btn-sm" onclick="deleteArchiveEntry('${entry.id}')">🗑️</button>` : ''; card.innerHTML = `<div class="archive-employee-info"><div style="font-weight:700;color:var(--dark);margin-bottom:4px;">👤 ${escapeHtml(entry.employee)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:0.85em;"><span class="employee-card-position ${positionClass}" style="font-size:0.8em;">${positionLabel}</span><span style="color:var(--gray);">🕐 Смена ${shiftLabel} • ${shiftTime}</span></div></div>${deleteBtn}`; dateCard.appendChild(card); }); content.appendChild(dateCard); }); };
 window.deleteArchiveEntry = async function(id) { if (!currentUser || currentUser.role !== 'superadmin') { alert('🔒 Только владелец'); return; } if (!confirm('Удалить?')) return; try { await deleteDoc(doc(db, "schedule", id)); await loadAllDataFromFirebase(); renderArchive(); alert('✅ Удалено'); } catch (e) { alert('Ошибка: ' + e.message); } };
-window.clearArchive = async function() { if (!currentUser || currentUser.role !== 'superadmin') { alert(' Только владелец'); return; } if (!confirm('⚠️ Удалить ВСЕ записи из архива?')) return; if (!confirm('Точно?')) return; try { const dates = Object.keys(data.schedule); let deletedCount = 0; for (const date of dates) { if (getDateStatus(date) === 'past') { for (const entry of data.schedule[date]) { await deleteDoc(doc(db, "schedule", entry.id)); deletedCount++; } } } await loadAllDataFromFirebase(); renderArchive(); alert(`✅ Удалено: ${deletedCount}`); } catch (e) { alert('Ошибка: ' + e.message); } };
-
-window.renderScheduleList = function() { const list = document.getElementById('scheduleList'); if (!list) return; list.innerHTML = ''; const dates = getSortedDates(); const activeDates = dates.filter(d => getDateStatus(d) !== 'past'); if (activeDates.length === 0) { list.innerHTML = '<div class="no-employees">Активных записей нет</div>'; return; } if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) { const clearBtn = document.createElement('button'); clearBtn.className = 'btn btn-danger btn-block'; clearBtn.style.marginBottom = '12px'; clearBtn.innerHTML = '🗑️ Очистить график'; clearBtn.onclick = clearCurrentSchedule; list.appendChild(clearBtn); } activeDates.forEach(date => { const status = getDateStatus(date); data.schedule[date].forEach(entry => { const item = document.createElement('div'); item.className = `schedule-item ${status === 'yesterday' ? 'yesterday' : ''}`; const badgeClass = `badge-${entry.type}`; let statusMark = status === 'today' ? '' : (status === 'yesterday' ? '✓' : ''); const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Другое') : shiftLabels[entry.shift]; const editBtn = `<button class="btn btn-warning btn-sm" onclick="editScheduleEntry('${entry.id}')" style="margin-right:4px;">✏️</button>`; const deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`; item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftTime}</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`; list.appendChild(item); }); }); };
-
-window.clearCurrentSchedule = async function() { if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) { alert(' Недостаточно прав'); return; } if (!confirm('⚠️ Удалить ВСЕ записи?')) return; if (!confirm('Точно?')) return; try { const dates = Object.keys(data.schedule); let deletedCount = 0; for (const date of dates) { if (getDateStatus(date) !== 'past') { for (const entry of data.schedule[date]) { await deleteDoc(doc(db, "schedule", entry.id)); deletedCount++; } } } await loadAllDataFromFirebase(); renderScheduleList(); renderSchedule(); alert(`✅ Удалено: ${deletedCount}`); } catch (e) { alert('Ошибка: ' + e.message); } };
-
+window.clearArchive = async function() { if (!currentUser || currentUser.role !== 'superadmin') { alert('🔒 Только владелец'); return; } if (!confirm('⚠️ Удалить ВСЕ записи из архива?')) return; if (!confirm('Точно?')) return; try { const dates = Object.keys(data.schedule); let deletedCount = 0; for (const date of dates) { if (getDateStatus(date) === 'past') { for (const entry of data.schedule[date]) { await deleteDoc(doc(db, "schedule", entry.id)); deletedCount++; } } } await loadAllDataFromFirebase(); renderArchive(); alert(`✅ Удалено: ${deletedCount}`); } catch (e) { alert('Ошибка: ' + e.message); } };
+window.renderScheduleList = function() { const list = document.getElementById('scheduleList'); if (!list) return; list.innerHTML = ''; const dates = getSortedDates(); const activeDates = dates.filter(d => getDateStatus(d) !== 'past'); if (activeDates.length === 0) { list.innerHTML = '<div class="no-employees">Активных записей нет</div>'; return; } if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) { const clearBtn = document.createElement('button'); clearBtn.className = 'btn btn-danger btn-block'; clearBtn.style.marginBottom = '12px'; clearBtn.innerHTML = '🗑️ Очистить график'; clearBtn.onclick = clearCurrentSchedule; list.appendChild(clearBtn); } activeDates.forEach(date => { const status = getDateStatus(date); data.schedule[date].forEach(entry => { const item = document.createElement('div'); item.className = `schedule-item ${status === 'yesterday' ? 'yesterday' : ''}`; const badgeClass = `badge-${entry.type}`; let statusMark = status === 'today' ? '🔵' : (status === 'yesterday' ? '✓' : ''); const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Другое') : shiftLabels[entry.shift]; const editBtn = `<button class="btn btn-warning btn-sm" onclick="editScheduleEntry('${entry.id}')" style="margin-right:4px;">✏️</button>`; const deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteScheduleEntry('${entry.id}')">✕</button>`; item.innerHTML = `<div class="schedule-item-info"><span>📅 ${date}${statusMark}</span><span>👤 ${entry.employee}</span><span class="shift-badge ${badgeClass}">${typeLabels[entry.type] || entry.type}</span><span>Смена ${shiftTime}</span></div><div style="display:flex;gap:4px;">${editBtn}${deleteBtn}</div>`; list.appendChild(item); }); }); };
+window.clearCurrentSchedule = async function() { if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) { alert('🔒 Недостаточно прав'); return; } if (!confirm('⚠️ Удалить ВСЕ записи?')) return; if (!confirm('Точно?')) return; try { const dates = Object.keys(data.schedule); let deletedCount = 0; for (const date of dates) { if (getDateStatus(date) !== 'past') { for (const entry of data.schedule[date]) { await deleteDoc(doc(db, "schedule", entry.id)); deletedCount++; } } } await loadAllDataFromFirebase(); renderScheduleList(); renderSchedule(); alert(`✅ Удалено: ${deletedCount}`); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.editScheduleEntry = function(id) { let targetEntry = null; for (const date in data.schedule) { const found = data.schedule[date].find(e => e.id === id); if (found) { targetEntry = found; break; } } if (!targetEntry) return; editingScheduleId = id; const [day, month, year] = targetEntry.date.split('.'); document.getElementById('adminDate').value = `${year}-${month}-${day}`; document.querySelectorAll('.employee-checkbox').forEach(cb => { cb.checked = false; cb.disabled = true; cb.parentElement.classList.remove('selected'); }); const targetRow = document.querySelector(`.employee-row[data-employee-id="${targetEntry.employeeId}"]`); if (targetRow) { const targetCb = targetRow.querySelector('.employee-checkbox'); targetCb.checked = true; targetRow.classList.add('selected'); document.getElementById(`emp_type_${targetEntry.employeeId}`).value = targetEntry.type; document.getElementById(`emp_shift_${targetEntry.employeeId}`).value = targetEntry.shift || '1'; if (targetEntry.shift === 'custom' && targetEntry.customShiftTime) { document.getElementById(`emp_custom_shift_${targetEntry.employeeId}`).style.display = 'block'; const times = targetEntry.customShiftTime.split(' - '); if (times.length === 2) { document.getElementById(`emp_custom_start_${targetEntry.employeeId}`).value = times[0]; document.getElementById(`emp_custom_end_${targetEntry.employeeId}`).value = times[1]; } } } const btn = document.getElementById('scheduleSubmitBtn'); btn.textContent = '💾 Сохранить'; btn.className = 'btn btn-warning btn-block'; btn.onclick = updateScheduleEntry; document.getElementById('scheduleFormTitle').textContent = '✏️ Редактирование'; if (!document.getElementById('cancelEditScheduleBtn')) { const cancelBtn = document.createElement('button'); cancelBtn.id = 'cancelEditScheduleBtn'; cancelBtn.className = 'btn btn-secondary btn-block'; cancelBtn.style.marginTop = '8px'; cancelBtn.textContent = '✕ Отмена'; cancelBtn.onclick = cancelEditSchedule; btn.parentNode.appendChild(cancelBtn); } document.getElementById('admin-schedule').scrollIntoView({ behavior: 'smooth' }); };
-
 window.updateScheduleEntry = async function() { if (!editingScheduleId) return; const dateInput = document.getElementById('adminDate').value; const checkedCb = document.querySelector('.employee-checkbox:checked'); if (!checkedCb || !dateInput) { alert('Проверьте дату и сотрудника'); return; } const date = formatDate(dateInput); const empName = checkedCb.dataset.name; const empId = checkedCb.value; const type = document.getElementById(`emp_type_${empId}`).value; const shift = document.getElementById(`emp_shift_${empId}`).value; const customShiftTime = shift === 'custom' ? getEmployeeCustomShiftTime(empId) : ''; try { await updateDoc(doc(db, "schedule", editingScheduleId), { date, employee: empName, employeeId: empId, type, shift, customShiftTime, branchId: currentUser.branchId });
-        
-        sendTelegramScheduleUpdate([date]);
-
-        const shiftDisplay = shift === 'custom' ? customShiftTime : 'смена ' + shiftLabels[shift]; await window.createNotification(empId, '🔄 Изменение', `Смена изменена на ${date} (${typeLabels[type]}, ${shiftDisplay})`, 'schedule'); cancelEditSchedule(); await loadAllDataFromFirebase(); renderScheduleList(); renderSchedule(); alert('✅ Обновлено!'); } catch (e) { alert('Ошибка: ' + e.message); } };
-
-window.cancelEditSchedule = function() { editingScheduleId = null; document.getElementById('adminDate').value = ''; document.querySelectorAll('.employee-checkbox').forEach(cb => { cb.checked = false; cb.disabled = false; cb.parentElement.classList.remove('selected'); }); updateSelectedCount(); const btn = document.getElementById('scheduleSubmitBtn'); btn.textContent = ' Добавить выбранных в график'; btn.className = 'btn btn-primary btn-block'; btn.onclick = addIndividualScheduleEntries; document.getElementById('scheduleFormTitle').textContent = ' Добавить сотрудников в график'; const cancelBtn = document.getElementById('cancelEditScheduleBtn'); if (cancelBtn) cancelBtn.remove(); };
-
-window.deleteScheduleEntry = async function(id) { if (!confirm('Удалить запись?')) return; try { let targetEntry = null; for (const date in data.schedule) { const found = data.schedule[date].find(e => e.id === id); if (found) { targetEntry = found; break; } } await deleteDoc(doc(db, "schedule", id)); if (targetEntry && targetEntry.employeeId) await window.createNotification(targetEntry.employeeId, '🗑️ Удаление', `Смена на ${targetEntry.date} удалена`, 'schedule'); await loadAllDataFromFirebase(); renderScheduleList(); renderSchedule(); } catch (e) { alert('Ошибка: ' + e.message); } };
-
+sendTelegramScheduleUpdate([date]);
+const shiftDisplay = shift === 'custom' ? customShiftTime : 'смена ' + shiftLabels[shift]; await window.createNotification(empId, '🔄 Изменение', `Смена изменена на ${date} (${typeLabels[type]}, ${shiftDisplay})`, 'schedule'); cancelEditSchedule(); await loadAllDataFromFirebase(); renderScheduleList(); renderSchedule(); alert('✅ Обновлено!'); } catch (e) { alert('Ошибка: ' + e.message); } };
+window.cancelEditSchedule = function() { editingScheduleId = null; document.getElementById('adminDate').value = ''; document.querySelectorAll('.employee-checkbox').forEach(cb => { cb.checked = false; cb.disabled = false; cb.parentElement.classList.remove('selected'); }); updateSelectedCount(); const btn = document.getElementById('scheduleSubmitBtn'); btn.textContent = '➕ Добавить выбранных в график'; btn.className = 'btn btn-primary btn-block'; btn.onclick = addIndividualScheduleEntries; document.getElementById('scheduleFormTitle').textContent = '➕ Добавить сотрудников в график'; const cancelBtn = document.getElementById('cancelEditScheduleBtn'); if (cancelBtn) cancelBtn.remove(); };
+window.deleteScheduleEntry = async function(id) { if (!confirm('Удалить запись?')) return; try { let targetEntry = null; for (const date in data.schedule) { const found = data.schedule[date].find(e => e.id === id); if (found) { targetEntry = found; break; } } await deleteDoc(doc(db, "schedule", id)); if (targetEntry && targetEntry.employeeId) await window.createNotification(targetEntry.employeeId, '️ Удаление', `Смена на ${targetEntry.date} удалена`, 'schedule'); await loadAllDataFromFirebase(); renderScheduleList(); renderSchedule(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.addContest = async function() { const name = document.getElementById('contestName').value.trim(); const description = document.getElementById('contestDescription').value.trim(); const status = document.getElementById('contestStatus').value; if (!name || !description) { alert('Заполните все поля'); return; } const btn = document.getElementById('contestSubmitBtn'); const originalText = btn.innerHTML; btn.innerHTML = `<span class="spinner"></span> Добавление...`; btn.disabled = true; try { await addDoc(collection(db, "contests"), { name, description, status, intermediateResults: [], finalResult: null, branchId: currentUser.branchId }); document.getElementById('contestName').value = ''; document.getElementById('contestDescription').value = ''; await loadAllDataFromFirebase(); renderContests(); renderAdminContestList(); alert('✅ Добавлен!'); } catch (e) { alert('Ошибка: ' + e.message); } finally { btn.innerHTML = originalText; btn.disabled = false; } };
 window.deleteContest = async function(id) { if (!confirm('Удалить?')) return; try { await deleteDoc(doc(db, "contests", id)); await loadAllDataFromFirebase(); renderContests(); renderAdminContestList(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.toggleContestStatus = async function(id) { const contest = data.contests.find(c => c.id === id); if (!contest) return; const newStatus = contest.status === 'active' ? 'finished' : 'active'; try { await updateDoc(doc(db, "contests", id), { status: newStatus }); await loadAllDataFromFirebase(); renderContests(); renderAdminContestList(); } catch (e) { alert('Ошибка: ' + e.message); } };
@@ -1572,11 +1124,8 @@ window.saveIntermediateResult = async function(contestId) { const title = docume
 window.saveFinalResult = async function(contestId) { const winner = document.getElementById(`finalWinner_${contestId}`).value.trim(); const description = document.getElementById(`finalDesc_${contestId}`).value.trim(); if (!winner) { alert('Введите имя победителя'); return; } try { await updateDoc(doc(db, "contests", contestId), { finalResult: { winner, description, date: Date.now() }, status: 'finished' }); openResultForms[contestId] = null; await loadAllDataFromFirebase(); renderContests(); renderAdminContestList(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.deleteIntermediateResult = async function(contestId, resultId) { if (!confirm('Удалить?')) return; const contest = data.contests.find(c => c.id === contestId); if (!contest) return; const updated = (contest.intermediateResults || []).filter(r => r.id !== resultId); try { await updateDoc(doc(db, "contests", contestId), { intermediateResults: updated }); await loadAllDataFromFirebase(); renderContests(); renderAdminContestList(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.deleteFinalResult = async function(contestId) { if (!confirm('Удалить?')) return; try { await updateDoc(doc(db, "contests", contestId), { finalResult: null }); await loadAllDataFromFirebase(); renderContests(); renderAdminContestList(); } catch (e) { alert('Ошибка: ' + e.message); } };
-
-window.renderContests = function() { const list = document.getElementById('contestsList'); if (!list) return; list.innerHTML = ''; if (data.contests.length === 0) { list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">🏆 Конкурсы не добавлены</div>'; return; } data.contests.forEach(contest => { const card = document.createElement('div'); card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`; const statusClass = contest.status === 'active' ? 'status-active' : 'status-finished'; const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен'; let intermediateHtml = ''; if (contest.intermediateResults && contest.intermediateResults.length > 0) intermediateHtml = `<div class="results-section"><h4> Промежуточные</h4>${[...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="result-item"><div class="result-item-header"><span class="result-title">${escapeHtml(r.title)}</span><span class="result-date">${formatDateTime(r.date)}</span></div>${r.description ? `<div class="result-description">${escapeHtml(r.description)}</div>` : ''}</div>`).join('')}</div>`; let finalHtml = ''; if (contest.finalResult) finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`; card.innerHTML = `<span class="contest-status ${statusClass}">${statusText}</span><h3>${escapeHtml(contest.name)}</h3><div class="contest-description">${escapeHtml(contest.description)}</div>${intermediateHtml}${finalHtml}`; list.appendChild(card); }); };
-
-window.renderAdminContestList = function() { const list = document.getElementById('adminContestList'); if (!list) return; list.innerHTML = ''; if (data.contests.length === 0) { list.innerHTML = '<div class="no-employees">Конкурсы не добавлены</div>'; return; } data.contests.forEach(contest => { const item = document.createElement('div'); item.className = `admin-contest-item ${contest.status === 'finished' ? 'status-finished-item' : ''}`; const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен'; const toggleBtnText = contest.status === 'active' ? '⏸️ Завершить' : '▶️ Возобновить'; let intResultsHtml = (contest.intermediateResults && contest.intermediateResults.length > 0) ? [...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="admin-result-item"><div class="admin-result-info"><strong>${escapeHtml(r.title)}</strong><small>${formatDateTime(r.date)}</small>${r.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteIntermediateResult('${contest.id}','${r.id}')">✕</button></div>`).join('') : '<div class="no-employees">Нет результатов</div>'; let finalResultHtml = contest.finalResult ? `<div class="admin-result-item final"><div class="admin-result-info"><strong>🏆 ${escapeHtml(contest.finalResult.winner)}</strong><small>${formatDateTime(contest.finalResult.date)}</small>${contest.finalResult.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(contest.finalResult.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteFinalResult('${contest.id}')">✕</button></div>` : '<div class="no-employees">Финальный результат не определён</div>'; let formHtml = ''; if (openResultForms[contest.id] === 'intermediate') formHtml = `<div class="inline-form"><h5>📊 Новый результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}','intermediate')">✕ Отмена</button></div></div>`; else if (openResultForms[contest.id] === 'final') formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;"> Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}','final')">✕ Отмена</button></div></div>`; item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}','intermediate')"></button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}','final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">🗑️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`; list.appendChild(item); }); };
-
+window.renderContests = function() { const list = document.getElementById('contestsList'); if (!list) return; list.innerHTML = ''; if (data.contests.length === 0) { list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">🏆 Конкурсы не добавлены</div>'; return; } data.contests.forEach(contest => { const card = document.createElement('div'); card.className = `contest-card ${contest.status === 'finished' ? 'status-finished-card' : ''}`; const statusClass = contest.status === 'active' ? 'status-active' : 'status-finished'; const statusText = contest.status === 'active' ? '🟢 Активный' : '⚫ Завершен'; let intermediateHtml = ''; if (contest.intermediateResults && contest.intermediateResults.length > 0) intermediateHtml = `<div class="results-section"><h4>📊 Промежуточные</h4>${[...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="result-item"><div class="result-item-header"><span class="result-title">${escapeHtml(r.title)}</span><span class="result-date">${formatDateTime(r.date)}</span></div>${r.description ? `<div class="result-description">${escapeHtml(r.description)}</div>` : ''}</div>`).join('')}</div>`; let finalHtml = ''; if (contest.finalResult) finalHtml = `<div class="results-section"><h4>🏆 Финальный результат</h4><div class="final-result"><div class="final-result-header"><div class="final-result-icon">🥇</div><div class="final-result-title">ПОБЕДИТЕЛЬ</div></div><div class="final-result-winner">${escapeHtml(contest.finalResult.winner)}</div>${contest.finalResult.description ? `<div class="final-result-description">${escapeHtml(contest.finalResult.description)}</div>` : ''}<div class="final-result-date">📅 ${formatDateTime(contest.finalResult.date)}</div></div></div>`; card.innerHTML = `<span class="contest-status ${statusClass}">${statusText}</span><h3>${escapeHtml(contest.name)}</h3><div class="contest-description">${escapeHtml(contest.description)}</div>${intermediateHtml}${finalHtml}`; list.appendChild(card); }); };
+window.renderAdminContestList = function() { const list = document.getElementById('adminContestList'); if (!list) return; list.innerHTML = ''; if (data.contests.length === 0) { list.innerHTML = '<div class="no-employees">Конкурсы не добавлены</div>'; return; } data.contests.forEach(contest => { const item = document.createElement('div'); item.className = `admin-contest-item ${contest.status === 'finished' ? 'status-finished-item' : ''}`; const statusText = contest.status === 'active' ? '🟢 Активный' : ' Завершен'; const toggleBtnText = contest.status === 'active' ? '⏸️ Завершить' : '▶️ Возобновить'; let intResultsHtml = (contest.intermediateResults && contest.intermediateResults.length > 0) ? [...contest.intermediateResults].sort((a, b) => a.date - b.date).map(r => `<div class="admin-result-item"><div class="admin-result-info"><strong>${escapeHtml(r.title)}</strong><small>${formatDateTime(r.date)}</small>${r.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteIntermediateResult('${contest.id}','${r.id}')">✕</button></div>`).join('') : '<div class="no-employees">Нет результатов</div>'; let finalResultHtml = contest.finalResult ? `<div class="admin-result-item final"><div class="admin-result-info"><strong> ${escapeHtml(contest.finalResult.winner)}</strong><small>${formatDateTime(contest.finalResult.date)}</small>${contest.finalResult.description ? `<div style="color:#555;font-size:0.82em;margin-top:2px;">${escapeHtml(contest.finalResult.description)}</div>` : ''}</div><button class="btn btn-danger btn-sm" onclick="deleteFinalResult('${contest.id}')">✕</button></div>` : '<div class="no-employees">Финальный результат не определён</div>'; let formHtml = ''; if (openResultForms[contest.id] === 'intermediate') formHtml = `<div class="inline-form"><h5>📊 Новый результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="intTitle_${contest.id}" placeholder="Название"></div><div class="form-group" style="margin-bottom:0;"><textarea id="intDesc_${contest.id}" rows="2" placeholder="Описание"></textarea></div><div class="inline-form-actions"><button class="btn btn-info btn-sm" onclick="saveIntermediateResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}','intermediate')">✕ Отмена</button></div></div>`; else if (openResultForms[contest.id] === 'final') formHtml = `<div class="inline-form" style="background:#fff9e6;border-color:#ffc107;"><h5 style="color:#856404;">🏆 Финальный результат</h5><div class="form-group" style="margin-bottom:8px;"><input type="text" id="finalWinner_${contest.id}" placeholder="Имя победителя"></div><div class="form-group" style="margin-bottom:0;"><textarea id="finalDesc_${contest.id}" rows="2" placeholder="Комментарий"></textarea></div><div class="inline-form-actions"><button class="btn btn-gold btn-sm" onclick="saveFinalResult('${contest.id}')">💾 Сохранить</button><button class="btn btn-danger btn-sm" onclick="toggleResultForm('${contest.id}','final')">✕ Отмена</button></div></div>`; item.innerHTML = `<div class="admin-contest-header"><div><div class="admin-contest-title">${escapeHtml(contest.name)}</div><div style="font-size:0.78em;color:var(--gray);margin-top:2px;">${statusText}</div></div><div class="admin-contest-actions"><button class="btn btn-info btn-sm" onclick="toggleResultForm('${contest.id}','intermediate')">📊</button><button class="btn btn-gold btn-sm" onclick="toggleResultForm('${contest.id}','final')">🏆</button><button class="btn btn-warning btn-sm" onclick="toggleContestStatus('${contest.id}')">${toggleBtnText}</button><button class="btn btn-danger btn-sm" onclick="deleteContest('${contest.id}')">️</button></div></div><div class="admin-contest-results"><h5>📊 Промежуточные</h5>${intResultsHtml}<h5>🏆 Финальный</h5>${finalResultHtml}</div>${formHtml}`; list.appendChild(item); }); };
 window.openMaterialForm = function() { document.getElementById('addMaterialSection').style.display = 'block'; document.getElementById('addMaterialSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); switchMaterialType('text'); };
 window.cancelMaterialForm = function() { document.getElementById('addMaterialSection').style.display = 'none'; document.getElementById('materialTitle').value = ''; document.getElementById('materialText').value = ''; document.getElementById('materialFile').value = ''; document.getElementById('fileInfo').textContent = ''; document.getElementById('fileWarning').style.display = 'none'; selectedFileData = null; };
 window.switchMaterialType = function(type) { currentMaterialType = type; document.getElementById('typeTextBtn').classList.toggle('active', type === 'text'); document.getElementById('typeFileBtn').classList.toggle('active', type === 'file'); document.getElementById('textForm').style.display = type === 'text' ? 'block' : 'none'; document.getElementById('fileForm').style.display = type === 'file' ? 'block' : 'none'; };
@@ -1585,8 +1134,7 @@ window.saveMaterial = async function() { const title = document.getElementById('
 window.deleteMaterial = async function(id) { if (!confirm('Удалить?')) return; try { await deleteDoc(doc(db, "materials", id)); await loadAllDataFromFirebase(); renderMaterials(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.viewMaterial = function(id) { const m = data.materials.find(x => x.id === id); if (!m) return; if (m.type === 'text') openFileViewer(m.title, null, true, m.content); else openFileViewer(m.title, m.file); };
 window.downloadMaterial = function(id) { const m = data.materials.find(x => x.id === id); if (!m || !m.file) return; downloadFileFromModal(m.file.name, m.file.data); };
-window.renderMaterials = function() { const list = document.getElementById('materialsList'); if (!list) return; list.innerHTML = ''; if (data.materials.length === 0) { list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📚 Материалы не добавлены</div>'; return; } data.materials.forEach(material => { const card = document.createElement('div'); card.className = `material-card type-${material.type}`; const icon = material.type === 'text' ? '' : (material.file ? getFileIcon(material.file.mimeType) : ''); const tagClass = material.type === 'text' ? 'tag-text' : 'tag-file'; const tagText = material.type === 'text' ? 'Текст' : 'Файл'; let previewHtml = ''; if (material.type === 'text') { const preview = material.content.length > 200 ? material.content.substring(0, 200) + '...' : material.content; previewHtml = `<div class="material-preview">${escapeHtml(preview)}</div>`; } else if (material.file) previewHtml = `<div class="material-file-info"><div class="file-icon-big">${getFileIcon(material.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(material.file.name)}</div><div class="file-size">${formatFileSize(material.file.size)}</div></div></div>`; const actionBtn = material.type === 'text' ? `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Читать</button>` : `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadMaterial('${material.id}')">⬇️ Скачать</button>`; card.innerHTML = `<div class="material-header"><div class="material-icon">${icon}</div><div class="material-title">${escapeHtml(material.title)}</div></div><div class="material-meta"><span class="material-tag ${tagClass}">${tagText}</span><span class="material-date">${formatDateTime(material.createdAt)}</span></div>${previewHtml}<div class="material-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteMaterial('${material.id}')">🗑️</button>` : ''}</div>`; list.appendChild(card); }); };
-
+window.renderMaterials = function() { const list = document.getElementById('materialsList'); if (!list) return; list.innerHTML = ''; if (data.materials.length === 0) { list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📚 Материалы не добавлены</div>'; return; } data.materials.forEach(material => { const card = document.createElement('div'); card.className = `material-card type-${material.type}`; const icon = material.type === 'text' ? '📝' : (material.file ? getFileIcon(material.file.mimeType) : ''); const tagClass = material.type === 'text' ? 'tag-text' : 'tag-file'; const tagText = material.type === 'text' ? 'Текст' : 'Файл'; let previewHtml = ''; if (material.type === 'text') { const preview = material.content.length > 200 ? material.content.substring(0, 200) + '...' : material.content; previewHtml = `<div class="material-preview">${escapeHtml(preview)}</div>`; } else if (material.file) previewHtml = `<div class="material-file-info"><div class="file-icon-big">${getFileIcon(material.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(material.file.name)}</div><div class="file-size">${formatFileSize(material.file.size)}</div></div></div>`; const actionBtn = material.type === 'text' ? `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Читать</button>` : `<button class="btn btn-view btn-sm" onclick="viewMaterial('${material.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadMaterial('${material.id}')">⬇️ Скачать</button>`; card.innerHTML = `<div class="material-header"><div class="material-icon">${icon}</div><div class="material-title">${escapeHtml(material.title)}</div></div><div class="material-meta"><span class="material-tag ${tagClass}">${tagText}</span><span class="material-date">${formatDateTime(material.createdAt)}</span></div>${previewHtml}<div class="material-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteMaterial('${material.id}')">🗑️</button>` : ''}</div>`; list.appendChild(card); }); };
 window.openInfoForm = function() { document.getElementById('addInfoSection').style.display = 'block'; document.getElementById('addInfoSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); switchInfoType('text'); };
 window.cancelInfoForm = function() { document.getElementById('addInfoSection').style.display = 'none'; document.getElementById('infoTitle').value = ''; document.getElementById('infoText').value = ''; document.getElementById('infoFile').value = ''; document.getElementById('infoFileInfo').textContent = ''; document.getElementById('infoFileWarning').style.display = 'none'; selectedInfoFileData = null; };
 window.switchInfoType = function(type) { currentInfoType = type; document.getElementById('infoTypeTextBtn').classList.toggle('active', type === 'text'); document.getElementById('infoTypeFileBtn').classList.toggle('active', type === 'file'); document.getElementById('infoTextForm').style.display = type === 'text' ? 'block' : 'none'; document.getElementById('infoFileForm').style.display = type === 'file' ? 'block' : 'none'; };
@@ -1595,26 +1143,20 @@ window.saveInfo = async function() { const title = document.getElementById('info
 window.deleteInfo = async function(id) { if (!confirm('Удалить?')) return; try { await deleteDoc(doc(db, "info", id)); await loadAllDataFromFirebase(); renderInfo(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.viewInfo = function(id) { const i = data.info.find(x => x.id === id); if (!i) return; if (i.type === 'text') openFileViewer(i.title, null, true, i.content); else openFileViewer(i.title, i.file); };
 window.downloadInfo = function(id) { const i = data.info.find(x => x.id === id); if (!i || !i.file) return; downloadFileFromModal(i.file.name, i.file.data); };
-window.renderInfo = function() { const content = document.getElementById('infoContent'); if (!content) return; content.innerHTML = ''; if (data.info.length === 0) { content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📢 Информация не добавлена</div>'; return; } data.info.forEach(item => { const card = document.createElement('div'); card.className = `info-card type-${item.type}`; const icon = item.type === 'text' ? '📄' : (item.file ? getFileIcon(item.file.mimeType) : ''); const tagClass = item.type === 'text' ? 'tag-text' : 'tag-file'; const tagText = item.type === 'text' ? 'Текст' : 'Файл'; let previewHtml = ''; if (item.type === 'text') { const preview = item.content.length > 200 ? item.content.substring(0, 200) + '...' : item.content; previewHtml = `<div class="info-preview">${escapeHtml(preview)}</div>`; } else if (item.file) previewHtml = `<div class="info-file-info"><div class="file-icon-big">${getFileIcon(item.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(item.file.name)}</div><div class="file-size">${formatFileSize(item.file.size)}</div></div></div>`; const actionBtn = item.type === 'text' ? `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Читать</button>` : `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadInfo('${item.id}')">⬇️ Скачать</button>`; card.innerHTML = `<div class="info-header"><div class="info-icon">${icon}</div><div class="info-title">${escapeHtml(item.title)}</div></div><div class="info-meta"><span class="info-tag ${tagClass}">${tagText}</span><span class="info-date">${formatDateTime(item.createdAt)}</span></div>${previewHtml}<div class="info-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteInfo('${item.id}')">🗑️</button>` : ''}</div>`; content.appendChild(card); }); };
-
+window.renderInfo = function() { const content = document.getElementById('infoContent'); if (!content) return; content.innerHTML = ''; if (data.info.length === 0) { content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📢 Информация не добавлена</div>'; return; } data.info.forEach(item => { const card = document.createElement('div'); card.className = `info-card type-${item.type}`; const icon = item.type === 'text' ? '📄' : (item.file ? getFileIcon(item.file.mimeType) : ''); const tagClass = item.type === 'text' ? 'tag-text' : 'tag-file'; const tagText = item.type === 'text' ? 'Текст' : 'Файл'; let previewHtml = ''; if (item.type === 'text') { const preview = item.content.length > 200 ? item.content.substring(0, 200) + '...' : item.content; previewHtml = `<div class="info-preview">${escapeHtml(preview)}</div>`; } else if (item.file) previewHtml = `<div class="info-file-info"><div class="file-icon-big">${getFileIcon(item.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(item.file.name)}</div><div class="file-size">${formatFileSize(item.file.size)}</div></div></div>`; const actionBtn = item.type === 'text' ? `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Читать</button>` : `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadInfo('${item.id}')">️ Скачать</button>`; card.innerHTML = `<div class="info-header"><div class="info-icon">${icon}</div><div class="info-title">${escapeHtml(item.title)}</div></div><div class="info-meta"><span class="info-tag ${tagClass}">${tagText}</span><span class="info-date">${formatDateTime(item.createdAt)}</span></div>${previewHtml}<div class="info-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteInfo('${item.id}')">🗑️</button>` : ''}</div>`; content.appendChild(card); }); };
 function updateStats() { let totalEntries = 0, kassaCount = 0, kdCount = 0, zalCount = 0, skladCount = 0; Object.values(data.schedule).forEach(entries => { entries.forEach(entry => { totalEntries++; if (entry.type === 'kassa') kassaCount++; if (entry.type === 'kd') kdCount++; if (entry.type === 'zal') zalCount++; if (entry.type === 'sklad') skladCount++; }); }); data.stats.totalEntries = totalEntries; data.stats.kassaCount = kassaCount; data.stats.kdCount = kdCount; data.stats.zalCount = zalCount; data.stats.skladCount = skladCount; data.stats.activeContests = data.contests.filter(c => c.status === 'active').length; }
-
 function formatDate(dateStr) { if (!dateStr) return ''; const [year, month, day] = dateStr.split('-'); return `${day}.${month}.${year}`; }
 function formatDateTime(timestamp) { const d = new Date(timestamp); return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
 function formatFileSize(bytes) { if (bytes < 1024) return bytes + ' Б'; if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' КБ'; return (bytes / (1024 * 1024)).toFixed(2) + ' МБ'; }
-function getFileIcon(mimeType) { if (!mimeType) return '📄'; if (mimeType.startsWith('image/')) return '🖼️'; if (mimeType.startsWith('video/')) return '🎬'; if (mimeType.startsWith('audio/')) return '🎵'; if (mimeType.includes('pdf')) return '📕'; if (mimeType.includes('word') || mimeType.includes('document')) return '📘'; if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📗'; if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📙'; if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '🗜️'; return '📄'; }
+function getFileIcon(mimeType) { if (!mimeType) return '📄'; if (mimeType.startsWith('image/')) return '🖼️'; if (mimeType.startsWith('video/')) return ''; if (mimeType.startsWith('audio/')) return '🎵'; if (mimeType.includes('pdf')) return '📕'; if (mimeType.includes('word') || mimeType.includes('document')) return '📘'; if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📗'; if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📙'; if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '🗜️'; return '📄'; }
 function getSortedDates() { return Object.keys(data.schedule).sort((a, b) => { const [dayA, monthA, yearA] = a.split('.').map(Number); const [dayB, monthB, yearB] = b.split('.').map(Number); return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB); }); }
 function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-
 window.renderAdmin = function() { renderEmployeesList(); renderEmployeeIndividualList(); renderScheduleList(); renderAdminContestList(); renderFinancialPlansList(); renderEventsList(); renderRevisionsList(); };
 function renderAll() { renderSchedule(); renderMaterials(); renderContests(); renderInfo(); if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) renderAdmin(); }
-
 window.closeModal = function() { document.getElementById('materialModal').classList.remove('open'); };
 document.getElementById('materialModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeModal(); closeNotificationModal(); closeTransferModal(); closeNewChatModal(); } });
-
-window.resetAllData = async function() { if (!confirm('️ ВСЕ данные будут удалены!') || !confirm('Точно-точно?')) return; try { const collections = ["users", "schedule", "materials", "contests", "info", "settings", "branches", "notifications", "plans", "chats"]; for (const colName of collections) { const snap = await getDocs(collection(db, colName)); for (const d of snap.docs) await deleteDoc(doc(db, colName, d.id)); } alert('✅ Все данные удалены'); doLogout(); } catch (e) { alert('Ошибка: ' + e.message); } };
-
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeModal(); closeNotificationModal(); closeTransferModal(); } });
+window.resetAllData = async function() { if (!confirm('⚠️ ВСЕ данные будут удалены!') || !confirm('Точно-точно?')) return; try { const collections = ["users", "schedule", "materials", "contests", "info", "settings", "branches", "notifications", "plans"]; for (const colName of collections) { const snap = await getDocs(collection(db, colName)); for (const d of snap.docs) await deleteDoc(doc(db, colName, d.id)); } alert('✅ Все данные удалены'); doLogout(); } catch (e) { alert('Ошибка: ' + e.message); } };
 loadBranchesToLogin();
 autoLogin();
 </script>
