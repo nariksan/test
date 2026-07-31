@@ -187,6 +187,7 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 .employee-card-shift { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--gray); }
 .employee-card-shift-icon { font-size: 1.2em; }
 .employee-card-time { font-weight: 600; color: var(--dark); }
+.date-subst-btn { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
 .archive-info { background: linear-gradient(135deg, #e7f3ff 0%, #d1ecf1 100%); border-left: 4px solid var(--info); padding: 12px 14px; border-radius: var(--radius-md); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .archive-info-text { font-size: 0.88em; color: #0c5460; line-height: 1.4; }
 .archive-counter { background: var(--info); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 700; }
@@ -345,6 +346,8 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 .employee-select { padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85em; background: white; min-height: 36px; }
 .employee-select:focus { outline: none; border-color: var(--brand-green); }
 #selectedEmployeesCount { font-size: 0.85em; color: var(--brand-green); font-weight: 600; margin-top: 8px; text-align: right; padding: 0 8px; }
+.my-subst-block { background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%); border: 1px solid var(--gold); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 16px; }
+.my-subst-block h4 { color: #856404; margin-bottom: 10px; font-size: 0.95em; display: flex; align-items: center; gap: 6px; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
 .admin-plan-item { background: var(--bg); padding: 12px; border-radius: var(--radius-md); margin-bottom: 8px; border-left: 4px solid var(--brand-orange); display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -435,18 +438,9 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 </div>
 <div id="schedule" class="section">
 <h2 class="section-title">📅 График работы</h2>
+<div id="mySubstBlock" class="my-subst-block" style="display:none;"></div>
 <div id="scheduleDisabledMsg" style="display:none;"></div>
 <div id="scheduleContentWrapper">
-<div class="admin-card" style="background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%); border: 2px solid var(--gold);">
-<div class="admin-card-title" style="color: #856404; border-bottom-color: var(--gold);">🔄 Запрос подмены смены</div>
-<div class="form-row">
-<div class="form-group"><label>📅 Дата вашей смены</label><input type="date" id="substDate"></div>
-<div class="form-group"><label>👤 Кого просите подменить</label><select id="substTarget"><option value="">Выберите сотрудника</option></select></div>
-</div>
-<div class="form-group"><label>📝 Комментарий (причина)</label><textarea id="substComment" rows="2" placeholder="Причина подмены..."></textarea></div>
-<button class="btn btn-warning btn-block" onclick="sendSubstRequest()">🔄 Отправить запрос подмены</button>
-<div id="substRequestsList" style="margin-top: 16px;"></div>
-</div>
 <div id="scheduleGrid" class="schedule-grid"></div>
 </div>
 </div>
@@ -595,7 +589,6 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <div class="form-group"><label>Город</label><input type="text" id="newBranchCity" placeholder="Москва"></div>
 </div>
 <button class="btn btn-primary btn-block" id="branchSubmitBtn" onclick="addNewBranch()" style="margin-bottom: 16px;">➕ Добавить отделение</button>
-<button class="btn btn-info btn-block" onclick="migrateOldData()" style="margin-bottom: 16px;"> Мигрировать старые данные</button>
 <div id="branchesList" style="margin-top: 16px;"></div>
 </div>
 <div class="admin-card danger-zone">
@@ -610,6 +603,43 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 </main>
 <div class="modal" id="materialModal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle">Название</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body" id="modalBody"></div></div></div>
 <div class="modal" id="notificationModal"><div class="modal-content"><div class="modal-header"><h3>🔔 Уведомления</h3><button class="modal-close" onclick="closeNotificationModal()">×</button></div><div class="modal-body" id="notificationBody"></div></div></div>
+<div class="modal" id="substRequestModal">
+<div class="modal-content" style="max-width: 500px;">
+<div class="modal-header">
+<h3>🔄 Запрос подмены смены</h3>
+<button class="modal-close" onclick="closeSubstRequestModal()">×</button>
+</div>
+<div class="modal-body">
+<div class="form-group">
+<label>📅 Дата вашей смены</label>
+<input type="text" id="substModalDate" readonly style="background: #fff9e6; color: #856404; font-weight: 700; cursor: not-allowed;">
+</div>
+<div class="form-group">
+<label>🔄 Тип обмена</label>
+<select id="substModalType" onchange="toggleSwapDateBlock()">
+<option value="replace">👤 Попросить подменить меня</option>
+<option value="swap">🔁 Поменяться сменами</option>
+</select>
+</div>
+<div class="form-group">
+<label>👤 С кем поменяться</label>
+<select id="substModalTarget"><option value="">-- Выберите сотрудника --</option></select>
+</div>
+<div id="swapDateBlock" style="display:none;">
+<div class="form-group">
+<label>📅 На какую дату предложить свою смену</label>
+<input type="date" id="substModalSwapDate">
+<div style="font-size: 0.78em; color: var(--gray); margin-top: 4px;">💡 Укажите дату, на которую вы готовы выйти вместо этого сотрудника</div>
+</div>
+</div>
+<div class="form-group">
+<label>📝 Комментарий (причина)</label>
+<textarea id="substModalComment" rows="3" placeholder="Например: семейные обстоятельства, визит к врачу..."></textarea>
+</div>
+<button class="btn btn-warning btn-block" id="substModalSubmitBtn" onclick="submitSubstRequest()">🔄 Отправить запрос</button>
+</div>
+</div>
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -632,9 +662,7 @@ if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID || TELEGRAM_BOT_TOKEN.includes('Т�
 const currentBranch = data.branches.find(b => b.id === currentUser.branchId);
 const branchName = currentBranch ? currentBranch.name : 'Неизвестное отделение';
 const datesString = datesArray.join(', ');
-const text = `📅 Изменение/добавления в графике!
-🏢 Отделение: ${branchName}
-🗓 Даты: ${datesString}`;
+const text = `📅 Изменение/добавления в графике!\n🏢 Отделение: ${branchName}\n🗓 Даты: ${datesString}`;
 try {
 await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
 method: 'POST',
@@ -675,7 +703,6 @@ if (token) { localStorage.setItem('fcmToken', token); try { await updateDoc(doc(
 }
 const shiftTimes = { 1: '10:00 - 19:00', 2: '12:00 - 21:00', 3: '10:00 - 21:00', custom: '' };
 const shiftLabels = { 1: '9/1', 2: '9/2', 3: '11', custom: 'Другое' };
-const shiftHours = { 1: 9, 2: 9, 3: 11, custom: 0 };
 const typeLabels = { kassa: 'Касса', kd: 'КД', zal: 'Зал', sklad: 'Склад', reviziya: 'Ревизия', '-': '-' };
 const typeIcons = { kassa: '💰', kd: '🛒', zal: '🏬', sklad: '📦', reviziya: '📋', '-': '⚪' };
 const positionLabels = { director: 'Директор', admin: 'Администратор', senior_seller: 'Старший продавец', cashier: 'Кассир', cashier_seller: 'Продавец-кассир', storekeeper: 'Кладовщик', controller: 'Контролер', cleaner: 'Уборщица' };
@@ -694,6 +721,7 @@ let editingScheduleId = null;
 let editingEventId = null;
 let editingRevisionId = null;
 let notifications = [];
+let currentSubstDate = null;
 let planSettings = {
 schedule: true, archive: true,
 events: true, revisions: true, materials: true,
@@ -918,7 +946,7 @@ document.getElementById(sectionId).classList.add('active');
 document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active'));
 if (btn && btn.classList) btn.classList.add('active');
 if (sectionId === 'home') renderHome();
-if (sectionId === 'schedule') { renderSchedule(); renderSubstRequests(); populateSubstTarget(); }
+if (sectionId === 'schedule') { renderSchedule(); renderMySubstBlock(); }
 if (sectionId === 'archive') renderArchive();
 if (sectionId === 'info') renderInfoSection();
 if (sectionId === 'contests') renderContests();
@@ -974,8 +1002,7 @@ const todayEntries = data.schedule[todayStr] || [];
 const now = new Date();
 const dateFormatted = `${WEEKDAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()} г.`;
 const totalPeople = todayEntries.length;
-// Считаем по НАЗНАЧЕНИЮ (type), а не по должности
-let kassaCount = 0, kdCount = 0, zalCount = 0, skladCount = 0, reviziyaCount = 0, otherCount = 0;
+let kassaCount = 0, kdCount = 0, zalCount = 0, skladCount = 0, reviziyaCount = 0;
 todayEntries.forEach(entry => {
 const t = entry.type || '-';
 if (t === 'kassa') kassaCount++;
@@ -983,7 +1010,6 @@ else if (t === 'kd') kdCount++;
 else if (t === 'zal') zalCount++;
 else if (t === 'sklad') skladCount++;
 else if (t === 'reviziya') reviziyaCount++;
-else otherCount++;
 });
 const shiftCard = document.getElementById('todayShiftCard');
 if (todayEntries.length === 0) {
@@ -1036,7 +1062,6 @@ shiftCard.innerHTML = `
 <div style="font-size:0.9em;opacity:0.9;margin-bottom:10px;">👥 Сотрудники на смене:</div>
 <div class="today-shift-people">${peopleHtml}</div>`;
 }
-// ===== Статистика для плиток =====
 const activeContests = data.contests.filter(c => c.status === 'active').length;
 const totalContests = data.contests.length;
 const infoCount = data.info.length;
@@ -1071,29 +1096,42 @@ grid.innerHTML = `
 </div>
 </div>`;
 };
-// ===== ЗАПРОСЫ ПОДМЕНЫ =====
-function populateSubstTarget() {
-const sel = document.getElementById('substTarget');
-if (!sel) return;
-const currentVal = sel.value;
-sel.innerHTML = '<option value="">Выберите сотрудника</option>';
-data.employees.filter(e => e.role !== 'superadmin').forEach(emp => {
+// ===== МОДАЛКА ЗАПРОСА ПОДМЕНЫ =====
+window.openSubstRequestModal = function(date) {
+currentSubstDate = date;
+document.getElementById('substModalDate').value = date;
+const sel = document.getElementById('substModalTarget');
+sel.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+data.employees.filter(e => e.role !== 'superadmin' && e.id !== currentUser.id).forEach(emp => {
 const opt = document.createElement('option');
 opt.value = emp.id;
 opt.textContent = emp.name;
 sel.appendChild(opt);
 });
-sel.value = currentVal;
-}
-window.sendSubstRequest = async function() {
-const date = document.getElementById('substDate').value;
-const targetId = document.getElementById('substTarget').value;
-const comment = document.getElementById('substComment').value.trim();
-if (!date) { alert('⚠️ Выберите дату'); return; }
-if (!targetId) { alert('️ Выберите сотрудника'); return; }
+document.getElementById('substModalType').value = 'replace';
+document.getElementById('substModalComment').value = '';
+document.getElementById('substModalSwapDate').value = '';
+document.getElementById('swapDateBlock').style.display = 'none';
+document.getElementById('substRequestModal').classList.add('open');
+};
+window.closeSubstRequestModal = function() {
+document.getElementById('substRequestModal').classList.remove('open');
+currentSubstDate = null;
+};
+window.toggleSwapDateBlock = function() {
+const type = document.getElementById('substModalType').value;
+document.getElementById('swapDateBlock').style.display = type === 'swap' ? 'block' : 'none';
+};
+window.submitSubstRequest = async function() {
+const targetId = document.getElementById('substModalTarget').value;
+const type = document.getElementById('substModalType').value;
+const comment = document.getElementById('substModalComment').value.trim();
+const swapDate = document.getElementById('substModalSwapDate').value;
+if (!targetId) { alert('⚠️ Выберите сотрудника'); return; }
+if (type === 'swap' && !swapDate) { alert('⚠️ Укажите дату, на которую предлагаете свою смену'); return; }
 const targetEmp = data.employees.find(e => e.id === targetId);
-if (!targetEmp) { alert('Сотрудник не найден'); return; }
-const btn = event.target;
+if (!targetEmp) { alert('❌ Сотрудник не найден'); return; }
+const btn = document.getElementById('substModalSubmitBtn');
 const originalText = btn.innerHTML;
 btn.innerHTML = '<span class="spinner"></span> Отправка...';
 btn.disabled = true;
@@ -1103,51 +1141,57 @@ fromId: currentUser.id,
 fromName: currentUser.name,
 toId: targetId,
 toName: targetEmp.name,
-date: formatDate(date),
+date: currentSubstDate,
 comment: comment,
+exchangeType: type,
+swapDate: type === 'swap' ? formatDate(swapDate) : null,
 status: 'pending',
 branchId: currentUser.branchId,
 createdAt: Date.now()
 };
 await addDoc(collection(db, "substRequests"), reqData);
-await window.createNotification(targetId, ' Запрос подмены', `${currentUser.name} просит подменить смену ${formatDate(date)}`, 'schedule');
-document.getElementById('substDate').value = '';
-document.getElementById('substTarget').value = '';
-document.getElementById('substComment').value = '';
+const typeText = type === 'swap' ? `предлагает обмен сменами (${currentSubstDate} ↔ ${formatDate(swapDate)})` : `просит подменить смену ${currentSubstDate}`;
+await window.createNotification(targetId, '🔄 Запрос подмены', `${currentUser.name} ${typeText}`, 'schedule');
+closeSubstRequestModal();
 await loadAllDataFromFirebase();
-renderSubstRequests();
-alert('✅ Запрос на подмену отправлен!');
+renderMySubstBlock();
+alert('✅ Запрос отправлен!');
 } catch (e) { alert('Ошибка: ' + e.message); }
 finally { btn.innerHTML = originalText; btn.disabled = false; }
 };
-window.renderSubstRequests = function() {
-const container = document.getElementById('substRequestsList');
-if (!container) return;
+// ===== МОИ АКТИВНЫЕ ЗАПРОСЫ =====
+window.renderMySubstBlock = function() {
+const block = document.getElementById('mySubstBlock');
+if (!block) return;
 const myRequests = data.substRequests.filter(r => r.fromId === currentUser.id && r.status === 'pending');
 if (myRequests.length === 0) {
-container.innerHTML = '<div style="text-align:center;color:var(--gray);padding:10px;font-size:0.9em;">У вас нет активных запросов на подмену</div>';
+block.style.display = 'none';
 return;
 }
-container.innerHTML = '<h4 style="margin-bottom:10px;color:var(--brand-green);">📋 Ваши активные запросы:</h4>' +
-myRequests.map(r => `
-<div class="subst-request-card">
+block.style.display = 'block';
+block.innerHTML = `<h4>📋 Мои активные запросы на подмену (${myRequests.length})</h4>` +
+myRequests.map(r => {
+const typeLabel = r.exchangeType === 'swap' ? `🔁 Обмен сменами${r.swapDate ? ' (' + r.swapDate + ')' : ''}` : '👤 Прошу подменить';
+return `
+<div class="subst-request-card" style="margin-bottom:8px;">
 <div class="subst-request-info">
-<div>Вы → <span class="subst-request-to">${escapeHtml(r.toName)}</span></div>
+<div><strong>${typeLabel}</strong></div>
+<div>Я → <span class="subst-request-to">${escapeHtml(r.toName)}</span></div>
 <div class="subst-request-date">📅 ${r.date}</div>
 ${r.comment ? `<div class="subst-request-comment">"${escapeHtml(r.comment)}"</div>` : ''}
-<div style="font-size:0.75em;color:var(--light-gray);margin-top:4px;">Отправлено: ${formatDateTime(r.createdAt)}</div>
 </div>
 <div class="subst-request-actions">
 <button class="btn btn-danger btn-sm" onclick="cancelSubstRequest('${r.id}')">✕ Отменить</button>
 </div>
-</div>`).join('');
+</div>`;
+}).join('');
 };
 window.cancelSubstRequest = async function(id) {
 if (!confirm('Отменить запрос на подмену?')) return;
 try {
 await deleteDoc(doc(db, "substRequests", id));
 await loadAllDataFromFirebase();
-renderSubstRequests();
+renderMySubstBlock();
 alert('✅ Запрос отменён');
 } catch (e) { alert('Ошибка: ' + e.message); }
 };
@@ -1157,13 +1201,14 @@ if (!req) return;
 if (!confirm(decision === 'approved' ? '✅ Принять запрос на подмену?' : '❌ Отклонить запрос?')) return;
 try {
 await updateDoc(doc(db, "substRequests", id), { status: decision, resolvedAt: Date.now(), resolvedBy: currentUser.name });
+const decisionText = decision === 'approved' ? 'принял' : 'отклонил';
+const detailsText = req.exchangeType === 'swap' && req.swapDate ? `(обмен: ${req.date} ↔ ${req.swapDate})` : `(дата: ${req.date})`;
 await window.createNotification(req.fromId,
 decision === 'approved' ? '✅ Подмена принята' : '❌ Подмена отклонена',
-`${req.toName} ${decision === 'approved' ? 'принял' : 'отклонил'} ваш запрос на подмену смены ${req.date}`,
+`${req.toName} ${decisionText} ваш запрос ${detailsText}`,
 'schedule');
 await loadAllDataFromFirebase();
 renderAdminSubstList();
-renderSubstRequests();
 alert(decision === 'approved' ? '✅ Запрос принят' : '❌ Запрос отклонён');
 } catch (e) { alert('Ошибка: ' + e.message); }
 };
@@ -1179,9 +1224,12 @@ return;
 let html = '';
 if (pending.length > 0) {
 html += '<h4 style="margin-bottom:10px;color:var(--warning);">⏳ Ожидают решения (' + pending.length + ')</h4>';
-html += pending.map(r => `
+html += pending.map(r => {
+const typeLabel = r.exchangeType === 'swap' ? `🔁 Обмен сменами${r.swapDate ? ' (' + r.swapDate + ')' : ''}` : '👤 Прошу подменить';
+return `
 <div class="subst-request-card" style="background:#fff3cd;border-color:var(--warning);">
 <div class="subst-request-info">
+<div><strong>${typeLabel}</strong></div>
 <div><span class="subst-request-from">${escapeHtml(r.fromName)}</span> → <span class="subst-request-to">${escapeHtml(r.toName)}</span></div>
 <div class="subst-request-date">📅 ${r.date}</div>
 ${r.comment ? `<div class="subst-request-comment">"${escapeHtml(r.comment)}"</div>` : ''}
@@ -1190,20 +1238,25 @@ ${r.comment ? `<div class="subst-request-comment">"${escapeHtml(r.comment)}"</di
 <button class="btn btn-success btn-sm" onclick="resolveSubstRequest('${r.id}','approved')">✅ Принять</button>
 <button class="btn btn-danger btn-sm" onclick="resolveSubstRequest('${r.id}','rejected')">❌ Отклонить</button>
 </div>
-</div>`).join('');
+</div>`;
+}).join('');
 }
 if (resolved.length > 0) {
 html += '<h4 style="margin:16px 0 10px;color:var(--gray);">Решённые (' + resolved.length + ')</h4>';
-html += resolved.slice(0, 10).map(r => `
+html += resolved.slice(0, 10).map(r => {
+const typeLabel = r.exchangeType === 'swap' ? '🔁 Обмен' : '👤 Подмена';
+return `
 <div class="subst-request-card" style="background:#f8f9fa;border-color:#dee2e6;opacity:0.7;">
 <div class="subst-request-info">
+<div><strong>${typeLabel}</strong></div>
 <div><span class="subst-request-from">${escapeHtml(r.fromName)}</span> → <span class="subst-request-to">${escapeHtml(r.toName)}</span></div>
 <div class="subst-request-date">📅 ${r.date}</div>
 <div style="font-size:0.8em;color:${r.status==='approved'?'var(--success)':'var(--danger)'};font-weight:600;">
 ${r.status === 'approved' ? '✅ Принято' : '❌ Отклонено'} ${r.resolvedBy ? '• ' + escapeHtml(r.resolvedBy) : ''}
 </div>
 </div>
-</div>`).join('');
+</div>`;
+}).join('');
 }
 container.innerHTML = html;
 };
@@ -1479,7 +1532,6 @@ window.transferSuperAdmin = async function(targetId) { const targetAdmin = data.
 window.addNewBranch = async function() { const name = document.getElementById('newBranchName').value.trim(); const city = document.getElementById('newBranchCity').value.trim(); if (!name) { alert('Введите название'); return; } const btn = document.getElementById('branchSubmitBtn'); const originalText = btn.innerHTML; btn.innerHTML = `<span class="spinner"></span> Создание...`; btn.disabled = true; try { await addDoc(collection(db, "branches"), { name, city, createdAt: Date.now() }); document.getElementById('newBranchName').value = ''; document.getElementById('newBranchCity').value = ''; alert('✅ Отделение создано!'); loadBranchesToLogin(); renderBranchesList(); } catch (e) { alert('Ошибка: ' + e.message); } finally { btn.innerHTML = originalText; btn.disabled = false; } };
 window.renderBranchesList = async function() { const list = document.getElementById('branchesList'); if (!list) return; const branchesSnap = await getDocs(collection(db, "branches")); list.innerHTML = ''; branchesSnap.docs.forEach(doc => { const b = doc.data(); const div = document.createElement('div'); div.className = 'employee-admin-item'; div.innerHTML = `<div class="employee-admin-header"><div class="employee-admin-info"><div class="employee-admin-name">🏪 ${escapeHtml(b.name)}</div><div class="employee-admin-phone"> ${escapeHtml(b.city || 'Город не указан')}</div></div><button class="btn btn-danger btn-sm" onclick="deleteBranch('${doc.id}')">🗑️</button></div>`; list.appendChild(div); }); };
 window.deleteBranch = async function(id) { if (!confirm('Удалить отделение?')) return; try { await deleteDoc(doc(db, "branches", id)); renderBranchesList(); loadBranchesToLogin(); } catch (e) { alert('Ошибка: ' + e.message); } };
-window.migrateOldData = async function() { if (!confirm('️ Привязать старых сотрудников к текущему отделению?')) return; try { const usersSnap = await getDocs(collection(db, "users")); for (const d of usersSnap.docs) { if (!d.data().branchId) await updateDoc(doc(db, "users", d.id), { branchId: currentUser.branchId }); } const scheduleSnap = await getDocs(collection(db, "schedule")); for (const d of scheduleSnap.docs) { if (!d.data().branchId) await updateDoc(doc(db, "schedule", d.id), { branchId: currentUser.branchId }); } alert('✅ Мигрировано!'); await loadAllDataFromFirebase(); renderAll(); } catch (e) { alert('Ошибка: ' + e.message); } };
 // ===== РЕНДЕР ГРАФИКА =====
 window.renderSchedule = function() {
 const disabledMsg = document.getElementById('scheduleDisabledMsg');
@@ -1491,7 +1543,15 @@ return;
 }
 if (disabledMsg) disabledMsg.style.display = 'none';
 if (wrapper) wrapper.style.display = 'block';
-const grid = document.getElementById('scheduleGrid'); if (!grid) return; grid.innerHTML = ''; const dates = getSortedDates(); const activeDates = dates.filter(d => getDateStatus(d) !== 'past'); if (activeDates.length === 0) { grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📭 График пустой</div>'; return; } activeDates.forEach(date => { const entries = data.schedule[date]; if (!entries || entries.length === 0) return; const status = getDateStatus(date); const dateCard = document.createElement('div'); dateCard.className = `date-card ${status}`; let statusBadge = ''; if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>'; else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>'; else if (status === 'future') { const [day, month, year] = date.split('.').map(Number); const dateObj = new Date(year, month - 1, day); const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0,0,0,0); dateObj.setHours(0,0,0,0); if (dateObj.getTime() === tomorrow.getTime()) statusBadge = '<span class="tomorrow-badge">Завтра</span>'; } dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`; [...entries].sort((a, b) => { if (a.shift !== b.shift) return a.shift - b.shift; return a.type.localeCompare(b.type); }).forEach(entry => { const card = document.createElement('div'); card.className = `employee-schedule-card ${entry.type}`; const positionLabel = typeLabels[entry.type] || entry.type; const positionClass = entry.type; const shiftLabel = shiftLabels[entry.shift] || entry.shift; const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Не указано') : shiftTimes[entry.shift]; const role = entry.cashierRole || 'seller'; let roleBadge = ''; if (role === 'main-cashier') roleBadge = '<span style="background:#ffc107;color:#333;padding:2px 6px;border-radius:8px;font-size:0.7em;font-weight:700;">Кассир</span>'; else if (role === 'extra-cashier') roleBadge = '<span style="background:#fd7e14;color:white;padding:2px 6px;border-radius:8px;font-size:0.7em;font-weight:700;">Доп. кассир</span>'; card.innerHTML = `<div class="employee-card-header"><div class="employee-card-name">👤 ${escapeHtml(entry.employee)} ${roleBadge}</div><span class="employee-card-position ${positionClass}">${positionLabel}</span></div><div class="employee-card-shift"><span class="employee-card-shift-icon">🕐</span><span>Смена ${shiftLabel}</span><span style="color:var(--light-gray);">•</span><span class="employee-card-time">${shiftTime}</span></div>`; dateCard.appendChild(card); }); grid.appendChild(dateCard); });
+const grid = document.getElementById('scheduleGrid'); if (!grid) return; grid.innerHTML = ''; const dates = getSortedDates(); const activeDates = dates.filter(d => getDateStatus(d) !== 'past'); if (activeDates.length === 0) { grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📭 График пустой</div>'; return; } activeDates.forEach(date => { const entries = data.schedule[date]; if (!entries || entries.length === 0) return; const status = getDateStatus(date); const dateCard = document.createElement('div'); dateCard.className = `date-card ${status}`; let statusBadge = ''; if (status === 'today') statusBadge = '<span class="today-badge">Сегодня</span>'; else if (status === 'yesterday') statusBadge = '<span class="yesterday-badge">Вчера</span>'; else if (status === 'future') { const [day, month, year] = date.split('.').map(Number); const dateObj = new Date(year, month - 1, day); const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0,0,0,0); dateObj.setHours(0,0,0,0); if (dateObj.getTime() === tomorrow.getTime()) statusBadge = '<span class="tomorrow-badge">Завтра</span>'; } dateCard.innerHTML = `<h3>📅 ${date} ${statusBadge}</h3>`; [...entries].sort((a, b) => { if (a.shift !== b.shift) return a.shift - b.shift; return a.type.localeCompare(b.type); }).forEach(entry => { const card = document.createElement('div'); card.className = `employee-schedule-card ${entry.type}`; const positionLabel = typeLabels[entry.type] || entry.type; const positionClass = entry.type; const shiftLabel = shiftLabels[entry.shift] || entry.shift; const shiftTime = entry.shift === 'custom' ? (entry.customShiftTime || 'Не указано') : shiftTimes[entry.shift]; const role = entry.cashierRole || 'seller'; let roleBadge = ''; if (role === 'main-cashier') roleBadge = '<span style="background:#ffc107;color:#333;padding:2px 6px;border-radius:8px;font-size:0.7em;font-weight:700;">Кассир</span>'; else if (role === 'extra-cashier') roleBadge = '<span style="background:#fd7e14;color:white;padding:2px 6px;border-radius:8px;font-size:0.7em;font-weight:700;">Доп. кассир</span>'; card.innerHTML = `<div class="employee-card-header"><div class="employee-card-name">👤 ${escapeHtml(entry.employee)} ${roleBadge}</div><span class="employee-card-position ${positionClass}">${positionLabel}</span></div><div class="employee-card-shift"><span class="employee-card-shift-icon">🕐</span><span>Смена ${shiftLabel}</span><span style="color:var(--light-gray);">•</span><span class="employee-card-time">${shiftTime}</span></div>`; dateCard.appendChild(card); });
+// Кнопка запроса подмены — только для сегодняшних и будущих дат
+if (status === 'today' || status === 'future') {
+const substBtn = document.createElement('div');
+substBtn.className = 'date-subst-btn';
+substBtn.innerHTML = `<button class="btn btn-warning btn-sm btn-block" onclick="openSubstRequestModal('${date}')">🔄 Запрос подмены на эту дату</button>`;
+dateCard.appendChild(substBtn);
+}
+grid.appendChild(dateCard); });
 };
 // ===== АРХИВ =====
 window.renderArchive = function() {
@@ -1635,7 +1695,7 @@ window.createNotification = async function(userId, title, message, type = 'gener
 function renderNotifications() { const body = document.getElementById('notificationBody'); if (!body) return; const userNotifs = notifications.filter(n => n.userId === currentUser.id || n.userId === 'all'); if (userNotifs.length === 0) { body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);"><br><br>Нет уведомлений</div>'; return; } let html = ''; if (userNotifs.some(n => !n.read)) html += `<button class="btn btn-info btn-block" onclick="markAllNotificationsRead()" style="margin-bottom:12px;">✅ Отметить все прочитанными</button>`; userNotifs.forEach(notif => { const typeClass = notif.type === 'schedule' ? 'type-schedule' : (notif.type === 'transfer' ? 'type-transfer' : 'type-general'); const unreadClass = notif.read ? '' : 'unread'; html += `<div class="notification-item ${unreadClass} ${typeClass}"><div class="notification-content"><div class="notification-title">${escapeHtml(notif.title)}</div><div class="notification-message">${escapeHtml(notif.message)}</div><div class="notification-time">📅 ${formatDateTime(notif.createdAt)}${notif.createdBy ? ' • ' + escapeHtml(notif.createdBy) : ''}</div></div>${!notif.read ? `<div class="notification-actions"><button class="btn btn-sm btn-info" onclick="markNotificationRead('${notif.id}')">✓</button></div>` : ''}</div>`; }); body.innerHTML = html; }
 window.closeModal = function() { document.getElementById('materialModal').classList.remove('open'); };
 document.getElementById('materialModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeModal(); closeNotificationModal(); closeTransferModal(); } });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeModal(); closeNotificationModal(); closeTransferModal(); closeSubstRequestModal(); } });
 window.resetAllData = async function() { if (!confirm('⚠️ ВСЕ данные будут удалены!') || !confirm('Точно-точно?')) return; try { const collections = ["users", "schedule", "materials", "contests", "info", "settings", "branches", "notifications", "plans", "substRequests"]; for (const colName of collections) { const snap = await getDocs(collection(db, colName)); for (const d of snap.docs) await deleteDoc(doc(db, colName, d.id)); } alert('✅ Все данные удалены'); doLogout(); } catch (e) { alert('Ошибка: ' + e.message); } };
 loadBranchesToLogin();
 autoLogin();
