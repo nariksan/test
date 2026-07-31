@@ -409,7 +409,6 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <button class="top-nav-btn active" onclick="showSection('home', this)"><span class="nav-icon">🏠</span><span>Главная</span></button>
 <button class="top-nav-btn" onclick="showSection('schedule', this)"><span class="nav-icon">📅</span><span>График</span></button>
 <button class="top-nav-btn" onclick="showSection('archive', this)"><span class="nav-icon">📦</span><span>Архив</span></button>
-<button class="top-nav-btn" onclick="showSection('plan', this)"><span class="nav-icon">📈</span><span>Мероприятия и Обучение</span></button>
 <button class="top-nav-btn" onclick="showSection('contests', this)"><span class="nav-icon">🏆</span><span>Конкурсы</span></button>
 <button class="top-nav-btn" onclick="showSection('info', this)"><span class="nav-icon">📢</span><span>Инфо</span></button>
 <button class="top-nav-btn" onclick="showSection('admin', this)" id="topNavAdminBtn" style="display:none;"><span class="nav-icon">⚙️</span><span>Админ</span></button>
@@ -439,21 +438,20 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <div id="scheduleGrid" class="schedule-grid"></div>
 </div>
 <div id="archive" class="section"><h2 class="section-title">📦 Архив графика</h2><div id="archiveContent"></div></div>
-<div id="plan" class="section">
-<h2 class="section-title">📈 Мероприятия и Обучение</h2>
-<div class="plan-tabs">
-<button class="plan-tab active" onclick="showPlanTab('events', this)">🎉 Мероприятия</button>
-<button class="plan-tab" onclick="showPlanTab('revisions', this)">🔍 Ревизии</button>
-<button class="plan-tab" onclick="showPlanTab('materials', this)">📚 Обучение</button>
-</div>
-<div id="plan-events" class="plan-section active"><div id="eventsPlanContent"></div></div>
-<div id="plan-revisions" class="plan-section"><div id="revisionsPlanContent"></div></div>
-<div id="plan-materials" class="plan-section">
-<div id="materialsList" class="materials-list"></div>
-</div>
-</div>
 <div id="contests" class="section"><h2 class="section-title">🏆 Конкурсы персонала</h2><div id="contestsList" class="contests-list"></div></div>
-<div id="info" class="section"><h2 class="section-title">📢 Информация</h2><div id="infoContent" class="info-list"></div></div>
+<div id="info" class="section">
+<h2 class="section-title">📢 Информация</h2>
+<div class="plan-tabs">
+<button class="plan-tab active" onclick="showInfoTab('general', this)">📢 Информация</button>
+<button class="plan-tab" onclick="showInfoTab('events', this)">🎉 Мероприятия</button>
+<button class="plan-tab" onclick="showInfoTab('revisions', this)">🔍 Ревизии</button>
+<button class="plan-tab" onclick="showInfoTab('materials', this)">📚 Обучение</button>
+</div>
+<div id="info-general" class="plan-section active"><div id="infoContent" class="info-list"></div></div>
+<div id="info-events" class="plan-section"><div id="eventsPlanContent"></div></div>
+<div id="info-revisions" class="plan-section"><div id="revisionsPlanContent"></div></div>
+<div id="info-materials" class="plan-section"><div id="materialsList" class="materials-list"></div></div>
+</div>
 <div id="admin" class="section">
 <h2 class="section-title">️ Админ-панель</h2>
 <div class="admin-tabs">
@@ -577,8 +575,9 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 <div id="branchesList" style="margin-top: 16px;"></div>
 </div>
 <div class="admin-card">
-<div class="admin-card-title"> Управление разделами "Мероприятия и Обучение"</div>
-<p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Включите или выключите разделы. Если выключено — сотрудники увидят "Раздел временно недоступен".</p>
+<div class="admin-card-title"> Управление разделом «Инфо»</div>
+<p style="color: var(--gray); font-size: 0.85em; margin-bottom: 12px;">Включите или выключите подразделы. Если выключено — сотрудники увидят "Раздел временно недоступен".</p>
+<div class="form-group"><label style="display: flex; align-items: center; gap: 10px; cursor: pointer;"><input type="checkbox" id="planGeneralEnabled" style="width: 20px; height: 20px;" onchange="togglePlanSection('general')"><span>📢 Информация</span></label></div>
 <div class="form-group"><label style="display: flex; align-items: center; gap: 10px; cursor: pointer;"><input type="checkbox" id="planEventsEnabled" style="width: 20px; height: 20px;" onchange="togglePlanSection('events')"><span>🎉 Мероприятия</span></label></div>
 <div class="form-group"><label style="display: flex; align-items: center; gap: 10px; cursor: pointer;"><input type="checkbox" id="planRevisionsEnabled" style="width: 20px; height: 20px;" onchange="togglePlanSection('revisions')"><span>🔍 Ревизии</span></label></div>
 <div class="form-group"><label style="display: flex; align-items: center; gap: 10px; cursor: pointer;"><input type="checkbox" id="planMaterialsEnabled" style="width: 20px; height: 20px;" onchange="togglePlanSection('materials')"><span>📚 Обучение</span></label></div>
@@ -679,7 +678,7 @@ let editingScheduleId = null;
 let editingEventId = null;
 let editingRevisionId = null;
 let notifications = [];
-let planSettings = { events: true, revisions: true, materials: true };
+let planSettings = { general: true, events: true, revisions: true, materials: true };
 let data = { employees: [], schedule: {}, materials: [], contests: [], info: [], branches: [], substRequests: [], plans: { events: [], revisions: [] }, settings: { maintenanceMode: false }, stats: { totalEntries: 0, kassaCount: 0, kdCount: 0, zalCount: 0, skladCount: 0, activeContests: 0 } };
 function updateClock() {
 const now = new Date();
@@ -767,9 +766,7 @@ data.branches = (await getDocs(collection(db, "branches"))).docs.map(d => ({ id:
 const settingsDoc = await getDoc(doc(db, "settings", "global"));
 data.settings = settingsDoc.exists() ? settingsDoc.data() : { maintenanceMode: false };
 const planSettingsDoc = await getDoc(doc(db, "settings", "planSettings"));
-if (planSettingsDoc.exists()) {
-planSettings = { events: true, revisions: true, materials: true, ...planSettingsDoc.data() };
-}
+if (planSettingsDoc.exists()) planSettings = { general: true, events: true, revisions: true, materials: true, ...planSettingsDoc.data() };
 data.plans = { events: [], revisions: [] };
 data.plans.events = (await getDocs(query(collection(db, "plans"), where("type", "==", "event"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
 data.plans.revisions = (await getDocs(query(collection(db, "plans"), where("type", "==", "revision"), ...branchFilter))).docs.map(d => ({ id: d.id, ...d.data() }));
@@ -894,9 +891,8 @@ if (btn && btn.classList) btn.classList.add('active');
 if (sectionId === 'home') renderHome();
 if (sectionId === 'schedule') { renderSchedule(); renderSubstRequests(); populateSubstTarget(); }
 if (sectionId === 'archive') renderArchive();
-if (sectionId === 'plan') renderPlan();
+if (sectionId === 'info') renderInfoSection();
 if (sectionId === 'contests') renderContests();
-if (sectionId === 'info') renderInfo();
 if (sectionId === 'admin') renderAdmin();
 if (sectionId === 'superadmin') renderSuperAdminPanel();
 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -908,12 +904,21 @@ document.getElementById('admin-' + tabName).classList.add('active');
 if (btn) btn.classList.add('active');
 if (tabName === 'subst') renderAdminSubstList();
 };
-window.showPlanTab = function(tabName, btn) {
-document.querySelectorAll('.plan-section').forEach(s => s.classList.remove('active'));
-document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
-document.getElementById('plan-' + tabName).classList.add('active');
+window.showInfoTab = function(tabName, btn) {
+document.querySelectorAll('#info .plan-section').forEach(s => s.classList.remove('active'));
+document.querySelectorAll('#info .plan-tab').forEach(t => t.classList.remove('active'));
+document.getElementById('info-' + tabName).classList.add('active');
 if (btn) btn.classList.add('active');
+if (tabName === 'general') renderInfo();
+if (tabName === 'events') renderEventsPlan();
+if (tabName === 'revisions') renderRevisionsPlan();
 if (tabName === 'materials') renderMaterials();
+};
+window.renderInfoSection = function() {
+renderInfo();
+renderEventsPlan();
+renderRevisionsPlan();
+renderMaterials();
 };
 // ===== РЕНДЕР ГЛАВНОЙ =====
 window.renderHome = function() {
@@ -985,35 +990,19 @@ shiftCard.innerHTML = `
 <div class="today-shift-people">${peopleHtml}</div>`;
 }
 const grid = document.getElementById('homeGrid');
-const planBtn = document.querySelectorAll('.top-nav-btn')[3];
 grid.innerHTML = `
 <div class="home-tile" onclick="showSection('schedule', document.querySelectorAll('.top-nav-btn')[1])" style="cursor:pointer;">
 <div class="home-tile-header"><div class="home-tile-icon"></div><div class="home-tile-title">График работы</div></div>
 <div class="home-tile-subtitle">Посмотреть расписание смен и запросить подмену</div>
 </div>
-<div class="home-tile" onclick="showSection('plan', document.querySelectorAll('.top-nav-btn')[3])" style="cursor:pointer;">
-<div class="home-tile-header"><div class="home-tile-icon">📈</div><div class="home-tile-title">Мероприятия и Обучение</div></div>
-<div class="home-tile-subtitle">Мероприятия, ревизии и обучающие материалы</div>
-</div>
-<div class="home-tile" onclick="showSection('contests', document.querySelectorAll('.top-nav-btn')[4])" style="cursor:pointer;">
+<div class="home-tile" onclick="showSection('contests', document.querySelectorAll('.top-nav-btn')[3])" style="cursor:pointer;">
 <div class="home-tile-header"><div class="home-tile-icon">🏆</div><div class="home-tile-title">Конкурсы</div></div>
 <div class="home-tile-subtitle">Активные конкурсы персонала</div>
 </div>
-<div class="home-tile" onclick="showSection('info', document.querySelectorAll('.top-nav-btn')[5])" style="cursor:pointer;">
-<div class="home-tile-header"><div class="home-tile-icon">📢</div><div class="home-tile-title">Информация</div></div>
-<div class="home-tile-subtitle">Важные объявления</div>
-</div>
-<div class="home-tile" onclick="openPlanMaterialsTab()" style="cursor:pointer;">
-<div class="home-tile-header"><div class="home-tile-icon">📚</div><div class="home-tile-title">Обучение</div></div>
-<div class="home-tile-subtitle">Обучающие материалы</div>
+<div class="home-tile" onclick="showSection('info', document.querySelectorAll('.top-nav-btn')[4])" style="cursor:pointer;">
+<div class="home-tile-header"><div class="home-tile-icon">📢</div><div class="home-tile-title">Инфо</div></div>
+<div class="home-tile-subtitle">Информация, мероприятия, ревизии и обучение</div>
 </div>`;
-};
-window.openPlanMaterialsTab = function() {
-showSection('plan', document.querySelectorAll('.top-nav-btn')[3]);
-setTimeout(() => {
-const materialsTab = document.querySelectorAll('.plan-tab')[2];
-if (materialsTab) showPlanTab('materials', materialsTab);
-}, 50);
 };
 // ===== ЗАПРОСЫ ПОДМЕНЫ =====
 function populateSubstTarget() {
@@ -1157,7 +1146,6 @@ const checkbox = document.getElementById(`plan${section.charAt(0).toUpperCase() 
 planSettings[section] = checkbox.checked;
 try { await setDoc(doc(db, "settings", "planSettings"), planSettings, { merge: true }); alert(`✅ Раздел ${checkbox.checked ? 'включен' : 'выключен'}`); } catch (e) { alert('Ошибка: ' + e.message); }
 };
-window.renderPlan = function() { renderEventsPlan(); renderRevisionsPlan(); renderMaterials(); };
 window.renderEventsPlan = function() {
 const container = document.getElementById('eventsPlanContent'); if (!container) return;
 if (!planSettings.events) { container.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon">🎉</span><h3>Раздел временно недоступен</h3><p>Мероприятия отключены</p></div>`; return; }
@@ -1417,6 +1405,7 @@ window.renderEmployeesList = function() { const list = document.getElementById('
 // ===== ВЛАДЕЛЕЦ =====
 window.renderSuperAdminPanel = function() {
 renderBranchesList();
+document.getElementById('planGeneralEnabled').checked = planSettings.general;
 document.getElementById('planEventsEnabled').checked = planSettings.events;
 document.getElementById('planRevisionsEnabled').checked = planSettings.revisions;
 document.getElementById('planMaterialsEnabled').checked = planSettings.materials;
@@ -1499,10 +1488,37 @@ window.cancelInfoForm = function() { document.getElementById('addInfoSection').s
 window.switchInfoType = function(type) { currentInfoType = type; document.getElementById('infoTypeTextBtn').classList.toggle('active', type === 'text'); document.getElementById('infoTypeFileBtn').classList.toggle('active', type === 'file'); document.getElementById('infoTextForm').style.display = type === 'text' ? 'block' : 'none'; document.getElementById('infoFileForm').style.display = type === 'file' ? 'block' : 'none'; };
 window.handleInfoFileSelect = function(event) { const file = event.target.files[0]; const infoEl = document.getElementById('infoFileInfo'); const warningEl = document.getElementById('infoFileWarning'); if (!file) { selectedInfoFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return; } if (file.size > MAX_FILE_SIZE) { alert(`⚠️ Файл слишком большой! Максимум: ${formatFileSize(MAX_FILE_SIZE)}`); event.target.value = ''; selectedInfoFileData = null; infoEl.textContent = ''; warningEl.style.display = 'none'; return; } warningEl.style.display = file.size > RECOMMENDED_FILE_SIZE ? 'block' : 'none'; const reader = new FileReader(); reader.onload = function(e) { selectedInfoFileData = { name: file.name, mimeType: file.type || 'application/octet-stream', size: file.size, data: e.target.result }; infoEl.innerHTML = `✅ Выбран: <strong>${file.name}</strong> (${formatFileSize(file.size)})`; }; reader.readAsDataURL(file); };
 window.saveInfo = async function() { const title = document.getElementById('infoTitle').value.trim(); if (!title) { alert('Введите заголовок'); return; } let infoItem = { title, type: currentInfoType, createdAt: Date.now(), branchId: currentUser.branchId }; if (currentInfoType === 'text') { const text = document.getElementById('infoText').value.trim(); if (!text) { alert('Введите текст'); return; } infoItem.content = text; infoItem.file = null; } else { if (!selectedInfoFileData) { alert('Выберите файл'); return; } infoItem.content = null; infoItem.file = selectedInfoFileData; } const btn = document.getElementById('infoSaveBtn'); const originalText = btn.innerHTML; btn.innerHTML = `<span class="spinner"></span> Сохранение...`; btn.disabled = true; try { await addDoc(collection(db, "info"), infoItem); cancelInfoForm(); await loadAllDataFromFirebase(); renderInfo(); alert('✅ Добавлена!'); } catch (e) { alert('Ошибка: ' + e.message); } finally { btn.innerHTML = originalText; btn.disabled = false; } };
-window.deleteInfo = async function(id) { if (!confirm('Удалить?')) return; try { await deleteDoc(doc(db, "info", id)); await loadAllDataFromFirebase(); renderInfo(); } catch (e) { alert('Ошибка: ' + e.message); } };
+window.deleteInfo = async function(id) { if (!confirm('Удалить?')) return; try { await deleteDoc(doc(db, "info"), id); await loadAllDataFromFirebase(); renderInfo(); } catch (e) { alert('Ошибка: ' + e.message); } };
 window.viewInfo = function(id) { const i = data.info.find(x => x.id === id); if (!i) return; if (i.type === 'text') openFileViewer(i.title, null, true, i.content); else openFileViewer(i.title, i.file); };
 window.downloadInfo = function(id) { const i = data.info.find(x => x.id === id); if (!i || !i.file) return; downloadFileFromModal(i.file.name, i.file.data); };
-window.renderInfo = function() { const content = document.getElementById('infoContent'); if (!content) return; content.innerHTML = ''; if (data.info.length === 0) { content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📢 Информация не добавлена</div>'; return; } data.info.forEach(item => { const card = document.createElement('div'); card.className = `info-card type-${item.type}`; const icon = item.type === 'text' ? '📄' : (item.file ? getFileIcon(item.file.mimeType) : ''); const tagClass = item.type === 'text' ? 'tag-text' : 'tag-file'; const tagText = item.type === 'text' ? 'Текст' : 'Файл'; let previewHtml = ''; if (item.type === 'text') { const preview = item.content.length > 200 ? item.content.substring(0, 200) + '...' : item.content; previewHtml = `<div class="info-preview">${escapeHtml(preview)}</div>`; } else if (item.file) previewHtml = `<div class="info-file-info"><div class="file-icon-big">${getFileIcon(item.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(item.file.name)}</div><div class="file-size">${formatFileSize(item.file.size)}</div></div></div>`; const actionBtn = item.type === 'text' ? `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Читать</button>` : `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadInfo('${item.id}')">⬇️ Скачать</button>`; card.innerHTML = `<div class="info-header"><div class="info-icon">${icon}</div><div class="info-title">${escapeHtml(item.title)}</div></div><div class="info-meta"><span class="info-tag ${tagClass}">${tagText}</span><span class="info-date">${formatDateTime(item.createdAt)}</span></div>${previewHtml}<div class="info-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteInfo('${item.id}')">🗑️</button>` : ''}</div>`; content.appendChild(card); }); };
+window.renderInfo = function() {
+const content = document.getElementById('infoContent');
+if (!content) return;
+content.innerHTML = '';
+if (!planSettings.general) {
+content.innerHTML = `<div class="plan-disabled"><span class="plan-disabled-icon">📢</span><h3>Раздел временно недоступен</h3><p>Информация отключена</p></div>`;
+return;
+}
+if (data.info.length === 0) {
+content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--light-gray);">📢 Информация не добавлена</div>';
+return;
+}
+data.info.forEach(item => {
+const card = document.createElement('div');
+card.className = `info-card type-${item.type}`;
+const icon = item.type === 'text' ? '📄' : (item.file ? getFileIcon(item.file.mimeType) : '');
+const tagClass = item.type === 'text' ? 'tag-text' : 'tag-file';
+const tagText = item.type === 'text' ? 'Текст' : 'Файл';
+let previewHtml = '';
+if (item.type === 'text') {
+const preview = item.content.length > 200 ? item.content.substring(0, 200) + '...' : item.content;
+previewHtml = `<div class="info-preview">${escapeHtml(preview)}</div>`;
+} else if (item.file) previewHtml = `<div class="info-file-info"><div class="file-icon-big">${getFileIcon(item.file.mimeType)}</div><div class="file-details"><div class="file-name">${escapeHtml(item.file.name)}</div><div class="file-size">${formatFileSize(item.file.size)}</div></div></div>`;
+const actionBtn = item.type === 'text' ? `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Читать</button>` : `<button class="btn btn-view btn-sm" onclick="viewInfo('${item.id}')">👁️ Открыть</button><button class="btn btn-download btn-sm" onclick="downloadInfo('${item.id}')">⬇️ Скачать</button>`;
+card.innerHTML = `<div class="info-header"><div class="info-icon">${icon}</div><div class="info-title">${escapeHtml(item.title)}</div></div><div class="info-meta"><span class="info-tag ${tagClass}">${tagText}</span><span class="info-date">${formatDateTime(item.createdAt)}</span></div>${previewHtml}<div class="info-actions">${actionBtn}${currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin') ? `<button class="btn btn-danger btn-sm" onclick="deleteInfo('${item.id}')">🗑️</button>` : ''}</div>`;
+content.appendChild(card);
+});
+};
 // ===== УТИЛИТЫ =====
 function updateStats() { let totalEntries = 0, kassaCount = 0, kdCount = 0, zalCount = 0, skladCount = 0; Object.values(data.schedule).forEach(entries => { entries.forEach(entry => { totalEntries++; if (entry.type === 'kassa') kassaCount++; if (entry.type === 'kd') kdCount++; if (entry.type === 'zal') zalCount++; if (entry.type === 'sklad') skladCount++; }); }); data.stats.totalEntries = totalEntries; data.stats.kassaCount = kassaCount; data.stats.kdCount = kdCount; data.stats.zalCount = zalCount; data.stats.skladCount = skladCount; data.stats.activeContests = data.contests.filter(c => c.status === 'active').length; }
 function formatDate(dateStr) { if (!dateStr) return ''; const [year, month, day] = dateStr.split('-'); return `${day}.${month}.${year}`; }
@@ -1512,7 +1528,7 @@ function getFileIcon(mimeType) { if (!mimeType) return '📄'; if (mimeType.star
 function getSortedDates() { return Object.keys(data.schedule).sort((a, b) => { const [dayA, monthA, yearA] = a.split('.').map(Number); const [dayB, monthB, yearB] = b.split('.').map(Number); return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB); }); }
 function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 window.renderAdmin = function() { renderEmployeesList(); renderEmployeeIndividualList(); renderScheduleList(); renderAdminContestList(); renderEventsList(); renderRevisionsList(); renderAdminSubstList(); };
-function renderAll() { renderHome(); renderSchedule(); renderPlan(); renderContests(); renderInfo(); if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) renderAdmin(); }
+function renderAll() { renderHome(); renderSchedule(); renderInfoSection(); renderContests(); if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) renderAdmin(); }
 // ===== МОДАЛКИ И УВЕДОМЛЕНИЯ =====
 window.openFileViewer = function(title, fileData, isText = false, textContent = '') { document.getElementById('modalTitle').textContent = title; const body = document.getElementById('modalBody'); body.innerHTML = ''; if (isText) body.innerHTML = `<pre>${escapeHtml(textContent)}</pre>`; else if (fileData) { const mimeType = fileData.mimeType || 'application/octet-stream'; const dataUrl = fileData.data; if (mimeType.startsWith('image/')) body.innerHTML = `<img src="${dataUrl}">`; else if (mimeType.includes('pdf')) body.innerHTML = `<iframe src="${dataUrl}"></iframe>`; else body.innerHTML = `<div style="text-align:center;padding:20px;"><div style="font-size:4em;">${getFileIcon(mimeType)}</div><button class="btn btn-warning" onclick="downloadFileFromModal('${escapeHtml(fileData.name)}','${dataUrl}')">⬇️ Скачать</button></div>`; } document.getElementById('materialModal').classList.add('open'); };
 window.downloadFileFromModal = function(filename, dataUrl) { const link = document.createElement('a'); link.href = dataUrl; link.download = filename; document.body.appendChild(link); link.click(); document.body.removeChild(link); };
