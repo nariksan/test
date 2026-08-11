@@ -777,7 +777,7 @@ function renderGroup() {
     <div class="group-stat-card orange"><div class="stat-value">${kids.length}</div><div class="stat-label">👶 Всего детей</div></div>
     <div class="group-stat-card pink"><div class="stat-value">${girls}</div><div class="stat-label">🎀 Девочек</div></div>
     <div class="group-stat-card blue"><div class="stat-value">${boys}</div><div class="stat-label">👦 Мальчиков</div></div>
-    <div class="group-stat-card green"><div class="stat-value">${parents.length}</div><div class="stat-label">Родителей</div></div>
+    <div class="group-stat-card green"><div class="stat-value">${(data.committee || []).length}</div><div class="stat-label">👥 Комитет</div></div>
     <div class="group-stat-card green"><div class="stat-value">${teachers.length}</div><div class="stat-label">Воспитателей</div></div>
   </div>`;
 
