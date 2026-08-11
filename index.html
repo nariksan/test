@@ -579,7 +579,6 @@ async function loadFromFirebase() {
 function bindGroupData() {
   if (!app.groupData[currentGroupId]) app.groupData[currentGroupId] = defaultGroupData();
   data = app.groupData[currentGroupId];
-  // страховка для старых данных
   if (!data.children) data.children = [];
   if (!data.parents) data.parents = [];
   if (!data.events) data.events = [];
@@ -772,7 +771,6 @@ function renderGroup() {
 
   let html = `<div class="group-hero"><div class="group-number">Группа № ${escapeHtml(g.number)}</div><div class="group-name">${escapeHtml(g.name)}</div><div class="group-month">📅 ${escapeHtml(m.name)}</div>${data.description ? `<div class="group-desc">${escapeHtml(data.description)}</div>` : ''}</div>`;
 
-  // АВТО-СЧЁТЧИКИ
   html += `<div class="group-stats-grid">
     <div class="group-stat-card orange"><div class="stat-value">${kids.length}</div><div class="stat-label">👶 Всего детей</div></div>
     <div class="group-stat-card pink"><div class="stat-value">${girls}</div><div class="stat-label">🎀 Девочек</div></div>
@@ -781,7 +779,6 @@ function renderGroup() {
     <div class="group-stat-card green"><div class="stat-value">${teachers.length}</div><div class="stat-label">Воспитателей</div></div>
   </div>`;
 
-  // ДНИ РОЖДЕНИЯ
   const bds = getUpcomingBirthdays();
   html += `<div class="info-block-g" style="border-left-color:var(--danger)"><h3>🎂 Дни рождения</h3>`;
   if (!bds.length) html += `<p style="color:var(--light-gray);font-size:0.9em">Добавьте детей с датами рождения в админке (👥 Люди → Дети)</p>`;
@@ -794,7 +791,6 @@ function renderGroup() {
   });
   html += `</div>`;
 
-  // СОБЫТИЯ
   const events = (data.events || []).filter(e => e.title).slice().sort((a,b) => (a.date||'9999').localeCompare(b.date||'9999'));
   html += `<div class="info-block-g" style="border-left-color:var(--info)"><h3>🎉 События и праздники</h3>`;
   if (!events.length) html += `<p style="color:var(--light-gray);font-size:0.9em">Событий пока нет. Добавьте их в админке (🏫 Группа → События)</p>`;
@@ -804,21 +800,18 @@ function renderGroup() {
   });
   html += `</div>`;
 
-  // ВОСПИТАТЕЛИ
   if (teachers.length) {
-    html += `<div class="info-block-g"><h3>👩‍🏫 Наши воспитатели</h3>`;
+    html += `<div class="info-block-g"><h3>👩‍ Наши воспитатели</h3>`;
     teachers.forEach(t => { if (!t.name) return; const ph = t.phone ? `<div class="teacher-phone">📞 <a href="tel:${t.phone.replace(/[^\d+]/g,'')}">${escapeHtml(t.phone)}</a></div>` : ''; html += `<div class="teacher-item"><div><div class="teacher-name">${escapeHtml(t.name)}</div><div class="teacher-role">${escapeHtml(t.role || 'Воспитатель')}</div></div>${ph}</div>`; });
     html += `</div>`;
   }
 
-  // КОМИТЕТ
   if (data.committee && data.committee.length) {
     html += `<h3 style="font-size:1.1em;color:var(--brand-green);margin:20px 0 12px;">👥 Родительский комитет</h3><div class="committee-grid">`;
     data.committee.forEach(mb => { if (!mb.name) return; let cls = 'committee-card'; const r = (mb.role||'').toLowerCase(); if (r.includes('председатель')) cls += ' chair'; else if (r.includes('казначей')) cls += ' treasurer'; const ph = mb.phone ? `<div class="member-phone">📞 <a href="tel:${mb.phone.replace(/[^\d+]/g,'')}">${escapeHtml(mb.phone)}</a></div>` : ''; html += `<div class="${cls}"><div class="member-name">${escapeHtml(mb.name)}</div><div class="member-role">${escapeHtml(mb.role || 'Член комитета')}</div>${ph}</div>`; });
     html += `</div>`;
   }
 
-  // РОДИТЕЛИ
   if (parents.length) {
     html += `<div class="info-block-g" style="margin-top:20px"><h3>👨‍👩‍ Родители</h3>`;
     parents.forEach(p => { if (!p.name) return; const ph = p.phone ? `<div class="teacher-phone">📞 <a href="tel:${p.phone.replace(/[^\d+]/g,'')}">${escapeHtml(p.phone)}</a></div>` : ''; html += `<div class="teacher-item"><div><div class="teacher-name">${escapeHtml(p.name)}</div></div>${ph}</div>`; });
@@ -909,25 +902,43 @@ function renderAdminSummary() {
 
 function renderAdminGroupInfo() {
   const g = getGroup(currentGroupId);
+  const m = getCurrentMonth();
+  const kids = data.children || [];
+  const girls = kids.filter(k => k.gender === 'girl').length;
+  const boys = kids.filter(k => k.gender === 'boy').length;
   let evHtml = '';
   (data.events || []).forEach(e => { evHtml += eventRowHtml(e); });
   document.getElementById('admin-groupinfo').innerHTML = `
-    <div class="admin-card"><div class="admin-card-title">🏫 Информация о группе</div>
-    <div class="form-group"><label>Номер группы</label><input type="number" id="editGroupNumber" value="${g ? escapeHtml(g.number) : ''}" onchange="markDirty()"></div>
-    <div class="form-group"><label>Название</label><input type="text" id="editGroupName" value="${g ? escapeHtml(g.name) : ''}" onchange="markDirty()"></div>
-    <div class="form-group"><label>Описание</label><textarea id="editGroupDescription" onchange="markDirty()">${escapeHtml(data.description || '')}</textarea></div>
+    <div class="admin-card"><div class="admin-card-title">📋 О группе «${g ? escapeHtml(g.name) : ''}»</div>
+      <div class="admin-cards-grid">
+        <div class="stat-card"><div class="stat-label">Номер и название</div><div class="stat-value">№ ${g ? escapeHtml(g.number) : ''} «${g ? escapeHtml(g.name) : ''}»</div></div>
+        <div class="stat-card"><div class="stat-label">👶 Детей</div><div class="stat-value">${kids.length}</div></div>
+        <div class="stat-card"><div class="stat-label">🎀 Девочек</div><div class="stat-value">${girls}</div></div>
+        <div class="stat-card"><div class="stat-label">👦 Мальчиков</div><div class="stat-value">${boys}</div></div>
+        <div class="stat-card green"><div class="stat-label">👥 Комитет</div><div class="stat-value">${(data.committee || []).length}</div></div>
+        <div class="stat-card green"><div class="stat-label">👩‍ Воспитателей</div><div class="stat-value">${(data.teachers || []).length}</div></div>
+        <div class="stat-card"><div class="stat-label">📅 Текущий месяц</div><div class="stat-value">${escapeHtml(m.name)}</div></div>
+        <div class="stat-card green"><div class="stat-label">💰 Остаток</div><div class="stat-value">${formatMoney(calcBalance(m))} ₽</div></div>
+      </div>
+    </div>
+    <div class="admin-card"><div class="admin-card-title">✏️ Переименовать группу / описание</div>
+      <div class="hint">💡 Когда дети переходят в другую группу (выпуск или перевод), просто поменяйте здесь номер и название — все данные (дети, взносы, новости, архив) сохранятся.</div>
+      <div class="form-group"><label>Номер группы</label><input type="number" id="editGroupNumber" value="${g ? escapeHtml(g.number) : ''}" onchange="markDirty()"></div>
+      <div class="form-group"><label>Название группы</label><input type="text" id="editGroupName" value="${g ? escapeHtml(g.name) : ''}" onchange="markDirty()"></div>
+      <div class="form-group"><label>Описание (видно родителям в «Наша группа»)</label><textarea id="editGroupDescription" onchange="markDirty()">${escapeHtml(data.description || '')}</textarea></div>
     </div>
     <div class="admin-card"><div class="admin-card-title">🎉 События и праздники</div>
-    <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addEventRow();markDirty()">➕ Добавить событие</button></div>
-    <div id="adminEventsList">${evHtml}</div></div>`;
+      <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addEventRow();markDirty()">➕ Добавить событие</button></div>
+      <div id="adminEventsList">${evHtml}</div>
+    </div>`;
 }
 
 function eventRowHtml(e = null) {
-  return `<div class="a-row event-row-admin"><input type="text" class="e-title" value="${e ? escapeHtml(e.title || '') : ''}" placeholder="Название (утренник, праздник...)"><input type="date" class="e-date" value="${e ? (e.date || '') : ''}"><input type="text" class="e-desc" value="${e ? escapeHtml(e.description || '') : ''}" placeholder="Описание (необязательно)"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;
+  return `<div class="a-row event-row-admin"><input type="text" class="e-title" value="${e ? escapeHtml(e.title || '') : ''}" placeholder="Название события"><input type="date" class="e-date" value="${e ? (e.date || '') : ''}"><input type="text" class="e-desc" value="${e ? escapeHtml(e.description || '') : ''}" placeholder="Описание (необязательно)"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;
 }
 function addEventRow() { document.getElementById('adminEventsList').insertAdjacentHTML('beforeend', eventRowHtml()); }
 
-// ===== ЛЮДИ (комитет, родители, дети, воспитатели) =====
+// ЛЮДИ
 function renderAdminPeople() {
   let comHtml = ''; (data.committee || []).forEach(x => { comHtml += committeeRowHtml(x); });
   let parHtml = ''; (data.parents || []).forEach(p => { parHtml += parentRowHtml(p); });
@@ -1006,6 +1017,7 @@ function renderAdminMonths() {
   document.getElementById('admin-months').innerHTML = html;
 }
 
+// ===== ДОСТУП + УПРАВЛЕНИЕ АДМИНАМИ =====
 function renderAdminAccess() {
   const reqs = currentRole === 'owner' ? app.requests : app.requests.filter(r => r.groupId === currentGroupId);
   let reqHtml = '';
@@ -1015,7 +1027,16 @@ function renderAdminAccess() {
   const users = app.users.filter(u => u.groupId === currentGroupId);
   let usersHtml = '';
   if (!users.length) usersHtml = '<p style="color:var(--light-gray);font-size:0.85em">Нет пользователей.</p>';
-  users.forEach(u => { usersHtml += `<div class="user-card${u.role === 'admin' ? ' admin-u' : ''}"><div><b>${escapeHtml(u.name || u.phone)}</b> <span class="role-badge${u.role === 'admin' ? ' admin-b' : ''}">${u.role === 'admin' ? '💎 админ' : '👁️ родитель'}</span><br><small style="color:var(--gray)">${u.phone ? '📞 ' + escapeHtml(u.phone) + ' · ' : ''}пароль: <span class="pwd-chip">${escapeHtml(u.password)}</span></small></div><div><button class="btn btn-secondary btn-sm" onclick="changeUserPassword('${u.id}')">🔑</button><button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">🗑</button></div></div>`; });
+  users.forEach(u => {
+    const isSelf = u.id === currentUserId;
+    let roleBtns = '';
+    if (u.role === 'admin') {
+      roleBtns += `<button class="btn btn-secondary btn-sm" onclick="setUserRole('${u.id}','member')">${isSelf ? '⬇️ Снять себя в родители' : '⬇️ В родители'}</button>`;
+    } else {
+      roleBtns += `<button class="btn btn-gold btn-sm" onclick="setUserRole('${u.id}','admin')">⬆️ В админы</button>`;
+    }
+    usersHtml += `<div class="user-card${u.role === 'admin' ? ' admin-u' : ''}"><div><b>${escapeHtml(u.name || u.phone)}</b> <span class="role-badge${u.role === 'admin' ? ' admin-b' : ''}">${u.role === 'admin' ? '💎 админ' : '👁️ родитель'}</span>${isSelf ? ' <span class="role-badge" style="background:var(--info)">это вы</span>' : ''}<br><small style="color:var(--gray)">${u.phone ? '📞 ' + escapeHtml(u.phone) + ' · ' : ''}пароль: <span class="pwd-chip">${escapeHtml(u.password)}</span></small></div><div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">${roleBtns}<button class="btn btn-secondary btn-sm" onclick="changeUserPassword('${u.id}')">🔑</button><button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">🗑</button></div></div>`;
+  });
 
   document.getElementById('admin-access').innerHTML = `
     <div class="admin-card"><div class="admin-card-title">📩 Запросы на вход</div>${reqHtml}</div>
@@ -1023,10 +1044,28 @@ function renderAdminAccess() {
       <div class="form-group"><label>ФИО</label><input type="text" id="newUserFullname" placeholder="Например: Наталья"></div>
       <div class="form-group"><label>Телефон</label><input type="tel" id="newUserPhone" placeholder="Последние цифры"></div>
       <div class="form-group"><label>Пароль</label><div style="display:flex;gap:8px"><input type="text" id="newUserPassword"><button class="btn btn-secondary btn-sm" onclick="document.getElementById('newUserPassword').value=genPassword()">🎲</button></div></div>
-      <div class="form-group"><label>Роль</label><select id="newUserRole"><option value="member">👁️ Родитель</option>${currentRole === 'owner' ? '<option value="admin">💎 Админ</option>' : ''}</select></div>
+      <div class="form-group"><label>Роль</label><select id="newUserRole"><option value="member">👁️ Родитель</option>${(currentRole === 'owner' || currentRole === 'admin') ? '<option value="admin">💎 Админ</option>' : ''}</select></div>
       <button class="btn btn-success" onclick="addUserManual()">➕ Добавить</button>
     </div>
-    <div class="admin-card"><div class="admin-card-title">👥 Пользователи группы</div>${usersHtml}</div>`;
+    <div class="admin-card"><div class="admin-card-title">👥 Пользователи группы</div>
+      <div class="hint">💎 Назначайте админов из родителей или комитета кнопкой «⬆️ В админы». Админ может снять полномочия с себя — «⬇️ Снять себя в родители» (например, при выходе из комитета или переводе в другую группу).</div>
+      ${usersHtml}</div>`;
+}
+
+async function setUserRole(id, role) {
+  const u = app.users.find(x => x.id === id); if (!u) return;
+  if (role === 'admin') { if (!confirm(`Назначить «${u.name || u.phone}» администратором группы?`)) return; }
+  else { if (!confirm(`Перевести «${u.name || u.phone}» в родители (снять права админа)?`)) return; }
+  u.role = role;
+  await saveToFirebase();
+  if (id === currentUserId) {
+    currentRole = role;
+    let roleText = '👁️ Родитель'; if (role === 'admin') roleText = '💎 Админ';
+    document.getElementById('currentUserRole').textContent = roleText;
+    document.getElementById('navAdminBtn').style.display = (role === 'admin' || role === 'owner') ? '' : 'none';
+    if (role !== 'admin') { alert('✅ Вы переведены в родители. Админ-панель больше недоступна.'); showSection('home', document.querySelector('.top-nav-btn')); return; }
+  }
+  renderAdminAccess();
 }
 
 function recalcAdmin() {
@@ -1048,7 +1087,6 @@ function collectAdminData() {
   if (g) { const gn = document.getElementById('editGroupNumber'); const gname = document.getElementById('editGroupName'); if (gn) g.number = gn.value.trim(); if (gname) g.name = gname.value.trim(); }
   const gd = document.getElementById('editGroupDescription'); if (gd) data.description = gd.value.trim();
 
-  // События
   data.events = [];
   document.querySelectorAll('#adminEventsList .a-row').forEach(r => {
     const title = r.querySelector('.e-title').value.trim();
@@ -1057,21 +1095,18 @@ function collectAdminData() {
     if (title) data.events.push({ title, date, description });
   });
 
-  // Комитет
   data.committee = [];
   document.querySelectorAll('#adminCommitteeList .a-row').forEach(r => {
     const i = r.querySelectorAll('input');
     if (i[0].value.trim()) data.committee.push({ name: i[0].value.trim(), role: i[1].value.trim(), phone: i[2].value.trim() });
   });
 
-  // Родители
   data.parents = [];
   document.querySelectorAll('#adminParentsList .a-row').forEach(r => {
     const i = r.querySelectorAll('input');
     if (i[0].value.trim()) data.parents.push({ name: i[0].value.trim(), phone: i[1].value.trim() });
   });
 
-  // Дети
   data.children = [];
   document.querySelectorAll('#adminChildrenList .a-row').forEach(r => {
     const name = r.querySelector('.k-name').value.trim();
@@ -1080,7 +1115,6 @@ function collectAdminData() {
     if (name) data.children.push({ name, gender, birthday });
   });
 
-  // Воспитатели
   data.teachers = [];
   document.querySelectorAll('#adminTeachersList .a-row').forEach(r => {
     const i = r.querySelectorAll('input');
@@ -1106,6 +1140,7 @@ async function saveAll() {
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Сохранение...'; }
   await saveToFirebase();
   renderAll(); clearDirty();
+  document.getElementById('headerGroupLabel').textContent = groupLabel(getGroup(currentGroupId));
   if (btn) { btn.disabled = false; btn.innerHTML = '💾 Сохранить'; }
 }
 
@@ -1122,12 +1157,22 @@ async function archiveMonth() { if (!confirm('Архивировать теку�
 // ACCESS
 function openAccessRequestModal() { const sel = document.getElementById('reqGroup'); sel.innerHTML = '<option value="">— Выберите группу —</option>'; app.groups.forEach(g => { const o = document.createElement('option'); o.value = g.id; o.textContent = groupLabel(g); sel.appendChild(o); }); document.getElementById('accessRequestModal').classList.add('active'); }
 async function submitAccessRequest() { const name = document.getElementById('reqName').value.trim(); const phone = document.getElementById('reqPhone').value.trim(); const groupId = document.getElementById('reqGroup').value || null; const groupText = document.getElementById('reqGroupText').value.trim(); if (!name && !normalizePhone(phone)) { alert('Укажите имя или телефон'); return; } if (!groupId && !groupText) { alert('Выберите группу'); return; } app.requests.push({ id: 'req_' + Date.now(), name, phone, groupId, groupText, date: new Date().toISOString() }); await saveToFirebase(); closeModal('accessRequestModal'); alert('✅ Запрос отправлен!'); }
-function openApprove(id) { const r = app.requests.find(x => x.id === id); if (!r) return; pendingRequestId = id; document.getElementById('approveInfo').innerHTML = `<b>${escapeHtml(r.name || r.phone)}</b>`; const gbox = document.getElementById('approveGroupBox'); if (r.groupId) gbox.style.display = 'none'; else { gbox.style.display = ''; const sel = document.getElementById('approveGroup'); sel.innerHTML = ''; app.groups.forEach(g => { const o = document.createElement('option'); o.value = g.id; o.textContent = groupLabel(g); sel.appendChild(o); }); } document.getElementById('approvePassword').value = genPassword(); document.getElementById('approveModal').classList.add('active'); }
-async function confirmApprove() { const r = app.requests.find(x => x.id === pendingRequestId); if (!r) return; const gid = r.groupId || document.getElementById('approveGroup').value; const role = document.getElementById('approveRole').value; const pwd = document.getElementById('approvePassword').value.trim(); if (!pwd) { alert('Задайте пароль'); return; } app.users.push({ id: 'user_' + Date.now(), role, groupId: gid, name: r.name, phone: r.phone, password: pwd }); app.requests = app.requests.filter(x => x.id !== pendingRequestId); await saveToFirebase(); closeModal('approveModal'); renderAdminAccess(); alert('✅ Пользователь создан! Пароль: ' + pwd); }
+function openApprove(id) {
+  const r = app.requests.find(x => x.id === id); if (!r) return;
+  pendingRequestId = id;
+  document.getElementById('approveInfo').innerHTML = `<b>${escapeHtml(r.name || r.phone)}</b>`;
+  const gbox = document.getElementById('approveGroupBox');
+  if (r.groupId) gbox.style.display = 'none';
+  else { gbox.style.display = ''; const sel = document.getElementById('approveGroup'); sel.innerHTML = ''; app.groups.forEach(g => { const o = document.createElement('option'); o.value = g.id; o.textContent = groupLabel(g); sel.appendChild(o); }); }
+  document.getElementById('approveRole').innerHTML = '<option value="member">👁️ Родитель</option>' + ((currentRole === 'owner' || currentRole === 'admin') ? '<option value="admin">💎 Админ</option>' : '');
+  document.getElementById('approvePassword').value = genPassword();
+  document.getElementById('approveModal').classList.add('active');
+}
+async function confirmApprove() { const r = app.requests.find(x => x.id === pendingRequestId); if (!r) return; const gid = r.groupId || document.getElementById('approveGroup').value; const role = document.getElementById('approveRole').value || 'member'; const pwd = document.getElementById('approvePassword').value.trim(); if (!pwd) { alert('Задайте пароль'); return; } app.users.push({ id: 'user_' + Date.now(), role, groupId: gid, name: r.name, phone: r.phone, password: pwd }); app.requests = app.requests.filter(x => x.id !== pendingRequestId); await saveToFirebase(); closeModal('approveModal'); renderAdminAccess(); alert('✅ Пользователь создан! Пароль: ' + pwd); }
 async function rejectRequest(id) { if (!confirm('Отклонить?')) return; app.requests = app.requests.filter(x => x.id !== id); await saveToFirebase(); renderAdminAccess(); }
 async function addUserManual() { const name = document.getElementById('newUserFullname').value.trim(); const phone = document.getElementById('newUserPhone').value.trim(); const pwd = document.getElementById('newUserPassword').value.trim(); const role = document.getElementById('newUserRole').value; if (!name && !normalizePhone(phone)) { alert('Укажите имя или телефон'); return; } if (!pwd) { alert('Задайте пароль'); return; } app.users.push({ id: 'user_' + Date.now(), role, groupId: currentGroupId, name, phone, password: pwd }); await saveToFirebase(); renderAdminAccess(); alert('✅ Добавлен. Пароль: ' + pwd); }
 async function changeUserPassword(id) { const u = app.users.find(x => x.id === id); if (!u) return; const p = prompt('Новый пароль:', u.password); if (!p) return; u.password = p.trim(); await saveToFirebase(); renderAdminAccess(); }
-async function deleteUser(id) { const u = app.users.find(x => x.id === id); if (!u) return; if (!confirm('Удалить ' + (u.name || u.phone) + '?')) return; app.users = app.users.filter(x => x.id !== id); await saveToFirebase(); renderAdminAccess(); }
+async function deleteUser(id) { const u = app.users.find(x => x.id === id); if (!u) return; if (u.id === currentUserId) { alert('⛔ Нельзя удалить свой собственный аккаунт!'); return; } if (!confirm('Удалить ' + (u.name || u.phone) + '?')) return; app.users = app.users.filter(x => x.id !== id); await saveToFirebase(); renderAdminAccess(); }
 
 // OWNER
 function renderOwner() {
