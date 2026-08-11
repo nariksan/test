@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Бюджет Группы">
 <link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <title>Родительский комитет — Бюджет группы</title>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -28,7 +27,7 @@ html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 button, .top-nav-btn, .btn, .home-tile { user-select: none; -webkit-user-select: none; touch-action: manipulation; }
 input, textarea, select { user-select: text; -webkit-user-select: text; }
 
-/* LOGIN */
+/* LOGIN / MAINTENANCE */
 .login-screen, .maintenance-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .login-screen.hidden, .maintenance-screen.hidden { display: none; }
 .login-container, .maintenance-container { background: white; border-radius: var(--radius-xl); padding: 30px 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.4s ease; text-align: center; }
@@ -54,20 +53,22 @@ input, textarea, select { user-select: text; -webkit-user-select: text; }
 .btn-request:hover { border-color: var(--brand-green); }
 
 /* HEADER */
-.app-header { position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
-.header-banner { position: relative; width: 100%; height: auto; overflow: visible; background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); }
-.header-banner img { width: 100%; height: auto; display: block; max-height: 200px; object-fit: cover; object-position: center; }
-.header-content { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 16px 8px; z-index: 2; }
-.header-top { display: flex; justify-content: flex-start; align-items: flex-start; gap: 12px; }
-.header-title h1 { font-size: 1.6em; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); margin-bottom: 4px; }
+.app-header { position: relative; z-index: 100; box-shadow: var(--shadow-md); }
+.header-banner { position: relative; width: 100%; min-height: 130px; overflow: hidden; background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); }
+.header-banner::before { content: '🧸 🎨 🏫  🖍️ '; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.6em; opacity: 0.15; white-space: nowrap; letter-spacing: 14px; pointer-events: none; z-index: 1; }
+.banner-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0.35; z-index: 1; }
+.header-content { position: relative; z-index: 2; min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; padding: 12px 16px; gap: 8px; }
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+.header-title h1 { color: #fff; font-size: 1.5em; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.35); margin-bottom: 2px; }
+.header-group-label { color: rgba(255,255,255,0.92); font-size: 0.8em; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
 .current-user-badge { background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.9) 100%); backdrop-filter: blur(10px); color: var(--brand-green); padding: 4px 10px; border-radius: 16px; font-size: 0.75em; display: inline-flex; align-items: center; gap: 5px; border: 2px solid var(--brand-orange); box-shadow: 0 2px 6px rgba(0,0,0,0.15); font-weight: 600; }
 .role-badge-header { background: linear-gradient(135deg, var(--brand-orange) 0%, var(--gold) 100%); color: white; padding: 2px 7px; border-radius: 10px; font-size: 0.85em; font-weight: 700; box-shadow: 0 2px 4px rgba(232, 119, 34, 0.3); }
-.header-clock { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: var(--brand-green); padding: 4px 10px; border-radius: var(--radius-md); text-align: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 2px solid rgba(232, 119, 34, 0.6); }
-.clock-time { font-size: 1em; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 1px; background: linear-gradient(135deg, var(--brand-orange) 0%, var(--brand-green) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.clock-date { font-size: 0.65em; color: var(--brand-orange); font-weight: 600; margin-top: 2px; }
+.header-clock { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); color: #fff; padding: 4px 10px; border-radius: var(--radius-md); text-align: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 2px solid rgba(255,255,255,0.5); }
+.clock-time { font-size: 1em; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 1px; color: #fff; }
+.clock-date { font-size: 0.65em; color: #ffe8d6; font-weight: 600; margin-top: 2px; }
 .clock-separator { animation: blink 1s infinite; }
 @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.3; } }
-.month-selector-header select { padding: 6px 10px; border-radius: var(--radius-sm); border: 2px solid var(--brand-orange); font-size: 0.8em; background: rgba(255,255,255,0.9); cursor: pointer; font-weight: 600; }
+.month-selector-header select { padding: 6px 10px; border-radius: var(--radius-sm); border: 2px solid var(--brand-orange); font-size: 0.8em; background: rgba(255,255,255,0.95); cursor: pointer; font-weight: 600; }
 
 /* NAV */
 .top-nav { background: white; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 99; }
@@ -142,25 +143,45 @@ input, textarea, select { user-select: text; -webkit-user-select: text; }
 .committee-card .member-phone a { color: var(--brand-green); text-decoration: none; }
 .committee-empty { text-align: center; color: var(--light-gray); padding: 40px; font-style: italic; }
 
-/* GROUP INFO */
+/* GROUP */
 .group-hero { background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-orange) 100%); color: white; border-radius: var(--radius-xl); padding: 28px; margin-bottom: 20px; text-align: center; box-shadow: var(--shadow-md); }
 .group-hero .group-number { font-size: 0.85em; opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
 .group-hero .group-name { font-size: 2em; font-weight: 800; margin-bottom: 8px; }
 .group-hero .group-month { font-size: 0.9em; opacity: 0.9; margin-bottom: 12px; }
 .group-hero .group-desc { font-size: 0.9em; opacity: 0.95; line-height: 1.5; max-width: 600px; margin: 0 auto; }
-.group-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.group-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 20px; }
 .group-stat-card { background: white; padding: 16px; border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm); border-top: 4px solid var(--brand-green); }
 .group-stat-card.green { border-top-color: var(--success); }
 .group-stat-card.red { border-top-color: var(--danger); }
 .group-stat-card.orange { border-top-color: var(--warning); }
+.group-stat-card.pink { border-top-color: #e83e8c; }
+.group-stat-card.blue { border-top-color: var(--info); }
 .group-stat-card .stat-value { font-size: 1.5em; font-weight: 800; color: var(--dark); }
 .group-stat-card .stat-label { font-size: 0.7em; color: var(--gray); text-transform: uppercase; margin-top: 4px; }
-.teachers-block { background: white; border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; border-left: 4px solid var(--warning); box-shadow: var(--shadow-sm); }
-.teachers-block h3 { font-size: 1em; color: var(--brand-green); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.info-block-g { background: white; border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; border-left: 4px solid var(--warning); box-shadow: var(--shadow-sm); }
+.info-block-g h3 { font-size: 1em; color: var(--brand-green); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .teacher-item { background: var(--bg); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .teacher-item .teacher-name { font-weight: 700; color: var(--dark); }
 .teacher-item .teacher-role { font-size: 0.75em; color: var(--warning); font-weight: 600; }
 .teacher-item .teacher-phone a { color: var(--brand-green); text-decoration: none; font-size: 0.85em; }
+
+/* BIRTHDAYS */
+.birthday-card { background: var(--bg); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--warning); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.birthday-card.today { border-left-color: var(--danger); background: #fff5f5; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(220,53,69,0.3); } 50% { box-shadow: 0 0 0 6px rgba(220,53,69,0); } }
+.birthday-avatar { font-size: 1.8em; }
+.birthday-info { flex: 1; min-width: 140px; }
+.birthday-name { font-weight: 700; color: var(--dark); }
+.birthday-date { font-size: 0.82em; color: var(--gray); margin-top: 2px; }
+.birthday-date.today-text { color: var(--danger); font-weight: 700; }
+.birthday-age { background: white; padding: 4px 12px; border-radius: 12px; font-size: 0.78em; font-weight: 700; color: var(--brand-green); border: 1px solid var(--border); }
+
+/* EVENTS */
+.event-card-g { background: var(--bg); border-radius: var(--radius-md); padding: 14px; margin-bottom: 10px; border-left: 4px solid var(--info); }
+.event-card-g.past { opacity: 0.6; }
+.event-date-badge { display: inline-block; background: var(--info); color: white; padding: 3px 10px; border-radius: 10px; font-size: 0.75em; font-weight: 700; margin-bottom: 6px; }
+.event-title-g { font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.event-desc-g { color: #555; font-size: 0.88em; line-height: 1.5; }
 
 /* ARCHIVE */
 .archive-item { background: white; padding: 16px; border-radius: var(--radius-lg); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: var(--shadow-sm); border-left: 4px solid var(--info); }
@@ -206,8 +227,11 @@ input, textarea, select { user-select: text; -webkit-user-select: text; }
 .student-row { grid-template-columns: 1fr 110px 52px 40px; }
 .expense-row { grid-template-columns: 1fr 120px 40px; }
 .committee-row-admin { grid-template-columns: 1.2fr 1fr 1fr 40px; }
-.a-row input { padding: 10px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 0.88em; width: 100%; }
-.a-row input:focus { border-color: var(--brand-green); outline: none; }
+.parent-row-admin { grid-template-columns: 1fr 1fr 40px; }
+.child-row-admin { grid-template-columns: 1fr 120px 150px 40px; }
+.event-row-admin { grid-template-columns: 1fr 150px 1fr 40px; }
+.a-row input, .a-row select { padding: 10px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 0.88em; width: 100%; background: white; }
+.a-row input:focus, .a-row select:focus { border-color: var(--brand-green); outline: none; }
 .switch { position: relative; width: 46px; height: 26px; display: inline-block; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; inset: 0; background: #d3dae6; border-radius: 26px; transition: 0.2s; cursor: pointer; }
@@ -246,24 +270,24 @@ input, textarea, select { user-select: text; -webkit-user-select: text; }
 .modal h2 { margin-bottom: 16px; color: var(--brand-green); font-size: 1.2em; }
 
 /* SAVE INDICATOR */
-.save-indicator { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 0.85em; font-weight: 600; box-shadow: var(--shadow-md); opacity: 0; transition: opacity 0.3s; z-index: 1300; }
+.save-indicator { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 0.85em; font-weight: 600; box-shadow: var(--shadow-md); opacity: 0; transition: opacity 0.3s; z-index: 1300; pointer-events: none; }
 .save-indicator.show { opacity: 1; }
 
-/* SPINNER */
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
-.header-banner img { max-height: 140px; }
-.header-content { padding: 8px 12px 6px; }
-.header-title h1 { font-size: 1.3em; }
+.header-banner, .header-content { min-height: 110px; }
+.header-title h1 { font-size: 1.2em; }
 .current-user-badge { font-size: 0.7em; padding: 3px 8px; }
 .clock-time { font-size: 0.9em; }
 .clock-date { font-size: 0.6em; }
 .header-clock { padding: 3px 8px; }
 .student-row { grid-template-columns: 1fr 90px 46px 36px; }
 .committee-row-admin { grid-template-columns: 1fr 1fr; }
+.parent-row-admin { grid-template-columns: 1fr 1fr 36px; }
+.child-row-admin { grid-template-columns: 1fr 110px 36px; }
+.event-row-admin { grid-template-columns: 1fr 1fr; }
 .expense-row { grid-template-columns: 1fr 100px 36px; }
 .balance-hero .balance-value { font-size: 1.8em; }
 .balance-stats { grid-template-columns: repeat(2, 1fr); }
@@ -314,15 +338,20 @@ input, textarea, select { user-select: text; -webkit-user-select: text; }
 <!-- HEADER -->
 <header class="app-header" id="appHeader" style="display:none;">
 <div class="header-banner">
-<img src="budget-banner.jpg" alt="Бюджет группы" onerror="this.style.display='none'">
+<img class="banner-img" src="budget-banner.jpg" alt="" onerror="this.remove()">
 <div class="header-content">
-<div class="header-top"><div class="header-title"><h1>💰 Бюджет группы</h1></div></div>
-<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 8px;">
-<div class="current-user-badge" id="currentUserBadge" style="display:none;"><span>👤</span><span id="currentUserName"></span><span class="role-badge-header" id="currentUserRole"></span></div>
-<div style="display: flex; align-items: center; gap: 8px;">
+<div class="header-top">
+<div class="header-title">
+<h1>💰 Бюджет группы</h1>
+<div class="header-group-label" id="headerGroupLabel"></div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
 <div class="month-selector-header"><select id="monthSelect" onchange="changeMonth(this.value)"></select></div>
 <div class="header-clock"><div class="clock-time" id="clockTime">--:--:--</div><div class="clock-date" id="clockDate">...</div></div>
 </div>
+</div>
+<div class="header-bottom">
+<div class="current-user-badge" id="currentUserBadge" style="display:none;"><span>👤</span><span id="currentUserName"></span><span class="role-badge-header" id="currentUserRole"></span></div>
 </div>
 </div>
 </div>
@@ -347,68 +376,60 @@ input, textarea, select { user-select: text; -webkit-user-select: text; }
 <!-- CONTENT -->
 <main class="app-content" id="appContent" style="display:none;">
 
-<!-- HOME -->
 <div id="home" class="section active">
 <h2 class="section-title">🏠 Главная</h2>
 <div class="balance-hero" id="balanceHero"></div>
 <div class="home-grid" id="homeGrid"></div>
 </div>
 
-<!-- GROUP -->
 <div id="group" class="section">
 <h2 class="section-title">🏫 Наша группа</h2>
 <div id="groupInfo"></div>
 </div>
 
-<!-- NEWS -->
 <div id="news" class="section">
 <h2 class="section-title">📰 Новости и объявления</h2>
 <div id="newsList"></div>
 </div>
 
-<!-- CONTRIBUTIONS -->
 <div id="contributions" class="section">
 <h2 class="section-title">💰 Сдача взносов</h2>
 <div id="contributionsTable"></div>
 </div>
 
-<!-- EXPENSES -->
 <div id="expenses" class="section">
 <h2 class="section-title">💸 Расходы текущего месяца</h2>
 <div id="expensesTable"></div>
 </div>
 
-<!-- COMMITTEE -->
 <div id="committee" class="section">
 <h2 class="section-title">👥 Родительский комитет</h2>
 <div id="committeeList"></div>
 </div>
 
-<!-- ARCHIVE -->
 <div id="archive" class="section">
 <h2 class="section-title">📦 Архив месяцев</h2>
 <div id="archiveList"></div>
 </div>
 
-<!-- ADMIN -->
 <div id="admin" class="section">
 <h2 class="section-title">⚙️ Админ-панель <span class="unsaved-badge" id="unsavedBadge">● не сохранено</span></h2>
 <div class="admin-tabs">
 <button class="admin-tab active" onclick="showAdminTab('summary', this)">📊 Сводка</button>
 <button class="admin-tab" onclick="showAdminTab('groupinfo', this)">🏫 Группа</button>
+<button class="admin-tab" onclick="showAdminTab('people', this)">👥 Люди</button>
 <button class="admin-tab" onclick="showAdminTab('students', this)">💰 Взносы</button>
 <button class="admin-tab" onclick="showAdminTab('expenses', this)">💸 Расходы</button>
 <button class="admin-tab" onclick="showAdminTab('news', this)">📰 Новости</button>
-<button class="admin-tab" onclick="showAdminTab('committee', this)">👥 Комитет</button>
 <button class="admin-tab" onclick="showAdminTab('months', this)">📅 Месяцы</button>
 <button class="admin-tab" onclick="showAdminTab('access', this)">🔑 Доступ</button>
 </div>
 <div id="admin-summary" class="admin-section active"></div>
 <div id="admin-groupinfo" class="admin-section"></div>
+<div id="admin-people" class="admin-section"></div>
 <div id="admin-students" class="admin-section"></div>
 <div id="admin-expenses" class="admin-section"></div>
 <div id="admin-news" class="admin-section"></div>
-<div id="admin-committee" class="admin-section"></div>
 <div id="admin-months" class="admin-section"></div>
 <div id="admin-access" class="admin-section"></div>
 <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
@@ -417,7 +438,6 @@ input, textarea, select { user-select: text; -webkit-user-select: text; }
 </div>
 </div>
 
-<!-- OWNER -->
 <div id="owner" class="section">
 <h2 class="section-title">👑 Панель Владельца</h2>
 <div id="ownerContent"></div>
@@ -501,11 +521,24 @@ function markDirty() { adminDirty = true; document.getElementById('unsavedBadge'
 function clearDirty() { adminDirty = false; document.getElementById('unsavedBadge').style.display = 'none'; }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function showSaveIndicator() { const i = document.getElementById('saveIndicator'); i.classList.add('show'); setTimeout(() => i.classList.remove('show'), 2000); }
+function ageWord(n) { const m10 = n % 10, m100 = n % 100; if (m10 === 1 && m100 !== 11) return n + ' год'; if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return n + ' года'; return n + ' лет'; }
+function formatDateRu(dateStr) { if (!dateStr) return ''; const p = dateStr.split('-').map(Number); if (p.length < 3 || !p[0] || !p[1] || !p[2]) return dateStr; return `${p[2]} ${MONTH_NAMES[p[1]-1]} ${p[0]}`; }
+function isPastDate(dateStr) { if (!dateStr) return false; const p = dateStr.split('-').map(Number); if (p.length < 3) return false; const t = new Date(); t.setHours(0,0,0,0); return new Date(p[0], p[1]-1, p[2]) < t; }
+function getUpcomingBirthdays() {
+  const today = new Date(); const t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  return (data.children || []).filter(k => k.birthday).map(k => {
+    const p = k.birthday.split('-').map(Number);
+    if (p.length < 3 || !p[0]) return null;
+    const y = p[0], m = p[1], d = p[2];
+    let next = new Date(t0.getFullYear(), m - 1, d);
+    if (next < t0) next = new Date(t0.getFullYear() + 1, m - 1, d);
+    return { name: k.name, gender: k.gender, day: d, month: m, age: next.getFullYear() - y, next, isToday: (today.getMonth() === m - 1 && today.getDate() === d) };
+  }).filter(Boolean).sort((a, b) => a.next - b.next);
+}
 
-// DEFAULT DATA
 function defaultGroupData() {
   const m = { id: 'month_' + Date.now(), name: new Date().toLocaleString('ru', { month: 'long', year: 'numeric' }), prevBalance: 0, additionalIncome: 0, students: [], expenses: [] };
-  return { months: [m], currentMonthId: m.id, archive: [], committee: [], news: [], description: '', teachers: [] };
+  return { months: [m], currentMonthId: m.id, archive: [], committee: [], news: [], description: '', teachers: [], children: [], parents: [], events: [] };
 }
 function getDefaultApp() {
   const g = { id: 'group_' + Date.now(), number: 7, name: 'Бусинки' };
@@ -546,6 +579,11 @@ async function loadFromFirebase() {
 function bindGroupData() {
   if (!app.groupData[currentGroupId]) app.groupData[currentGroupId] = defaultGroupData();
   data = app.groupData[currentGroupId];
+  // страховка для старых данных
+  if (!data.children) data.children = [];
+  if (!data.parents) data.parents = [];
+  if (!data.events) data.events = [];
+  if (!data.teachers) data.teachers = [];
   currentMonthId = data.currentMonthId || (data.months[0] && data.months[0].id);
 }
 
@@ -604,7 +642,8 @@ function enterApp() {
   document.getElementById('topNav').style.display = '';
   document.getElementById('appContent').style.display = '';
   document.getElementById('currentUserBadge').style.display = 'inline-flex';
-  document.getElementById('currentUserName').textContent = currentUserName;
+  document.getElementById('currentUserName').textContent = currentUserName || '';
+  document.getElementById('headerGroupLabel').textContent = groupLabel(getGroup(currentGroupId));
   let roleText = '👁️ Родитель';
   if (currentRole === 'admin') roleText = '💎 Админ';
   if (currentRole === 'owner') roleText = '👑 Владелец';
@@ -632,7 +671,8 @@ function doLogout() {
 // NAVIGATION
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
   document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   if (id === 'home') renderHome();
@@ -656,7 +696,6 @@ function showAdminTab(tab, btn) {
 
 function changeMonth(id) { currentMonthId = id; data.currentMonthId = id; renderAll(); }
 
-// RENDER ALL
 function renderAll() {
   renderMonthSelector(); renderHome(); renderGroup(); renderNews();
   renderContributions(); renderExpenses(); renderCommittee(); renderArchive();
@@ -671,7 +710,7 @@ function renderMonthSelector() {
 function renderHome() {
   const m = getCurrentMonth();
   const bal = calcBalance(m), inc = calcIncome(m), exp = calcExpense(m);
-  const addInc = Number(m.additionalIncome || 0), prevBal = Number(m.prevBalance || 0);
+  const prevBal = Number(m.prevBalance || 0);
   const tc = m.students.filter(s => s.name).length, pc = m.students.filter(s => s.paid).length;
   const g = getGroup(currentGroupId);
 
@@ -687,7 +726,7 @@ function renderHome() {
     </div>`;
 
   const newsCount = data.news.length;
-  const committeeCount = data.committee.length;
+  const kidsCount = (data.children || []).length;
   document.getElementById('homeGrid').innerHTML = `
     <div class="home-tile" onclick="showSection('contributions', document.querySelectorAll('.top-nav-btn')[3])">
       <div class="home-tile-header"><div class="home-tile-icon">💰</div><div class="home-tile-title">Взносы</div></div>
@@ -713,9 +752,9 @@ function renderHome() {
     </div>
     <div class="home-tile" onclick="showSection('group', document.querySelectorAll('.top-nav-btn')[1])">
       <div class="home-tile-header"><div class="home-tile-icon">🏫</div><div class="home-tile-title">Наша группа</div></div>
-      <div class="home-tile-subtitle">Информация, воспитатели, комитет</div>
+      <div class="home-tile-subtitle">Дети, воспитатели, дни рождения</div>
       <div class="home-tile-badges">
-        <span class="home-tile-badge ${committeeCount > 0 ? 'gold' : ''}"><span>👥</span><span class="badge-count">${committeeCount}</span><span>комитет</span></span>
+        <span class="home-tile-badge ${kidsCount > 0 ? 'gold' : ''}"><span>👶</span><span class="badge-count">${kidsCount}</span><span>детей</span></span>
       </div>
     </div>`;
 }
@@ -725,25 +764,67 @@ function renderGroup() {
   const c = document.getElementById('groupInfo');
   const g = getGroup(currentGroupId); const m = getCurrentMonth();
   if (!g) { c.innerHTML = '<p style="color:var(--light-gray)">Группа не найдена</p>'; return; }
-  const tc = m.students.filter(s => s.name).length, pc = m.students.filter(s => s.paid).length;
+  const kids = data.children || [];
+  const girls = kids.filter(k => k.gender === 'girl').length;
+  const boys = kids.filter(k => k.gender === 'boy').length;
+  const parents = data.parents || [];
+  const teachers = data.teachers || [];
+
   let html = `<div class="group-hero"><div class="group-number">Группа № ${escapeHtml(g.number)}</div><div class="group-name">${escapeHtml(g.name)}</div><div class="group-month">📅 ${escapeHtml(m.name)}</div>${data.description ? `<div class="group-desc">${escapeHtml(data.description)}</div>` : ''}</div>`;
+
+  // АВТО-СЧЁТЧИКИ
   html += `<div class="group-stats-grid">
-    <div class="group-stat-card orange"><div class="stat-value">${tc}</div><div class="stat-label">Детей</div></div>
-    <div class="group-stat-card green"><div class="stat-value">${pc}</div><div class="stat-label">Сдали</div></div>
-    <div class="group-stat-card"><div class="stat-value">${formatMoney(calcIncome(m))} ₽</div><div class="stat-label">Собрано</div></div>
-    <div class="group-stat-card red"><div class="stat-value">${formatMoney(calcExpense(m))} ₽</div><div class="stat-label">Потрачено</div></div>
-    <div class="group-stat-card green"><div class="stat-value">${formatMoney(calcBalance(m))} ₽</div><div class="stat-label">Остаток</div></div>
+    <div class="group-stat-card orange"><div class="stat-value">${kids.length}</div><div class="stat-label">👶 Всего детей</div></div>
+    <div class="group-stat-card pink"><div class="stat-value">${girls}</div><div class="stat-label">🎀 Девочек</div></div>
+    <div class="group-stat-card blue"><div class="stat-value">${boys}</div><div class="stat-label">👦 Мальчиков</div></div>
+    <div class="group-stat-card green"><div class="stat-value">${parents.length}</div><div class="stat-label">Родителей</div></div>
+    <div class="group-stat-card green"><div class="stat-value">${teachers.length}</div><div class="stat-label">Воспитателей</div></div>
   </div>`;
-  if (data.teachers && data.teachers.length) {
-    html += `<div class="teachers-block"><h3>👩‍🏫 Наши воспитатели</h3>`;
-    data.teachers.forEach(t => { if (!t.name) return; const ph = t.phone ? `<div class="teacher-phone">📞 <a href="tel:${t.phone.replace(/[^\d+]/g,'')}">${escapeHtml(t.phone)}</a></div>` : ''; html += `<div class="teacher-item"><div><div class="teacher-name">${escapeHtml(t.name)}</div><div class="teacher-role">${escapeHtml(t.role || 'Воспитатель')}</div></div>${ph}</div>`; });
+
+  // ДНИ РОЖДЕНИЯ
+  const bds = getUpcomingBirthdays();
+  html += `<div class="info-block-g" style="border-left-color:var(--danger)"><h3>🎂 Дни рождения</h3>`;
+  if (!bds.length) html += `<p style="color:var(--light-gray);font-size:0.9em">Добавьте детей с датами рождения в админке (👥 Люди → Дети)</p>`;
+  else bds.forEach(b => {
+    html += `<div class="birthday-card${b.isToday ? ' today' : ''}">
+      <div class="birthday-avatar">${b.isToday ? '🎉' : (b.gender === 'girl' ? '🎀' : '👦')}</div>
+      <div class="birthday-info"><div class="birthday-name">${escapeHtml(b.name)}</div><div class="birthday-date${b.isToday ? ' today-text' : ''}">${b.day} ${MONTH_NAMES[b.month-1]}${b.isToday ? ' — СЕГОДНЯ ПРАЗДНИК!' : ''}</div></div>
+      <div class="birthday-age">исполнится ${ageWord(b.age)}</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // СОБЫТИЯ
+  const events = (data.events || []).filter(e => e.title).slice().sort((a,b) => (a.date||'9999').localeCompare(b.date||'9999'));
+  html += `<div class="info-block-g" style="border-left-color:var(--info)"><h3>🎉 События и праздники</h3>`;
+  if (!events.length) html += `<p style="color:var(--light-gray);font-size:0.9em">Событий пока нет. Добавьте их в админке (🏫 Группа → События)</p>`;
+  else events.forEach(ev => {
+    const past = isPastDate(ev.date);
+    html += `<div class="event-card-g${past ? ' past' : ''}"><span class="event-date-badge">📅 ${formatDateRu(ev.date)}</span><div class="event-title-g">${escapeHtml(ev.title)}</div>${ev.description ? `<div class="event-desc-g">${escapeHtml(ev.description)}</div>` : ''}</div>`;
+  });
+  html += `</div>`;
+
+  // ВОСПИТАТЕЛИ
+  if (teachers.length) {
+    html += `<div class="info-block-g"><h3>👩‍🏫 Наши воспитатели</h3>`;
+    teachers.forEach(t => { if (!t.name) return; const ph = t.phone ? `<div class="teacher-phone">📞 <a href="tel:${t.phone.replace(/[^\d+]/g,'')}">${escapeHtml(t.phone)}</a></div>` : ''; html += `<div class="teacher-item"><div><div class="teacher-name">${escapeHtml(t.name)}</div><div class="teacher-role">${escapeHtml(t.role || 'Воспитатель')}</div></div>${ph}</div>`; });
     html += `</div>`;
   }
+
+  // КОМИТЕТ
   if (data.committee && data.committee.length) {
     html += `<h3 style="font-size:1.1em;color:var(--brand-green);margin:20px 0 12px;">👥 Родительский комитет</h3><div class="committee-grid">`;
     data.committee.forEach(mb => { if (!mb.name) return; let cls = 'committee-card'; const r = (mb.role||'').toLowerCase(); if (r.includes('председатель')) cls += ' chair'; else if (r.includes('казначей')) cls += ' treasurer'; const ph = mb.phone ? `<div class="member-phone">📞 <a href="tel:${mb.phone.replace(/[^\d+]/g,'')}">${escapeHtml(mb.phone)}</a></div>` : ''; html += `<div class="${cls}"><div class="member-name">${escapeHtml(mb.name)}</div><div class="member-role">${escapeHtml(mb.role || 'Член комитета')}</div>${ph}</div>`; });
     html += `</div>`;
   }
+
+  // РОДИТЕЛИ
+  if (parents.length) {
+    html += `<div class="info-block-g" style="margin-top:20px"><h3>👨‍👩‍ Родители</h3>`;
+    parents.forEach(p => { if (!p.name) return; const ph = p.phone ? `<div class="teacher-phone">📞 <a href="tel:${p.phone.replace(/[^\d+]/g,'')}">${escapeHtml(p.phone)}</a></div>` : ''; html += `<div class="teacher-item"><div><div class="teacher-name">${escapeHtml(p.name)}</div></div>${ph}</div>`; });
+    html += `</div>`;
+  }
+
   c.innerHTML = html;
 }
 
@@ -805,7 +886,7 @@ function renderArchive() {
 
 // ADMIN
 function renderAdmin() {
-  renderAdminSummary(); renderAdminGroupInfo(); renderAdminStudents(); renderAdminExpenses(); renderAdminNews(); renderAdminCommittee(); renderAdminMonths(); renderAdminAccess();
+  renderAdminSummary(); renderAdminGroupInfo(); renderAdminPeople(); renderAdminStudents(); renderAdminExpenses(); renderAdminNews(); renderAdminMonths(); renderAdminAccess();
 }
 
 function renderAdminSummary() {
@@ -828,24 +909,60 @@ function renderAdminSummary() {
 
 function renderAdminGroupInfo() {
   const g = getGroup(currentGroupId);
-  let teachersHtml = '';
-  (data.teachers || []).forEach(t => { teachersHtml += `<div class="a-row committee-row-admin"><input type="text" class="t-name" value="${escapeHtml(t.name || '')}" placeholder="ФИО"><input type="text" class="t-role" value="${escapeHtml(t.role || '')}" placeholder="Должность"><input type="tel" class="t-phone" value="${escapeHtml(t.phone || '')}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`; });
+  let evHtml = '';
+  (data.events || []).forEach(e => { evHtml += eventRowHtml(e); });
   document.getElementById('admin-groupinfo').innerHTML = `
     <div class="admin-card"><div class="admin-card-title">🏫 Информация о группе</div>
     <div class="form-group"><label>Номер группы</label><input type="number" id="editGroupNumber" value="${g ? escapeHtml(g.number) : ''}" onchange="markDirty()"></div>
     <div class="form-group"><label>Название</label><input type="text" id="editGroupName" value="${g ? escapeHtml(g.name) : ''}" onchange="markDirty()"></div>
     <div class="form-group"><label>Описание</label><textarea id="editGroupDescription" onchange="markDirty()">${escapeHtml(data.description || '')}</textarea></div>
     </div>
-    <div class="admin-card"><div class="admin-card-title">👩‍🏫 Воспитатели</div>
-    <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addTeacherRow();markDirty()">➕ Добавить</button></div>
-    <div id="adminTeachers">${teachersHtml}</div></div>`;
+    <div class="admin-card"><div class="admin-card-title">🎉 События и праздники</div>
+    <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addEventRow();markDirty()">➕ Добавить событие</button></div>
+    <div id="adminEventsList">${evHtml}</div></div>`;
 }
 
-function addTeacherRow() {
-  const d = document.createElement('div'); d.className = 'a-row committee-row-admin';
-  d.innerHTML = `<input type="text" class="t-name" placeholder="ФИО"><input type="text" class="t-role" placeholder="Должность"><input type="tel" class="t-phone" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button>`;
-  document.getElementById('adminTeachers').appendChild(d);
+function eventRowHtml(e = null) {
+  return `<div class="a-row event-row-admin"><input type="text" class="e-title" value="${e ? escapeHtml(e.title || '') : ''}" placeholder="Название (утренник, праздник...)"><input type="date" class="e-date" value="${e ? (e.date || '') : ''}"><input type="text" class="e-desc" value="${e ? escapeHtml(e.description || '') : ''}" placeholder="Описание (необязательно)"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;
 }
+function addEventRow() { document.getElementById('adminEventsList').insertAdjacentHTML('beforeend', eventRowHtml()); }
+
+// ===== ЛЮДИ (комитет, родители, дети, воспитатели) =====
+function renderAdminPeople() {
+  let comHtml = ''; (data.committee || []).forEach(x => { comHtml += committeeRowHtml(x); });
+  let parHtml = ''; (data.parents || []).forEach(p => { parHtml += parentRowHtml(p); });
+  let chHtml = ''; (data.children || []).forEach(k => { chHtml += childRowHtml(k); });
+  let tHtml = ''; (data.teachers || []).forEach(t => { tHtml += teacherRowHtml(t); });
+  document.getElementById('admin-people').innerHTML = `
+    <div class="admin-card"><div class="admin-card-title">👥 Комитет</div>
+      <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addCommitteeRow();markDirty()">➕ Добавить</button></div>
+      <div id="adminCommitteeList">${comHtml}</div></div>
+    <div class="admin-card"><div class="admin-card-title">👨‍👩‍ Родители</div>
+      <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addParentRow();markDirty()">➕ Добавить</button></div>
+      <div id="adminParentsList">${parHtml}</div></div>
+    <div class="admin-card"><div class="admin-card-title">👶 Дети <span style="font-size:0.8em;color:var(--gray);font-weight:400">(пол и дата рождения — для счётчиков и дней рождения)</span></div>
+      <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addChildRow();markDirty()">➕ Добавить ребёнка</button></div>
+      <div id="adminChildrenList">${chHtml}</div></div>
+    <div class="admin-card"><div class="admin-card-title">👩‍🏫 Воспитатели</div>
+      <div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addTeacherRow();markDirty()">➕ Добавить</button></div>
+      <div id="adminTeachersList">${tHtml}</div></div>`;
+}
+function committeeRowHtml(x = null) {
+  return `<div class="a-row committee-row-admin"><input type="text" class="p-name" value="${x ? escapeHtml(x.name || '') : ''}" placeholder="ФИО"><input type="text" class="p-role" value="${x ? escapeHtml(x.role || '') : ''}" placeholder="Роль"><input type="tel" class="p-phone" value="${x ? escapeHtml(x.phone || '') : ''}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;
+}
+function addCommitteeRow() { document.getElementById('adminCommitteeList').insertAdjacentHTML('beforeend', committeeRowHtml()); }
+function parentRowHtml(p = null) {
+  return `<div class="a-row parent-row-admin"><input type="text" class="p-name" value="${p ? escapeHtml(p.name || '') : ''}" placeholder="ФИО"><input type="tel" class="p-phone" value="${p ? escapeHtml(p.phone || '') : ''}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;
+}
+function addParentRow() { document.getElementById('adminParentsList').insertAdjacentHTML('beforeend', parentRowHtml()); }
+function childRowHtml(k = null) {
+  return `<div class="a-row child-row-admin"><input type="text" class="k-name" value="${k ? escapeHtml(k.name || '') : ''}" placeholder="Имя ребёнка"><select class="k-gender"><option value="girl" ${k && k.gender === 'girl' ? 'selected' : ''}>🎀 Девочка</option><option value="boy" ${k && k.gender === 'boy' ? 'selected' : ''}>👦 Мальчик</option></select><input type="date" class="k-birthday" value="${k ? (k.birthday || '') : ''}"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;
+}
+function addChildRow() { document.getElementById('adminChildrenList').insertAdjacentHTML('beforeend', childRowHtml()); }
+function teacherRowHtml(t = null) {
+  return `<div class="a-row committee-row-admin"><input type="text" class="t-name" value="${t ? escapeHtml(t.name || '') : ''}" placeholder="ФИО"><input type="text" class="t-role" value="${t ? escapeHtml(t.role || '') : ''}" placeholder="Должность"><input type="tel" class="t-phone" value="${t ? escapeHtml(t.phone || '') : ''}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;
+}
+function addTeacherRow() { document.getElementById('adminTeachersList').insertAdjacentHTML('beforeend', teacherRowHtml()); }
 
 function renderAdminStudents() {
   const m = getCurrentMonth(); let rows = '';
@@ -882,13 +999,6 @@ function renderAdminNews() {
 }
 function addNewsRow() { const d = document.createElement('div'); d.className = 'a-news-card'; d.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px"><label class="a-urgent-label"><input type="checkbox" class="a-news-urgent"> 🔴 Срочно</label><button class="btn btn-danger btn-sm" onclick="this.closest('.a-news-card').remove();markDirty()">🗑</button></div><input type="text" class="a-news-title" placeholder="Заголовок"><textarea class="a-news-text" placeholder="Текст"></textarea>`; document.getElementById('adminNews').appendChild(d); }
 
-function renderAdminCommittee() {
-  let rows = '';
-  data.committee.forEach(c => { rows += `<div class="a-row committee-row-admin"><input type="text" class="c-name" value="${escapeHtml(c.name || '')}" placeholder="ФИО"><input type="text" class="c-role" value="${escapeHtml(c.role || '')}" placeholder="Роль"><input type="tel" class="c-phone" value="${escapeHtml(c.phone || '')}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`; });
-  document.getElementById('admin-committee').innerHTML = `<div class="admin-card"><div class="admin-card-title">👥 Комитет</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addCommitteeRow();markDirty()">➕ Добавить члена</button></div><div id="adminCommittee">${rows}</div></div>`;
-}
-function addCommitteeRow() { const d = document.createElement('div'); d.className = 'a-row committee-row-admin'; d.innerHTML = `<input type="text" class="c-name" placeholder="ФИО"><input type="text" class="c-role" placeholder="Роль"><input type="tel" class="c-phone" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button>`; document.getElementById('adminCommittee').appendChild(d); }
-
 function renderAdminMonths() {
   let html = `<div class="admin-card"><div class="admin-card-title">➕ Создать месяц</div><div class="form-group"><label>Название</label><input type="text" id="newMonthName" placeholder="Например: Сентябрь 2026"></div><button class="btn btn-success" onclick="createNewMonth()">➕ Создать</button></div><div class="admin-card"><div class="admin-card-title">📅 Список месяцев</div><div id="monthsList">`;
   data.months.forEach(m => { const cur = m.id === currentMonthId; html += `<div class="month-item${cur ? ' is-current' : ''}"><div><strong>${escapeHtml(m.name)}</strong>${cur ? '<span class="month-current-badge">⭐ текущий</span>' : ''}<small style="display:block;color:var(--gray);margin-top:4px">Взносов: ${m.students.length} · Расходов: ${m.expenses.length} · Остаток: <b>${formatMoney(calcBalance(m))} ₽</b></small></div><div class="month-item-actions">${cur ? '' : `<button class="btn btn-primary btn-sm" onclick="setCurrentMonth('${m.id}')">⭐</button>`}<button class="btn btn-secondary btn-sm" onclick="renameMonth('${m.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteMonth('${m.id}')">🗑</button></div></div>`; });
@@ -920,8 +1030,8 @@ function renderAdminAccess() {
 }
 
 function recalcAdmin() {
-  let inc = 0, pc = 0, tc = 0, exp = 0, expected = 0;
-  document.querySelectorAll('#adminStudents .student-row').forEach(r => { const name = r.querySelector('.a-name').value.trim(); const amount = Number(r.querySelector('.a-amount').value) || 0; const paid = r.querySelector('.a-paid').checked; if (name || amount) { tc++; expected += amount; if (paid) { inc += amount; pc++; } } });
+  let inc = 0, pc = 0, tc = 0, exp = 0;
+  document.querySelectorAll('#adminStudents .student-row').forEach(r => { const name = r.querySelector('.a-name').value.trim(); const amount = Number(r.querySelector('.a-amount').value) || 0; const paid = r.querySelector('.a-paid').checked; if (name || amount) { tc++; if (paid) { inc += amount; pc++; } } });
   document.querySelectorAll('#adminExpenses .expense-row').forEach(r => { exp += Number(r.querySelector('.a-amount').value) || 0; });
   const pb = Number(document.getElementById('editPrevBalance') ? document.getElementById('editPrevBalance').value : 0) || 0;
   const ai = Number(document.getElementById('editAddIncome') ? document.getElementById('editAddIncome').value : 0) || 0;
@@ -937,8 +1047,45 @@ function collectAdminData() {
   const g = getGroup(currentGroupId);
   if (g) { const gn = document.getElementById('editGroupNumber'); const gname = document.getElementById('editGroupName'); if (gn) g.number = gn.value.trim(); if (gname) g.name = gname.value.trim(); }
   const gd = document.getElementById('editGroupDescription'); if (gd) data.description = gd.value.trim();
+
+  // События
+  data.events = [];
+  document.querySelectorAll('#adminEventsList .a-row').forEach(r => {
+    const title = r.querySelector('.e-title').value.trim();
+    const date = r.querySelector('.e-date').value;
+    const description = r.querySelector('.e-desc').value.trim();
+    if (title) data.events.push({ title, date, description });
+  });
+
+  // Комитет
+  data.committee = [];
+  document.querySelectorAll('#adminCommitteeList .a-row').forEach(r => {
+    const i = r.querySelectorAll('input');
+    if (i[0].value.trim()) data.committee.push({ name: i[0].value.trim(), role: i[1].value.trim(), phone: i[2].value.trim() });
+  });
+
+  // Родители
+  data.parents = [];
+  document.querySelectorAll('#adminParentsList .a-row').forEach(r => {
+    const i = r.querySelectorAll('input');
+    if (i[0].value.trim()) data.parents.push({ name: i[0].value.trim(), phone: i[1].value.trim() });
+  });
+
+  // Дети
+  data.children = [];
+  document.querySelectorAll('#adminChildrenList .a-row').forEach(r => {
+    const name = r.querySelector('.k-name').value.trim();
+    const gender = r.querySelector('.k-gender').value;
+    const birthday = r.querySelector('.k-birthday').value;
+    if (name) data.children.push({ name, gender, birthday });
+  });
+
+  // Воспитатели
   data.teachers = [];
-  document.querySelectorAll('#adminTeachers .committee-row-admin').forEach(r => { const i = r.querySelectorAll('input'); if (i[0].value.trim()) data.teachers.push({ name: i[0].value.trim(), role: i[1].value.trim(), phone: i[2].value.trim() }); });
+  document.querySelectorAll('#adminTeachersList .a-row').forEach(r => {
+    const i = r.querySelectorAll('input');
+    if (i[0].value.trim()) data.teachers.push({ name: i[0].value.trim(), role: i[1].value.trim(), phone: i[2].value.trim() });
+  });
 
   const m = getCurrentMonth();
   const pb = document.getElementById('editPrevBalance'); const adi = document.getElementById('editAddIncome');
@@ -948,8 +1095,6 @@ function collectAdminData() {
   document.querySelectorAll('#adminStudents .student-row').forEach(r => { const name = r.querySelector('.a-name').value.trim(); const amount = Number(r.querySelector('.a-amount').value) || 0; const paid = r.querySelector('.a-paid').checked; if (name || amount) m.students.push({ name, amount, paid }); });
   m.expenses = [];
   document.querySelectorAll('#adminExpenses .expense-row').forEach(r => { const desc = r.querySelector('.a-desc').value.trim(); const amount = Number(r.querySelector('.a-amount').value) || 0; if (desc || amount) m.expenses.push({ description: desc, amount }); });
-  data.committee = [];
-  document.querySelectorAll('#adminCommittee .committee-row-admin').forEach(r => { const i = r.querySelectorAll('input'); if (i[0].value.trim()) data.committee.push({ name: i[0].value.trim(), role: i[1].value.trim(), phone: i[2].value.trim() }); });
   data.news = [];
   document.querySelectorAll('#adminNews .a-news-card').forEach(c => { const t = c.querySelector('.a-news-title').value.trim(); const x = c.querySelector('.a-news-text').value.trim(); if (t || x) data.news.push({ title: t, text: x, urgent: c.querySelector('.a-news-urgent').checked, date: c.dataset.date || new Date().toISOString() }); });
   data.currentMonthId = currentMonthId;
@@ -1013,7 +1158,7 @@ function renderOwner() {
     </div>`;
 }
 
-function ownerSwitchGroup(gid) { if (adminDirty) collectAdminData(); currentGroupId = gid; bindGroupData(); renderAll(); renderOwner(); clearDirty(); }
+function ownerSwitchGroup(gid) { if (adminDirty) collectAdminData(); currentGroupId = gid; bindGroupData(); renderAll(); renderOwner(); document.getElementById('headerGroupLabel').textContent = groupLabel(getGroup(currentGroupId)); clearDirty(); }
 async function createGroup() { const num = document.getElementById('newGroupNumber').value.trim(); const name = document.getElementById('newGroupName').value.trim(); if (!num || !name) { alert('Заполните оба поля'); return; } app.groups.push({ id: 'group_' + Date.now(), number: num, name }); await saveToFirebase(); renderOwner(); fillLoginGroups(); alert('✅ Группа создана'); }
 async function deleteGroup(id) { if (app.groups.length <= 1) { alert('Нельзя удалить последнюю'); return; } const g = getGroup(id); if (!confirm('Удалить "' + groupLabel(g) + '"?')) return; collectAdminData(); app.groups = app.groups.filter(x => x.id !== id); app.users = app.users.filter(x => x.groupId !== id); app.requests = app.requests.filter(x => x.groupId !== id); delete app.groupData[id]; if (currentGroupId === id) currentGroupId = app.groups[0].id; bindGroupData(); await saveToFirebase(); renderAll(); renderOwner(); }
 async function saveSiteSettings() { settings.maintenanceMode = document.getElementById('maintenanceToggle').checked; await saveSettings(); alert(settings.maintenanceMode ? '⚠️ Тех. работы ВКЛЮЧЕНЫ' : '✅ Тех. работы ВЫКЛЮЧЕНЫ'); }
