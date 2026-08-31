@@ -291,6 +291,16 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 .album-close-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
 .album-modal-body { flex: 1; overflow: hidden; background: #f8f9fa; }
 .album-modal-body iframe { width: 100%; height: 100%; border: none; }
+.report-card { background:white; border-radius:var(--radius-lg); padding:16px; margin-bottom:12px; border-left:4px solid var(--brand-green); box-shadow:var(--shadow-sm); }
+.report-card.inactive { border-left-color:var(--danger); opacity:0.7; }
+.report-card-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+.report-card-title { font-weight:700; font-size:1.05em; color:var(--dark); }
+.report-card-meta { font-size:0.82em; color:var(--gray); margin-top:4px; }
+.report-card-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+.report-status { display:inline-block; padding:3px 10px; border-radius:10px; font-size:0.75em; font-weight:700; }
+.report-status.active { background:#e8f5e9; color:var(--success); }
+.report-status.inactive { background:#ffebee; color:var(--danger); }
+.report-link-box { background:#f8f9fa; border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px; margin-top:10px; font-family:monospace; font-size:0.85em; word-break:break-all; }
 @media (max-width:768px) {
 .header-banner, .header-content { min-height:110px; }
 .header-title h1 { font-size:1.2em; }
@@ -336,9 +346,9 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 </div>
 <div class="login-error" id="loginError"></div>
 <div class="login-status" id="loginStatus">Подключение...</div>
-<div class="form-group"><label> Выберите группу</label><select id="loginGroup"></select></div>
-<div class="form-group"><label>📱 Телефон</label><input type="tel" id="loginPhone" placeholder="можно последние 4 цифры" onkeypress="if(event.key==='Enter')doLogin()"></div>
-<div class="form-group"><label>🔒 Пароль</label><input type="password" id="loginPassword" placeholder="Введите пароль" onkeypress="if(event.key==='Enter')doLogin()" disabled></div>
+<div class="form-group"><label>🏫 Выберите группу</label><select id="loginGroup"></select></div>
+<div class="form-group"><label> Телефон</label><input type="tel" id="loginPhone" placeholder="можно последние 4 цифры" onkeypress="if(event.key==='Enter')doLogin()"></div>
+<div class="form-group"><label> Пароль</label><input type="password" id="loginPassword" placeholder="Введите пароль" onkeypress="if(event.key==='Enter')doLogin()" disabled></div>
 <button class="login-btn" onclick="doLogin()" id="loginBtn" disabled>Войти</button>
 <button class="btn-request" onclick="openHelpModal()">📩 Помощь и доступ</button>
 <div class="login-hint"><br>🔐 Данные защищены Firebase Authentication</div>
@@ -365,13 +375,13 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 <nav class="top-nav" id="topNav" style="display:none;">
 <div class="top-nav-inner">
 <button class="top-nav-btn active" onclick="showSection('home', this)"><span class="nav-icon">🏠</span><span>Главная</span></button>
-<button class="top-nav-btn" onclick="showSection('group', this)"><span class="nav-icon"></span><span>Группа</span></button>
+<button class="top-nav-btn" onclick="showSection('group', this)"><span class="nav-icon">🏫</span><span>Группа</span></button>
 <button class="top-nav-btn" id="navNewsBtn" onclick="showSection('news', this)">
 <span class="nav-icon">📰</span><span>Новости</span>
 <span id="newsBadge" class="nav-badge new-change">0</span>
 </button>
 <button class="top-nav-btn" id="navContribBtn" onclick="showSection('contributions', this)">
-<span class="nav-icon">💰</span><span>Взносы</span>
+<span class="nav-icon"></span><span>Взносы</span>
 <span id="contribBadge" class="nav-badge new-change">0</span>
 </button>
 <button class="top-nav-btn" id="navExpensesBtn" onclick="showSection('expenses', this)">
@@ -389,20 +399,20 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 <span id="notifBadge" class="nav-badge">0</span>
 </button>
 <button class="top-nav-btn" id="navAdminBtn" onclick="showSection('admin', this)" style="display:none;"><span class="nav-icon">⚙️</span><span>Админ</span></button>
-<button class="top-nav-btn" id="navOwnerBtn" onclick="showSection('owner', this)" style="display:none;color:var(--danger);"><span class="nav-icon"></span><span>Владелец</span></button>
-<button class="top-nav-logout" onclick="doLogout()"><span></span><span>Выйти</span></button>
+<button class="top-nav-btn" id="navOwnerBtn" onclick="showSection('owner', this)" style="display:none;color:var(--danger);"><span class="nav-icon">👑</span><span>Владелец</span></button>
+<button class="top-nav-logout" onclick="doLogout()"><span>🚪</span><span>Выйти</span></button>
 </div>
 </nav>
 <main class="app-content" id="appContent" style="display:none;">
-<div id="home" class="section active"><h2 class="section-title"> Главная</h2><div class="balance-hero" id="balanceHero"></div><div class="home-grid" id="homeGrid"></div></div>
+<div id="home" class="section active"><h2 class="section-title">🏠 Главная</h2><div class="balance-hero" id="balanceHero"></div><div class="home-grid" id="homeGrid"></div></div>
 <div id="group" class="section"><h2 class="section-title">🏫 Наша группа</h2><div id="groupInfo"></div></div>
-<div id="news" class="section"><h2 class="section-title"> Новости и объявления</h2><div id="newsList"></div></div>
-<div id="contributions" class="section"><h2 class="section-title">💰 Сдача взносов</h2><div id="contributionsTable"></div></div>
+<div id="news" class="section"><h2 class="section-title">📰 Новости и объявления</h2><div id="newsList"></div></div>
+<div id="contributions" class="section"><h2 class="section-title"> Сдача взносов</h2><div id="contributionsTable"></div></div>
 <div id="expenses" class="section"><h2 class="section-title">💸 Расходы текущего месяца</h2><div id="expensesTable"></div></div>
 <div id="committee" class="section"><h2 class="section-title">👥 Родительский комитет</h2><div id="committeeList"></div></div>
-<div id="archive" class="section"><h2 class="section-title"> Архив месяцев</h2><div id="archiveList"></div></div>
+<div id="archive" class="section"><h2 class="section-title">📦 Архив месяцев</h2><div id="archiveList"></div></div>
 <div id="messages" class="section">
-<h2 class="section-title"> Связь с владельцем</h2>
+<h2 class="section-title">📩 Связь с владельцем</h2>
 <div class="admin-card">
 <div class="admin-card-title">✍️ Написать сообщение</div>
 <div class="form-group"><label>Тема (необязательно)</label><input type="text" id="msgSubject" placeholder="Кратко о чём сообщение"></div>
@@ -410,23 +420,23 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 <button class="btn btn-success btn-block" onclick="sendMessage()">📨 Отправить владельцу</button>
 </div>
 <div class="admin-card">
-<div class="admin-card-title">📋 Мои обращения</div>
+<div class="admin-card-title"> Мои обращения</div>
 <div id="myMessagesList"></div>
 </div>
 </div>
 <div id="notifications" class="section">
-<h2 class="section-title"> Центр уведомлений</h2>
+<h2 class="section-title">🔔 Центр уведомлений</h2>
 <div class="notif-stats" id="notifStats"></div>
 <div class="notif-toolbar">
 <div style="display:flex; gap:6px; flex-wrap:wrap; flex:1;">
-<button class="filter-btn active" data-filter="all" onclick="setNotifFilter('all', this)"> Все</button>
+<button class="filter-btn active" data-filter="all" onclick="setNotifFilter('all', this)">📋 Все</button>
 <button class="filter-btn" data-filter="message" onclick="setNotifFilter('message', this)">📩 Сообщения</button>
 <button class="filter-btn" data-filter="access" onclick="setNotifFilter('access', this)">🔐 Запросы доступа</button>
 <button class="filter-btn" data-filter="reply" onclick="setNotifFilter('reply', this)">💬 Ответы</button>
 </div>
 <div style="display:flex; gap:6px; flex-wrap:wrap;">
 <button class="btn btn-info btn-sm" onclick="markAllNotificationsRead()">✅ Прочитано всё</button>
-<button class="btn btn-danger btn-sm" onclick="deleteAllNotifications()">🗑 Очистить</button>
+<button class="btn btn-danger btn-sm" onclick="deleteAllNotifications()"> Очистить</button>
 </div>
 </div>
 <div id="notificationsList"></div>
@@ -434,15 +444,16 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 <div id="admin" class="section">
 <h2 class="section-title">️ Админ-панель <span class="unsaved-badge" id="unsavedBadge">● не сохранено</span></h2>
 <div class="admin-tabs">
-<button class="admin-tab active" onclick="showAdminTab('summary', this)">📊 Сводка</button>
+<button class="admin-tab active" onclick="showAdminTab('summary', this)"> Сводка</button>
 <button class="admin-tab" onclick="showAdminTab('groupinfo', this)">🏫 Группа</button>
 <button class="admin-tab" onclick="showAdminTab('people', this)">👥 Люди</button>
 <button class="admin-tab" onclick="showAdminTab('students', this)">💰 Взносы</button>
 <button class="admin-tab" onclick="showAdminTab('expenses', this)">💸 Расходы</button>
 <button class="admin-tab" onclick="showAdminTab('news', this)">📰 Новости</button>
 <button class="admin-tab" onclick="showAdminTab('months', this)">📅 Месяцы</button>
-<button class="admin-tab" onclick="showAdminTab('access', this)"> Доступ</button>
-<button class="admin-tab" onclick="showAdminTab('albums', this)"> Альбомы</button>
+<button class="admin-tab" onclick="showAdminTab('access', this)">🔑 Доступ</button>
+<button class="admin-tab" onclick="showAdminTab('albums', this)">📸 Альбомы</button>
+<button class="admin-tab" onclick="showAdminTab('reports', this)">📤 Публичные сводки</button>
 </div>
 <div id="admin-summary" class="admin-section active"></div>
 <div id="admin-groupinfo" class="admin-section"></div>
@@ -453,17 +464,18 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 <div id="admin-months" class="admin-section"></div>
 <div id="admin-access" class="admin-section"></div>
 <div id="admin-albums" class="admin-section"></div>
+<div id="admin-reports" class="admin-section"></div>
 <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
 <button class="btn btn-success" onclick="saveAll()" id="saveBtn"> Сохранить</button>
-<button class="btn btn-secondary" onclick="showSection('home', document.querySelector('.top-nav-btn'))"> На сайт</button>
+<button class="btn btn-secondary" onclick="showSection('home', document.querySelector('.top-nav-btn'))">🏠 На сайт</button>
 </div>
 </div>
 <div id="owner" class="section">
 <h2 class="section-title">👑 Панель Владельца — полное управление сайтом</h2>
 <div class="admin-tabs">
-<button class="admin-tab active" onclick="showOwnerTab('groups', this)">🏢 Группы</button>
-<button class="admin-tab" onclick="showOwnerTab('messages', this)">📨 Сообщения <span id="ownerMsgCount" style="background:var(--danger);color:white;padding:2px 6px;border-radius:8px;font-size:.75em;margin-left:4px;display:none;">0</span></button>
-<button class="admin-tab" onclick="showOwnerTab('albums', this)">📸 Альбомы</button>
+<button class="admin-tab active" onclick="showOwnerTab('groups', this)"> Группы</button>
+<button class="admin-tab" onclick="showOwnerTab('messages', this)"> Сообщения <span id="ownerMsgCount" style="background:var(--danger);color:white;padding:2px 6px;border-radius:8px;font-size:.75em;margin-left:4px;display:none;">0</span></button>
+<button class="admin-tab" onclick="showOwnerTab('albums', this)"> Альбомы</button>
 <button class="admin-tab" onclick="showOwnerTab('settings', this)">⚙️ Настройки</button>
 </div>
 <div id="owner-groups" class="admin-section active"></div>
@@ -475,12 +487,12 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 <div id="toastContainer" class="toast-container"></div>
 <div class="modal-overlay" id="accessRequestModal">
 <div class="modal">
-<h2>📩 Запрос на вход</h2>
+<h2> Запрос на вход</h2>
 <div class="form-group"><label>Имя / ФИО</label><input type="text" id="reqName" placeholder="Например: Наталья"></div>
 <div class="form-group"><label>Ваша группа</label><select id="reqGroup"></select></div>
 <div class="form-group"><label>Если группы нет — укажите</label><input type="text" id="reqGroupText" placeholder="Например: 8 Ромашка"></div>
 <div class="form-group"><label>Телефон</label><input type="tel" id="reqPhone" placeholder="можно последние 4 цифры"></div>
-<div class="hint">💡 Заполните хотя бы имя или телефон.</div>
+<div class="hint"> Заполните хотя бы имя или телефон.</div>
 <button class="btn btn-success btn-block" onclick="submitAccessRequest()">📨 Отправить</button>
 <button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="closeModal('accessRequestModal')">Отмена</button>
 </div>
@@ -504,8 +516,8 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 </div>
 <div class="modal-overlay" id="contactOwnerModal">
 <div class="modal">
-<h2>💬 Написать владельцу</h2>
-<div class="hint"> Ваше сообщение будет отправлено владельцу сайта</div>
+<h2> Написать владельцу</h2>
+<div class="hint">💡 Ваше сообщение будет отправлено владельцу сайта</div>
 <div class="form-group"><label>👤 Ваше имя</label><input type="text" id="guestContactName" placeholder="Например: Наталья Ивановна"></div>
 <div class="form-group"><label>📱 Телефон для связи</label><input type="tel" id="guestContactPhone" placeholder="+7 (___) ___-__-__"></div>
 <div class="form-group"><label> Ваша группа (если знаете)</label><select id="guestContactGroup"><option value="">— Не знаю / другая —</option></select></div>
@@ -528,10 +540,41 @@ input, textarea, select { user-select:text; -webkit-user-select:text; }
 <button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="closeModal('approveModal')">Отмена</button>
 </div>
 </div>
+<div class="modal-overlay" id="createReportModal">
+<div class="modal" style="max-width:600px;">
+<h2>📤 Создание публичной сводки</h2>
+<div class="hint">💡 Создайте ссылку, которую можно скинуть в родительский чат. Любой родитель (даже без аккаунта) сможет посмотреть сводку по ссылке + паролю.</div>
+<div class="form-group"><label>Название сводки</label><input type="text" id="reportTitle" placeholder="Например: Сводка Сентябрь → Октябрь 2026"></div>
+<div class="form-group"><label>Архивный месяц (итоги)</label><select id="reportArchiveMonth"></select></div>
+<div class="form-group"><label>Текущий месяц (планы)</label><select id="reportCurrentMonth"></select></div>
+<div class="form-group"><label>Комментарий для родителей</label><textarea id="reportComment" placeholder="Уважаемые родители, ..." rows="3"></textarea></div>
+<div class="form-group"><label>Пароль для доступа</label><div style="display:flex;gap:8px"><input type="text" id="reportPassword"><button class="btn btn-secondary btn-sm" onclick="document.getElementById('reportPassword').value=genPassword()">🎲</button></div></div>
+<div style="margin:12px 0;">
+<label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;font-size:0.9em;"><input type="checkbox" id="reportShowPaid" checked> Показывать список сдавших</label>
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9em;"><input type="checkbox" id="reportShowUnpaid" checked> Показывать список не сдавших</label>
+</div>
+<button class="btn btn-success btn-block" onclick="confirmCreateReport()">📤 Создать сводку</button>
+<button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="closeModal('createReportModal')">Отмена</button>
+</div>
+</div>
+<div class="modal-overlay" id="editReportModal">
+<div class="modal" style="max-width:600px;">
+<h2>✏️ Редактирование сводки</h2>
+<div class="form-group"><label>Название</label><input type="text" id="editReportTitle"></div>
+<div class="form-group"><label>Комментарий для родителей</label><textarea id="editReportComment" rows="3"></textarea></div>
+<div class="form-group"><label>Пароль</label><div style="display:flex;gap:8px"><input type="text" id="editReportPassword"><button class="btn btn-secondary btn-sm" onclick="document.getElementById('editReportPassword').value=genPassword()">🎲</button></div></div>
+<div style="margin:12px 0;">
+<label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;font-size:0.9em;"><input type="checkbox" id="editReportShowPaid"> Показывать сдавших</label>
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9em;"><input type="checkbox" id="editReportShowUnpaid"> Показывать не сдавших</label>
+</div>
+<button class="btn btn-success btn-block" onclick="confirmEditReport()">💾 Сохранить изменения</button>
+<button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="closeModal('editReportModal')">Отмена</button>
+</div>
+</div>
 <datalist id="childrenDatalist"></datalist>
 <div class="modal-overlay" id="childPickerModal">
 <div class="modal">
-<h2> Выберите ребёнка</h2>
+<h2>👶 Выберите ребёнка</h2>
 <div id="childPickerList" style="max-height:50vh;overflow-y:auto;"></div>
 <div class="form-group" style="margin-top:12px"><label>Или введите вручную</label><input type="text" id="childPickerManual" placeholder="ФИО"></div>
 <button class="btn btn-primary btn-block" onclick="applyChildPickerManual()">✍️ Использовать введённое</button>
@@ -587,6 +630,7 @@ let unreadNotifCount = 0;
 let lastSectionState = { news: '', contributions: '', expenses: '' };
 let previousSectionState = { news: '', contributions: '', expenses: '' };
 let sectionChanges = { news: 0, contributions: 0, expenses: 0 };
+let currentEditingReportId = null;
 
 function requestNotificationPermission() {
 if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
@@ -597,11 +641,11 @@ function playNotifySound() {
 const audio = document.getElementById('notifySound');
 if (audio) { audio.currentTime = 0; audio.play().catch(() => {}); }
 }
-function triggerNotification(title, body, isUrgent = false) {
+function triggerNotification(title, body, isUrgent) {
 playNotifySound();
 unreadMessagesCount++;
 updateBadge();
-document.title = `(${unreadMessagesCount}) ${originalTitle}`;
+document.title = '(' + unreadMessagesCount + ') ' + originalTitle;
 showToast(title, body, isUrgent ? 'urgent' : '');
 if ("Notification" in window && Notification.permission === "granted") {
 try { new Notification(title, { body: body, icon: './apple-touch-icon.png' }); } catch(e) {}
@@ -618,44 +662,45 @@ unreadMessagesCount = 0;
 updateBadge();
 document.title = originalTitle;
 }
-function showToast(title, message, type = '') {
+function showToast(title, message, type) {
+type = type || '';
 const container = document.getElementById('toastContainer');
 const toast = document.createElement('div');
-toast.className = `toast ${type}`;
+toast.className = 'toast ' + type;
 const icon = type === 'urgent' ? '🔴' : type === 'warning' ? '⚠️' : type === 'info' ? 'ℹ️' : '';
-toast.innerHTML = `<span style="font-size:1.5em">${icon}</span><div><div style="font-weight:700;font-size:0.9em">${title}</div><div style="font-size:0.8em;color:var(--gray)">${message}</div></div>`;
-toast.onclick = () => { toast.remove(); };
+toast.innerHTML = '<span style="font-size:1.5em">' + icon + '</span><div><div style="font-weight:700;font-size:0.9em">' + title + '</div><div style="font-size:0.8em;color:var(--gray)">' + message + '</div></div>';
+toast.onclick = function() { toast.remove(); };
 container.appendChild(toast);
-setTimeout(() => {
+setTimeout(function() {
 toast.style.opacity = '0'; toast.style.transform = 'translateX(120%)'; toast.style.transition = 'all 0.4s';
-setTimeout(() => toast.remove(), 400);
+setTimeout(function() { toast.remove(); }, 400);
 }, 5000);
 }
-async function createNotification({ type, title, text, from, fromPhone, groupId, relatedId, priority = 'normal', forRole = 'admin' }) {
+async function createNotification(opts) {
 try {
 await db.collection('notifications').add({
-type, title, text, from: from || '', fromPhone: fromPhone || '',
-groupId: groupId || null, relatedId: relatedId || null,
-priority, forRole, status: 'unread', date: new Date().toISOString()
+type: opts.type, title: opts.title, text: opts.text, from: opts.from || '', fromPhone: opts.fromPhone || '',
+groupId: opts.groupId || null, relatedId: opts.relatedId || null,
+priority: opts.priority || 'normal', forRole: opts.forRole || 'admin', status: 'unread', date: new Date().toISOString()
 });
 } catch(e) { console.error('Ошибка создания уведомления:', e); }
 }
 function startNotificationsListener() {
 if (notificationsUnsubscribe) notificationsUnsubscribe();
-let query = db.collection('notifications').orderBy('date', 'desc').limit(100);
-notificationsUnsubscribe = query.onSnapshot(snapshot => {
+const query = db.collection('notifications').orderBy('date', 'desc').limit(100);
+notificationsUnsubscribe = query.onSnapshot(function(snapshot) {
 const prevIds = new Set(allNotifications.map(n => n.id));
 allNotifications = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 unreadNotifCount = allNotifications.filter(n => n.status === 'unread').length;
 updateNotifBadge();
 if (!isNotifInitialLoad) {
-snapshot.docChanges().forEach(change => {
+snapshot.docChanges().forEach(function(change) {
 if (change.type === 'added' && !prevIds.has(change.doc.id)) {
 const n = change.doc.data();
 playNotifySound();
-showToast(`🔔 ${n.title}`, n.text || '', n.priority === 'high' ? 'urgent' : 'warning');
+showToast('🔔 ' + n.title, n.text || '', n.priority === 'high' ? 'urgent' : 'warning');
 if ("Notification" in window && Notification.permission === "granted") {
-try { new Notification(`🔔 ${n.title}`, { body: n.text || '', icon: './apple-touch-icon.png' }); } catch(e) {}
+try { new Notification('🔔 ' + n.title, { body: n.text || '', icon: './apple-touch-icon.png' }); } catch(e) {}
 }
 const activeSection = document.querySelector('.section.active');
 if (activeSection && activeSection.id === 'notifications') renderNotifications();
@@ -663,7 +708,7 @@ if (activeSection && activeSection.id === 'notifications') renderNotifications()
 });
 }
 isNotifInitialLoad = false;
-}, error => { console.error('Ошибка прослушивания уведомлений:', error); });
+}, function(error) { console.error('Ошибка прослушивания уведомлений:', error); });
 }
 function updateNotifBadge() {
 const badge = document.getElementById('notifBadge');
@@ -689,46 +734,42 @@ const totalCount = filtered.length;
 const msgCount = filtered.filter(n => n.type === 'message').length;
 const reqCount = filtered.filter(n => n.type === 'access').length;
 const replyCount = filtered.filter(n => n.type === 'reply').length;
-stats.innerHTML = `
-<div class="notif-stat"><div class="stat-value">${totalCount}</div><div class="stat-label">📋 Всего</div></div>
-<div class="notif-stat messages"><div class="stat-value">${msgCount}</div><div class="stat-label">📩 Сообщения</div></div>
-<div class="notif-stat requests"><div class="stat-value">${reqCount}</div><div class="stat-label">🔐 Запросы</div></div>
-<div class="notif-stat replies"><div class="stat-value">${replyCount}</div><div class="stat-label">💬 Ответы</div></div>
-`;
+stats.innerHTML = '<div class="notif-stat"><div class="stat-value">' + totalCount + '</div><div class="stat-label">📋 Всего</div></div>' +
+'<div class="notif-stat messages"><div class="stat-value">' + msgCount + '</div><div class="stat-label">📩 Сообщения</div></div>' +
+'<div class="notif-stat requests"><div class="stat-value">' + reqCount + '</div><div class="stat-label">🔐 Запросы</div></div>' +
+'<div class="notif-stat replies"><div class="stat-value">' + replyCount + '</div><div class="stat-label">💬 Ответы</div></div>';
 if (!filtered.length) {
-list.innerHTML = `<div class="notif-empty"><div class="notif-empty-icon">🔕</div><div>Уведомлений пока нет</div></div>`;
+list.innerHTML = '<div class="notif-empty"><div class="notif-empty-icon">🔕</div><div>Уведомлений пока нет</div></div>';
 return;
 }
-const icons = { message: '📩', access: '', reply: '💬', system: 'ℹ️' };
+const icons = { message: '📩', access: '🔐', reply: '💬', system: 'ℹ️' };
 const typeLabels = { message: 'Сообщение', access: 'Запрос доступа', reply: 'Ответ', system: 'Система' };
-list.innerHTML = filtered.map(n => {
+let html = '';
+filtered.forEach(function(n) {
 const g = n.groupId ? getGroup(n.groupId) : null;
 const isUnread = n.status === 'unread';
-return `<div class="notif-item type-${n.type} ${isUnread ? 'unread' : ''}" data-id="${n.id}">
-<div class="notif-icon">${icons[n.type] || '🔔'}</div>
-<div class="notif-body">
-<div class="notif-title">
-${escapeHtml(n.title)}
-<span class="notif-type-badge ${n.type}">${typeLabels[n.type] || n.type}</span>
-${isUnread ? '<span style="background:var(--warning);color:white;font-size:0.7em;padding:2px 6px;border-radius:6px;font-weight:700;">НОВОЕ</span>' : ''}
-</div>
-<div class="notif-text">${escapeHtml(n.text || '')}</div>
-<div class="notif-meta">
-${n.from ? `<span> ${escapeHtml(n.from)}</span>` : ''}
-${n.fromPhone ? `<span> ${escapeHtml(n.fromPhone)}</span>` : ''}
-${g ? `<span>🏫 ${escapeHtml(groupLabel(g))}</span>` : ''}
-<span>📅 ${formatDateTime(n.date)}</span>
-</div>
-</div>
-<div class="notif-actions">
-${isUnread ? `<button class="btn btn-success btn-sm" onclick="markNotificationRead('${n.id}')">✅</button>` : ''}
-<button class="btn btn-danger btn-sm" onclick="deleteNotification('${n.id}')">🗑</button>
-</div>
-</div>`;
-}).join('');
+html += '<div class="notif-item type-' + n.type + ' ' + (isUnread ? 'unread' : '') + '" data-id="' + n.id + '">';
+html += '<div class="notif-icon">' + (icons[n.type] || '🔔') + '</div>';
+html += '<div class="notif-body">';
+html += '<div class="notif-title">' + escapeHtml(n.title) + '<span class="notif-type-badge ' + n.type + '">' + (typeLabels[n.type] || n.type) + '</span>';
+if (isUnread) html += '<span style="background:var(--warning);color:white;font-size:0.7em;padding:2px 6px;border-radius:6px;font-weight:700;">НОВОЕ</span>';
+html += '</div>';
+html += '<div class="notif-text">' + escapeHtml(n.text || '') + '</div>';
+html += '<div class="notif-meta">';
+if (n.from) html += '<span> ' + escapeHtml(n.from) + '</span>';
+if (n.fromPhone) html += '<span>📞 ' + escapeHtml(n.fromPhone) + '</span>';
+if (g) html += '<span>🏫 ' + escapeHtml(groupLabel(g)) + '</span>';
+html += '<span>📅 ' + formatDateTime(n.date) + '</span>';
+html += '</div></div>';
+html += '<div class="notif-actions">';
+if (isUnread) html += '<button class="btn btn-success btn-sm" onclick="markNotificationRead(\'' + n.id + '\')">✅</button>';
+html += '<button class="btn btn-danger btn-sm" onclick="deleteNotification(\'' + n.id + '\')">🗑</button>';
+html += '</div></div>';
+});
+list.innerHTML = html;
 }
 async function markNotificationRead(id) {
-try { await db.collection('notifications').doc(id).update({ status: 'read' }); } catch(e) { alert(' Ошибка: ' + e.message); }
+try { await db.collection('notifications').doc(id).update({ status: 'read' }); } catch(e) { alert('❌ Ошибка: ' + e.message); }
 }
 async function markAllNotificationsRead() {
 if (!allNotifications.length) return;
@@ -742,7 +783,7 @@ showToast('✅ Готово', 'Все уведомления отмечены к
 }
 async function deleteNotification(id) {
 if (!confirm('Удалить это уведомление?')) return;
-try { await db.collection('notifications').doc(id).delete(); } catch(e) { alert(' Ошибка: ' + e.message); }
+try { await db.collection('notifications').doc(id).delete(); } catch(e) { alert('❌ Ошибка: ' + e.message); }
 }
 async function deleteAllNotifications() {
 if (!allNotifications.length) return;
@@ -752,7 +793,7 @@ try {
 const batch = db.batch();
 allNotifications.forEach(n => batch.delete(db.collection('notifications').doc(n.id)));
 await batch.commit();
-showToast(' Готово', 'Все уведомления удалены', 'info');
+showToast('🗑 Готово', 'Все уведомления удалены', 'info');
 } catch(e) { alert('❌ Ошибка: ' + e.message); }
 }
 function computeSectionHash(section) {
@@ -760,16 +801,16 @@ if (!data) return '';
 const m = getCurrentMonth();
 if (!m) return '';
 if (section === 'news') {
-const items = (data.news || []).map(n => `${n.date||''}|${n.title||''}|${n.urgent?1:0}|${(n.text||'').length}`).join(';');
-return `${(data.news||[]).length}:${items}`;
+const items = (data.news || []).map(n => (n.date||'') + '|' + (n.title||'') + '|' + (n.urgent?1:0) + '|' + (n.text||'').length).join(';');
+return (data.news||[]).length + ':' + items;
 }
 if (section === 'contributions') {
-const items = (m.students || []).map(s => `${s.name||''}|${s.amount||0}|${s.paid?1:0}`).join(';');
-return `${(m.students||[]).length}:${m.additionalIncome||0}:${items}`;
+const items = (m.students || []).map(s => (s.name||'') + '|' + (s.amount||0) + '|' + (s.paid?1:0)).join(';');
+return (m.students||[]).length + ':' + (m.additionalIncome||0) + ':' + items;
 }
 if (section === 'expenses') {
-const items = (m.expenses || []).map(e => `${e.description||''}|${e.amount||0}`).join(';');
-return `${(m.expenses||[]).length}:${items}`;
+const items = (m.expenses || []).map(e => (e.description||'') + '|' + (e.amount||0)).join(';');
+return (m.expenses||[]).length + ':' + items;
 }
 return '';
 }
@@ -779,7 +820,7 @@ if (section === 'news') {
 const oldItems = oldHash.split(':').slice(1).join(':').split(';').filter(Boolean);
 const newItems = newHash.split(':').slice(1).join(':').split(';').filter(Boolean);
 let count = 0;
-newItems.forEach(item => { if (!oldItems.includes(item)) count++; });
+newItems.forEach(item => { if (oldItems.indexOf(item) === -1) count++; });
 return count || (newItems.length !== oldItems.length ? Math.abs(newItems.length - oldItems.length) : 1);
 }
 if (section === 'contributions' || section === 'expenses') {
@@ -795,27 +836,28 @@ return 0;
 }
 function loadLastSectionState() {
 if (!currentGroupId) return;
-const key = `lastSectionState_${currentGroupId}`;
+const key = 'lastSectionState_' + currentGroupId;
 try {
 const raw = localStorage.getItem(key);
 if (raw) lastSectionState = JSON.parse(raw);
 else lastSectionState = { news: '', contributions: '', expenses: '' };
 } catch(e) { lastSectionState = { news: '', contributions: '', expenses: '' }; }
-previousSectionState = { ...lastSectionState };
+previousSectionState = Object.assign({}, lastSectionState);
 }
 function saveSectionState(section) {
 if (!currentGroupId) return;
-const key = `lastSectionState_${currentGroupId}`;
+const key = 'lastSectionState_' + currentGroupId;
 lastSectionState[section] = computeSectionHash(section);
 try { localStorage.setItem(key, JSON.stringify(lastSectionState)); } catch(e) {}
 }
 function saveAllSectionsState() {
 ['news', 'contributions', 'expenses'].forEach(s => saveSectionState(s));
 }
-function updateSectionBadges(silent = false) {
+function updateSectionBadges(silent) {
+silent = silent || false;
 if (!data || currentRole === 'owner') return;
 const currentHashes = { news: computeSectionHash('news'), contributions: computeSectionHash('contributions'), expenses: computeSectionHash('expenses') };
-['news', 'contributions', 'expenses'].forEach(section => {
+['news', 'contributions', 'expenses'].forEach(function(section) {
 const changes = countChanges(section, lastSectionState[section], currentHashes[section]);
 sectionChanges[section] = changes;
 const badgeId = section === 'news' ? 'newsBadge' : section === 'contributions' ? 'contribBadge' : 'expensesBadge';
@@ -825,25 +867,24 @@ if (changes > 0) { badge.textContent = changes; badge.style.display = 'inline-bl
 else { badge.style.display = 'none'; }
 }
 if (!silent && changes > 0 && previousSectionState[section] && previousSectionState[section] !== currentHashes[section]) {
-const titles = { news: '📰 Новые новости', contributions: ' Изменения во взносах', expenses: ' Новые расходы' };
-const messages = {
-news: `Появил${changes === 1 ? 'ась' : 'ось'} ${changes} ${changes === 1 ? 'новость' : (changes < 5 ? 'новости' : 'новостей')}`,
-contributions: `Изменени${changes === 1 ? 'е' : 'й'}: ${changes} ${changes === 1 ? 'запись' : (changes < 5 ? 'записи' : 'записей')}`,
-expenses: `Добавлен${changes === 1 ? '' : 'о'} ${changes} ${changes === 1 ? 'расход' : (changes < 5 ? 'расхода' : 'расходов')}`
-};
-showToast(titles[section], messages[section], 'warning');
+const titles = { news: '📰 Новые новости', contributions: '💰 Изменения во взносах', expenses: '💸 Новые расходы' };
+let msgText = '';
+if (section === 'news') msgText = 'Появил' + (changes === 1 ? 'ась' : 'ось') + ' ' + changes + ' ' + (changes === 1 ? 'новость' : (changes < 5 ? 'новости' : 'новостей'));
+else if (section === 'contributions') msgText = 'Изменени' + (changes === 1 ? 'е' : 'й') + ': ' + changes + ' ' + (changes === 1 ? 'запись' : (changes < 5 ? 'записи' : 'записей'));
+else msgText = 'Добавлен' + (changes === 1 ? '' : 'о') + ' ' + changes + ' ' + (changes === 1 ? 'расход' : (changes < 5 ? 'расхода' : 'расходов'));
+showToast(titles[section], msgText, 'warning');
 }
 });
-previousSectionState = { ...currentHashes };
+previousSectionState = Object.assign({}, currentHashes);
 updateHomeTilesChanges();
 }
 function updateHomeTilesChanges() {
-document.querySelectorAll('.home-tile').forEach(tile => {
+document.querySelectorAll('.home-tile').forEach(function(tile) {
 const onclick = tile.getAttribute('onclick') || '';
 let section = null;
-if (onclick.includes("'news'")) section = 'news';
-else if (onclick.includes("'contributions'")) section = 'contributions';
-else if (onclick.includes("'expenses'")) section = 'expenses';
+if (onclick.indexOf("'news'") !== -1) section = 'news';
+else if (onclick.indexOf("'contributions'") !== -1) section = 'contributions';
+else if (onclick.indexOf("'expenses'") !== -1) section = 'expenses';
 if (!section) return;
 const changes = sectionChanges[section] || 0;
 tile.classList.toggle('has-changes', changes > 0);
@@ -854,7 +895,7 @@ const badges = tile.querySelector('.home-tile-badges');
 if (badges) {
 const b = document.createElement('span');
 b.className = 'home-tile-badge changes';
-b.textContent = ` ${changes} изм.`;
+b.textContent = '🔔 ' + changes + ' изм.';
 badges.insertBefore(b, badges.firstChild);
 }
 }
@@ -862,12 +903,12 @@ badges.insertBefore(b, badges.firstChild);
 }
 function startMessagesListener() {
 if (messagesUnsubscribe) messagesUnsubscribe();
-messagesUnsubscribe = db.collection('messages').orderBy('date', 'desc').onSnapshot(snapshot => {
-snapshot.docChanges().forEach(change => {
+messagesUnsubscribe = db.collection('messages').orderBy('date', 'desc').onSnapshot(function(snapshot) {
+snapshot.docChanges().forEach(function(change) {
 if (change.type === 'added' && !isInitialLoad) {
 const msg = change.doc.data();
 if (currentRole === 'owner' && msg.status === 'new') {
-triggerNotification('Новое сообщение!', `От: ${msg.senderName || 'Неизвестно'}`, msg.subject && msg.subject.toLowerCase().includes('срочно'));
+triggerNotification('Новое сообщение!', 'От: ' + (msg.senderName || 'Неизвестно'), msg.subject && msg.subject.toLowerCase().indexOf('срочно') !== -1);
 } else if (currentRole !== 'owner' && msg.status === 'replied' && msg.senderId === currentUserId) {
 triggerNotification('Ответ владельца', 'На ваше сообщение получен ответ');
 }
@@ -878,11 +919,11 @@ unreadMessagesCount = snapshot.docs.filter(d => d.data().status === 'new').lengt
 updateBadge();
 }
 isInitialLoad = false;
-}, error => { console.error("Ошибка прослушивания сообщений:", error); });
+}, function(error) { console.error("Ошибка прослушивания сообщений:", error); });
 }
 function startDataListener() {
 if (dataUnsubscribe) dataUnsubscribe();
-dataUnsubscribe = db.collection('data').doc('main').onSnapshot(doc => {
+dataUnsubscribe = db.collection('data').doc('main').onSnapshot(function(doc) {
 if (!doc.exists) return;
 const newData = doc.data();
 if (!app || JSON.stringify(app) !== JSON.stringify(newData)) {
@@ -901,19 +942,19 @@ else if (id === 'home') renderHome();
 }
 }
 }
-}, error => { console.error("Ошибка прослушивания данных:", error); });
+}, function(error) { console.error("Ошибка прослушивания данных:", error); });
 }
 function updateClock() {
 const now = new Date();
-document.getElementById('clockDate').textContent = `${WEEKDAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`;
-document.getElementById('clockTime').innerHTML = `${String(now.getHours()).padStart(2,'0')}<span class="clock-separator">:</span>${String(now.getMinutes()).padStart(2,'0')}<span class="clock-separator">:</span>${String(now.getSeconds()).padStart(2,'0')}`;
+document.getElementById('clockDate').textContent = WEEKDAY_NAMES[now.getDay()] + ', ' + now.getDate() + ' ' + MONTH_NAMES[now.getMonth()];
+document.getElementById('clockTime').innerHTML = String(now.getHours()).padStart(2,'0') + '<span class="clock-separator">:</span>' + String(now.getMinutes()).padStart(2,'0') + '<span class="clock-separator">:</span>' + String(now.getSeconds()).padStart(2,'0');
 }
 updateClock(); setInterval(updateClock, 1000);
 function normalizePhone(p) { return (p || '').replace(/\D/g, ''); }
 function emailFromPhone(p) { return normalizePhone(p) + EMAIL_DOMAIN; }
 function genPassword() { return Math.random().toString(36).slice(-6); }
 function formatMoney(n) { return Number(n || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 }); }
-function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>"']/g, function(c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
 function groupLabel(g) { return g ? ('№ ' + g.number + ' — ' + g.name) : ''; }
 function getGroup(id) { return (app && app.groups || []).find(g => g.id === id) || null; }
 function getCurrentMonth() { return data.months.find(m => m.id === currentMonthId) || data.months[0]; }
@@ -926,7 +967,7 @@ function clearDirty() { adminDirty = false; document.getElementById('unsavedBadg
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function showSaveIndicator() { const i = document.getElementById('saveIndicator'); i.classList.add('show'); setTimeout(() => i.classList.remove('show'), 2000); }
 function ageWord(n) { const m10 = n % 10, m100 = n % 100; if (m10 === 1 && m100 !== 11) return n + ' год'; if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return n + ' года'; return n + ' лет'; }
-function formatDateRu(d) { if (!d) return ''; const p = d.split('-').map(Number); if (p.length < 3) return d; return `${p[2]} ${MONTH_NAMES[p[1]-1]} ${p[0]}`; }
+function formatDateRu(d) { if (!d) return ''; const p = d.split('-').map(Number); if (p.length < 3) return d; return p[2] + ' ' + MONTH_NAMES[p[1]-1] + ' ' + p[0]; }
 function formatDateTime(iso) { if (!iso) return ''; const d = new Date(iso); return d.toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
 function isPastDate(d) { if (!d) return false; const p = d.split('-').map(Number); if (p.length < 3) return false; const t = new Date(); t.setHours(0,0,0,0); return new Date(p[0], p[1]-1, p[2]) < t; }
 function getUpcomingBirthdays() {
@@ -935,7 +976,7 @@ return (data.children || []).filter(k => k.birthday).map(k => {
 const p = k.birthday.split('-').map(Number); if (p.length < 3 || !p[0]) return null;
 let next = new Date(t0.getFullYear(), p[1]-1, p[2]);
 if (next < t0) next = new Date(t0.getFullYear()+1, p[1]-1, p[2]);
-return { name: k.name, gender: k.gender, day: p[2], month: p[1], age: next.getFullYear()-p[0], next, isToday: (today.getMonth() === p[1]-1 && today.getDate() === p[2]) };
+return { name: k.name, gender: k.gender, day: p[2], month: p[1], age: next.getFullYear()-p[0], next: next, isToday: (today.getMonth() === p[1]-1 && today.getDate() === p[2]) };
 }).filter(Boolean).sort((a,b) => a.next - b.next);
 }
 function defaultGroupData() {
@@ -967,7 +1008,7 @@ return allAlbums;
 }
 async function createAlbum(groupId, title, fileName) {
 try {
-await db.collection('albums').add({ groupId, title, fileName, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+await db.collection('albums').add({ groupId: groupId, title: title, fileName: fileName, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 return true;
 } catch(e) { console.error('Ошибка создания альбома:', e); return false; }
 }
@@ -977,7 +1018,7 @@ try {
 await db.collection('albums').doc(albumId).delete();
 alert('✅ Альбом удалён!');
 return true;
-} catch(e) { alert(' Ошибка: ' + e.message); return false; }
+} catch(e) { alert('❌ Ошибка: ' + e.message); return false; }
 }
 async function loadFromFirebase() {
 try {
@@ -987,7 +1028,7 @@ if (!protectionEnabled) {
 const pwdDoc = await db.collection('settings').doc('passwords').get();
 if (pwdDoc.exists) { const p = pwdDoc.data(); settings = { ownerPhone: p.ownerPhone || settings.ownerPhone, ownerPassword: p.ownerPassword || settings.ownerPassword, maintenanceMode: !!p.maintenanceMode }; }
 }
-auth.onAuthStateChanged(async fu => {
+auth.onAuthStateChanged(async function(fu) {
 if (fu && protectionEnabled) { await enterByAuth(fu); return; }
 if (fu && !protectionEnabled) return;
 if (!protectionEnabled) {
@@ -1017,19 +1058,19 @@ if (!app.groups.length) { app = getDefaultApp(); await saveToFirebase(); }
 async function enterByAuth(fu) {
 try {
 const al = await db.collection('allowlist').doc(fu.uid).get();
-if (!al.exists) { alert('⛔ Доступ не найден.'); auth.signOut(); return; }
+if (!al.exists) { alert(' Доступ не найден.'); auth.signOut(); return; }
 await loadMainData();
 const role = al.data().role;
 if (role === 'owner') {
 currentRole = 'owner'; currentUserName = 'Владелец'; currentUserId = null;
 currentGroupId = currentGroupId || app.groups[0].id; bindGroupData(); afterAuth(); return;
 }
-if (!currentGroupId) { alert(' Выберите группу'); auth.signOut(); return; }
+if (!currentGroupId) { alert('⛔ Выберите группу'); auth.signOut(); return; }
 const u = app.users.find(x => x.uid === fu.uid);
-if (!u) { alert(' Пользователь не найден.'); auth.signOut(); return; }
+if (!u) { alert('⛔ Пользователь не найден.'); auth.signOut(); return; }
 currentRole = u.role; currentUserId = u.id; currentUserName = u.name || u.phone; currentGroupId = u.groupId;
 bindGroupData(); afterAuth();
-} catch(e) { console.error(e); alert(' Ошибка входа: ' + e.message); }
+} catch(e) { console.error(e); alert('❌ Ошибка входа: ' + e.message); }
 }
 function afterAuth() {
 if (settings.maintenanceMode && currentRole !== 'owner') {
@@ -1042,7 +1083,7 @@ enterApp();
 function enableLogin() {
 document.getElementById('loginPassword').disabled = false;
 document.getElementById('loginBtn').disabled = false;
-document.getElementById('loginStatus').textContent = protectionEnabled ? ' Защищённый вход' : '✅ Готово к входу';
+document.getElementById('loginStatus').textContent = protectionEnabled ? '🔐 Защищённый вход' : '✅ Готово к входу';
 }
 function fillLoginGroups() {
 const sel = document.getElementById('loginGroup');
@@ -1090,9 +1131,9 @@ document.getElementById('appContent').style.display = '';
 document.getElementById('currentUserBadge').style.display = 'inline-flex';
 document.getElementById('currentUserName').textContent = currentUserName || '';
 document.getElementById('headerGroupLabel').textContent = groupLabel(getGroup(currentGroupId));
-let roleText = '️ Родитель';
-if (currentRole === 'admin') roleText = ' Админ';
-if (currentRole === 'owner') roleText = ' Владелец';
+let roleText = '👁️ Родитель';
+if (currentRole === 'admin') roleText = '💎 Админ';
+if (currentRole === 'owner') roleText = '👑 Владелец';
 document.getElementById('currentUserRole').textContent = roleText;
 document.getElementById('navAdminBtn').style.display = (currentRole === 'admin' || currentRole === 'owner') ? '' : 'none';
 document.getElementById('navOwnerBtn').style.display = currentRole === 'owner' ? '' : 'none';
@@ -1161,14 +1202,14 @@ const subject = document.getElementById('guestContactSubject').value.trim();
 const text = document.getElementById('guestContactText').value.trim();
 if (!name && !phone) { alert('Укажите имя или телефон'); return; }
 if (!text) { alert('Введите текст сообщения'); return; }
-const msg = { senderName: name || 'Неизвестно', senderPhone: phone || '', groupId, subject: subject || 'Сообщение с экрана входа', text, date: new Date().toISOString(), status: 'new', read: false, fromGuest: true };
+const msg = { senderName: name || 'Неизвестно', senderPhone: phone || '', groupId: groupId, subject: subject || 'Сообщение с экрана входа', text: text, date: new Date().toISOString(), status: 'new', read: false, fromGuest: true };
 try {
 const ref = await db.collection('messages').add(msg);
 await createNotification({
 type: 'message', title: ' Новое сообщение с сайта',
-text: `${subject || 'Без темы'}: ${text.substring(0, 150)}${text.length > 150 ? '...' : ''}`,
+text: (subject || 'Без темы') + ': ' + text.substring(0, 150) + (text.length > 150 ? '...' : ''),
 from: name || 'Гость', fromPhone: phone, groupId: groupId, relatedId: ref.id,
-priority: (subject && subject.toLowerCase().includes('срочно')) ? 'high' : 'normal'
+priority: (subject && subject.toLowerCase().indexOf('срочно') !== -1) ? 'high' : 'normal'
 });
 document.getElementById('guestContactName').value = '';
 document.getElementById('guestContactPhone').value = '';
@@ -1193,7 +1234,7 @@ childPickerTarget = inputEl;
 const list = document.getElementById('childPickerList'); list.innerHTML = '';
 const kids = data.children || [];
 if (!kids.length) list.innerHTML = '<p style="color:var(--light-gray);font-size:.9em">Дети ещё не добавлены</p>';
-kids.forEach(k => { if (!k.name) return; const b = document.createElement('button'); b.className = 'btn btn-sm btn-secondary'; b.style.margin = '3px'; b.textContent = (k.gender === 'girl' ? ' ' : '👦 ') + k.name; b.onclick = () => { childPickerTarget.value = k.name; markDirty(); closeModal('childPickerModal'); }; list.appendChild(b); });
+kids.forEach(k => { if (!k.name) return; const b = document.createElement('button'); b.className = 'btn btn-sm btn-secondary'; b.style.margin = '3px'; b.textContent = (k.gender === 'girl' ? '👧 ' : ' ') + k.name; b.onclick = function() { childPickerTarget.value = k.name; markDirty(); closeModal('childPickerModal'); }; list.appendChild(b); });
 document.getElementById('childPickerManual').value = '';
 document.getElementById('childPickerModal').classList.add('active');
 }
@@ -1235,6 +1276,7 @@ document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'
 document.getElementById('admin-' + tab).classList.add('active');
 if (btn) btn.classList.add('active');
 if (tab === 'albums') renderAdminAlbums();
+if (tab === 'reports') renderAdminReports();
 }
 function showOwnerTab(tab, btn) {
 document.querySelectorAll('#owner .admin-section').forEach(s => s.classList.remove('active'));
@@ -1253,84 +1295,79 @@ function renderHome() {
 const m = getCurrentMonth();
 const bal = calcBalance(m), inc = calcIncome(m), exp = calcExpense(m), prevBal = Number(m.prevBalance || 0);
 const tc = m.students.filter(s => s.name).length, pc = m.students.filter(s => s.paid).length;
-document.getElementById('balanceHero').innerHTML = `<div>Текущий остаток средств</div><div class="balance-value">${formatMoney(bal)} ₽</div><div>${groupLabel(getGroup(currentGroupId))} · ${escapeHtml(m.name)}</div>
-<div class="balance-stats">
-<div class="balance-stat"><div class="balance-stat-value">${formatMoney(prevBal)} ₽</div><div class="balance-stat-label">С прошл. мес.</div></div>
-<div class="balance-stat"><div class="balance-stat-value">${formatMoney(inc)} ₽</div><div class="balance-stat-label">Приход</div></div>
-<div class="balance-stat"><div class="balance-stat-value">${formatMoney(exp)} ₽</div><div class="balance-stat-label">Расход</div></div>
-<div class="balance-stat"><div class="balance-stat-value">${pc}/${tc}</div><div class="balance-stat-label">Сдали</div></div>
-</div>`;
+document.getElementById('balanceHero').innerHTML = '<div>Текущий остаток средств</div><div class="balance-value">' + formatMoney(bal) + ' ₽</div><div>' + groupLabel(getGroup(currentGroupId)) + ' · ' + escapeHtml(m.name) + '</div>' +
+'<div class="balance-stats">' +
+'<div class="balance-stat"><div class="balance-stat-value">' + formatMoney(prevBal) + ' ₽</div><div class="balance-stat-label">С прошл. мес.</div></div>' +
+'<div class="balance-stat"><div class="balance-stat-value">' + formatMoney(inc) + ' ₽</div><div class="balance-stat-label">Приход</div></div>' +
+'<div class="balance-stat"><div class="balance-stat-value">' + formatMoney(exp) + ' ₽</div><div class="balance-stat-label">Расход</div></div>' +
+'<div class="balance-stat"><div class="balance-stat-value">' + pc + '/' + tc + '</div><div class="balance-stat-label">Сдали</div></div>' +
+'</div>';
 const kidsCount = (data.children || []).length;
 const urgentNewsCount = (data.news || []).filter(n => n.urgent).length;
 const unpaidCount = tc - pc;
 const newsChanges = sectionChanges.news || 0;
 const contribChanges = sectionChanges.contributions || 0;
 const expChanges = sectionChanges.expenses || 0;
-document.getElementById('homeGrid').innerHTML = `
-${currentRole === 'member' || currentRole === 'admin' ? `<div class="parent-dashboard-header" style="grid-column: 1 / -1;"><span style="font-size:1.5em">‍‍👧‍👦</span><h3>Панель родителя: важная информация группы</h3></div>` : ''}
-<div class="home-tile ${contribChanges > 0 ? 'has-changes' : ''}" onclick="showSection('contributions', document.getElementById('navContribBtn'))">
-<div class="home-tile-header"><div class="home-tile-icon">💰</div><div class="home-tile-title">Взносы</div></div>
-<div class="home-tile-subtitle">Сдача взносов за текущий месяц</div>
-<div class="home-tile-badges">
-${contribChanges > 0 ? `<span class="home-tile-badge changes">🔔 ${contribChanges} изм.</span>` : ''}
-<span class="home-tile-badge ${pc>0?'active':''}">✅ ${pc} сдали</span>
-<span class="home-tile-badge ${unpaidCount>0?'danger':''}">⏳ ${unpaidCount} ожидают</span>
-</div>
-</div>
-<div class="home-tile ${expChanges > 0 ? 'has-changes' : ''}" onclick="showSection('expenses', document.getElementById('navExpensesBtn'))">
-<div class="home-tile-header"><div class="home-tile-icon">💸</div><div class="home-tile-title">Расходы</div></div>
-<div class="home-tile-subtitle">Куда потрачены деньги</div>
-<div class="home-tile-badges">
-${expChanges > 0 ? `<span class="home-tile-badge changes">🔔 ${expChanges} изм.</span>` : ''}
-<span class="home-tile-badge warning">📊 ${formatMoney(exp)} ₽</span>
-</div>
-</div>
-<div class="home-tile ${newsChanges > 0 ? 'has-changes' : ''}" onclick="showSection('news', document.getElementById('navNewsBtn'))">
-<div class="home-tile-header"><div class="home-tile-icon">📰</div><div class="home-tile-title">Новости</div></div>
-<div class="home-tile-subtitle">Объявления и информация</div>
-<div class="home-tile-badges">
-${newsChanges > 0 ? `<span class="home-tile-badge changes">🔔 ${newsChanges} нов.</span>` : ''}
-<span class="home-tile-badge ${data.news.length>0?'info':''}">📄 ${data.news.length}</span>
-${urgentNewsCount > 0 ? `<span class="home-tile-badge danger">🔴 ${urgentNewsCount} срочных</span>` : ''}
-</div>
-</div>
-<div class="home-tile" onclick="showSection('group', document.querySelectorAll('.top-nav-btn')[1])">
-<div class="home-tile-header"><div class="home-tile-icon">🏫</div><div class="home-tile-title">Наша группа</div></div>
-<div class="home-tile-subtitle">Дети, воспитатели, фотоальбомы</div>
-<div class="home-tile-badges"><span class="home-tile-badge ${kidsCount>0?'gold':''}"> ${kidsCount} детей</span></div>
-</div>`;
+let html = '';
+if (currentRole === 'member' || currentRole === 'admin') {
+html += '<div class="parent-dashboard-header" style="grid-column: 1 / -1;"><span style="font-size:1.5em">👨‍‍👧‍👦</span><h3>Панель родителя: важная информация группы</h3></div>';
+}
+html += '<div class="home-tile ' + (contribChanges > 0 ? 'has-changes' : '') + '" onclick="showSection(\'contributions\', document.getElementById(\'navContribBtn\'))">';
+html += '<div class="home-tile-header"><div class="home-tile-icon">💰</div><div class="home-tile-title">Взносы</div></div>';
+html += '<div class="home-tile-subtitle">Сдача взносов за текущий месяц</div>';
+html += '<div class="home-tile-badges">';
+if (contribChanges > 0) html += '<span class="home-tile-badge changes">🔔 ' + contribChanges + ' изм.</span>';
+html += '<span class="home-tile-badge ' + (pc>0?'active':'') + '">✅ ' + pc + ' сдали</span>';
+html += '<span class="home-tile-badge ' + (unpaidCount>0?'danger':'') + '">⏳ ' + unpaidCount + ' ожидают</span>';
+html += '</div></div>';
+html += '<div class="home-tile ' + (expChanges > 0 ? 'has-changes' : '') + '" onclick="showSection(\'expenses\', document.getElementById(\'navExpensesBtn\'))">';
+html += '<div class="home-tile-header"><div class="home-tile-icon">💸</div><div class="home-tile-title">Расходы</div></div>';
+html += '<div class="home-tile-subtitle">Куда потрачены деньги</div>';
+html += '<div class="home-tile-badges">';
+if (expChanges > 0) html += '<span class="home-tile-badge changes">🔔 ' + expChanges + ' изм.</span>';
+html += '<span class="home-tile-badge warning">📊 ' + formatMoney(exp) + ' ₽</span>';
+html += '</div></div>';
+html += '<div class="home-tile ' + (newsChanges > 0 ? 'has-changes' : '') + '" onclick="showSection(\'news\', document.getElementById(\'navNewsBtn\'))">';
+html += '<div class="home-tile-header"><div class="home-tile-icon">📰</div><div class="home-tile-title">Новости</div></div>';
+html += '<div class="home-tile-subtitle">Объявления и информация</div>';
+html += '<div class="home-tile-badges">';
+if (newsChanges > 0) html += '<span class="home-tile-badge changes">🔔 ' + newsChanges + ' нов.</span>';
+html += '<span class="home-tile-badge ' + (data.news.length>0?'info':'') + '">📄 ' + data.news.length + '</span>';
+if (urgentNewsCount > 0) html += '<span class="home-tile-badge danger">🔴 ' + urgentNewsCount + ' срочных</span>';
+html += '</div></div>';
+html += '<div class="home-tile" onclick="showSection(\'group\', document.querySelectorAll(\'.top-nav-btn\')[1])">';
+html += '<div class="home-tile-header"><div class="home-tile-icon"></div><div class="home-tile-title">Наша группа</div></div>';
+html += '<div class="home-tile-subtitle">Дети, воспитатели, фотоальбомы</div>';
+html += '<div class="home-tile-badges"><span class="home-tile-badge ' + (kidsCount>0?'gold':'') + '">👶 ' + kidsCount + ' детей</span></div>';
+html += '</div>';
+document.getElementById('homeGrid').innerHTML = html;
 }
 function renderGroup() {
 const c = document.getElementById('groupInfo');
 const g = getGroup(currentGroupId); const m = getCurrentMonth();
 if (!g) { c.innerHTML = '<p>Группа не найдена</p>'; return; }
 const kids = data.children || [], girls = kids.filter(k => k.gender === 'girl').length, boys = kids.filter(k => k.gender === 'boy').length;
-let html = `<div class="group-hero"><div class="group-number">Группа № ${escapeHtml(g.number)}</div><div class="group-name">${escapeHtml(g.name)}</div><div> ${escapeHtml(m.name)}</div>${data.description ? `<div class="group-desc">${escapeHtml(data.description)}</div>` : ''}</div>`;
-html += `<div class="group-stats-grid">
-<div class="group-stat-card orange"><div class="stat-value">${kids.length}</div><div class="stat-label">👶 Всего детей</div></div>
-<div class="group-stat-card pink"><div class="stat-value">${girls}</div><div class="stat-label"> Девочек</div></div>
-<div class="group-stat-card blue"><div class="stat-value">${boys}</div><div class="stat-label">👦 Мальчиков</div></div>
-<div class="group-stat-card green"><div class="stat-value">${(data.committee||[]).length}</div><div class="stat-label">👥 Комитет</div></div>
-<div class="group-stat-card green"><div class="stat-value">${(data.teachers||[]).length}</div><div class="stat-label">Воспитателей</div></div></div>`;
+let html = '<div class="group-hero"><div class="group-number">Группа № ' + escapeHtml(g.number) + '</div><div class="group-name">' + escapeHtml(g.name) + '</div><div>📅 ' + escapeHtml(m.name) + '</div>' + (data.description ? '<div class="group-desc">' + escapeHtml(data.description) + '</div>' : '') + '</div>';
+html += '<div class="group-stats-grid">';
+html += '<div class="group-stat-card orange"><div class="stat-value">' + kids.length + '</div><div class="stat-label">👶 Всего детей</div></div>';
+html += '<div class="group-stat-card pink"><div class="stat-value">' + girls + '</div><div class="stat-label">🎀 Девочек</div></div>';
+html += '<div class="group-stat-card blue"><div class="stat-value">' + boys + '</div><div class="stat-label">👦 Мальчиков</div></div>';
+html += '<div class="group-stat-card green"><div class="stat-value">' + (data.committee||[]).length + '</div><div class="stat-label"> Комитет</div></div>';
+html += '<div class="group-stat-card green"><div class="stat-value">' + (data.teachers||[]).length + '</div><div class="stat-label">‍🏫 Воспитателей</div></div></div>';
 const bds = getUpcomingBirthdays();
-html += `<div class="info-block-g" style="border-left-color:var(--danger)"><h3>🎂 Дни рождения</h3>`;
-if (!bds.length) html += `<p style="color:var(--light-gray);font-size:.9em">Добавьте детей с датами рождения</p>`;
-else bds.forEach(b => { html += `<div class="birthday-card${b.isToday?' today':''}"><div class="birthday-avatar">${b.isToday?'':(b.gender==='girl'?'':'')}</div><div class="birthday-info"><div class="birthday-name">${escapeHtml(b.name)}</div><div class="birthday-date${b.isToday?' today-text':''}">${b.day} ${MONTH_NAMES[b.month-1]}${b.isToday?' — СЕГОДНЯ!':''}</div></div><div class="birthday-age">исполнится ${ageWord(b.age)}</div></div>`; });
-html += `</div>`;
+html += '<div class="info-block-g" style="border-left-color:var(--danger)"><h3>🎂 Дни рождения</h3>';
+if (!bds.length) html += '<p style="color:var(--light-gray);font-size:.9em">Добавьте детей с датами рождения</p>';
+else bds.forEach(b => { html += '<div class="birthday-card' + (b.isToday?' today':'') + '"><div class="birthday-avatar">' + (b.isToday?'🎉':(b.gender==='girl'?'👧':'👦')) + '</div><div class="birthday-info"><div class="birthday-name">' + escapeHtml(b.name) + '</div><div class="birthday-date' + (b.isToday?' today-text':'') + '">' + b.day + ' ' + MONTH_NAMES[b.month-1] + (b.isToday?' — СЕГОДНЯ!':'') + '</div></div><div class="birthday-age">исполнится ' + ageWord(b.age) + '</div></div>'; });
+html += '</div>';
 const events = (data.events || []).filter(e => e.title).slice().sort((a,b) => (a.date||'9999').localeCompare(b.date||'9999'));
-html += `<div class="info-block-g" style="border-left-color:var(--info)"><h3>🎉 События и праздники</h3>`;
-if (!events.length) html += `<p style="color:var(--light-gray);font-size:.9em">Событий пока нет</p>`;
-else events.forEach(ev => { html += `<div class="event-card-g${isPastDate(ev.date)?' past':''}"><span class="event-date-badge"> ${formatDateRu(ev.date)}</span><div class="event-title-g">${escapeHtml(ev.title)}</div>${ev.description?`<div class="event-desc-g">${escapeHtml(ev.description)}</div>`:''}</div>`; });
-html += `</div>`;
-if ((data.teachers||[]).length) { html += `<div class="info-block-g"><h3>👩‍ Наши воспитатели</h3>`; data.teachers.forEach(t => { if (!t.name) return; const ph = t.phone ? `<div class="teacher-phone"> <a href="tel:${t.phone.replace(/[^\d+]/g,'')}">${escapeHtml(t.phone)}</a></div>` : ''; html += `<div class="teacher-item"><div><div class="teacher-name">${escapeHtml(t.name)}</div><div class="teacher-role">${escapeHtml(t.role||'Воспитатель')}</div></div>${ph}</div>`; }); html += `</div>`; }
-if ((data.committee||[]).length) { html += `<h3 style="font-size:1.1em;color:var(--brand-green);margin:20px 0 12px;">👥 Родительский комитет</h3><div class="committee-grid">`; data.committee.forEach(mb => { if (!mb.name) return; let cls = 'committee-card'; const r = (mb.role||'').toLowerCase(); if (r.includes('председатель')) cls += ' chair'; else if (r.includes('казначей')) cls += ' treasurer'; const ph = mb.phone ? `<div class="member-phone"> <a href="tel:${mb.phone.replace(/[^\d+]/g,'')}">${escapeHtml(mb.phone)}</a></div>` : ''; html += `<div class="${cls}"><div class="member-name">${escapeHtml(mb.name)}</div><div class="member-role">${escapeHtml(mb.role||'Член комитета')}</div>${ph}</div>`; }); html += `</div>`; }
-if ((data.parents||[]).length) { html += `<div class="info-block-g" style="margin-top:20px"><h3>👨‍👩 Родители</h3>`; data.parents.forEach(p => { if (!p.name) return; const ph = p.phone ? `<div class="teacher-phone">📞 <a href="tel:${p.phone.replace(/[^\d+]/g,'')}">${escapeHtml(p.phone)}</a></div>` : ''; html += `<div class="teacher-item"><div><div class="teacher-name">${escapeHtml(p.name)}</div></div>${ph}</div>`; }); html += `</div>`; }
-html += `<div class="albums-section">
-<h3 style="font-size:1.1em;color:var(--brand-green);margin-bottom:15px;"> Фотоальбомы группы</h3>
-<div class="albums-grid" id="groupAlbumsGrid">
-<p style="color:var(--gray);grid-column:1/-1;text-align:center;padding:20px;">Загрузка альбомов...</p>
-</div>
-</div>`;
+html += '<div class="info-block-g" style="border-left-color:var(--info)"><h3>🎉 События и праздники</h3>';
+if (!events.length) html += '<p style="color:var(--light-gray);font-size:.9em">Событий пока нет</p>';
+else events.forEach(ev => { html += '<div class="event-card-g' + (isPastDate(ev.date)?' past':'') + '"><span class="event-date-badge">📅 ' + formatDateRu(ev.date) + '</span><div class="event-title-g">' + escapeHtml(ev.title) + '</div>' + (ev.description?'<div class="event-desc-g">' + escapeHtml(ev.description) + '</div>':'') + '</div>'; });
+html += '</div>';
+if ((data.teachers||[]).length) { html += '<div class="info-block-g"><h3>👩‍🏫 Наши воспитатели</h3>'; data.teachers.forEach(t => { if (!t.name) return; const ph = t.phone ? '<div class="teacher-phone"> <a href="tel:' + t.phone.replace(/[^\d+]/g,'') + '">' + escapeHtml(t.phone) + '</a></div>' : ''; html += '<div class="teacher-item"><div><div class="teacher-name">' + escapeHtml(t.name) + '</div><div class="teacher-role">' + escapeHtml(t.role||'Воспитатель') + '</div></div>' + ph + '</div>'; }); html += '</div>'; }
+if ((data.committee||[]).length) { html += '<h3 style="font-size:1.1em;color:var(--brand-green);margin:20px 0 12px;">👥 Родительский комитет</h3><div class="committee-grid">'; data.committee.forEach(mb => { if (!mb.name) return; let cls = 'committee-card'; const r = (mb.role||'').toLowerCase(); if (r.indexOf('председатель') !== -1) cls += ' chair'; else if (r.indexOf('казначей') !== -1) cls += ' treasurer'; const ph = mb.phone ? '<div class="member-phone">📞 <a href="tel:' + mb.phone.replace(/[^\d+]/g,'') + '">' + escapeHtml(mb.phone) + '</a></div>' : ''; html += '<div class="' + cls + '"><div class="member-name">' + escapeHtml(mb.name) + '</div><div class="member-role">' + escapeHtml(mb.role||'Член комитета') + '</div>' + ph + '</div>'; }); html += '</div>'; }
+if ((data.parents||[]).length) { html += '<div class="info-block-g" style="margin-top:20px"><h3>👨‍👩 Родители</h3>'; data.parents.forEach(p => { if (!p.name) return; const ph = p.phone ? '<div class="teacher-phone">📞 <a href="tel:' + p.phone.replace(/[^\d+]/g,'') + '">' + escapeHtml(p.phone) + '</a></div>' : ''; html += '<div class="teacher-item"><div><div class="teacher-name">' + escapeHtml(p.name) + '</div></div>' + ph + '</div>'; }); html += '</div>'; }
+html += '<div class="albums-section"><h3 style="font-size:1.1em;color:var(--brand-green);margin-bottom:15px;"> Фотоальбомы группы</h3><div class="albums-grid" id="groupAlbumsGrid"><p style="color:var(--gray);grid-column:1/-1;text-align:center;padding:20px;">Загрузка альбомов...</p></div></div>';
 c.innerHTML = html;
 loadGroupAlbums().then(() => { renderGroupAlbums(); });
 }
@@ -1339,13 +1376,13 @@ const grid = document.getElementById('groupAlbumsGrid');
 if (!grid) return;
 if (groupAlbums.length === 0) { grid.innerHTML = '<p style="color:var(--gray);grid-column:1/-1;text-align:center;padding:20px;">Фотоальбомы пока не добавлены</p>'; return; }
 const g = getGroup(currentGroupId);
-const folder = g ? `photos/group_${g.number}/` : 'photos/';
+const folder = g ? 'photos/group_' + g.number + '/' : 'photos/';
 grid.innerHTML = '';
 groupAlbums.forEach(album => {
 const card = document.createElement('div');
 card.className = 'album-card';
 card.onclick = () => openAlbumModal(album.title, folder + album.fileName);
-card.innerHTML = `<div class="album-icon"></div><div class="album-title">${escapeHtml(album.title)}</div><div class="album-file">${escapeHtml(album.fileName)}</div>`;
+card.innerHTML = '<div class="album-icon">📸</div><div class="album-title">' + escapeHtml(album.title) + '</div><div class="album-file">' + escapeHtml(album.fileName) + '</div>';
 grid.appendChild(card);
 });
 }
@@ -1364,28 +1401,25 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
 document.getElementById('albumModal').addEventListener('click', function(e) { if (e.target === this) closeAlbumModal(); });
 function isNewsNew(n) {
 if (!lastSectionState.news) return false;
-const itemStr = `${n.date||''}|${n.title||''}|${n.urgent?1:0}|${(n.text||'').length}`;
-return !lastSectionState.news.includes(itemStr);
+const itemStr = (n.date||'') + '|' + (n.title||'') + '|' + (n.urgent?1:0) + '|' + (n.text||'').length;
+return lastSectionState.news.indexOf(itemStr) === -1;
 }
 function isStudentNew(s, idx) {
 if (!lastSectionState.contributions) return false;
-const itemStr = `${s.name||''}|${s.amount||0}|${s.paid?1:0}`;
-return !lastSectionState.contributions.includes(itemStr);
+const itemStr = (s.name||'') + '|' + (s.amount||0) + '|' + (s.paid?1:0);
+return lastSectionState.contributions.indexOf(itemStr) === -1;
 }
 function isExpenseNew(e, idx) {
 if (!lastSectionState.expenses) return false;
-const itemStr = `${e.description||''}|${e.amount||0}`;
-return !lastSectionState.expenses.includes(itemStr);
+const itemStr = (e.description||'') + '|' + (e.amount||0);
+return lastSectionState.expenses.indexOf(itemStr) === -1;
 }
 function renderNews() {
 const c = document.getElementById('newsList');
 const changes = sectionChanges.news || 0;
 let bannerHtml = '';
 if (changes > 0) {
-bannerHtml = `<div class="changes-banner">
-<div class="cb-icon"></div>
-<div class="cb-text"><b>Новые новости!</b> С вашего последнего визита ${changes === 1 ? 'появилась 1 новость' : `появил${changes < 5 ? 'ось' : 'ось'} ${changes} ${changes === 1 ? 'новость' : (changes < 5 ? 'новости' : 'новостей')}`}. Новые выделены цветом.</div>
-</div>`;
+bannerHtml = '<div class="changes-banner"><div class="cb-icon"></div><div class="cb-text"><b>Новые новости!</b> С вашего последнего визита ' + (changes === 1 ? 'появилась 1 новость' : 'появилось ' + changes + (changes < 5 ? ' новости' : ' новостей')) + '. Новые выделены цветом.</div></div>';
 }
 if (!data.news.length) { c.innerHTML = bannerHtml + '<div class="news-empty">Новостей пока нет</div>'; return; }
 c.innerHTML = bannerHtml;
@@ -1399,14 +1433,14 @@ if (!n.title && !n.text) return;
 const d = n.date ? new Date(n.date) : null;
 const isNew = isNewsNew(n);
 const dateStr = d ? d.toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
-c.innerHTML += `
-<div class="news-card${n.urgent ? ' urgent' : ''}${isNew ? ' is-new' : ''}">
-${n.urgent ? '<div style="position:absolute;top:-10px;right:-10px;background:var(--danger);color:white;padding:4px 12px;border-radius:12px;font-size:0.75em;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,0.2);">🔥 СРОЧНО</div>' : ''}
-${isNew && !n.urgent ? '<div style="position:absolute;top:-10px;right:-10px;background:var(--warning);color:white;padding:4px 12px;border-radius:12px;font-size:0.75em;font-weight:700;"> НОВОЕ</div>' : ''}
-<div class="news-date">📅 ${dateStr}</div>
-<div class="news-title">${escapeHtml(n.title || '')}</div>
-<div class="news-text">${escapeHtml(n.text || '').replace(/\n/g, '<br>')}</div>
-</div>`;
+let html = '<div class="news-card' + (n.urgent ? ' urgent' : '') + (isNew ? ' is-new' : '') + '">';
+if (n.urgent) html += '<div style="position:absolute;top:-10px;right:-10px;background:var(--danger);color:white;padding:4px 12px;border-radius:12px;font-size:0.75em;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,0.2);">🔥 СРОЧНО</div>';
+if (isNew && !n.urgent) html += '<div style="position:absolute;top:-10px;right:-10px;background:var(--warning);color:white;padding:4px 12px;border-radius:12px;font-size:0.75em;font-weight:700;">🆕 НОВОЕ</div>';
+html += '<div class="news-date">📅 ' + dateStr + '</div>';
+html += '<div class="news-title">' + escapeHtml(n.title || '') + '</div>';
+html += '<div class="news-text">' + escapeHtml(n.text || '').replace(/\n/g, '<br>') + '</div>';
+html += '</div>';
+c.innerHTML += html;
 });
 }
 function renderContributions() {
@@ -1420,42 +1454,23 @@ if (s.paid) { pc++; tp += Number(s.amount || 0); }
 const remaining = te - tp;
 const changes = sectionChanges.contributions || 0;
 if (changes > 0) {
-html += `<div class="changes-banner">
-<div class="cb-icon">🔔</div>
-<div class="cb-text"><b>Изменения во взносах!</b> С вашего последнего визита ${changes === 1 ? 'произошло 1 изменение' : `произошл${changes < 5 ? 'о' : 'о'} ${changes} ${changes === 1 ? 'изменение' : (changes < 5 ? 'изменения' : 'изменений')}`} (кто-то сдал или изменилась сумма). Новые/изменённые строки выделены.</div>
-</div>`;
+html += '<div class="changes-banner"><div class="cb-icon">🔔</div><div class="cb-text"><b>Изменения во взносах!</b> С вашего последнего визита ' + (changes === 1 ? 'произошло 1 изменение' : 'произошло ' + changes + ' изменений') + ' (кто-то сдал или изменилась сумма). Новые/изменённые строки выделены.</div></div>';
 }
-html += `<div class="parent-dashboard-header" style="margin-bottom:16px; border-left: 4px solid var(--brand-green);">
-<div style="font-size:2em; margin-right:12px;">💰</div>
-<div>
-<h3 style="margin:0; font-size:1.1em; color:var(--dark);">Сбор взносов: ${escapeHtml(m.name)}</h3>
-<div style="color:var(--gray); font-size:0.9em; margin-top:6px; line-height: 1.5;">
-Собрано: <b style="color:var(--success);">${formatMoney(tp)} ₽</b> из <b>${formatMoney(te)} ₽</b><br>
-${remaining > 0 ? `Осталось собрать: <b style="color:var(--warning);">${formatMoney(remaining)} ₽</b>` : '<b style="color:var(--success);">✅ Все собрали! Спасибо!</b>'}
-</div>
-</div>
-</div>`;
+html += '<div class="parent-dashboard-header" style="margin-bottom:16px; border-left: 4px solid var(--brand-green);"><div style="font-size:2em; margin-right:12px;">💰</div><div><h3 style="margin:0; font-size:1.1em; color:var(--dark);">Сбор взносов: ' + escapeHtml(m.name) + '</h3><div style="color:var(--gray); font-size:0.9em; margin-top:6px; line-height: 1.5;">Собрано: <b style="color:var(--success);">' + formatMoney(tp) + ' ₽</b> из <b>' + formatMoney(te) + ' ₽</b><br>' + (remaining > 0 ? 'Осталось собрать: <b style="color:var(--warning);">' + formatMoney(remaining) + ' ₽</b>' : '<b style="color:var(--success);">✅ Все собрали! Спасибо!</b>') + '</div></div></div>';
 html += '<div style="overflow-x:auto;"><table class="data-table"><thead><tr><th style="width:40px">№</th><th>ФИО ребёнка</th><th style="width:120px">Сумма</th><th style="width:100px; text-align:center;">Статус</th></tr></thead><tbody>';
 m.students.forEach((s, i) => {
 if (!s.name && !s.amount) return;
 const rowBg = s.paid ? 'background:#f0fdf4;' : 'background:#fffbeb;';
 const isNew = isStudentNew(s, i);
-html += `<tr class="${isNew ? 'is-new' : ''}" style="${rowBg}">
-<td>${i + 1}</td>
-<td style="font-weight:600;">${escapeHtml(s.name) || '—'}</td>
-<td class="amount">${s.amount ? formatMoney(s.amount) + ' ₽' : '—'}</td>
-<td style="text-align:center;" class="${s.paid ? 'status-paid' : 'status-unpaid'}">
-${s.paid ? '✔ Оплачено' : '⏳ Ожидается'}
-</td>
-</tr>`;
+html += '<tr class="' + (isNew ? 'is-new' : '') + '" style="' + rowBg + '"><td>' + (i + 1) + '</td><td style="font-weight:600;">' + (escapeHtml(s.name) || '—') + '</td><td class="amount">' + (s.amount ? formatMoney(s.amount) + ' ₽' : '—') + '</td><td style="text-align:center;" class="' + (s.paid ? 'status-paid' : 'status-unpaid') + '">' + (s.paid ? '✔ Оплачено' : '⏳ Ожидается') + '</td></tr>';
 });
 if (tc > 0) {
-html += `<tr class="totals-row"><td colspan="2"><b>ИТОГО:</b> сдали ${pc} из ${tc}</td><td class="amount"><b>${formatMoney(tp)} ₽</b></td><td><small>ожидалось ${formatMoney(te)} ₽</small></td></tr>`;
+html += '<tr class="totals-row"><td colspan="2"><b>ИТОГО:</b> сдали ' + pc + ' из ' + tc + '</td><td class="amount"><b>' + formatMoney(tp) + ' ₽</b></td><td><small>ожидалось ' + formatMoney(te) + ' ₽</small></td></tr>';
 } else {
 html += '<tr><td colspan="4" style="text-align:center;color:var(--light-gray);padding:20px">Нет данных</td></tr>';
 }
 html += '</tbody></table></div>';
-html += `<div class="hint" style="margin-top:16px;">💡 <b>Как оплатить:</b> Переводите деньги на карту с пометкой "Имя ребенка" и сообщайте казначею в чате.</div>`;
+html += '<div class="hint" style="margin-top:16px;">💡 <b>Как оплатить:</b> Переводите деньги на карту с пометкой "Имя ребенка" и сообщайте казначею в чате.</div>';
 document.getElementById('contributionsTable').innerHTML = html;
 }
 function renderExpenses() {
@@ -1466,38 +1481,23 @@ const income = calcIncome(m) + Number(m.additionalIncome || 0);
 const balance = income - t + Number(m.prevBalance || 0);
 const changes = sectionChanges.expenses || 0;
 if (changes > 0) {
-html += `<div class="changes-banner">
-<div class="cb-icon">🔔</div>
-<div class="cb-text"><b>Новые расходы!</b> С вашего последнего визита ${changes === 1 ? 'добавлен 1 расход' : `добавлен${changes < 5 ? 'о' : 'о'} ${changes} ${changes === 1 ? 'расход' : (changes < 5 ? 'расхода' : 'расходов')}`}. Новые строки выделены.</div>
-</div>`;
+html += '<div class="changes-banner"><div class="cb-icon">🔔</div><div class="cb-text"><b>Новые расходы!</b> С вашего последнего визита ' + (changes === 1 ? 'добавлен 1 расход' : 'добавлено ' + changes + ' расходов') + '. Новые строки выделены.</div></div>';
 }
-html += `<div class="parent-dashboard-header" style="margin-bottom:16px; border-left: 4px solid var(--info);">
-<div style="font-size:2em; margin-right:12px;"></div>
-<div>
-<h3 style="margin:0; font-size:1.1em; color:var(--dark);">Финансы группы: ${escapeHtml(m.name)}</h3>
-<div style="color:var(--gray); font-size:0.9em; margin-top:6px; line-height: 1.5;">
-Бюджет: <b>${formatMoney(income)} ₽</b> · Расход: <b style="color:var(--danger);">${formatMoney(t)} ₽</b> · Остаток: <b style="color:var(--brand-green);">${formatMoney(balance)} ₽</b>
-</div>
-</div>
-</div>`;
+html += '<div class="parent-dashboard-header" style="margin-bottom:16px; border-left: 4px solid var(--info);"><div style="font-size:2em; margin-right:12px;">📊</div><div><h3 style="margin:0; font-size:1.1em; color:var(--dark);">Финансы группы: ' + escapeHtml(m.name) + '</h3><div style="color:var(--gray); font-size:0.9em; margin-top:6px; line-height: 1.5;">Бюджет: <b>' + formatMoney(income) + ' ₽</b> · Расход: <b style="color:var(--danger);">' + formatMoney(t) + ' ₽</b> · Остаток: <b style="color:var(--brand-green);">' + formatMoney(balance) + ' ₽</b></div></div></div>';
 html += '<div style="overflow-x:auto;"><table class="data-table"><thead><tr><th style="width:40px">№</th><th>На что потрачено</th><th style="width:120px; text-align:right;">Сумма</th></tr></thead><tbody>';
 m.expenses.forEach((e, i) => {
 const isNew = isExpenseNew(e, i);
-html += `<tr class="${isNew ? 'is-new' : ''}">
-<td>${i + 1}</td>
-<td style="font-weight:500;">${escapeHtml(e.description) || '—'}</td>
-<td class="amount" style="text-align:right; color:var(--danger);">- ${e.amount ? formatMoney(e.amount) + ' ₽' : '—'}</td>
-</tr>`;
+html += '<tr class="' + (isNew ? 'is-new' : '') + '"><td>' + (i + 1) + '</td><td style="font-weight:500;">' + (escapeHtml(e.description) || '—') + '</td><td class="amount" style="text-align:right; color:var(--danger);">- ' + (e.amount ? formatMoney(e.amount) + ' ₽' : '—') + '</td></tr>';
 });
 if (m.expenses.length) {
-html += `<tr class="totals-row"><td colspan="2"><b>ИТОГО РАСХОД:</b></td><td class="amount" style="text-align:right;"><b>${formatMoney(t)} ₽</b></td></tr>`;
+html += '<tr class="totals-row"><td colspan="2"><b>ИТОГО РАСХОД:</b></td><td class="amount" style="text-align:right;"><b>' + formatMoney(t) + ' ₽</b></td></tr>';
 } else {
 html += '<tr><td colspan="3" style="text-align:center;color:var(--light-gray);padding:20px">Расходов в этом месяце пока не было</td></tr>';
 }
 html += '</tbody></table></div>';
 document.getElementById('expensesTable').innerHTML = html;
 }
-function renderCommittee() { const c = document.getElementById('committeeList'); if (!data.committee.length) { c.innerHTML = '<div class="news-empty">Состав комитета ещё не заполнен</div>'; return; } let html = '<div class="committee-grid">'; data.committee.forEach(mb => { if (!mb.name) return; let cls = 'committee-card'; const r = (mb.role||'').toLowerCase(); if (r.includes('председатель')) cls += ' chair'; else if (r.includes('казначей')||r.includes('бухгалтер')) cls += ' treasurer'; const ph = mb.phone ? `<div class="member-phone">📞 <a href="tel:${mb.phone.replace(/[^\d+]/g,'')}">${escapeHtml(mb.phone)}</a></div>` : ''; html += `<div class="${cls}"><div class="member-name">${escapeHtml(mb.name)}</div><div class="member-role">${escapeHtml(mb.role||'Член комитета')}</div>${ph}</div>`; }); html += '</div>'; c.innerHTML = html; }
+function renderCommittee() { const c = document.getElementById('committeeList'); if (!data.committee.length) { c.innerHTML = '<div class="news-empty">Состав комитета ещё не заполнен</div>'; return; } let html = '<div class="committee-grid">'; data.committee.forEach(mb => { if (!mb.name) return; let cls = 'committee-card'; const r = (mb.role||'').toLowerCase(); if (r.indexOf('председатель') !== -1) cls += ' chair'; else if (r.indexOf('казначей') !== -1 || r.indexOf('бухгалтер') !== -1) cls += ' treasurer'; const ph = mb.phone ? '<div class="member-phone"> <a href="tel:' + mb.phone.replace(/[^\d+]/g,'') + '">' + escapeHtml(mb.phone) + '</a></div>' : ''; html += '<div class="' + cls + '"><div class="member-name">' + escapeHtml(mb.name) + '</div><div class="member-role">' + escapeHtml(mb.role||'Член комитета') + '</div>' + ph + '</div>'; }); html += '</div>'; c.innerHTML = html; }
 function renderArchive() {
 const c = document.getElementById('archiveList');
 if (!data.archive.length) { c.innerHTML = '<div class="news-empty">Архив пуст</div>'; return; }
@@ -1505,15 +1505,7 @@ let html = '<div class="hint" style="margin-bottom:16px;">💡 <b>Скачать
 data.archive.slice().reverse().forEach(m => {
 const inc = calcIncome(m), ai = Number(m.additionalIncome||0), exp = calcExpense(m), bal = Number(m.prevBalance||0)+inc+ai-exp;
 const pc = m.students.filter(s => s.paid).length, tc = m.students.filter(s => s.name).length;
-html += `<div class="archive-item">
-<div class="archive-item-info">
-<strong>${escapeHtml(m.name)}</strong>
-<small>Приход: ${formatMoney(inc)} ₽ · Расход: ${formatMoney(exp)} ₽ · Остаток: <b>${formatMoney(bal)} ₽</b> · Сдали: ${pc}/${tc}</small>
-</div>
-<div class="archive-item-actions">
-<button class="btn btn-purple btn-sm" onclick="downloadArchiveReport('${m.id}')">📄 Скачать сводку</button>
-</div>
-</div>`;
+html += '<div class="archive-item"><div class="archive-item-info"><strong>' + escapeHtml(m.name) + '</strong><small>Приход: ' + formatMoney(inc) + ' ₽ · Расход: ' + formatMoney(exp) + ' ₽ · Остаток: <b>' + formatMoney(bal) + ' ₽</b> · Сдали: ' + pc + '/' + tc + '</small></div><div class="archive-item-actions"><button class="btn btn-purple btn-sm" onclick="downloadArchiveReport(\'' + m.id + '\')">📄 Скачать сводку</button></div></div>';
 });
 c.innerHTML = html;
 }
@@ -1531,11 +1523,39 @@ const pc = m.students.filter(s => s.paid).length;
 const tc = m.students.filter(s => s.name).length;
 const paidList = m.students.filter(s => s.name && s.paid);
 const unpaidList = m.students.filter(s => s.name && !s.paid);
-const generatedDate = new Date().toLocaleString('ru-RU', {
-day: '2-digit', month: '2-digit', year: 'numeric',
-hour: '2-digit', minute: '2-digit'
+const generatedDate = new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+const totalExpected = m.students.reduce((s, x) => s + (x.name ? Number(x.amount || 0) : 0), 0);
+let studentsHtml = '';
+if (tc > 0) {
+studentsHtml = '<table><thead><tr><th style="width:50px;">№</th><th>ФИО ребёнка</th><th style="width:120px;">Сумма</th><th style="width:120px; text-align:center;">Статус</th></tr></thead><tbody>';
+m.students.filter(s => s.name).forEach((s, i) => {
+studentsHtml += '<tr><td>' + (i + 1) + '</td><td>' + escapeHtml(s.name) + '</td><td class="amount">' + (s.amount ? formatMoney(s.amount) + ' ₽' : '—') + '</td><td style="text-align:center;" class="' + (s.paid ? 'status-paid' : 'status-unpaid') + '">' + (s.paid ? '✔ Оплачено' : '⏳ Ожидается') + '</td></tr>';
 });
-const htmlContent = '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Сводка — ' + escapeHtml(m.name) + ' — Группа №' + escapeHtml(g.number) + ' ' + escapeHtml(g.name) + '</title><style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; padding: 20px; } .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; } .header { background: linear-gradient(135deg, #2d8b4d 0%, #e87722 100%); color: white; padding: 40px 30px; text-align: center; } .header-icon { font-size: 3em; margin-bottom: 10px; } .header h1 { font-size: 2em; margin-bottom: 8px; font-weight: 800; } .header h2 { font-size: 1.3em; opacity: 0.95; font-weight: 600; } .header .subtitle { font-size: 0.9em; opacity: 0.85; margin-top: 8px; } .content { padding: 30px; } .section { margin-bottom: 30px; } .section-title { font-size: 1.4em; font-weight: 700; color: #2d8b4d; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 3px solid #e87722; display: flex; align-items: center; gap: 10px; } .section-icon { font-size: 1.2em; } .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; } .summary-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 12px; text-align: center; border-left: 4px solid #2d8b4d; } .summary-card.green { border-left-color: #28a745; } .summary-card.red { border-left-color: #dc3545; } .summary-card.orange { border-left-color: #fd7e14; } .summary-card.blue { border-left-color: #17a2b8; } .summary-label { font-size: 0.8em; text-transform: uppercase; color: #666; margin-bottom: 6px; font-weight: 600; } .summary-value { font-size: 1.8em; font-weight: 800; color: #333; } .summary-value.positive { color: #28a745; } .summary-value.negative { color: #dc3545; } table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); } th { background: #2d8b4d; color: white; padding: 12px; text-align: left; font-size: 0.85em; text-transform: uppercase; font-weight: 700; } td { padding: 12px; border-top: 1px solid #e9ecef; font-size: 0.95em; } tr:hover { background: #f8f9fa; } .status-paid { color: #28a745; font-weight: 700; } .status-unpaid { color: #fd7e14; font-weight: 700; } .amount { font-weight: 600; text-align: right; } .totals-row { background: #fff9e6 !important; font-weight: 700; border-top: 2px solid #e87722; } .totals-row td { padding: 15px 12px; font-size: 1.05em; } .expense-amount { color: #dc3545; } .footer { background: #f8f9fa; padding: 20px 30px; text-align: center; color: #666; font-size: 0.85em; border-top: 2px solid #e9ecef; } .footer strong { color: #2d8b4d; } .stats-box { background: #e8f5e9; border-left: 4px solid #28a745; padding: 15px 20px; border-radius: 8px; margin: 20px 0; } .stats-box-title { font-weight: 700; color: #2d8b4d; margin-bottom: 8px; font-size: 1.05em; } .stats-box-content { display: flex; gap: 20px; flex-wrap: wrap; } .stats-item { display: flex; align-items: center; gap: 8px; } .stats-item-icon { font-size: 1.5em; } .stats-item-text { font-size: 0.95em; } .stats-item-text strong { color: #2d8b4d; font-size: 1.2em; } .no-data { text-align: center; color: #999; padding: 30px; font-style: italic; } @media print { body { background: white; padding: 0; } .container { box-shadow: none; border-radius: 0; } .no-print { display: none; } } .print-button { position: fixed; top: 20px; right: 20px; background: #2d8b4d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; } .print-button:hover { background: #236b3a; transform: translateY(-2px); }</style></head><body><button class="print-button no-print" onclick="window.print()">🖨️ Распечатать / Сохранить PDF</button><div class="container"><div class="header"><div class="header-icon">💰</div><h1>Финансовая сводка</h1><h2>' + escapeHtml(m.name) + '</h2><div class="subtitle">Группа №' + escapeHtml(g.number) + ' «' + escapeHtml(g.name) + '»</div></div><div class="content"><div class="section"><div class="section-title"><span class="section-icon">📊</span>Общая информация</div><div class="summary-grid"><div class="summary-card blue"><div class="summary-label">Остаток с прошлого месяца</div><div class="summary-value">' + formatMoney(prevBal) + ' ₽</div></div><div class="summary-card green"><div class="summary-label">Приход (взносы)</div><div class="summary-value positive">' + formatMoney(inc) + ' ₽</div></div><div class="summary-card orange"><div class="summary-label">Доп. приход</div><div class="summary-value">' + formatMoney(ai) + ' ₽</div></div><div class="summary-card red"><div class="summary-label">Расход</div><div class="summary-value negative">' + formatMoney(exp) + ' ₽</div></div><div class="summary-card green"><div class="summary-label">Итоговый остаток</div><div class="summary-value positive">' + formatMoney(balance) + ' ₽</div></div></div><div class="stats-box"><div class="stats-box-title">📈 Статистика сбора взносов</div><div class="stats-box-content"><div class="stats-item"><span class="stats-item-icon">✅</span><div class="stats-item-text">Сдали: <strong>' + pc + '</strong> из ' + tc + '</div></div><div class="stats-item"><span class="stats-item-icon">⏳</span><div class="stats-item-text">Ожидают: <strong>' + (tc - pc) + '</strong></div></div><div class="stats-item"><span class="stats-item-icon">💰</span><div class="stats-item-text">Собрано: <strong>' + formatMoney(inc) + ' ₽</strong></div></div></div></div></div><div class="section"><div class="section-title"><span class="section-icon">💰</span>Взносы родителей</div>' + (tc > 0 ? '<table><thead><tr><th style="width: 50px;">№</th><th>ФИО ребёнка</th><th style="width: 120px;">Сумма</th><th style="width: 120px; text-align: center;">Статус</th></tr></thead><tbody>' + m.students.filter(s => s.name).map((s, i) => '<tr><td>' + (i + 1) + '</td><td>' + escapeHtml(s.name) + '</td><td class="amount">' + (s.amount ? formatMoney(s.amount) + ' ₽' : '—') + '</td><td style="text-align: center;" class="' + (s.paid ? 'status-paid' : 'status-unpaid') + '">' + (s.paid ? '✔ Оплачено' : '⏳ Ожидается') + '</td></tr>').join('') + '<tr class="totals-row"><td colspan="2"><strong>ИТОГО:</strong> сдали ' + pc + ' из ' + tc + '</td><td class="amount"><strong>' + formatMoney(inc) + ' ₽</strong></td><td style="text-align: center;"><small>ожидалось ' + formatMoney(m.students.reduce((s, x) => s + (x.name ? Number(x.amount || 0) : 0), 0)) + ' ₽</small></td></tr></tbody></table>' : '<div class="no-data">Нет данных о взносах</div>') + '</div>' + (m.expenses.length > 0 ? '<div class="section"><div class="section-title"><span class="section-icon">💸</span>Расходы</div><table><thead><tr><th style="width: 50px;">№</th><th>На что потрачено</th><th style="width: 150px; text-align: right;">Сумма</th></tr></thead><tbody>' + m.expenses.map((e, i) => '<tr><td>' + (i + 1) + '</td><td>' + escapeHtml(e.description) + '</td><td class="amount expense-amount">- ' + (e.amount ? formatMoney(e.amount) + ' ₽' : '—') + '</td></tr>').join('') + '<tr class="totals-row"><td colspan="2"><strong>ИТОГО РАСХОД:</strong></td><td class="amount expense-amount"><strong>' + formatMoney(exp) + ' ₽</strong></td></tr></tbody></table></div>' : '') + (paidList.length > 0 ? '<div class="section"><div class="section-title"><span class="section-icon">✅</span>Сдали взносы (' + paidList.length + ')</div><div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745;">' + paidList.map(s => '<div style="padding: 6px 0; border-bottom: 1px solid #e9ecef;">✔ ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>').join('') + '</div></div>' : '') + (unpaidList.length > 0 ? '<div class="section"><div class="section-title"><span class="section-icon"></span>Ожидают оплаты (' + unpaidList.length + ')</div><div style="background: #fffbeb; padding: 15px; border-radius: 8px; border-left: 4px solid #fd7e14;">' + unpaidList.map(s => '<div style="padding: 6px 0; border-bottom: 1px solid #e9ecef;">⏳ ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>').join('') + '</div></div>' : '') + '</div><div class="footer"><p><strong>Родительский комитет</strong> · Группа №' + escapeHtml(g.number) + ' «' + escapeHtml(g.name) + '»</p><p style="margin-top: 8px;">Документ сформирован: ' + generatedDate + '</p><p style="margin-top: 8px; font-size: 0.8em; opacity: 0.7;">Этот документ можно распечатать или сохранить как PDF</p></div></div></body></html>';
+studentsHtml += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО:</strong> сдали ' + pc + ' из ' + tc + '</td><td class="amount"><strong>' + formatMoney(inc) + ' ₽</strong></td><td style="text-align:center;"><small>ожидалось ' + formatMoney(totalExpected) + ' ₽</small></td></tr></tbody></table>';
+} else {
+studentsHtml = '<div class="no-data">Нет данных о взносах</div>';
+}
+let expensesHtml = '';
+if (m.expenses.length > 0) {
+expensesHtml = '<div class="section"><div class="section-title"><span class="section-icon">💸</span>Расходы</div><table><thead><tr><th style="width:50px;">№</th><th>На что потрачено</th><th style="width:150px; text-align:right;">Сумма</th></tr></thead><tbody>';
+m.expenses.forEach((e, i) => {
+expensesHtml += '<tr><td>' + (i + 1) + '</td><td>' + escapeHtml(e.description || '—') + '</td><td class="amount expense-amount">- ' + (e.amount ? formatMoney(e.amount) + ' ₽' : '—') + '</td></tr>';
+});
+expensesHtml += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО РАСХОД:</strong></td><td class="amount expense-amount"><strong>' + formatMoney(exp) + ' ₽</strong></td></tr></tbody></table></div>';
+}
+let paidListHtml = '';
+if (paidList.length > 0) {
+paidListHtml = '<div class="section"><div class="section-title"><span class="section-icon">✅</span>Сдали взносы (' + paidList.length + ')</div><div style="background:#f0fdf4; padding:15px; border-radius:8px; border-left:4px solid #28a745;">';
+paidList.forEach(s => { paidListHtml += '<div style="padding:6px 0; border-bottom:1px solid #e9ecef;">✔ ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>'; });
+paidListHtml += '</div></div>';
+}
+let unpaidListHtml = '';
+if (unpaidList.length > 0) {
+unpaidListHtml = '<div class="section"><div class="section-title"><span class="section-icon"></span>Ожидают оплаты (' + unpaidList.length + ')</div><div style="background:#fffbeb; padding:15px; border-radius:8px; border-left:4px solid #fd7e14;">';
+unpaidList.forEach(s => { unpaidListHtml += '<div style="padding:6px 0; border-bottom:1px solid #e9ecef;">⏳ ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>'; });
+unpaidListHtml += '</div></div>';
+}
+const htmlContent = '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Сводка — ' + escapeHtml(m.name) + ' — Группа №' + escapeHtml(g.number) + ' ' + escapeHtml(g.name) + '</title><style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; padding: 20px; } .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; } .header { background: linear-gradient(135deg, #2d8b4d 0%, #e87722 100%); color: white; padding: 40px 30px; text-align: center; } .header-icon { font-size: 3em; margin-bottom: 10px; } .header h1 { font-size: 2em; margin-bottom: 8px; font-weight: 800; } .header h2 { font-size: 1.3em; opacity: 0.95; font-weight: 600; } .header .subtitle { font-size: 0.9em; opacity: 0.85; margin-top: 8px; } .content { padding: 30px; } .section { margin-bottom: 30px; } .section-title { font-size: 1.4em; font-weight: 700; color: #2d8b4d; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 3px solid #e87722; display: flex; align-items: center; gap: 10px; } .section-icon { font-size: 1.2em; } .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; } .summary-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 12px; text-align: center; border-left: 4px solid #2d8b4d; } .summary-card.green { border-left-color: #28a745; } .summary-card.red { border-left-color: #dc3545; } .summary-card.orange { border-left-color: #fd7e14; } .summary-card.blue { border-left-color: #17a2b8; } .summary-label { font-size: 0.8em; text-transform: uppercase; color: #666; margin-bottom: 6px; font-weight: 600; } .summary-value { font-size: 1.8em; font-weight: 800; color: #333; } .summary-value.positive { color: #28a745; } .summary-value.negative { color: #dc3545; } table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); } th { background: #2d8b4d; color: white; padding: 12px; text-align: left; font-size: 0.85em; text-transform: uppercase; font-weight: 700; } td { padding: 12px; border-top: 1px solid #e9ecef; font-size: 0.95em; } tr:hover { background: #f8f9fa; } .status-paid { color: #28a745; font-weight: 700; } .status-unpaid { color: #fd7e14; font-weight: 700; } .amount { font-weight: 600; text-align: right; } .totals-row { background: #fff9e6 !important; font-weight: 700; border-top: 2px solid #e87722; } .totals-row td { padding: 15px 12px; font-size: 1.05em; } .expense-amount { color: #dc3545; } .footer { background: #f8f9fa; padding: 20px 30px; text-align: center; color: #666; font-size: 0.85em; border-top: 2px solid #e9ecef; } .footer strong { color: #2d8b4d; } .stats-box { background: #e8f5e9; border-left: 4px solid #28a745; padding: 15px 20px; border-radius: 8px; margin: 20px 0; } .stats-box-title { font-weight: 700; color: #2d8b4d; margin-bottom: 8px; font-size: 1.05em; } .stats-box-content { display: flex; gap: 20px; flex-wrap: wrap; } .stats-item { display: flex; align-items: center; gap: 8px; } .stats-item-icon { font-size: 1.5em; } .stats-item-text { font-size: 0.95em; } .stats-item-text strong { color: #2d8b4d; font-size: 1.2em; } .no-data { text-align: center; color: #999; padding: 30px; font-style: italic; } @media print { body { background: white; padding: 0; } .container { box-shadow: none; border-radius: 0; } .no-print { display: none; } } .print-button { position: fixed; top: 20px; right: 20px; background: #2d8b4d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; } .print-button:hover { background: #236b3a; transform: translateY(-2px); }</style></head><body><button class="print-button no-print" onclick="window.print()">🖨️ Распечатать / Сохранить PDF</button><div class="container"><div class="header"><div class="header-icon">💰</div><h1>Финансовая сводка</h1><h2>' + escapeHtml(m.name) + '</h2><div class="subtitle">Группа №' + escapeHtml(g.number) + ' «' + escapeHtml(g.name) + '»</div></div><div class="content"><div class="section"><div class="section-title"><span class="section-icon">📊</span>Общая информация</div><div class="summary-grid"><div class="summary-card blue"><div class="summary-label">Остаток с прошлого месяца</div><div class="summary-value">' + formatMoney(prevBal) + ' ₽</div></div><div class="summary-card green"><div class="summary-label">Приход (взносы)</div><div class="summary-value positive">' + formatMoney(inc) + ' ₽</div></div><div class="summary-card orange"><div class="summary-label">Доп. приход</div><div class="summary-value">' + formatMoney(ai) + ' ₽</div></div><div class="summary-card red"><div class="summary-label">Расход</div><div class="summary-value negative">' + formatMoney(exp) + ' ₽</div></div><div class="summary-card green"><div class="summary-label">Итоговый остаток</div><div class="summary-value positive">' + formatMoney(balance) + ' ₽</div></div></div><div class="stats-box"><div class="stats-box-title">📈 Статистика сбора взносов</div><div class="stats-box-content"><div class="stats-item"><span class="stats-item-icon">✅</span><div class="stats-item-text">Сдали: <strong>' + pc + '</strong> из ' + tc + '</div></div><div class="stats-item"><span class="stats-item-icon">⏳</span><div class="stats-item-text">Ожидают: <strong>' + (tc - pc) + '</strong></div></div><div class="stats-item"><span class="stats-item-icon">💰</span><div class="stats-item-text">Собрано: <strong>' + formatMoney(inc) + ' ₽</strong></div></div></div></div></div><div class="section"><div class="section-title"><span class="section-icon">💰</span>Взносы родителей</div>' + studentsHtml + '</div>' + expensesHtml + paidListHtml + unpaidListHtml + '</div><div class="footer"><p><strong>Родительский комитет</strong> · Группа №' + escapeHtml(g.number) + ' «' + escapeHtml(g.name) + '»</p><p style="margin-top:8px;">Документ сформирован: ' + generatedDate + '</p><p style="margin-top:8px; font-size:0.8em; opacity:0.7;">Этот документ можно распечатать или сохранить как PDF</p></div></div></body></html>';
 const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
 const url = URL.createObjectURL(blob);
 const a = document.createElement('a');
@@ -1548,19 +1568,243 @@ document.body.removeChild(a);
 URL.revokeObjectURL(url);
 showToast('✅ Готово', 'Сводка скачана. Откройте файл в браузере.', 'info');
 }
+
+// ============ ПУБЛИЧНЫЕ СВОДКИ ============
+function getReportUrl(reportId) {
+const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
+return base + 'svodka.html?token=' + reportId;
+}
+
+async function renderAdminReports() {
+const container = document.getElementById('admin-reports');
+container.innerHTML = '<p style="color:var(--gray)">Загрузка сводок...</p>';
+try {
+const snap = await db.collection('public_reports').where('groupId', '==', currentGroupId).orderBy('createdAt', 'desc').get();
+const reports = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+let html = '<div class="admin-card"><div class="admin-card-title"> Публичные сводки</div>';
+html += '<div class="hint"> Создавайте публичные ссылки для родителей. Ссылка + пароль скидываются в чат. Любой родитель (даже без аккаунта) сможет посмотреть сводку.</div>';
+html += '<button class="btn btn-success" onclick="openCreateReportModal()">➕ Создать сводку</button></div>';
+if (reports.length === 0) {
+html += '<div class="news-empty" style="padding:30px;">Публичных сводок ещё нет</div>';
+} else {
+reports.forEach(r => {
+const statusClass = r.active ? 'active' : 'inactive';
+const statusText = r.active ? ' Активна' : '🔴 Отозвана';
+let createdDate = '';
+if (r.createdAt) {
+if (r.createdAt.toDate) createdDate = formatDateTime(r.createdAt.toDate().toISOString());
+else if (typeof r.createdAt === 'string') createdDate = formatDateTime(r.createdAt);
+}
+html += '<div class="report-card ' + statusClass + '">';
+html += '<div class="report-card-header"><div><div class="report-card-title">' + escapeHtml(r.title || 'Без названия') + '</div>';
+html += '<div class="report-card-meta">📅 Создана: ' + createdDate + ' · <span class="report-status ' + statusClass + '">' + statusText + '</span></div>';
+if (r.archiveMonthName || r.currentMonthName) {
+html += '<div class="report-card-meta">📊 ' + escapeHtml(r.archiveMonthName || '—') + ' → ' + escapeHtml(r.currentMonthName || '—') + '</div>';
+}
+html += '</div></div>';
+html += '<div class="report-link-box">🔗 ' + escapeHtml(getReportUrl(r.id)) + '</div>';
+html += '<div class="report-card-actions">';
+html += '<button class="btn btn-info btn-sm" onclick="copyReportLink(\'' + r.id + '\')"> Копировать ссылку</button>';
+html += '<button class="btn btn-primary btn-sm" onclick="openEditReportModal(\'' + r.id + '\')">✏️ Редактировать</button>';
+html += '<button class="btn btn-secondary btn-sm" onclick="updateReportData(\'' + r.id + '\')">🔄 Обновить данные</button>';
+html += '<button class="btn btn-gold btn-sm" onclick="changeReportPassword(\'' + r.id + '\')">🔑 Сменить пароль</button>';
+if (r.active) {
+html += '<button class="btn btn-danger btn-sm" onclick="revokeReport(\'' + r.id + '\')"> Отозвать</button>';
+} else {
+html += '<button class="btn btn-success btn-sm" onclick="activateReport(\'' + r.id + '\')">✅ Активировать</button>';
+}
+html += '<button class="btn btn-danger btn-sm" onclick="deleteReport(\'' + r.id + '\')">🗑 Удалить</button>';
+html += '</div></div>';
+});
+}
+container.innerHTML = html;
+} catch(e) { container.innerHTML = '<p style="color:var(--danger)">Ошибка: ' + e.message + '</p>'; }
+}
+
+function openCreateReportModal() {
+const archiveSelect = document.getElementById('reportArchiveMonth');
+const currentSelect = document.getElementById('reportCurrentMonth');
+archiveSelect.innerHTML = '<option value="">— Не показывать —</option>';
+currentSelect.innerHTML = '';
+data.archive.forEach(m => {
+const o = document.createElement('option');
+o.value = m.id; o.textContent = m.name;
+archiveSelect.appendChild(o);
+});
+data.months.forEach(m => {
+const o = document.createElement('option');
+o.value = m.id; o.textContent = m.name + (m.id === currentMonthId ? ' (текущий)' : '');
+if (m.id === currentMonthId) o.selected = true;
+currentSelect.appendChild(o);
+});
+if (data.archive.length > 0) archiveSelect.value = data.archive[data.archive.length - 1].id;
+document.getElementById('reportTitle').value = '';
+document.getElementById('reportComment').value = '';
+document.getElementById('reportPassword').value = genPassword();
+document.getElementById('reportShowPaid').checked = true;
+document.getElementById('reportShowUnpaid').checked = true;
+document.getElementById('createReportModal').classList.add('active');
+}
+
+async function confirmCreateReport() {
+const title = document.getElementById('reportTitle').value.trim();
+const archiveMonthId = document.getElementById('reportArchiveMonth').value;
+const currentMonthIdVal = document.getElementById('reportCurrentMonth').value;
+const comment = document.getElementById('reportComment').value.trim();
+const password = document.getElementById('reportPassword').value.trim();
+const showPaid = document.getElementById('reportShowPaid').checked;
+const showUnpaid = document.getElementById('reportShowUnpaid').checked;
+if (!title) { alert('Введите название сводки'); return; }
+if (!password) { alert('Задайте пароль'); return; }
+if (!currentMonthIdVal && !archiveMonthId) { alert('Выберите хотя бы один месяц'); return; }
+const archiveMonth = archiveMonthId ? data.archive.find(m => m.id === archiveMonthId) : null;
+const currentMonth = currentMonthIdVal ? data.months.find(m => m.id === currentMonthIdVal) : null;
+const g = getGroup(currentGroupId);
+const reportData = {
+groupId: currentGroupId,
+title: title,
+password: password,
+comment: comment,
+showPaid: showPaid,
+showUnpaid: showUnpaid,
+active: true,
+archiveMonthName: archiveMonth ? archiveMonth.name : null,
+currentMonthName: currentMonth ? currentMonth.name : null,
+groupInfo: { number: g ? g.number : '', name: g ? g.name : '' },
+archiveMonth: archiveMonth ? JSON.parse(JSON.stringify(archiveMonth)) : null,
+currentMonth: currentMonth ? JSON.parse(JSON.stringify(currentMonth)) : null,
+createdBy: currentUserId,
+createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+};
+try {
+await db.collection('public_reports').add(reportData);
+closeModal('createReportModal');
+showToast('✅ Готово', 'Сводка создана! Скопируйте ссылку и пароль.', 'info');
+renderAdminReports();
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
+}
+
+async function copyReportLink(reportId) {
+const url = getReportUrl(reportId);
+try {
+await navigator.clipboard.writeText(url);
+showToast(' Скопировано', 'Ссылка скопирована в буфер обмена', 'info');
+} catch(e) {
+prompt('Скопируйте ссылку вручную:', url);
+}
+}
+
+async function openEditReportModal(reportId) {
+try {
+const doc = await db.collection('public_reports').doc(reportId).get();
+if (!doc.exists) { alert('Сводка не найдена'); return; }
+const r = doc.data();
+currentEditingReportId = reportId;
+document.getElementById('editReportTitle').value = r.title || '';
+document.getElementById('editReportComment').value = r.comment || '';
+document.getElementById('editReportPassword').value = r.password || '';
+document.getElementById('editReportShowPaid').checked = r.showPaid !== false;
+document.getElementById('editReportShowUnpaid').checked = r.showUnpaid !== false;
+document.getElementById('editReportModal').classList.add('active');
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
+}
+
+async function confirmEditReport() {
+if (!currentEditingReportId) return;
+const title = document.getElementById('editReportTitle').value.trim();
+const comment = document.getElementById('editReportComment').value.trim();
+const password = document.getElementById('editReportPassword').value.trim();
+const showPaid = document.getElementById('editReportShowPaid').checked;
+const showUnpaid = document.getElementById('editReportShowUnpaid').checked;
+if (!title) { alert('Введите название'); return; }
+if (!password) { alert('Задайте пароль'); return; }
+try {
+await db.collection('public_reports').doc(currentEditingReportId).update({
+title: title, comment: comment, password: password, showPaid: showPaid, showUnpaid: showUnpaid,
+updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+closeModal('editReportModal');
+showToast('✅ Сохранено', 'Изменения применены', 'info');
+renderAdminReports();
+} catch(e) { alert(' Ошибка: ' + e.message); }
+}
+
+async function updateReportData(reportId) {
+if (!confirm('Обновить данные сводки из текущих данных группы?')) return;
+try {
+const doc = await db.collection('public_reports').doc(reportId).get();
+if (!doc.exists) { alert('Сводка не найдена'); return; }
+const r = doc.data();
+const updates = { updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+if (r.archiveMonth && r.archiveMonth.id) {
+const archM = data.archive.find(m => m.id === r.archiveMonth.id);
+if (archM) updates.archiveMonth = JSON.parse(JSON.stringify(archM));
+}
+if (r.currentMonth && r.currentMonth.id) {
+const curM = data.months.find(m => m.id === r.currentMonth.id);
+if (curM) updates.currentMonth = JSON.parse(JSON.stringify(curM));
+}
+const g = getGroup(currentGroupId);
+if (g) updates.groupInfo = { number: g.number, name: g.name };
+await db.collection('public_reports').doc(reportId).update(updates);
+showToast('✅ Обновлено', 'Данные сводки обновлены', 'info');
+renderAdminReports();
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
+}
+
+async function changeReportPassword(reportId) {
+const newPwd = prompt('Новый пароль для сводки:', genPassword());
+if (!newPwd || !newPwd.trim()) return;
+try {
+await db.collection('public_reports').doc(reportId).update({
+password: newPwd.trim(),
+updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+showToast('🔑 Пароль изменён', 'Новый пароль: ' + newPwd.trim(), 'info');
+renderAdminReports();
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
+}
+
+async function revokeReport(reportId) {
+if (!confirm('Отозвать ссылку? Родители больше не смогут по ней войти.')) return;
+try {
+await db.collection('public_reports').doc(reportId).update({
+active: false,
+updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+showToast('🚫 Ссылка отозвана', 'Сводка деактивирована', 'warning');
+renderAdminReports();
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
+}
+
+async function activateReport(reportId) {
+try {
+await db.collection('public_reports').doc(reportId).update({
+active: true,
+updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+showToast('✅ Ссылка активирована', 'Сводка снова доступна', 'info');
+renderAdminReports();
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
+}
+
+async function deleteReport(reportId) {
+if (!confirm('Удалить сводку? Это действие нельзя отменить.')) return;
+if (!confirm('Точно удалить?')) return;
+try {
+await db.collection('public_reports').doc(reportId).delete();
+showToast('🗑 Удалено', 'Сводка удалена', 'info');
+renderAdminReports();
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
+}
+// ============ КОНЕЦ ПУБЛИЧНЫХ СВОДОК ============
+
 async function renderAdminAlbums() {
 const container = document.getElementById('admin-albums');
 const g = getGroup(currentGroupId);
-const folder = g ? `photos/group_${g.number}/` : 'photos/';
-container.innerHTML = `
-<div class="admin-card">
-<div class="admin-card-title">➕ Создать фотоальбом</div>
-<div class="hint">💡 Сначала загрузите HTML-файл галереи в папку <code>${folder}</code> на хостинге, затем укажите его имя ниже.</div>
-<div class="form-group"><label>Название альбома</label><input type="text" id="newAlbumTitle" placeholder="Например: Новый год 2026"></div>
-<div class="form-group"><label>Имя файла (HTML)</label><input type="text" id="newAlbumFile" placeholder="Например: gallery1.html"></div>
-<button class="btn btn-success btn-block" onclick="adminCreateAlbum()">📸 Создать альбом</button>
-</div>
-<div class="admin-card"><div class="admin-card-title"> Альбомы группы ${escapeHtml(g ? groupLabel(g) : '')}</div><div id="adminAlbumsList">Загрузка...</div></div>`;
+const folder = g ? 'photos/group_' + g.number + '/' : 'photos/';
+container.innerHTML = '<div class="admin-card"><div class="admin-card-title">➕ Создать фотоальбом</div><div class="hint">💡 Сначала загрузите HTML-файл галереи в папку <code>' + folder + '</code> на хостинге, затем укажите его имя ниже.</div><div class="form-group"><label>Название альбома</label><input type="text" id="newAlbumTitle" placeholder="Например: Новый год 2026"></div><div class="form-group"><label>Имя файла (HTML)</label><input type="text" id="newAlbumFile" placeholder="Например: gallery1.html"></div><button class="btn btn-success btn-block" onclick="adminCreateAlbum()">📸 Создать альбом</button></div><div class="admin-card"><div class="admin-card-title">📸 Альбомы группы ' + escapeHtml(g ? groupLabel(g) : '') + '</div><div id="adminAlbumsList">Загрузка...</div></div>';
 await loadGroupAlbums();
 renderAdminAlbumsList();
 }
@@ -1572,7 +1816,7 @@ list.innerHTML = '';
 groupAlbums.forEach(album => {
 const div = document.createElement('div');
 div.className = 'album-admin-item';
-div.innerHTML = `<div class="album-admin-info"><div class="album-admin-title">${escapeHtml(album.title)}</div><div class="album-admin-file">📄 ${escapeHtml(album.fileName)}</div></div><button class="btn btn-danger btn-sm" onclick="adminDeleteAlbum('${album.id}')"> Удалить</button>`;
+div.innerHTML = '<div class="album-admin-info"><div class="album-admin-title">' + escapeHtml(album.title) + '</div><div class="album-admin-file">📄 ' + escapeHtml(album.fileName) + '</div></div><button class="btn btn-danger btn-sm" onclick="adminDeleteAlbum(\'' + album.id + '\')">🗑 Удалить</button>';
 list.appendChild(div);
 });
 }
@@ -1598,16 +1842,7 @@ if (success) { await loadGroupAlbums(); renderAdminAlbumsList(); }
 async function renderOwnerAlbums() {
 const container = document.getElementById('owner-albums');
 const allAlbums = await loadAllAlbums();
-let html = `
-<div class="admin-card">
-<div class="admin-card-title"> Создать фотоальбом для группы</div>
-<div class="hint">💡 Владелец может создавать альбомы для любой группы. Сначала загрузите HTML-файл в папку группы на хостинге.</div>
-<div class="form-group"><label>Группа</label><select id="ownerAlbumGroup"></select></div>
-<div class="form-group"><label>Название альбома</label><input type="text" id="ownerAlbumTitle" placeholder="Например: Выпускной 2026"></div>
-<div class="form-group"><label>Имя файла (HTML)</label><input type="text" id="ownerAlbumFile" placeholder="Например: gallery2.html"></div>
-<button class="btn btn-success btn-block" onclick="ownerCreateAlbum()">📸 Создать альбом</button>
-</div>
-<div class="admin-card"><div class="admin-card-title"> Все альбомы всех групп</div><div id="ownerAlbumsList">Загрузка...</div></div>`;
+let html = '<div class="admin-card"><div class="admin-card-title">📸 Создать фотоальбом для группы</div><div class="hint">💡 Владелец может создавать альбомы для любой группы. Сначала загрузите HTML-файл в папку группы на хостинге.</div><div class="form-group"><label>Группа</label><select id="ownerAlbumGroup"></select></div><div class="form-group"><label>Название альбома</label><input type="text" id="ownerAlbumTitle" placeholder="Например: Выпускной 2026"></div><div class="form-group"><label>Имя файла (HTML)</label><input type="text" id="ownerAlbumFile" placeholder="Например: gallery2.html"></div><button class="btn btn-success btn-block" onclick="ownerCreateAlbum()">📸 Создать альбом</button></div><div class="admin-card"><div class="admin-card-title">📸 Все альбомы всех групп</div><div id="ownerAlbumsList">Загрузка...</div></div>';
 container.innerHTML = html;
 const groupSelect = document.getElementById('ownerAlbumGroup');
 app.groups.forEach(g => {
@@ -1625,7 +1860,7 @@ allAlbums.forEach(album => {
 const g = getGroup(album.groupId);
 const div = document.createElement('div');
 div.className = 'album-admin-item';
-div.innerHTML = `<div class="album-admin-info"><div class="album-admin-title">${escapeHtml(album.title)}</div><div class="album-admin-file">📄 ${escapeHtml(album.fileName)}</div><div class="album-admin-group"> ${g ? groupLabel(g) : 'Группа не найдена'}</div></div><button class="btn btn-danger btn-sm" onclick="ownerDeleteAlbum('${album.id}')">🗑 Удалить</button>`;
+div.innerHTML = '<div class="album-admin-info"><div class="album-admin-title">' + escapeHtml(album.title) + '</div><div class="album-admin-file">📄 ' + escapeHtml(album.fileName) + '</div><div class="album-admin-group">🏫 ' + (g ? groupLabel(g) : 'Группа не найдена') + '</div></div><button class="btn btn-danger btn-sm" onclick="ownerDeleteAlbum(\'' + album.id + '\')">🗑 Удалить</button>';
 list.appendChild(div);
 });
 }
@@ -1658,24 +1893,24 @@ const msg = {
 senderId: currentUserId,
 authUid: currentAuthUid,
 senderName: currentUserName,
-senderPhone: app.users.find(u => u.id === currentUserId)?.phone || '',
-groupId: currentGroupId, subject, text,
+senderPhone: app.users.find(u => u.id === currentUserId) ? app.users.find(u => u.id === currentUserId).phone : '',
+groupId: currentGroupId, subject: subject, text: text,
 date: new Date().toISOString(), status: 'new', read: false
 };
 try {
 const ref = await db.collection('messages').add(msg);
 await createNotification({
 type: 'message', title: '📩 Новое сообщение от родителя',
-text: `${subject || 'Без темы'}: ${text.substring(0, 150)}${text.length > 150 ? '...' : ''}`,
+text: (subject || 'Без темы') + ': ' + text.substring(0, 150) + (text.length > 150 ? '...' : ''),
 from: currentUserName || 'Родитель', fromPhone: msg.senderPhone,
 groupId: currentGroupId, relatedId: ref.id,
-priority: (subject && subject.toLowerCase().includes('срочно')) ? 'high' : 'normal'
+priority: (subject && subject.toLowerCase().indexOf('срочно') !== -1) ? 'high' : 'normal'
 });
 document.getElementById('msgSubject').value = '';
 document.getElementById('msgText').value = '';
 alert('✅ Сообщение отправлено владельцу!');
 renderMyMessages();
-} catch(e) { alert(' Ошибка отправки: ' + e.message); }
+} catch(e) { alert('❌ Ошибка отправки: ' + e.message); }
 }
 async function renderMyMessages() {
 const list = document.getElementById('myMessagesList');
@@ -1693,21 +1928,8 @@ let html = '';
 snap.docs.forEach(doc => {
 const m = doc.data();
 const statusClass = m.status === 'new' ? 'new' : 'replied';
-const statusText = m.status === 'new' ? ' Ожидает ответа' : '✅ Отвечено';
-html += `<div class="message-card ${statusClass}">
-<div class="message-header">
-<div class="message-meta">
-${m.subject ? `<div class="message-subject">${escapeHtml(m.subject)}</div>` : ''}
-<div class="message-date">${formatDateTime(m.date)}</div>
-</div>
-<span class="message-status ${statusClass}">${statusText}</span>
-</div>
-<div class="message-text">${escapeHtml(m.text)}</div>
-${m.reply ? `<div class="message-reply">
-<div class="message-reply-header"> Ответ владельца (${formatDateTime(m.reply.date)})</div>
-<div class="message-reply-text">${escapeHtml(m.reply.text)}</div>
-</div>` : ''}
-</div>`;
+const statusText = m.status === 'new' ? '⏳ Ожидает ответа' : '✅ Отвечено';
+html += '<div class="message-card ' + statusClass + '"><div class="message-header"><div class="message-meta">' + (m.subject ? '<div class="message-subject">' + escapeHtml(m.subject) + '</div>' : '') + '<div class="message-date">' + formatDateTime(m.date) + '</div></div><span class="message-status ' + statusClass + '">' + statusText + '</span></div><div class="message-text">' + escapeHtml(m.text) + '</div>' + (m.reply ? '<div class="message-reply"><div class="message-reply-header"> Ответ владельца (' + formatDateTime(m.reply.date) + ')</div><div class="message-reply-text">' + escapeHtml(m.reply.text) + '</div></div>' : '') + '</div>';
 });
 list.innerHTML = html;
 } catch(e) { list.innerHTML = '<p style="color:var(--danger)">Ошибка загрузки: ' + e.message + '</p>'; }
@@ -1738,7 +1960,7 @@ try {
 const msgDoc = await db.collection('messages').doc(msgId).get();
 const originalMsg = msgDoc.data();
 await db.collection('messages').doc(msgId).update({
-reply: { text, date: new Date().toISOString() }, status: 'replied', read: true
+reply: { text: text, date: new Date().toISOString() }, status: 'replied', read: true
 });
 if (originalMsg.senderId) {
 await createNotification({
@@ -1750,7 +1972,7 @@ groupId: originalMsg.groupId, relatedId: msgId, priority: 'normal', forRole: 'pa
 }
 alert('✅ Ответ отправлен!');
 loadOwnerMessages();
-} catch(e) { alert(' Ошибка: ' + e.message); }
+} catch(e) { alert('❌ Ошибка: ' + e.message); }
 }
 async function deleteChat(msgId) {
 if (!confirm('Удалить всю переписку с этим пользователем? Это действие нельзя отменить.')) return;
@@ -1770,123 +1992,64 @@ const container = document.getElementById('owner-messages');
 let filtered = messages;
 if (messagesFilter === 'new') filtered = messages.filter(m => m.status === 'new');
 else if (messagesFilter === 'replied') filtered = messages.filter(m => m.status === 'replied');
-let html = `<div class="messages-stats">📨 Всего сообщений: ${messages.length} · 🆕 Новых: ${messages.filter(m => m.status === 'new').length} · 💬 Отвечено: ${messages.filter(m => m.status === 'replied').length}</div>`;
-html += `<div class="messages-filter">
-<button class="filter-btn ${messagesFilter === 'all' ? 'active' : ''}" onclick="setMessagesFilter('all')">Все</button>
-<button class="filter-btn ${messagesFilter === 'new' ? 'active' : ''}" onclick="setMessagesFilter('new')"> Новые</button>
-<button class="filter-btn ${messagesFilter === 'replied' ? 'active' : ''}" onclick="setMessagesFilter('replied')"> Отвеченные</button>
-</div>`;
+let html = '<div class="messages-stats">📨 Всего сообщений: ' + messages.length + ' · 🆕 Новых: ' + messages.filter(m => m.status === 'new').length + ' · 💬 Отвечено: ' + messages.filter(m => m.status === 'replied').length + '</div>';
+html += '<div class="messages-filter"><button class="filter-btn ' + (messagesFilter === 'all' ? 'active' : '') + '" onclick="setMessagesFilter(\'all\')">Все</button><button class="filter-btn ' + (messagesFilter === 'new' ? 'active' : '') + '" onclick="setMessagesFilter(\'new\')">🆕 Новые</button><button class="filter-btn ' + (messagesFilter === 'replied' ? 'active' : '') + '" onclick="setMessagesFilter(\'replied\')">💬 Отвеченные</button></div>';
 if (!filtered.length) { html += '<div class="news-empty">Нет сообщений по выбранному фильтру</div>'; }
 else {
 filtered.forEach(m => {
 const g = getGroup(m.groupId);
 const statusClass = m.status === 'new' ? 'new' : 'replied';
-html += `<div class="message-card ${statusClass}" id="msg-${m.id}">
-<div class="message-header">
-<div class="message-meta">
-<div class="message-sender">${escapeHtml(m.senderName || 'Без имени')}</div>
-<div class="message-group"> ${g ? groupLabel(g) : 'Группа не найдена'} · 📞 ${escapeHtml(m.senderPhone || 'нет телефона')}</div>
-<div class="message-date">${formatDateTime(m.date)}</div>
-</div>
-<span class="message-status ${statusClass}">${m.status === 'new' ? '🆕 Новое' : '✅ Отвечено'}</span>
-</div>
-${m.subject ? `<div class="message-subject">${escapeHtml(m.subject)}</div>` : ''}
-<div class="message-text">${escapeHtml(m.text)}</div>
-${m.reply ? `<div class="message-reply">
-<div class="message-reply-header"> Ваш ответ (${formatDateTime(m.reply.date)})</div>
-<div class="message-reply-text">${escapeHtml(m.reply.text)}</div>
-</div>` : `<div class="reply-form">
-<textarea id="reply-${m.id}" placeholder="Введите ответ..."></textarea>
-<button class="btn btn-success btn-sm" onclick="sendReply('${m.id}')">📨 Ответить</button>
-</div>`}
-<div class="message-actions">
-<button class="btn btn-danger btn-sm" onclick="deleteChat('${m.id}')">🗑 Удалить чат</button>
-</div>
-</div>`;
+html += '<div class="message-card ' + statusClass + '" id="msg-' + m.id + '"><div class="message-header"><div class="message-meta"><div class="message-sender">' + escapeHtml(m.senderName || 'Без имени') + '</div><div class="message-group"> ' + (g ? groupLabel(g) : 'Группа не найдена') + ' · 📞 ' + escapeHtml(m.senderPhone || 'нет телефона') + '</div><div class="message-date">' + formatDateTime(m.date) + '</div></div><span class="message-status ' + statusClass + '">' + (m.status === 'new' ? ' Новое' : '✅ Отвечено') + '</span></div>' + (m.subject ? '<div class="message-subject">' + escapeHtml(m.subject) + '</div>' : '') + '<div class="message-text">' + escapeHtml(m.text) + '</div>' + (m.reply ? '<div class="message-reply"><div class="message-reply-header">💬 Ваш ответ (' + formatDateTime(m.reply.date) + ')</div><div class="message-reply-text">' + escapeHtml(m.reply.text) + '</div></div>' : '<div class="reply-form"><textarea id="reply-' + m.id + '" placeholder="Введите ответ..."></textarea><button class="btn btn-success btn-sm" onclick="sendReply(\'' + m.id + '\')">📨 Ответить</button></div>') + '<div class="message-actions"><button class="btn btn-danger btn-sm" onclick="deleteChat(\'' + m.id + '\')">🗑 Удалить чат</button></div></div>';
 });
 }
 container.innerHTML = html;
 }
 function setMessagesFilter(filter) { messagesFilter = filter; loadOwnerMessages(); }
 function renderAdmin() { fillChildrenDatalist(); renderAdminSummary(); renderAdminGroupInfo(); renderAdminPeople(); renderAdminStudents(); renderAdminExpenses(); renderAdminNews(); renderAdminMonths(); renderAdminAccess(); }
-function renderAdminSummary() { const m = getCurrentMonth(); document.getElementById('admin-summary').innerHTML = `<div class="admin-card"><div class="admin-card-title">📊 Сводка: ${escapeHtml(m.name)}</div><div class="admin-cards-grid">
-<div class="stat-card"><div class="stat-label">Остаток с прош. мес.</div><div class="stat-value"><input type="number" id="editPrevBalance" step="0.01" value="${m.prevBalance}" onchange="markDirty();recalcAdmin()"></div></div>
-<div class="stat-card"><div class="stat-label">Доп. приход</div><div class="stat-value"><input type="number" id="editAddIncome" step="0.01" value="${m.additionalIncome}" onchange="markDirty();recalcAdmin()"></div></div>
-<div class="stat-card green"><div class="stat-label">Приход (авто)</div><div class="stat-value" id="autoIncome">0</div></div>
-<div class="stat-card red"><div class="stat-label">Расход (авто)</div><div class="stat-value" id="autoExpense">0</div></div>
-<div class="stat-card"><div class="stat-label">Бюджет</div><div class="stat-value" id="autoBudget">0</div></div>
-<div class="stat-card green"><div class="stat-label">Остаток</div><div class="stat-value" id="autoBalance">0</div></div></div>
-<div class="hint">💡 Приход и расход считаются автоматически.</div><button class="btn btn-success" onclick="archiveMonth()"> Архивировать месяц</button></div>`; recalcAdmin(); }
+function renderAdminSummary() { const m = getCurrentMonth(); document.getElementById('admin-summary').innerHTML = '<div class="admin-card"><div class="admin-card-title">📊 Сводка: ' + escapeHtml(m.name) + '</div><div class="admin-cards-grid"><div class="stat-card"><div class="stat-label">Остаток с прош. мес.</div><div class="stat-value"><input type="number" id="editPrevBalance" step="0.01" value="' + m.prevBalance + '" onchange="markDirty();recalcAdmin()"></div></div><div class="stat-card"><div class="stat-label">Доп. приход</div><div class="stat-value"><input type="number" id="editAddIncome" step="0.01" value="' + m.additionalIncome + '" onchange="markDirty();recalcAdmin()"></div></div><div class="stat-card green"><div class="stat-label">Приход (авто)</div><div class="stat-value" id="autoIncome">0</div></div><div class="stat-card red"><div class="stat-label">Расход (авто)</div><div class="stat-value" id="autoExpense">0</div></div><div class="stat-card"><div class="stat-label">Бюджет</div><div class="stat-value" id="autoBudget">0</div></div><div class="stat-card green"><div class="stat-label">Остаток</div><div class="stat-value" id="autoBalance">0</div></div></div><div class="hint">💡 Приход и расход считаются автоматически.</div><button class="btn btn-success" onclick="archiveMonth()">📦 Архивировать месяц</button></div>'; recalcAdmin(); }
 function renderAdminGroupInfo() { const g = getGroup(currentGroupId); const kids = data.children||[]; let evHtml = ''; (data.events||[]).forEach(e => { evHtml += eventRowHtml(e); });
-document.getElementById('admin-groupinfo').innerHTML = `<div class="admin-card"><div class="admin-card-title">📋 О группе «${g?escapeHtml(g.name):''}»</div><div class="admin-cards-grid">
-<div class="stat-card"><div class="stat-label">Группа</div><div class="stat-value">№ ${g?escapeHtml(g.number):''} «${g?escapeHtml(g.name):''}»</div></div>
-<div class="stat-card"><div class="stat-label"> Детей</div><div class="stat-value">${kids.length}</div></div>
-<div class="stat-card"><div class="stat-label">🎀 Девочек</div><div class="stat-value">${kids.filter(k=>k.gender==='girl').length}</div></div>
-<div class="stat-card"><div class="stat-label">👦 Мальчиков</div><div class="stat-value">${kids.filter(k=>k.gender==='boy').length}</div></div>
-<div class="stat-card green"><div class="stat-label"> Комитет</div><div class="stat-value">${(data.committee||[]).length}</div></div>
-<div class="stat-card green"><div class="stat-label">💰 Остаток</div><div class="stat-value">${formatMoney(calcBalance(getCurrentMonth()))} ₽</div></div></div></div>
-<div class="admin-card"><div class="admin-card-title">✏️ Переименовать группу / описание</div>
-<div class="hint">💡 Когда дети переходят в другую группу — поменяйте номер и название, все данные сохранятся.</div>
-<div class="form-group"><label>Номер группы</label><input type="number" id="editGroupNumber" value="${g?escapeHtml(g.number):''}" onchange="markDirty()"></div>
-<div class="form-group"><label>Название группы</label><input type="text" id="editGroupName" value="${g?escapeHtml(g.name):''}" onchange="markDirty()"></div>
-<div class="form-group"><label>Описание</label><textarea id="editGroupDescription" onchange="markDirty()">${escapeHtml(data.description||'')}</textarea></div></div>
-<div class="admin-card"><div class="admin-card-title"> События и праздники</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addEventRow();markDirty()"> Добавить событие</button></div><div id="adminEventsList">${evHtml}</div></div>`; }
-function eventRowHtml(e = null) { return `<div class="a-row event-row-admin"><input type="text" class="e-title" value="${e?escapeHtml(e.title||''):''}" placeholder="Название события"><input type="date" class="e-date" value="${e?(e.date||''):''}"><input type="text" class="e-desc" value="${e?escapeHtml(e.description||''):''}" placeholder="Описание"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()"></button></div>`; }
+document.getElementById('admin-groupinfo').innerHTML = '<div class="admin-card"><div class="admin-card-title">📋 О группе «' + (g?escapeHtml(g.name):'') + '»</div><div class="admin-cards-grid"><div class="stat-card"><div class="stat-label">Группа</div><div class="stat-value">№ ' + (g?escapeHtml(g.number):'') + ' «' + (g?escapeHtml(g.name):'') + '»</div></div><div class="stat-card"><div class="stat-label">👶 Детей</div><div class="stat-value">' + kids.length + '</div></div><div class="stat-card"><div class="stat-label">🎀 Девочек</div><div class="stat-value">' + kids.filter(k=>k.gender==='girl').length + '</div></div><div class="stat-card"><div class="stat-label"> Мальчиков</div><div class="stat-value">' + kids.filter(k=>k.gender==='boy').length + '</div></div><div class="stat-card green"><div class="stat-label">👥 Комитет</div><div class="stat-value">' + (data.committee||[]).length + '</div></div><div class="stat-card green"><div class="stat-label">💰 Остаток</div><div class="stat-value">' + formatMoney(calcBalance(getCurrentMonth())) + ' ₽</div></div></div></div><div class="admin-card"><div class="admin-card-title">✏️ Переименовать группу / описание</div><div class="hint">💡 Когда дети переходят в другую группу — поменяйте номер и название, все данные сохранятся.</div><div class="form-group"><label>Номер группы</label><input type="number" id="editGroupNumber" value="' + (g?escapeHtml(g.number):'') + '" onchange="markDirty()"></div><div class="form-group"><label>Название группы</label><input type="text" id="editGroupName" value="' + (g?escapeHtml(g.name):'') + '" onchange="markDirty()"></div><div class="form-group"><label>Описание</label><textarea id="editGroupDescription" onchange="markDirty()">' + escapeHtml(data.description||'') + '</textarea></div></div><div class="admin-card"><div class="admin-card-title">🎉 События и праздники</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addEventRow();markDirty()">➕ Добавить событие</button></div><div id="adminEventsList">' + evHtml + '</div></div>'; }
+function eventRowHtml(e) { e = e || null; return '<div class="a-row event-row-admin"><input type="text" class="e-title" value="' + (e?escapeHtml(e.title||''):'') + '" placeholder="Название события"><input type="date" class="e-date" value="' + (e?(e.date||''):'') + '"><input type="text" class="e-desc" value="' + (e?escapeHtml(e.description||''):'') + '" placeholder="Описание"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>'; }
 function addEventRow() { document.getElementById('adminEventsList').insertAdjacentHTML('beforeend', eventRowHtml()); }
 function renderAdminPeople() { let comHtml=''; (data.committee||[]).forEach(x => comHtml += committeeRowHtml(x)); let parHtml=''; (data.parents||[]).forEach(p => parHtml += parentRowHtml(p)); let chHtml=''; (data.children||[]).forEach(k => chHtml += childRowHtml(k)); let tHtml=''; (data.teachers||[]).forEach(t => tHtml += teacherRowHtml(t));
-document.getElementById('admin-people').innerHTML = `
-<div class="admin-card"><div class="admin-card-title"> Комитет</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addCommitteeRow();markDirty()">➕ Добавить</button></div><div id="adminCommitteeList">${comHtml}</div></div>
-<div class="admin-card"><div class="admin-card-title">👨 Родители</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addParentRow();markDirty()">➕ Добавить</button></div><div id="adminParentsList">${parHtml}</div></div>
-<div class="admin-card"><div class="admin-card-title"> Дети</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addChildRow();markDirty()">➕ Добавить ребёнка</button></div><div id="adminChildrenList">${chHtml}</div></div>
-<div class="admin-card"><div class="admin-card-title">🏫 Воспитатели</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addTeacherRow();markDirty()"> Добавить</button></div><div id="adminTeachersList">${tHtml}</div></div>`; }
-function committeeRowHtml(x=null){return `<div class="a-row committee-row-admin"><input type="text" class="p-name" value="${x?escapeHtml(x.name||''):''}" placeholder="ФИО"><input type="text" class="p-role" value="${x?escapeHtml(x.role||''):''}" placeholder="Роль"><input type="tel" class="p-phone" value="${x?escapeHtml(x.phone||''):''}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()"></button></div>`;}
+document.getElementById('admin-people').innerHTML = '<div class="admin-card"><div class="admin-card-title">👥 Комитет</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addCommitteeRow();markDirty()">➕ Добавить</button></div><div id="adminCommitteeList">' + comHtml + '</div></div><div class="admin-card"><div class="admin-card-title">👨 Родители</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addParentRow();markDirty()">➕ Добавить</button></div><div id="adminParentsList">' + parHtml + '</div></div><div class="admin-card"><div class="admin-card-title">👶 Дети</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addChildRow();markDirty()">➕ Добавить ребёнка</button></div><div id="adminChildrenList">' + chHtml + '</div></div><div class="admin-card"><div class="admin-card-title">👩‍🏫 Воспитатели</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addTeacherRow();markDirty()">➕ Добавить</button></div><div id="adminTeachersList">' + tHtml + '</div></div>'; }
+function committeeRowHtml(x){x=x||null;return '<div class="a-row committee-row-admin"><input type="text" class="p-name" value="' + (x?escapeHtml(x.name||''):'') + '" placeholder="ФИО"><input type="text" class="p-role" value="' + (x?escapeHtml(x.role||''):'') + '" placeholder="Роль"><input type="tel" class="p-phone" value="' + (x?escapeHtml(x.phone||''):'') + '" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>';}
 function addCommitteeRow(){document.getElementById('adminCommitteeList').insertAdjacentHTML('beforeend',committeeRowHtml());}
-function parentRowHtml(p=null){return `<div class="a-row parent-row-admin"><input type="text" class="p-name" value="${p?escapeHtml(p.name||''):''}" placeholder="ФИО"><input type="tel" class="p-phone" value="${p?escapeHtml(p.phone||''):''}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;}
+function parentRowHtml(p){p=p||null;return '<div class="a-row parent-row-admin"><input type="text" class="p-name" value="' + (p?escapeHtml(p.name||''):'') + '" placeholder="ФИО"><input type="tel" class="p-phone" value="' + (p?escapeHtml(p.phone||''):'') + '" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>';}
 function addParentRow(){document.getElementById('adminParentsList').insertAdjacentHTML('beforeend',parentRowHtml());}
-function childRowHtml(k=null){return `<div class="a-row child-row-admin"><input type="text" class="k-name" value="${k?escapeHtml(k.name||''):''}" placeholder="Имя ребёнка"><select class="k-gender"><option value="girl" ${k&&k.gender==='girl'?'selected':''}>🎀 Девочка</option><option value="boy" ${k&&k.gender==='boy'?'selected':''}> Мальчик</option></select><input type="date" class="k-birthday" value="${k?(k.birthday||''):''}"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;}
+function childRowHtml(k){k=k||null;return '<div class="a-row child-row-admin"><input type="text" class="k-name" value="' + (k?escapeHtml(k.name||''):'') + '" placeholder="Имя ребёнка"><select class="k-gender"><option value="girl" ' + (k&&k.gender==='girl'?'selected':'') + '>🎀 Девочка</option><option value="boy" ' + (k&&k.gender==='boy'?'selected':'') + '> Мальчик</option></select><input type="date" class="k-birthday" value="' + (k?(k.birthday||''):'') + '"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>';}
 function addChildRow(){document.getElementById('adminChildrenList').insertAdjacentHTML('beforeend',childRowHtml());}
-function teacherRowHtml(t=null){return `<div class="a-row committee-row-admin"><input type="text" class="t-name" value="${t?escapeHtml(t.name||''):''}" placeholder="ФИО"><input type="text" class="t-role" value="${t?escapeHtml(t.role||''):''}" placeholder="Должность"><input type="tel" class="t-phone" value="${t?escapeHtml(t.phone||''):''}" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>`;}
+function teacherRowHtml(t){t=t||null;return '<div class="a-row committee-row-admin"><input type="text" class="t-name" value="' + (t?escapeHtml(t.name||''):'') + '" placeholder="ФИО"><input type="text" class="t-role" value="' + (t?escapeHtml(t.role||''):'') + '" placeholder="Должность"><input type="tel" class="t-phone" value="' + (t?escapeHtml(t.phone||''):'') + '" placeholder="Телефон"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();markDirty()">🗑</button></div>';}
 function addTeacherRow(){document.getElementById('adminTeachersList').insertAdjacentHTML('beforeend',teacherRowHtml());}
-function renderAdminStudents() { const m = getCurrentMonth(); let rows = ''; m.students.forEach(s => { rows += `<div class="a-row student-row"><div style="display:flex;gap:4px;"><input type="text" class="a-name" list="childrenDatalist" value="${escapeHtml(s.name||'')}" placeholder="ФИО или 👶"><button class="btn btn-gold btn-sm" onclick="openChildPicker(this.previousElementSibling)">👶</button></div><input type="number" class="a-amount" value="${s.amount||''}" placeholder="₽" step="0.01"><label class="switch"><input type="checkbox" class="a-paid" ${s.paid?'checked':''}><span class="slider"></span></label><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()"></button></div>`; });
-document.getElementById('admin-students').innerHTML = `<div class="admin-card"><div class="admin-card-title"> Взносы</div><div class="admin-toolbar"><input type="text" id="studentSearch" placeholder="🔍 Поиск..." oninput="filterStudents()"><button class="btn btn-success btn-sm" onclick="addStudentRow();markDirty()">➕ Добавить</button><button class="btn btn-primary btn-sm" onclick="markAllPaid()">✅ Все сдали</button><button class="btn btn-secondary btn-sm" onclick="copyFromArchive()"> Копировать</button></div><div class="admin-stats" id="studentStats"></div><div id="adminStudents">${rows}</div></div>`; recalcAdmin(); }
-function addStudentRow(){const d=document.createElement('div');d.className='a-row student-row';d.innerHTML=`<div style="display:flex;gap:4px;"><input type="text" class="a-name" list="childrenDatalist" placeholder="ФИО или "><button class="btn btn-gold btn-sm" onclick="openChildPicker(this.previousElementSibling)"></button></div><input type="number" class="a-amount" placeholder="₽" step="0.01"><label class="switch"><input type="checkbox" class="a-paid"><span class="slider"></span></label><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()">🗑</button>`;document.getElementById('adminStudents').appendChild(d);}
+function renderAdminStudents() { const m = getCurrentMonth(); let rows = ''; m.students.forEach(s => { rows += '<div class="a-row student-row"><div style="display:flex;gap:4px;"><input type="text" class="a-name" list="childrenDatalist" value="' + escapeHtml(s.name||'') + '" placeholder="ФИО или 👶"><button class="btn btn-gold btn-sm" onclick="openChildPicker(this.previousElementSibling)"></button></div><input type="number" class="a-amount" value="' + (s.amount||'') + '" placeholder="₽" step="0.01"><label class="switch"><input type="checkbox" class="a-paid" ' + (s.paid?'checked':'') + '><span class="slider"></span></label><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()">🗑</button></div>'; });
+document.getElementById('admin-students').innerHTML = '<div class="admin-card"><div class="admin-card-title">💰 Взносы</div><div class="admin-toolbar"><input type="text" id="studentSearch" placeholder="🔍 Поиск..." oninput="filterStudents()"><button class="btn btn-success btn-sm" onclick="addStudentRow();markDirty()">➕ Добавить</button><button class="btn btn-primary btn-sm" onclick="markAllPaid()">✅ Все сдали</button><button class="btn btn-secondary btn-sm" onclick="copyFromArchive()">📋 Копировать</button></div><div class="admin-stats" id="studentStats"></div><div id="adminStudents">' + rows + '</div></div>'; recalcAdmin(); }
+function addStudentRow(){const d=document.createElement('div');d.className='a-row student-row';d.innerHTML='<div style="display:flex;gap:4px;"><input type="text" class="a-name" list="childrenDatalist" placeholder="ФИО или 👶"><button class="btn btn-gold btn-sm" onclick="openChildPicker(this.previousElementSibling)">👶</button></div><input type="number" class="a-amount" placeholder="₽" step="0.01"><label class="switch"><input type="checkbox" class="a-paid"><span class="slider"></span></label><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()">🗑</button>';document.getElementById('adminStudents').appendChild(d);}
 function markAllPaid(){document.querySelectorAll('#adminStudents .a-paid').forEach(cb=>cb.checked=true);recalcAdmin();markDirty();}
-function filterStudents(){const q=(document.getElementById('studentSearch').value||'').toLowerCase();document.querySelectorAll('#adminStudents .student-row').forEach(r=>{r.style.display=r.querySelector('.a-name').value.toLowerCase().includes(q)?'':'none';});}
-function copyFromArchive(){const src=data.archive.length?data.archive[data.archive.length-1]:null;if(!src){alert('Нет архива');return;}if(!confirm('Скопировать из "'+src.name+'"?'))return;const c=document.getElementById('adminStudents');c.innerHTML='';src.students.forEach(s=>{if(s.name){const d=document.createElement('div');d.className='a-row student-row';d.innerHTML=`<div style="display:flex;gap:4px;"><input type="text" class="a-name" list="childrenDatalist" value="${escapeHtml(s.name)}"><button class="btn btn-gold btn-sm" onclick="openChildPicker(this.previousElementSibling)">👶</button></div><input type="number" class="a-amount" value="${s.amount||''}" step="0.01"><label class="switch"><input type="checkbox" class="a-paid"><span class="slider"></span></label><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()">🗑</button>`;c.appendChild(d);}});recalcAdmin();markDirty();}
-function renderAdminExpenses() { const m = getCurrentMonth(); let rows = ''; m.expenses.forEach(e => { rows += `<div class="a-row expense-row"><input type="text" class="a-desc" value="${escapeHtml(e.description||'')}" placeholder="На что потрачено"><input type="number" class="a-amount" value="${e.amount||''}" placeholder="₽" step="0.01"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()"></button></div>`; }); document.getElementById('admin-expenses').innerHTML = `<div class="admin-card"><div class="admin-card-title">💸 Расходы</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addExpenseRow();markDirty()">➕ Добавить расход</button></div><div class="admin-stats" id="expenseStats"></div><div id="adminExpenses">${rows}</div></div>`; }
-function addExpenseRow(){const d=document.createElement('div');d.className='a-row expense-row';d.innerHTML=`<input type="text" class="a-desc" placeholder="На что потрачено"><input type="number" class="a-amount" placeholder="₽" step="0.01"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()">🗑</button>`;document.getElementById('adminExpenses').appendChild(d);}
-function renderAdminNews() { let rows = ''; data.news.forEach(n => { rows += `<div class="a-news-card" ${n.date?`data-date="${n.date}"`:''}><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px"><label class="a-urgent-label"><input type="checkbox" class="a-news-urgent" ${n.urgent?'checked':''}> 🔴 Срочно</label><button class="btn btn-danger btn-sm" onclick="this.closest('.a-news-card').remove();markDirty()">🗑</button></div><input type="text" class="a-news-title" placeholder="Заголовок" value="${escapeHtml(n.title||'')}"><textarea class="a-news-text" placeholder="Текст">${escapeHtml(n.text||'')}</textarea></div>`; }); document.getElementById('admin-news').innerHTML = `<div class="admin-card"><div class="admin-card-title"> Новости</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addNewsRow();markDirty()">➕ Добавить новость</button></div><div id="adminNews">${rows}</div></div>`; }
-function addNewsRow(){const d=document.createElement('div');d.className='a-news-card';d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px"><label class="a-urgent-label"><input type="checkbox" class="a-news-urgent"> 🔴 Срочно</label><button class="btn btn-danger btn-sm" onclick="this.closest('.a-news-card').remove();markDirty()"></button></div><input type="text" class="a-news-title" placeholder="Заголовок"><textarea class="a-news-text" placeholder="Текст"></textarea>`;document.getElementById('adminNews').appendChild(d);}
-function renderAdminMonths() { let html = `<div class="admin-card"><div class="admin-card-title">➕ Создать месяц</div><div class="form-group"><label>Название</label><input type="text" id="newMonthName" placeholder="Например: Сентябрь 2026"></div><button class="btn btn-success" onclick="createNewMonth()"> Создать</button></div><div class="admin-card"><div class="admin-card-title"> Список месяцев</div><div id="monthsList">`; data.months.forEach(m => { const cur = m.id === currentMonthId; html += `<div class="month-item${cur?' is-current':''}"><div><strong>${escapeHtml(m.name)}</strong>${cur?'<span class="month-current-badge">⭐ текущий</span>':''}<small style="display:block;color:var(--gray);margin-top:4px">Остаток: <b>${formatMoney(calcBalance(m))} ₽</b></small></div><div class="month-item-actions">${cur?'':`<button class="btn btn-primary btn-sm" onclick="setCurrentMonth('${m.id}')">⭐</button>`}<button class="btn btn-secondary btn-sm" onclick="renameMonth('${m.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteMonth('${m.id}')">🗑</button></div></div>`; }); html += '</div></div>'; document.getElementById('admin-months').innerHTML = html; }
+function filterStudents(){const q=(document.getElementById('studentSearch').value||'').toLowerCase();document.querySelectorAll('#adminStudents .student-row').forEach(r=>{r.style.display=r.querySelector('.a-name').value.toLowerCase().indexOf(q)!==-1?'':'none';});}
+function copyFromArchive(){const src=data.archive.length?data.archive[data.archive.length-1]:null;if(!src){alert('Нет архива');return;}if(!confirm('Скопировать из "'+src.name+'"?'))return;const c=document.getElementById('adminStudents');c.innerHTML='';src.students.forEach(s=>{if(s.name){const d=document.createElement('div');d.className='a-row student-row';d.innerHTML='<div style="display:flex;gap:4px;"><input type="text" class="a-name" list="childrenDatalist" value="'+escapeHtml(s.name)+'"><button class="btn btn-gold btn-sm" onclick="openChildPicker(this.previousElementSibling)"></button></div><input type="number" class="a-amount" value="'+(s.amount||'')+'" step="0.01"><label class="switch"><input type="checkbox" class="a-paid"><span class="slider"></span></label><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()">🗑</button>';c.appendChild(d);}});recalcAdmin();markDirty();}
+function renderAdminExpenses() { const m = getCurrentMonth(); let rows = ''; m.expenses.forEach(e => { rows += '<div class="a-row expense-row"><input type="text" class="a-desc" value="' + escapeHtml(e.description||'') + '" placeholder="На что потрачено"><input type="number" class="a-amount" value="' + (e.amount||'') + '" placeholder="₽" step="0.01"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()">🗑</button></div>'; }); document.getElementById('admin-expenses').innerHTML = '<div class="admin-card"><div class="admin-card-title">💸 Расходы</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addExpenseRow();markDirty()">➕ Добавить расход</button></div><div class="admin-stats" id="expenseStats"></div><div id="adminExpenses">' + rows + '</div></div>'; }
+function addExpenseRow(){const d=document.createElement('div');d.className='a-row expense-row';d.innerHTML='<input type="text" class="a-desc" placeholder="На что потрачено"><input type="number" class="a-amount" placeholder="₽" step="0.01"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();recalcAdmin();markDirty()"></button>';document.getElementById('adminExpenses').appendChild(d);}
+function renderAdminNews() { let rows = ''; data.news.forEach(n => { rows += '<div class="a-news-card" ' + (n.date?'data-date="'+n.date+'"':'') + '><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px"><label class="a-urgent-label"><input type="checkbox" class="a-news-urgent" ' + (n.urgent?'checked':'') + '> 🔴 Срочно</label><button class="btn btn-danger btn-sm" onclick="this.closest(\'.a-news-card\').remove();markDirty()">🗑</button></div><input type="text" class="a-news-title" placeholder="Заголовок" value="' + escapeHtml(n.title||'') + '"><textarea class="a-news-text" placeholder="Текст">' + escapeHtml(n.text||'') + '</textarea></div>'; }); document.getElementById('admin-news').innerHTML = '<div class="admin-card"><div class="admin-card-title">📰 Новости</div><div class="admin-toolbar"><button class="btn btn-success btn-sm" onclick="addNewsRow();markDirty()">➕ Добавить новость</button></div><div id="adminNews">' + rows + '</div></div>'; }
+function addNewsRow(){const d=document.createElement('div');d.className='a-news-card';d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px"><label class="a-urgent-label"><input type="checkbox" class="a-news-urgent"> 🔴 Срочно</label><button class="btn btn-danger btn-sm" onclick="this.closest(\'.a-news-card\').remove();markDirty()">🗑</button></div><input type="text" class="a-news-title" placeholder="Заголовок"><textarea class="a-news-text" placeholder="Текст"></textarea>';document.getElementById('adminNews').appendChild(d);}
+function renderAdminMonths() { let html = '<div class="admin-card"><div class="admin-card-title">➕ Создать месяц</div><div class="form-group"><label>Название</label><input type="text" id="newMonthName" placeholder="Например: Сентябрь 2026"></div><button class="btn btn-success" onclick="createNewMonth()">📅 Создать</button></div><div class="admin-card"><div class="admin-card-title">📅 Список месяцев</div><div id="monthsList">'; data.months.forEach(m => { const cur = m.id === currentMonthId; html += '<div class="month-item' + (cur?' is-current':'') + '"><div><strong>' + escapeHtml(m.name) + '</strong>' + (cur?'<span class="month-current-badge">⭐ текущий</span>':'') + '<small style="display:block;color:var(--gray);margin-top:4px">Остаток: <b>' + formatMoney(calcBalance(m)) + ' ₽</b></small></div><div class="month-item-actions">' + (cur?'':'<button class="btn btn-primary btn-sm" onclick="setCurrentMonth(\'' + m.id + '\')">⭐</button>') + '<button class="btn btn-secondary btn-sm" onclick="renameMonth(\'' + m.id + '\')">️</button><button class="btn btn-danger btn-sm" onclick="deleteMonth(\'' + m.id + '\')">🗑</button></div></div>'; }); html += '</div></div>'; document.getElementById('admin-months').innerHTML = html; }
 async function renderAdminAccess() {
 let reqs = [];
 if (protectionEnabled) { try { const snap = await db.collection('inbox').get(); reqs = snap.docs.map(d => ({ id: d.id, ...d.data() })); } catch(e) {} }
 else { reqs = currentRole === 'owner' ? app.requests : app.requests.filter(r => r.groupId === currentGroupId); }
 let reqHtml = '';
 if (!reqs.length) reqHtml = '<p style="color:var(--light-gray);font-size:.85em">Запросов нет.</p>';
-reqs.forEach(r => { const g = r.groupId ? getGroup(r.groupId) : null; reqHtml += `<div class="request-card"><div><b>${escapeHtml(r.name||r.phone)}</b><br><small style="color:var(--gray)">📞 ${escapeHtml(r.phone||'')} · 🏢 ${g?groupLabel(g):escapeHtml(r.groupText||'')}</small></div><div><button class="btn btn-success btn-sm" onclick="openApprove('${r.id}')">✅</button><button class="btn btn-danger btn-sm" onclick="rejectRequest('${r.id}')">❌</button></div></div>`; });
+reqs.forEach(r => { const g = r.groupId ? getGroup(r.groupId) : null; reqHtml += '<div class="request-card"><div><b>' + escapeHtml(r.name||r.phone) + '</b><br><small style="color:var(--gray)"> ' + escapeHtml(r.phone||'') + ' · 🏢 ' + (g?groupLabel(g):escapeHtml(r.groupText||'')) + '</small></div><div><button class="btn btn-success btn-sm" onclick="openApprove(\'' + r.id + '\')">✅</button><button class="btn btn-danger btn-sm" onclick="rejectRequest(\'' + r.id + '\')">❌</button></div></div>'; });
 const users = app.users.filter(u => u.groupId === currentGroupId);
 let usersHtml = '';
 if (!users.length) usersHtml = '<p style="color:var(--light-gray);font-size:.85em">Нет пользователей.</p>';
 users.forEach(u => {
 const isSelf = u.id === currentUserId;
 let roleBtns = '';
-if (u.role === 'admin') roleBtns += `<button class="btn btn-secondary btn-sm" onclick="setUserRole('${u.id}','member')">${isSelf?'⬇️ Снять себя в родители':'️ В родители'}</button>`;
-else roleBtns += `<button class="btn btn-gold btn-sm" onclick="setUserRole('${u.id}','admin')">️ В админы</button>`;
-usersHtml += `<div class="user-card${u.role==='admin'?' admin-u':''}"><div><b>${escapeHtml(u.name||u.phone)}</b> <span class="role-badge${u.role==='admin'?' admin-b':''}">${u.role==='admin'?'💎 админ':'👁️ родитель'}</span>${isSelf?' <span class="role-badge" style="background:var(--info)">это вы</span>':''}<br><small style="color:var(--gray)">${u.phone?' '+escapeHtml(u.phone)+' · ':''}пароль: <span class="pwd-chip">${escapeHtml(u.password)}</span></small></div><div style="display:flex;gap:4px;flex-wrap:wrap;">${roleBtns}<button class="btn btn-secondary btn-sm" onclick="changeUserPassword('${u.id}')">🔑</button><button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">🗑</button></div></div>`;
+if (u.role === 'admin') roleBtns += '<button class="btn btn-secondary btn-sm" onclick="setUserRole(\'' + u.id + '\',\'member\')">' + (isSelf?'⬇️ Снять себя в родители':'⬇️ В родители') + '</button>';
+else roleBtns += '<button class="btn btn-gold btn-sm" onclick="setUserRole(\'' + u.id + '\',\'admin\')">⬆️ В админы</button>';
+usersHtml += '<div class="user-card' + (u.role==='admin'?' admin-u':'') + '"><div><b>' + escapeHtml(u.name||u.phone) + '</b> <span class="role-badge' + (u.role==='admin'?' admin-b':'') + '">' + (u.role==='admin'?'💎 админ':'👁️ родитель') + '</span>' + (isSelf?' <span class="role-badge" style="background:var(--info)">это вы</span>':'') + '<br><small style="color:var(--gray)">' + (u.phone?'📞 '+escapeHtml(u.phone)+' · ':'') + 'пароль: <span class="pwd-chip">' + escapeHtml(u.password) + '</span></small></div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + roleBtns + '<button class="btn btn-secondary btn-sm" onclick="changeUserPassword(\'' + u.id + '\')">🔑</button><button class="btn btn-danger btn-sm" onclick="deleteUser(\'' + u.id + '\')"></button></div></div>';
 });
-document.getElementById('admin-access').innerHTML = `
-<div class="admin-card"><div class="admin-card-title">📩 Запросы на вход</div>${reqHtml}</div>
-<div class="admin-card"><div class="admin-card-title"> Добавить пользователя</div>
-<div class="hint">🔐 Пользователь получит аккаунт Firebase Auth (вход: телефон + пароль).</div>
-<div class="form-group"><label>ФИО</label><input type="text" id="newUserFullname" placeholder="Например: Наталья"></div>
-<div class="form-group"><label>Телефон</label><input type="tel" id="newUserPhone" placeholder="Полностью или последние 4 цифры"></div>
-<div class="form-group"><label>Пароль</label><div style="display:flex;gap:8px"><input type="text" id="newUserPassword"><button class="btn btn-secondary btn-sm" onclick="document.getElementById('newUserPassword').value=genPassword()"></button></div></div>
-<div class="form-group"><label>Роль</label><select id="newUserRole"><option value="member">👁️ Родитель</option><option value="admin">💎 Админ</option></select></div>
-<button class="btn btn-success" onclick="addUserManual()">➕ Добавить</button></div>
-<div class="admin-card"><div class="admin-card-title">👥 Пользователи группы</div>
-<div class="hint">💎 «⬆️ В админы» — назначить из родителей/комитета. «️ В родители» — снять полномочия (в т.ч. себя).</div>
-${usersHtml}</div>`;
+document.getElementById('admin-access').innerHTML = '<div class="admin-card"><div class="admin-card-title">📩 Запросы на вход</div>' + reqHtml + '</div><div class="admin-card"><div class="admin-card-title">➕ Добавить пользователя</div><div class="hint">🔐 Пользователь получит аккаунт Firebase Auth (вход: телефон + пароль).</div><div class="form-group"><label>ФИО</label><input type="text" id="newUserFullname" placeholder="Например: Наталья"></div><div class="form-group"><label>Телефон</label><input type="tel" id="newUserPhone" placeholder="Полностью или последние 4 цифры"></div><div class="form-group"><label>Пароль</label><div style="display:flex;gap:8px"><input type="text" id="newUserPassword"><button class="btn btn-secondary btn-sm" onclick="document.getElementById(\'newUserPassword\').value=genPassword()">🎲</button></div></div><div class="form-group"><label>Роль</label><select id="newUserRole"><option value="member">👁️ Родитель</option><option value="admin">💎 Админ</option></select></div><button class="btn btn-success" onclick="addUserManual()">➕ Добавить</button></div><div class="admin-card"><div class="admin-card-title">👥 Пользователи группы</div><div class="hint">💎 «️ В админы» — назначить из родителей/комитета. «⬇️ В родители» — снять полномочия (в т.ч. себя).</div>' + usersHtml + '</div>';
 }
 function getSecondaryAuth() { const name = 'sec' + Date.now(); const sec = firebase.initializeApp(firebaseConfig, name); return sec.auth(); }
 async function createAuthAccount(phone, password) {
@@ -1899,10 +2062,10 @@ return null;
 }
 async function setUserRole(id, role) {
 const u = app.users.find(x => x.id === id); if (!u) return;
-if (role === 'admin') { if (!confirm(`Назначить «${u.name||u.phone}» администратором?`)) return; }
-else { if (!confirm(`Перевести «${u.name||u.phone}» в родители?`)) return; }
+if (role === 'admin') { if (!confirm('Назначить «' + (u.name||u.phone) + '» администратором?')) return; }
+else { if (!confirm('Перевести «' + (u.name||u.phone) + '» в родители?')) return; }
 u.role = role;
-if (protectionEnabled && u.uid) { try { await db.collection('allowlist').doc(u.uid).set({ role, groupId: u.groupId, phone: u.phone }, { merge: true }); } catch(e) {} }
+if (protectionEnabled && u.uid) { try { await db.collection('allowlist').doc(u.uid).set({ role: role, groupId: u.groupId, phone: u.phone }, { merge: true }); } catch(e) {} }
 await saveToFirebase();
 if (id === currentUserId) {
 currentRole = role;
@@ -1925,9 +2088,9 @@ if (protectionEnabled) {
 if (!normalizePhone(phone)) { alert('🔐 Для защищённого режима нужен полный телефон'); return; }
 uid = await createAuthAccount(phone, pwd);
 if (!uid) { alert('❌ Не удалось создать аккаунт Auth'); return; }
-await db.collection('allowlist').doc(uid).set({ role, groupId: currentGroupId, phone });
+await db.collection('allowlist').doc(uid).set({ role: role, groupId: currentGroupId, phone: phone });
 }
-app.users.push({ id: 'user_' + Date.now(), uid, role, groupId: currentGroupId, name, phone, password: pwd });
+app.users.push({ id: 'user_' + Date.now(), uid: uid, role: role, groupId: currentGroupId, name: name, phone: phone, password: pwd });
 await saveToFirebase(); renderAdminAccess();
 alert('✅ Добавлен. Пароль: ' + pwd);
 }
@@ -1945,7 +2108,7 @@ await saveToFirebase(); renderAdminAccess();
 }
 async function deleteUser(id) {
 const u = app.users.find(x => x.id === id); if (!u) return;
-if (u.id === currentUserId) { alert(' Нельзя удалить свой аккаунт!'); return; }
+if (u.id === currentUserId) { alert('❌ Нельзя удалить свой аккаунт!'); return; }
 if (!confirm('Удалить ' + (u.name||u.phone) + '?')) return;
 if (protectionEnabled && u.uid) { try { await db.collection('allowlist').doc(u.uid).delete(); } catch(e) {} }
 app.users = app.users.filter(x => x.id !== id);
@@ -1958,7 +2121,7 @@ const groupId = document.getElementById('reqGroup').value || null;
 const groupText = document.getElementById('reqGroupText').value.trim();
 if (!name && !normalizePhone(phone)) { alert('Укажите имя или телефон'); return; }
 if (!groupId && !groupText) { alert('Выберите группу'); return; }
-const reqData = { name, phone, groupId, groupText, date: new Date().toISOString() };
+const reqData = { name: name, phone: phone, groupId: groupId, groupText: groupText, date: new Date().toISOString() };
 let reqId = null;
 if (protectionEnabled) {
 const ref = await db.collection('inbox').add(reqData);
@@ -1971,7 +2134,7 @@ await saveToFirebase();
 const g = groupId ? getGroup(groupId) : null;
 await createNotification({
 type: 'access', title: ' Новый запрос на доступ',
-text: `${name || 'Неизвестно'} просит доступ${g ? ' в группу ' + groupLabel(g) : (groupText ? ' в группу: ' + groupText : '')}. Телефон: ${phone || 'не указан'}`,
+text: (name || 'Неизвестно') + ' просит доступ' + (g ? ' в группу ' + groupLabel(g) : (groupText ? ' в группу: ' + groupText : '')) + '. Телефон: ' + (phone || 'не указан'),
 from: name || 'Неизвестно', fromPhone: phone, groupId: groupId, relatedId: reqId, priority: 'normal'
 });
 closeModal('accessRequestModal');
@@ -1980,7 +2143,7 @@ alert('✅ Запрос отправлен!');
 function openApprove(id) {
 pendingRequestId = id;
 const r = (app.requests || []).find(x => x.id === id);
-document.getElementById('approveInfo').innerHTML = `<b>Запрос одобряется</b>`;
+document.getElementById('approveInfo').innerHTML = '<b>Запрос одобряется</b>';
 const gbox = document.getElementById('approveGroupBox');
 if (r && r.groupId) gbox.style.display = 'none';
 else { gbox.style.display = ''; const sel = document.getElementById('approveGroup'); sel.innerHTML = ''; (protectionEnabled ? publicConfig.groups : app.groups).forEach(g => { const o = document.createElement('option'); o.value = g.id; o.textContent = groupLabel(g); sel.appendChild(o); }); }
@@ -2000,10 +2163,10 @@ if (!normalizePhone(r.phone)) { alert('🔐 Для защищённого реж
 let uid = null;
 if (protectionEnabled) {
 uid = await createAuthAccount(r.phone, pwd);
-if (!uid) { alert('❌ Не удалось создать аккаунт'); return; }
-await db.collection('allowlist').doc(uid).set({ role, groupId: gid, phone: r.phone });
+if (!uid) { alert(' Не удалось создать аккаунт'); return; }
+await db.collection('allowlist').doc(uid).set({ role: role, groupId: gid, phone: r.phone });
 }
-app.users.push({ id: 'user_' + Date.now(), uid, role, groupId: gid, name: r.name, phone: r.phone, password: pwd });
+app.users.push({ id: 'user_' + Date.now(), uid: uid, role: role, groupId: gid, name: r.name, phone: r.phone, password: pwd });
 if (fromInbox) await db.collection('inbox').doc(pendingRequestId).delete();
 else app.requests = app.requests.filter(x => x.id !== pendingRequestId);
 await saveToFirebase();
@@ -2032,10 +2195,9 @@ else { skipped++; }
 }
 await saveToFirebase();
 await db.collection('public').doc('config').set({ groups: app.groups.map(g => ({ id: g.id, number: g.number, name: g.name })), maintenanceMode: settings.maintenanceMode, protected: true });
-alert(`✅ Готово! Создано аккаунтов: ${created}, пропущено: ${skipped}.
-ТЕПЕРЬ: Firestore Database → Rules → вставь новые правила → Publish.`);
+alert('✅ Готово! Создано аккаунтов: ' + created + ', пропущено: ' + skipped + '.\nТЕПЕРЬ: Firestore Database → Rules → вставь новые правила → Publish.');
 }
-function recalcAdmin() { let inc=0,pc=0,tc=0,exp=0; document.querySelectorAll('#adminStudents .student-row').forEach(r => { const name=r.querySelector('.a-name').value.trim(); const amount=Number(r.querySelector('.a-amount').value)||0; const paid=r.querySelector('.a-paid').checked; if(name||amount){tc++;if(paid){inc+=amount;pc++;}} }); document.querySelectorAll('#adminExpenses .expense-row').forEach(r => { exp += Number(r.querySelector('.a-amount').value)||0; }); const pb=Number(document.getElementById('editPrevBalance')?document.getElementById('editPrevBalance').value:0)||0; const ai=Number(document.getElementById('editAddIncome')?document.getElementById('editAddIncome').value:0)||0; const e1=document.getElementById('autoIncome'); if(e1)e1.textContent=formatMoney(inc)+' ₽'; const e2=document.getElementById('autoExpense'); if(e2)e2.textContent=formatMoney(exp)+' ₽'; const e3=document.getElementById('autoBudget'); if(e3)e3.textContent=formatMoney(inc+ai)+' ₽'; const e4=document.getElementById('autoBalance'); if(e4)e4.textContent=formatMoney(pb+inc+ai-exp)+' ₽'; const e5=document.getElementById('studentStats'); if(e5)e5.innerHTML=`Сдали: <b>${pc} из ${tc}</b> · Собрано: <b>${formatMoney(inc)} ₽</b>`; const e6=document.getElementById('expenseStats'); if(e6)e6.innerHTML=`Итого расход: <b>${formatMoney(exp)} ₽</b>`; }
+function recalcAdmin() { let inc=0,pc=0,tc=0,exp=0; document.querySelectorAll('#adminStudents .student-row').forEach(r => { const name=r.querySelector('.a-name').value.trim(); const amount=Number(r.querySelector('.a-amount').value)||0; const paid=r.querySelector('.a-paid').checked; if(name||amount){tc++;if(paid){inc+=amount;pc++;}} }); document.querySelectorAll('#adminExpenses .expense-row').forEach(r => { exp += Number(r.querySelector('.a-amount').value)||0; }); const pb=Number(document.getElementById('editPrevBalance')?document.getElementById('editPrevBalance').value:0)||0; const ai=Number(document.getElementById('editAddIncome')?document.getElementById('editAddIncome').value:0)||0; const e1=document.getElementById('autoIncome'); if(e1)e1.textContent=formatMoney(inc)+' ₽'; const e2=document.getElementById('autoExpense'); if(e2)e2.textContent=formatMoney(exp)+' ₽'; const e3=document.getElementById('autoBudget'); if(e3)e3.textContent=formatMoney(inc+ai)+' ₽'; const e4=document.getElementById('autoBalance'); if(e4)e4.textContent=formatMoney(pb+inc+ai-exp)+' ₽'; const e5=document.getElementById('studentStats'); if(e5)e5.innerHTML='Сдали: <b>' + pc + ' из ' + tc + '</b> · Собрано: <b>' + formatMoney(inc) + ' ₽</b>'; const e6=document.getElementById('expenseStats'); if(e6)e6.innerHTML='Итого расход: <b>' + formatMoney(exp) + ' ₽</b>'; }
 function collectAdminData() {
 const g = getGroup(currentGroupId);
 if (g) { const gn=document.getElementById('editGroupNumber'); const gname=document.getElementById('editGroupName'); if(gn)g.number=gn.value.trim(); if(gname)g.name=gname.value.trim(); }
@@ -2073,13 +2235,13 @@ fillChildrenDatalist();
 document.getElementById('headerGroupLabel').textContent = groupLabel(getGroup(currentGroupId));
 if (btn) { btn.disabled = false; btn.innerHTML = '💾 Сохранить'; }
 }
-async function saveToFirebase() { try { await db.collection('data').doc('main').set({ ...app, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); showSaveIndicator(); } catch(err) { console.error(err); alert('❌ Ошибка: ' + err.message); } }
-async function saveSettings() { try { await db.collection('settings').doc('passwords').set(settings); await db.collection('public').doc('config').set({ maintenanceMode: settings.maintenanceMode }, { merge: true }); showSaveIndicator(); } catch(err) { alert('❌ Ошибка: ' + err.message); } }
+async function saveToFirebase() { try { await db.collection('data').doc('main').set(Object.assign({}, app, { updatedAt: firebase.firestore.FieldValue.serverTimestamp() })); showSaveIndicator(); } catch(err) { console.error(err); alert('❌ Ошибка: ' + err.message); } }
+async function saveSettings() { try { await db.collection('settings').doc('passwords').set(settings); await db.collection('public').doc('config').set({ maintenanceMode: settings.maintenanceMode }, { merge: true }); showSaveIndicator(); } catch(err) { alert(' Ошибка: ' + err.message); } }
 async function createNewMonth(){const n=document.getElementById('newMonthName').value.trim();if(!n){alert('Введите название');return;}collectAdminData();data.months.push({id:'month_'+Date.now(),name:n,prevBalance:0,additionalIncome:0,students:[],expenses:[]});await saveToFirebase();renderAdminMonths();renderMonthSelector();clearDirty();alert('✅ Месяц создан');}
 async function setCurrentMonth(id){collectAdminData();currentMonthId=id;data.currentMonthId=id;await saveToFirebase();renderAdminMonths();renderMonthSelector();renderAll();clearDirty();}
 async function renameMonth(id){const m=data.months.find(x=>x.id===id);if(!m)return;const n=prompt('Новое название:',m.name);if(!n)return;collectAdminData();m.name=n.trim();await saveToFirebase();renderAdminMonths();renderMonthSelector();clearDirty();}
 async function deleteMonth(id){if(data.months.length<=1){alert('Нельзя удалить последний');return;}const m=data.months.find(x=>x.id===id);if(!confirm('Удалить "'+m.name+'"?'))return;collectAdminData();data.months=data.months.filter(x=>x.id!==id);if(currentMonthId===id)currentMonthId=data.months[0].id;data.currentMonthId=currentMonthId;await saveToFirebase();renderAdminMonths();renderMonthSelector();renderAll();clearDirty();}
-async function archiveMonth(){if(!confirm('Архивировать текущий месяц?'))return;collectAdminData();const m=getCurrentMonth();const bal=calcBalance(m);data.archive.push({...m,students:[...m.students],expenses:[...m.expenses]});data.months=data.months.filter(x=>x.id!==m.id);const nm=prompt('Название нового месяца:',new Date().toLocaleString('ru',{month:'long',year:'numeric'}));if(!nm)return;const nmo={id:'month_'+Date.now(),name:nm,prevBalance:bal,additionalIncome:0,students:[],expenses:[]};data.months.push(nmo);currentMonthId=nmo.id;data.currentMonthId=nmo.id;await saveToFirebase();renderAll();renderAdminMonths();renderMonthSelector();clearDirty();alert('✅ Архивировано. Остаток '+formatMoney(bal)+' ₽ перенесён.');}
+async function archiveMonth(){if(!confirm('Архивировать текущий месяц?'))return;collectAdminData();const m=getCurrentMonth();const bal=calcBalance(m);data.archive.push(Object.assign({}, m, {students:[...m.students],expenses:[...m.expenses]}));data.months=data.months.filter(x=>x.id!==m.id);const nm=prompt('Название нового месяца:',new Date().toLocaleString('ru',{month:'long',year:'numeric'}));if(!nm)return;const nmo={id:'month_'+Date.now(),name:nm,prevBalance:bal,additionalIncome:0,students:[],expenses:[]};data.months.push(nmo);currentMonthId=nmo.id;data.currentMonthId=nmo.id;await saveToFirebase();renderAll();renderAdminMonths();renderMonthSelector();clearDirty();alert('✅ Архивировано. Остаток '+formatMoney(bal)+' ₽ перенесён.');}
 function renderOwner() { renderOwnerGroups(); renderOwnerSettings(); }
 function renderOwnerGroups() {
 let groupsHtml = '';
@@ -2089,41 +2251,20 @@ const gd = app.groupData[g.id];
 const kc = gd ? (gd.children || []).length : 0;
 const curM = gd ? (gd.months || []).find(mm => mm.id === gd.currentMonthId) : null;
 const bal = curM ? calcBalance(curM) : 0;
-groupsHtml += `<div class="month-item${g.id===currentGroupId?' is-current':''}"><div><strong>${groupLabel(g)}</strong>${g.id===currentGroupId?'<span class="month-current-badge">открыта</span>':''}<br><small style="color:var(--gray)">👥 ${uc} польз. ·  ${kc} детей · 💰 ${formatMoney(bal)} ₽</small></div><div class="month-item-actions"><button class="btn btn-primary btn-sm" onclick="ownerSwitchGroup('${g.id}')"> Открыть</button><button class="btn btn-warning btn-sm" onclick="ownerSwitchGroup('${g.id}');showSection('admin', document.getElementById('navAdminBtn'))">️ Админ</button><button class="btn btn-danger btn-sm" onclick="deleteGroup('${g.id}')">🗑</button></div></div>`;
+groupsHtml += '<div class="month-item' + (g.id===currentGroupId?' is-current':'') + '"><div><strong>' + groupLabel(g) + '</strong>' + (g.id===currentGroupId?'<span class="month-current-badge">открыта</span>':'') + '<br><small style="color:var(--gray)">👥 ' + uc + ' польз. · 👶 ' + kc + ' детей · 💰 ' + formatMoney(bal) + ' ₽</small></div><div class="month-item-actions"><button class="btn btn-primary btn-sm" onclick="ownerSwitchGroup(\'' + g.id + '\')"> Открыть</button><button class="btn btn-warning btn-sm" onclick="ownerSwitchGroup(\'' + g.id + '\');showSection(\'admin\', document.getElementById(\'navAdminBtn\'))">️ Админ</button><button class="btn btn-danger btn-sm" onclick="deleteGroup(\'' + g.id + '\')">🗑</button></div></div>';
 });
-document.getElementById('owner-groups').innerHTML = `
-<div class="admin-card"><div class="admin-card-title"> Полное управление сайтом</div>
-<div class="hint">Вы управляете ВСЕМ сайтом и всеми группами. Переключайте группы в шапке или кнопками ниже.</div>
-<div class="admin-card-title">🔐 Защита (Firebase Auth)</div>
-<div class="hint">${protectionEnabled ? '✅ Защита ВКЛЮЧЕНА. Вход только через Firebase Auth.' : '️ Защита пока выключена. Нажмите кнопку, затем опубликуйте новые правила Firestore.'}</div>
-<button class="btn btn-gold btn-block" onclick="enableProtection()">🔐 Включить защиту</button></div>
-<div class="admin-card"><div class="admin-card-title">➕ Создать группу</div>
-<div class="form-group"><label>Номер</label><input type="number" id="newGroupNumber" placeholder="8"></div>
-<div class="form-group"><label>Название</label><input type="text" id="newGroupName" placeholder="Ромашка"></div>
-<button class="btn btn-success" onclick="createGroup()">➕ Создать</button></div>
-<div class="admin-card"><div class="admin-card-title"> Все группы сайта</div>${groupsHtml}</div>`;
+document.getElementById('owner-groups').innerHTML = '<div class="admin-card"><div class="admin-card-title">👑 Полное управление сайтом</div><div class="hint">Вы управляете ВСЕМ сайтом и всеми группами. Переключайте группы в шапке или кнопками ниже.</div><div class="admin-card-title"> Защита (Firebase Auth)</div><div class="hint">' + (protectionEnabled ? '✅ Защита ВКЛЮЧЕНА. Вход только через Firebase Auth.' : '⚠️ Защита пока выключена. Нажмите кнопку, затем опубликуйте новые правила Firestore.') + '</div><button class="btn btn-gold btn-block" onclick="enableProtection()">🔐 Включить защиту</button></div><div class="admin-card"><div class="admin-card-title">➕ Создать группу</div><div class="form-group"><label>Номер</label><input type="number" id="newGroupNumber" placeholder="8"></div><div class="form-group"><label>Название</label><input type="text" id="newGroupName" placeholder="Ромашка"></div><button class="btn btn-success" onclick="createGroup()">➕ Создать</button></div><div class="admin-card"><div class="admin-card-title">🏫 Все группы сайта</div>' + groupsHtml + '</div>';
 }
 function renderOwnerSettings() {
-document.getElementById('owner-settings').innerHTML = `
-<div class="admin-card"><div class="admin-card-title"> Режим тех. работ</div>
-<div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fff3cd;border-radius:8px;margin-bottom:12px">
-<input type="checkbox" id="maintenanceToggle" style="width:20px;height:20px" ${settings.maintenanceMode?'checked':''}>
-<label for="maintenanceToggle" style="cursor:pointer;color:#856404"><b>Режим технических работ</b></label></div>
-<button class="btn btn-primary" onclick="saveSiteSettings()"> Сохранить</button></div>
-<div class="admin-card"><div class="admin-card-title"> Данные владельца</div>
-<div class="form-group"><label>Телефон</label><input type="tel" id="ownerPhoneInput" value="${escapeHtml(settings.ownerPhone)}"></div>
-<div class="form-group"><label>Пароль</label><input type="text" id="ownerPasswordInput" value="${escapeHtml(settings.ownerPassword)}"></div>
-<button class="btn btn-primary" onclick="saveOwnerCredentials()"> Сохранить</button></div>
-<div class="admin-card danger-zone"><div class="admin-card-title">⚠️ Опасная зона</div>
-<button class="btn btn-danger btn-block" onclick="resetAllData()">️ Удалить ВСЕ данные</button></div>`;
+document.getElementById('owner-settings').innerHTML = '<div class="admin-card"><div class="admin-card-title"> Режим тех. работ</div><div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fff3cd;border-radius:8px;margin-bottom:12px"><input type="checkbox" id="maintenanceToggle" style="width:20px;height:20px" ' + (settings.maintenanceMode?'checked':'') + '><label for="maintenanceToggle" style="cursor:pointer;color:#856404"><b>Режим технических работ</b></label></div><button class="btn btn-primary" onclick="saveSiteSettings()">💾 Сохранить</button></div><div class="admin-card"><div class="admin-card-title"> Данные владельца</div><div class="form-group"><label>Телефон</label><input type="tel" id="ownerPhoneInput" value="' + escapeHtml(settings.ownerPhone) + '"></div><div class="form-group"><label>Пароль</label><input type="text" id="ownerPasswordInput" value="' + escapeHtml(settings.ownerPassword) + '"></div><button class="btn btn-primary" onclick="saveOwnerCredentials()">💾 Сохранить</button></div><div class="admin-card danger-zone"><div class="admin-card-title">⚠️ Опасная зона</div><button class="btn btn-danger btn-block" onclick="resetAllData()">🗑 Удалить ВСЕ данные</button></div>';
 }
 function ownerSwitchGroup(gid){ if(adminDirty)collectAdminData(); currentGroupId=gid; bindGroupData(); renderAll(); renderOwner(); document.getElementById('headerGroupLabel').textContent=groupLabel(getGroup(currentGroupId)); const ogsel=document.getElementById('ownerGroupSelect'); if(ogsel) ogsel.value=gid; clearDirty(); }
-async function createGroup(){const num=document.getElementById('newGroupNumber').value.trim();const name=document.getElementById('newGroupName').value.trim();if(!num||!name){alert('Заполните оба поля');return;}app.groups.push({id:'group_'+Date.now(),number:num,name});await saveToFirebase();if(protectionEnabled){await db.collection('public').doc('config').set({groups:app.groups.map(g=>({id:g.id,number:g.number,name:g.name}))},{merge:true});}renderOwner();fillLoginGroups();const ogs=document.getElementById('ownerGroupSelect'); if(ogs){const o=document.createElement('option');o.value=app.groups[app.groups.length-1].id;o.textContent=' '+groupLabel(app.groups[app.groups.length-1]);ogs.appendChild(o);} alert('✅ Группа создана');}
+async function createGroup(){const num=document.getElementById('newGroupNumber').value.trim();const name=document.getElementById('newGroupName').value.trim();if(!num||!name){alert('Заполните оба поля');return;}app.groups.push({id:'group_'+Date.now(),number:num,name:name});await saveToFirebase();if(protectionEnabled){await db.collection('public').doc('config').set({groups:app.groups.map(g=>({id:g.id,number:g.number,name:g.name}))},{merge:true});}renderOwner();fillLoginGroups();const ogs=document.getElementById('ownerGroupSelect'); if(ogs){const o=document.createElement('option');o.value=app.groups[app.groups.length-1].id;o.textContent='🏫 '+groupLabel(app.groups[app.groups.length-1]);ogs.appendChild(o);} alert('✅ Группа создана');}
 async function deleteGroup(id){if(app.groups.length<=1){alert('Нельзя удалить последнюю');return;}const g=getGroup(id);if(!confirm('Удалить "'+groupLabel(g)+'"?'))return;collectAdminData();app.groups=app.groups.filter(x=>x.id!==id);app.users=app.users.filter(x=>x.groupId!==id);delete app.groupData[id];if(currentGroupId===id)currentGroupId=app.groups[0].id;bindGroupData();await saveToFirebase();if(protectionEnabled){await db.collection('public').doc('config').set({groups:app.groups.map(g=>({id:g.id,number:g.number,name:g.name}))},{merge:true});}renderAll();renderOwner();enterApp();}
-async function saveSiteSettings(){settings.maintenanceMode=document.getElementById('maintenanceToggle').checked;await saveSettings();alert(settings.maintenanceMode?'️ Тех. работы ВКЛЮЧЕНЫ':'✅ Тех. работы ВЫКЛЮЧЕНЫ');}
+async function saveSiteSettings(){settings.maintenanceMode=document.getElementById('maintenanceToggle').checked;await saveSettings();alert(settings.maintenanceMode?'⚠️ Тех. работы ВКЛЮЧЕНЫ':'✅ Тех. работы ВЫКЛЮЧЕНЫ');}
 async function saveOwnerCredentials(){const ph=document.getElementById('ownerPhoneInput').value.trim();const pw=document.getElementById('ownerPasswordInput').value.trim();if(normalizePhone(ph).length<6||pw.length<3){alert('Проверьте данные');return;}settings.ownerPhone=ph;settings.ownerPassword=pw;await saveSettings();alert('✅ Сохранено');}
 async function resetAllData(){if(!confirm('Удалить ВСЕ данные?')||!confirm('Точно?'))return;app=getDefaultApp();currentGroupId=app.groups[0].id;bindGroupData();await saveToFirebase();location.reload();}
-document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', function(e) { if (e.target === o) o.classList.remove('active'); }));
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').catch(() => {}); }); }
 loadFromFirebase();
 </script>
