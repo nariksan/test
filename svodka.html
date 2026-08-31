@@ -20,6 +20,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
 .content { padding:30px; }
 .section { margin-bottom:30px; }
 .section-title { font-size:1.3em; font-weight:700; color:#2d8b4d; margin-bottom:16px; padding-bottom:10px; border-bottom:3px solid #e87722; display:flex; align-items:center; gap:10px; }
+.section-title.plans { color:#e87722; border-bottom-color:#2d8b4d; }
 .section-icon { font-size:1.2em; }
 .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:20px; }
 .summary-card { background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%); padding:16px; border-radius:12px; text-align:center; border-left:4px solid #2d8b4d; }
@@ -62,6 +63,10 @@ tr:hover { background:#f8f9fa; }
 .loading { text-align:center; padding:60px; color:#999; }
 .loading-spinner { display:inline-block; width:40px; height:40px; border:4px solid #e9ecef; border-top-color:#2d8b4d; border-radius:50%; animation:spin 1s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
+.progress-bar { background:#e9ecef; border-radius:10px; height:24px; overflow:hidden; margin:10px 0; }
+.progress-fill { background:linear-gradient(90deg,#28a745,#2d8b4d); height:100%; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.85em; transition:width 0.5s; }
+.plans-info { background:#fff3cd; border-left:4px solid #fd7e14; padding:15px 20px; border-radius:8px; margin-bottom:20px; color:#856404; }
+.plans-info strong { color:#5b4300; }
 @media (max-width:600px) { .header { padding:25px 20px; } .header h1 { font-size:1.4em; } .content { padding:20px; } .summary-grid { grid-template-columns:repeat(2,1fr); } }
 </style>
 </head>
@@ -122,7 +127,7 @@ document.getElementById('app').innerHTML = '<div class="container"><div class="e
 }
 
 function showPasswordModal() {
-document.getElementById('app').innerHTML = '<div class="password-modal"><div class="password-box"><h2>🔐 Введите пароль</h2><p style="text-align:center;color:#666;margin-bottom:16px;font-size:0.9em">Для просмотра сводки нужен пароль</p><input type="password" id="pwdInput" placeholder="Пароль" onkeypress="if(event.key===\'Enter\')checkPassword()"><button onclick="checkPassword()"> Войти</button><div class="password-error" id="pwdError">Неверный пароль</div><p style="text-align:center;margin-top:16px;font-size:0.8em;color:#999">Пароль должен быть в сообщении от администратора группы</p></div></div>';
+document.getElementById('app').innerHTML = '<div class="password-modal"><div class="password-box"><h2> Введите пароль</h2><p style="text-align:center;color:#666;margin-bottom:16px;font-size:0.9em">Для просмотра сводки нужен пароль</p><input type="password" id="pwdInput" placeholder="Пароль" onkeypress="if(event.key===\'Enter\')checkPassword()"><button onclick="checkPassword()"> Войти</button><div class="password-error" id="pwdError">Неверный пароль</div><p style="text-align:center;margin-top:16px;font-size:0.8em;color:#999">Пароль должен быть в сообщении от администратора группы</p></div></div>';
 document.getElementById('pwdInput').focus();
 }
 
@@ -204,48 +209,64 @@ const cPrev = Number(currentM.prevBalance || 0);
 const cBal = cPrev + cInc + cAi - cExp;
 const cPc = currentM.students.filter(s => s.paid).length;
 const cTc = currentM.students.filter(s => s.name).length;
-const cRemaining = currentM.students.reduce((s, x) => s + (x.name ? Number(x.amount || 0) : 0), 0) - cInc;
+const totalExpected = currentM.students.reduce((s, x) => s + (x.name ? Number(x.amount || 0) : 0), 0);
+const remaining = totalExpected - cInc;
+const progressPercent = totalExpected > 0 ? Math.round((cInc / totalExpected) * 100) : 0;
 
-html += '<div class="section"><div class="section-title"><span class="section-icon">📋</span>Текущий месяц: ' + escapeHtml(currentM.name) + '</div>';
+html += '<div class="section"><div class="section-title plans"><span class="section-icon">📋</span>Планы на ' + escapeHtml(currentM.name) + '</div>';
+
+html += '<div class="plans-info"><strong>💡 Уважаемые родители!</strong> Ниже представлена информация о планируемом сборе взносов на текущий месяц. Мы собираем средства на нужды группы. Пожалуйста, ознакомьтесь с планами расходов и статусом сбора.</div>';
+
+// На что планируется потратить
+if (currentM.expenses.length > 0) {
+html += '<h3 style="color:#e87722;margin-bottom:10px;font-size:1.1em">🎯 На что планируется потратить</h3>';
+html += '<table><thead><tr><th style="width:40px">№</th><th>Статья расходов</th><th style="width:120px;text-align:right">Сумма</th></tr></thead><tbody>';
+currentM.expenses.forEach((e, i) => {
+html += '<tr><td>' + (i+1) + '</td><td>' + escapeHtml(e.description || '—') + '</td><td class="amount expense-amount">' + (e.amount ? formatMoney(e.amount) + ' ₽' : '—') + '</td></tr>';
+});
+html += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО ЗАПЛАНИРОВАНО:</strong></td><td class="amount expense-amount"><strong>' + formatMoney(cExp) + ' ₽</strong></td></tr>';
+html += '</tbody></table>';
+} else {
+html += '<div class="plans-info">📝 Планы расходов на текущий месяц ещё не сформированы. Информация будет обновлена.</div>';
+}
+
+// Прогресс сбора
+html += '<h3 style="color:#2d8b4d;margin:20px 0 10px;font-size:1.1em">📊 Прогресс сбора взносов</h3>';
 html += '<div class="summary-grid">';
 html += '<div class="summary-card blue"><div class="summary-label">Остаток с прошл. мес.</div><div class="summary-value">' + formatMoney(cPrev) + ' ₽</div></div>';
-html += '<div class="summary-card green"><div class="summary-label">Собрано</div><div class="summary-value positive">' + formatMoney(cInc) + ' ₽</div></div>';
-html += '<div class="summary-card orange"><div class="summary-label">Осталось собрать</div><div class="summary-value">' + formatMoney(Math.max(0, cRemaining)) + ' ₽</div></div>';
-html += '<div class="summary-card red"><div class="summary-label">Расход</div><div class="summary-value negative">' + formatMoney(cExp) + ' ₽</div></div>';
-html += '<div class="summary-card green"><div class="summary-label">Текущий остаток</div><div class="summary-value positive">' + formatMoney(cBal) + ' ₽</div></div>';
+html += '<div class="summary-card green"><div class="summary-label">Уже собрано</div><div class="summary-value positive">' + formatMoney(cInc) + ' ₽</div></div>';
+html += '<div class="summary-card orange"><div class="summary-label">Осталось собрать</div><div class="summary-value">' + formatMoney(Math.max(0, remaining)) + ' ₽</div></div>';
+html += '<div class="summary-card green"><div class="summary-label">Текущий баланс</div><div class="summary-value positive">' + formatMoney(cBal) + ' ₽</div></div>';
 html += '</div>';
 
+if (totalExpected > 0) {
+html += '<div class="progress-bar"><div class="progress-fill" style="width:' + progressPercent + '%">' + progressPercent + '%</div></div>';
+html += '<p style="text-align:center;color:#666;font-size:0.9em">Собрано ' + cPc + ' из ' + cTc + ' родителей</p>';
+}
+
+// Кто сколько должен
 if (cTc > 0) {
+html += '<h3 style="color:#2d8b4d;margin:20px 0 10px;font-size:1.1em">👥 Сбор взносов по родителям</h3>';
 html += '<table><thead><tr><th style="width:40px">№</th><th>ФИО ребёнка</th><th style="width:110px">Сумма</th><th style="width:110px;text-align:center">Статус</th></tr></thead><tbody>';
 currentM.students.filter(s => s.name).forEach((s, i) => {
-html += '<tr><td>' + (i+1) + '</td><td>' + escapeHtml(s.name) + '</td><td class="amount">' + (s.amount ? formatMoney(s.amount) + ' ₽' : '—') + '</td><td style="text-align:center" class="' + (s.paid ? 'status-paid' : 'status-unpaid') + '">' + (s.paid ? '✔ Оплачено' : '⏳ Ожидается') + '</td></tr>';
+html += '<tr><td>' + (i+1) + '</td><td>' + escapeHtml(s.name) + '</td><td class="amount">' + (s.amount ? formatMoney(s.amount) + ' ₽' : '—') + '</td><td style="text-align:center" class="' + (s.paid ? 'status-paid' : 'status-unpaid') + '">' + (s.paid ? '✔ Сдал' : '⏳ Ожидается') + '</td></tr>';
 });
 html += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО:</strong> сдали ' + cPc + ' из ' + cTc + '</td><td class="amount"><strong>' + formatMoney(cInc) + ' ₽</strong></td><td></td></tr>';
 html += '</tbody></table>';
-}
-
-// === ЗАПЛАНИРОВАННЫЕ РАСХОДЫ (НА ЧТО СОБИРАЕМ) ===
-if (currentM.expenses.length > 0) {
-html += '<div style="margin-top:20px"><h3 style="color:#2d8b4d;margin-bottom:10px;font-size:1.05em">💰 Запланировано (на что собираем)</h3><table><thead><tr><th style="width:40px">№</th><th>На что потрачено</th><th style="width:120px;text-align:right">Сумма</th></tr></thead><tbody>';
-currentM.expenses.forEach((e, i) => {
-html += '<tr><td>' + (i+1) + '</td><td>' + escapeHtml(e.description || '—') + '</td><td class="amount expense-amount">- ' + (e.amount ? formatMoney(e.amount) + ' ₽' : '—') + '</td></tr>';
-});
-html += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО ЗАПЛАНИРОВАНО:</strong></td><td class="amount expense-amount"><strong>' + formatMoney(cExp) + ' ₽</strong></td></tr>';
-html += '</tbody></table></div>';
 }
 
 const paidList = currentM.students.filter(s => s.name && s.paid);
 const unpaidList = currentM.students.filter(s => s.name && !s.paid);
 
 if (reportData.showPaid && paidList.length > 0) {
-html += '<div style="margin-top:20px"><h3 style="color:#28a745;margin-bottom:10px;font-size:1.05em">✅ Сдали взносы (' + paidList.length + ')</h3><div class="paid-list">';
+html += '<div style="margin-top:20px"><h3 style="color:#28a745;margin-bottom:10px;font-size:1.05em">✅ Уже сдали (' + paidList.length + ')</h3><div class="paid-list">';
 paidList.forEach(s => { html += '<div class="list-item">✔ ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>'; });
 html += '</div></div>';
 }
 
 if (reportData.showUnpaid && unpaidList.length > 0) {
-html += '<div style="margin-top:15px"><h3 style="color:#fd7e14;margin-bottom:10px;font-size:1.05em">⏳ Ожидают оплаты (' + unpaidList.length + ')</h3><div class="unpaid-list">';
-unpaidList.forEach(s => { html += '<div class="list-item">⏳ ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>'; });
+html += '<div style="margin-top:15px"><h3 style="color:#fd7e14;margin-bottom:10px;font-size:1.05em">⏳ Ещё не сдали (' + unpaidList.length + ')</h3><div class="unpaid-list">';
+unpaidList.forEach(s => { html += '<div class="list-item"> ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>'; });
 html += '</div></div>';
 }
 
