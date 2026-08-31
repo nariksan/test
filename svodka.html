@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2d8b4d">
 <title>Сводка группы</title>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -121,7 +122,7 @@ document.getElementById('app').innerHTML = '<div class="container"><div class="e
 }
 
 function showPasswordModal() {
-document.getElementById('app').innerHTML = '<div class="password-modal"><div class="password-box"><h2> Введите пароль</h2><p style="text-align:center;color:#666;margin-bottom:16px;font-size:0.9em">Для просмотра сводки нужен пароль</p><input type="password" id="pwdInput" placeholder="Пароль" onkeypress="if(event.key===\'Enter\')checkPassword()"><button onclick="checkPassword()">🔓 Войти</button><div class="password-error" id="pwdError">Неверный пароль</div><p style="text-align:center;margin-top:16px;font-size:0.8em;color:#999">Пароль должен быть в сообщении от администратора группы</p></div></div>';
+document.getElementById('app').innerHTML = '<div class="password-modal"><div class="password-box"><h2>🔐 Введите пароль</h2><p style="text-align:center;color:#666;margin-bottom:16px;font-size:0.9em">Для просмотра сводки нужен пароль</p><input type="password" id="pwdInput" placeholder="Пароль" onkeypress="if(event.key===\'Enter\')checkPassword()"><button onclick="checkPassword()"> Войти</button><div class="password-error" id="pwdError">Неверный пароль</div><p style="text-align:center;margin-top:16px;font-size:0.8em;color:#999">Пароль должен быть в сообщении от администратора группы</p></div></div>';
 document.getElementById('pwdInput').focus();
 }
 
@@ -155,6 +156,7 @@ if (reportData.comment) {
 html += '<div class="comment-box">💬 ' + escapeHtml(reportData.comment) + '</div>';
 }
 
+// === АРХИВНЫЙ МЕСЯЦ (ИТОГИ) ===
 if (archiveM) {
 const aInc = calcIncome(archiveM);
 const aAi = Number(archiveM.additionalIncome || 0);
@@ -164,7 +166,7 @@ const aBal = aPrev + aInc + aAi - aExp;
 const aPc = archiveM.students.filter(s => s.paid).length;
 const aTc = archiveM.students.filter(s => s.name).length;
 
-html += '<div class="section"><div class="section-title"><span class="section-icon"></span>Итоги: ' + escapeHtml(archiveM.name) + '</div>';
+html += '<div class="section"><div class="section-title"><span class="section-icon">📊</span>Итоги: ' + escapeHtml(archiveM.name) + '</div>';
 html += '<div class="summary-grid">';
 html += '<div class="summary-card blue"><div class="summary-label">Остаток с прошл. мес.</div><div class="summary-value">' + formatMoney(aPrev) + ' ₽</div></div>';
 html += '<div class="summary-card green"><div class="summary-label">Приход (взносы)</div><div class="summary-value positive">' + formatMoney(aInc) + ' ₽</div></div>';
@@ -193,6 +195,7 @@ html += '</tbody></table></div>';
 html += '</div>';
 }
 
+// === ТЕКУЩИЙ МЕСЯЦ (ПЛАНЫ) ===
 if (currentM) {
 const cInc = calcIncome(currentM);
 const cAi = Number(currentM.additionalIncome || 0);
@@ -221,6 +224,16 @@ html += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО:</strong> с�
 html += '</tbody></table>';
 }
 
+// === ЗАПЛАНИРОВАННЫЕ РАСХОДЫ (НА ЧТО СОБИРАЕМ) ===
+if (currentM.expenses.length > 0) {
+html += '<div style="margin-top:20px"><h3 style="color:#2d8b4d;margin-bottom:10px;font-size:1.05em">💰 Запланировано (на что собираем)</h3><table><thead><tr><th style="width:40px">№</th><th>На что потрачено</th><th style="width:120px;text-align:right">Сумма</th></tr></thead><tbody>';
+currentM.expenses.forEach((e, i) => {
+html += '<tr><td>' + (i+1) + '</td><td>' + escapeHtml(e.description || '—') + '</td><td class="amount expense-amount">- ' + (e.amount ? formatMoney(e.amount) + ' ₽' : '—') + '</td></tr>';
+});
+html += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО ЗАПЛАНИРОВАНО:</strong></td><td class="amount expense-amount"><strong>' + formatMoney(cExp) + ' ₽</strong></td></tr>';
+html += '</tbody></table></div>';
+}
+
 const paidList = currentM.students.filter(s => s.name && s.paid);
 const unpaidList = currentM.students.filter(s => s.name && !s.paid);
 
@@ -231,18 +244,9 @@ html += '</div></div>';
 }
 
 if (reportData.showUnpaid && unpaidList.length > 0) {
-html += '<div style="margin-top:15px"><h3 style="color:#fd7e14;margin-bottom:10px;font-size:1.05em"> Ожидают оплаты (' + unpaidList.length + ')</h3><div class="unpaid-list">';
+html += '<div style="margin-top:15px"><h3 style="color:#fd7e14;margin-bottom:10px;font-size:1.05em">⏳ Ожидают оплаты (' + unpaidList.length + ')</h3><div class="unpaid-list">';
 unpaidList.forEach(s => { html += '<div class="list-item">⏳ ' + escapeHtml(s.name) + (s.amount ? ' — ' + formatMoney(s.amount) + ' ₽' : '') + '</div>'; });
 html += '</div></div>';
-}
-
-if (currentM.expenses.length > 0) {
-html += '<div style="margin-top:20px"><h3 style="color:#2d8b4d;margin-bottom:10px;font-size:1.05em">💸 Расходы текущего месяца</h3><table><thead><tr><th style="width:40px">№</th><th>На что потрачено</th><th style="width:120px;text-align:right">Сумма</th></tr></thead><tbody>';
-currentM.expenses.forEach((e, i) => {
-html += '<tr><td>' + (i+1) + '</td><td>' + escapeHtml(e.description || '—') + '</td><td class="amount expense-amount">- ' + (e.amount ? formatMoney(e.amount) + ' ₽' : '—') + '</td></tr>';
-});
-html += '<tr class="totals-row"><td colspan="2"><strong>ИТОГО РАСХОД:</strong></td><td class="amount expense-amount"><strong>' + formatMoney(cExp) + ' ₽</strong></td></tr>';
-html += '</tbody></table></div>';
 }
 
 html += '</div>';
