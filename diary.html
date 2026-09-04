@@ -894,7 +894,7 @@ footer {
     <li><a onclick="filterPosts('songs')">Песни</a></li>
     <li><a onclick="filterPosts('stories')">Истории</a></li>
     <li><a onclick="filterPosts('photos')">Фото</a></li>
-    <li><a class="admin-link" onclick="toggleAdminPanel()">⚙ Админ</a></li>
+    <li><a class="admin-link" onclick="toggleAdminPanel()"> Админ</a></li>
     <li><a class="admin-link" onclick="goToIndex()" style="border-color:var(--accent-3);color:var(--accent-3)">← Назад</a></li>
   </ul>
 </nav>
@@ -935,7 +935,7 @@ footer {
 <!-- ADMIN PANEL -->
 <div class="admin-panel" id="adminPanel">
   <div class="admin-header">
-    <div class="admin-title"> Админ-панель</div>
+    <div class="admin-title">🔐 Админ-панель</div>
     <div class="admin-actions">
       <button class="btn" onclick="showMainView()">👁 На сайт</button>
       <button class="btn" onclick="exportData()">💾 Экспорт</button>
@@ -957,7 +957,7 @@ footer {
         <label class="form-label">Категория</label>
         <select class="form-select" id="postCategory">
           <option value="thoughts">💭 Мысль</option>
-          <option value="songs">🎵 Песня</option>
+          <option value="songs"> Песня</option>
           <option value="stories">📖 История</option>
           <option value="photos"> Фото</option>
         </select>
@@ -986,7 +986,7 @@ footer {
       <div class="form-group full">
         <label class="form-label">Ссылка на фото</label>
         <div class="form-hint">
-          📌 <b>Как добавить фото:</b><br>
+           <b>Как добавить фото:</b><br>
           1. Загрузи фото в папку <code>images</code> в своём репозитории GitHub.<br>
           2. Открой файл, нажми кнопку <b>Raw</b> и скопируй ссылку.<br>
           3. Вставь ссылку сюда.
@@ -1018,7 +1018,7 @@ footer {
 <div class="toast" id="toast"></div>
 
 <script>
-// Firebase Config
+// ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyCw8S1fwhfKUMUtNsDFDbz-oFeSkRD_NOk",
   authDomain: "evgenii-music-b5adf.firebaseapp.com",
@@ -1028,10 +1028,16 @@ const firebaseConfig = {
   appId: "1:518513745915:web:2d0e8dc9e1e6f37bccb55e"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+let db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  console.log('Firebase подключён');
+} catch (e) {
+  console.error('Ошибка Firebase:', e);
+}
 
-// Check auth
+// ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
 const userName = localStorage.getItem('evgenii_user');
 const licenseAccepted = localStorage.getItem('evgenii_agreement_accepted') === 'true';
 
@@ -1039,74 +1045,105 @@ if (!userName || !licenseAccepted) {
   window.location.href = 'index.html';
 }
 
-// Constants
-const STORAGE_KEY = 'evgenii_ai_posts';
-const LIKES_KEY = 'evgenii_ai_likes';
+// ===== ДАННЫЕ =====
 const ADMIN_PASSWORD = 'N130289s';
+let allPosts = [];
+let unsubscribePosts = null;
 
-// Default posts
-function getDefaultPosts() {
-  return [
-    {
-      id: 1, category: 'thoughts', date: '4 сентября 2026',
-      title: 'Почему тишина громче слов',
-      text: 'Иногда понимаешь, что самые важные вещи происходят в паузах между словами.\nВ тех моментах, когда никто не говорит, но все всё понимают.\nМожет, именно там и живёт настоящая связь между людьми?',
-      tags: ['философия', 'жизнь'], image: null, likes: 47, createdAt: Date.now() - 100000
-    },
-    {
-      id: 2, category: 'songs', date: '2 сентября 2026',
-      title: 'Ночной город (фрагмент)',
-      text: 'Огни фонарей рисуют тени на асфальте,\nЯ иду туда, где меня никто не ждёт.\nНочной город шепчет мне свои секреты,\nА я ему пою про то, что не найдёт...',
-      tags: ['ночь', 'город', 'лирика'], image: null, likes: 89, createdAt: Date.now() - 200000
-    },
-    {
-      id: 3, category: 'photos', date: '28 августа 2026',
-      title: 'Рассвет на крыше',
-      text: 'Встал в 5 утра, чтобы поймать этот момент.\nГород ещё спал, а небо уже горело.\nИногда стоит потерпеть бессонницу ради таких кадров.',
-      tags: ['рассвет', 'город'],
-      image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800',
-      likes: 234, createdAt: Date.now() - 400000
-    }
-  ];
-}
-
-function getPosts() {
-  const data = localStorage.getItem(STORAGE_KEY);
-  if (data) return JSON.parse(data);
-  const defaults = getDefaultPosts();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
-  return defaults;
-}
-
-function savePosts(posts) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-}
-
-function getLikedPosts() {
-  const data = localStorage.getItem(LIKES_KEY);
-  return data ? JSON.parse(data) : [];
-}
-
-function toggleLike(postId) {
-  const liked = getLikedPosts();
-  const posts = getPosts();
-  const idx = liked.indexOf(postId);
-  if (idx > -1) {
-    liked.splice(idx, 1);
-    const p = posts.find(p => p.id === postId);
-    if (p) p.likes = Math.max(0, (p.likes || 1) - 1);
-  } else {
-    liked.push(postId);
-    const p = posts.find(p => p.id === postId);
-    if (p) p.likes = (p.likes || 0) + 1;
+// ===== ЗАГРУЗКА ПОСТОВ ИЗ FIREBASE =====
+function loadPostsFromFirebase() {
+  if (!db) {
+    console.error('Firebase не подключён');
+    return;
   }
-  localStorage.setItem(LIKES_KEY, JSON.stringify(liked));
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-  renderPosts();
-  updateStats();
+
+  // Отписываемся от предыдущего слушателя
+  if (unsubscribePosts) {
+    unsubscribePosts();
+  }
+
+  // Слушаем изменения в коллекции posts в реальном времени
+  unsubscribePosts = db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+    allPosts = [];
+    snapshot.forEach(doc => {
+      allPosts.push({ id: doc.id, ...doc.data() });
+    });
+    
+    console.log('Загружено постов:', allPosts.length);
+    renderPosts();
+    updateStats();
+    renderAdminPostsList();
+  }, error => {
+    console.error('Ошибка загрузки постов:', error);
+  });
 }
 
-// Navigation
+// ===== СОХРАНЕНИЕ ПОСТА В FIREBASE =====
+async function savePostToFirebase(post) {
+  if (!db) {
+    showToast('❌ Firebase не подключён', 'error');
+    return null;
+  }
+
+  try {
+    const docRef = await db.collection('posts').add(post);
+    console.log('Пост сохранён с ID:', docRef.id);
+    return docRef.id;
+  } catch (error) {
+    console.error('Ошибка сохранения:', error);
+    showToast('❌ Ошибка сохранения: ' + error.message, 'error');
+    return null;
+  }
+}
+
+// ===== ОБНОВЛЕНИЕ ПОСТА В FIREBASE =====
+async function updatePostInFirebase(postId, postData) {
+  if (!db) {
+    showToast('❌ Firebase не подключён', 'error');
+    return false;
+  }
+
+  try {
+    await db.collection('posts').doc(postId).update(postData);
+    console.log('Пост обновлён:', postId);
+    return true;
+  } catch (error) {
+    console.error('Ошибка обновления:', error);
+    showToast('❌ Ошибка обновления: ' + error.message, 'error');
+    return false;
+  }
+}
+
+// ===== УДАЛЕНИЕ ПОСТА ИЗ FIREBASE =====
+async function deletePostFromFirebase(postId) {
+  if (!db) {
+    showToast('❌ Firebase не подключён', 'error');
+    return false;
+  }
+
+  try {
+    await db.collection('posts').doc(postId).delete();
+    console.log('Пост удалён:', postId);
+    return true;
+  } catch (error) {
+    console.error('Ошибка удаления:', error);
+    showToast('❌ Ошибка удаления: ' + error.message, 'error');
+    return false;
+  }
+}
+
+// ===== ОБНОВЛЕНИЕ ЛАЙКОВ В FIREBASE =====
+async function updateLikesInFirebase(postId, likes) {
+  if (!db) return;
+
+  try {
+    await db.collection('posts').doc(postId).update({ likes: likes });
+  } catch (error) {
+    console.error('Ошибка обновления лайков:', error);
+  }
+}
+
+// ===== НАВИГАЦИЯ =====
 function showMainView() {
   document.getElementById('mainView').style.display = 'block';
   document.getElementById('adminPanel').classList.remove('active');
@@ -1114,14 +1151,14 @@ function showMainView() {
 }
 
 function toggleAdminPanel() {
-  const password = prompt(' Введите пароль администратора:');
+  const password = prompt('🔐 Введите пароль администратора:');
   if (password === ADMIN_PASSWORD) {
     document.getElementById('mainView').style.display = 'none';
     document.getElementById('adminPanel').classList.add('active');
-    initAdmin();
+    renderAdminPostsList();
     window.scrollTo(0, 0);
   } else if (password !== null) {
-    alert(' Неверный пароль!');
+    alert('❌ Неверный пароль!');
   }
 }
 
@@ -1129,15 +1166,14 @@ function goToIndex() {
   window.location.href = 'index.html';
 }
 
-// Render
+// ===== РЕНДЕР =====
 const categoryNames = { thoughts: 'Мысль', songs: 'Песня', stories: 'История', photos: 'Фото' };
 const categoryTextClass = { thoughts: '', songs: 'lyrics', stories: 'story', photos: '' };
 
 function renderPosts(filter = 'all') {
   const grid = document.getElementById('postsGrid');
-  const posts = getPosts().sort((a, b) => b.createdAt - a.createdAt);
   const liked = getLikedPosts();
-  const filtered = filter === 'all' ? posts : posts.filter(p => p.category === filter);
+  const filtered = filter === 'all' ? allPosts : allPosts.filter(p => p.category === filter);
 
   if (filtered.length === 0) {
     grid.innerHTML = `
@@ -1167,7 +1203,7 @@ function renderPosts(filter = 'all') {
         </div>
         <div class="post-footer">
           <div class="post-tags">${tagsHtml}</div>
-          <div class="post-likes ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+          <div class="post-likes ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
             ${isLiked ? '♥' : '♡'} ${post.likes || 0}
           </div>
         </div>
@@ -1178,16 +1214,15 @@ function renderPosts(filter = 'all') {
 
 function escapeHtml(str) {
   const div = document.createElement('div');
-  div.textContent = str;
+  div.textContent = str || '';
   return div.innerHTML;
 }
 
 function updateStats() {
-  const posts = getPosts();
   const counts = { thoughts: 0, songs: 0, stories: 0, photos: 0 };
-  posts.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
+  allPosts.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
 
-  document.getElementById('count-all').textContent = posts.length;
+  document.getElementById('count-all').textContent = allPosts.length;
   document.getElementById('count-thoughts').textContent = counts.thoughts;
   document.getElementById('count-songs').textContent = counts.songs;
   document.getElementById('count-stories').textContent = counts.stories;
@@ -1201,7 +1236,7 @@ function updateStats() {
   `;
 }
 
-// Filters
+// ===== ФИЛЬТРЫ =====
 document.getElementById('filterButtons').addEventListener('click', (e) => {
   const btn = e.target.closest('.filter-btn');
   if (!btn) return;
@@ -1218,13 +1253,80 @@ function filterPosts(cat) {
   showMainView();
 }
 
-// Admin
+// ===== ЛАЙКИ =====
+function getLikedPosts() {
+  const data = localStorage.getItem('evgenii_liked_posts');
+  return data ? JSON.parse(data) : [];
+}
+
+function saveLikedPosts(liked) {
+  localStorage.setItem('evgenii_liked_posts', JSON.stringify(liked));
+}
+
+async function toggleLike(postId) {
+  const liked = getLikedPosts();
+  const post = allPosts.find(p => p.id === postId);
+  if (!post) return;
+
+  const idx = liked.indexOf(postId);
+  let newLikes = post.likes || 0;
+
+  if (idx > -1) {
+    liked.splice(idx, 1);
+    newLikes = Math.max(0, newLikes - 1);
+  } else {
+    liked.push(postId);
+    newLikes += 1;
+  }
+
+  saveLikedPosts(liked);
+  await updateLikesInFirebase(postId, newLikes);
+}
+
+// ===== АДМИНКА =====
 let editingId = null;
 
-function initAdmin() {
-  updateAdminStats();
-  renderAdminPostsList();
-  setTodayDate();
+function renderAdminPostsList(search = '') {
+  const list = document.getElementById('adminPostsList');
+  let posts = allPosts;
+
+  if (search) {
+    const q = search.toLowerCase();
+    posts = posts.filter(p => 
+      (p.title || '').toLowerCase().includes(q) || 
+      (p.text || '').toLowerCase().includes(q) || 
+      (p.tags || []).some(t => t.toLowerCase().includes(q))
+    );
+  }
+
+  if (posts.length === 0) {
+    list.innerHTML = `<div class="empty-list"><div class="emoji">${search ? '🔍' : '📝'}</div><h3>${search ? 'Ничего не найдено' : 'Пока нет постов'}</h3></div>`;
+    return;
+  }
+
+  list.innerHTML = posts.map(p => {
+    const thumbStyle = p.image ? `background-image:url('${p.image}')` : '';
+    const thumbContent = p.image ? '' : (categoryNames[p.category] || '📝');
+    const tags = (p.tags || []).map(t => `#${t}`).join(' ');
+    return `
+      <div class="post-item" data-category="${p.category}">
+        <div class="post-item-thumb" style="${thumbStyle}">${thumbContent}</div>
+        <div class="post-item-info">
+          <div class="post-item-title">${escapeHtml(p.title)}</div>
+          <div class="post-item-meta">
+            <span class="post-item-category">${categoryNames[p.category]}</span>
+            <span>📅 ${escapeHtml(p.date)}</span>
+            <span>♡ ${p.likes || 0}</span>
+            ${tags ? `<span>${escapeHtml(tags)}</span>` : ''}
+          </div>
+        </div>
+        <div class="post-item-actions">
+          <button class="icon-btn edit" onclick="editPost('${p.id}')" title="Редактировать">✏️</button>
+          <button class="icon-btn delete" onclick="deletePost('${p.id}')" title="Удалить">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 function setTodayDate() {
@@ -1234,9 +1336,8 @@ function setTodayDate() {
 }
 
 function updateAdminStats() {
-  const posts = getPosts();
   const counts = { thoughts: 0, songs: 0, stories: 0, photos: 0 };
-  posts.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
+  allPosts.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
 
   document.getElementById('adminStats').innerHTML = `
     <div class="stat-card"><div class="stat-icon thoughts">💭</div><div class="stat-info"><div class="num">${counts.thoughts}</div><div class="label">Мыслей</div></div></div>
@@ -1268,7 +1369,7 @@ function clearImage() {
   document.getElementById('removeImage').style.display = 'none';
 }
 
-function savePost() {
+async function savePost() {
   const category = document.getElementById('postCategory').value;
   const date = document.getElementById('postDate').value.trim();
   const title = document.getElementById('postTitle').value.trim();
@@ -1282,29 +1383,33 @@ function savePost() {
   }
 
   const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
-  const posts = getPosts();
 
   if (editingId) {
-    const idx = posts.findIndex(p => p.id === editingId);
-    if (idx > -1) {
-      posts[idx] = { ...posts[idx], category, date, title, text, tags, image: imageUrl || posts[idx].image };
+    // Обновление существующего поста
+    const postData = { category, date, title, text, tags, image: imageUrl || undefined };
+    const success = await updatePostInFirebase(editingId, postData);
+    if (success) {
+      showToast('✅ Пост обновлён', 'success');
+      cancelEdit();
     }
-    showToast('✅ Пост обновлён', 'success');
-    cancelEdit();
   } else {
-    posts.push({
-      id: Date.now(), category, date, title, text, tags,
-      image: imageUrl || null, likes: 0, createdAt: Date.now()
-    });
-    showToast('✨ Пост добавлен!', 'success');
+    // Создание нового поста
+    const newPost = {
+      category,
+      date,
+      title,
+      text,
+      tags,
+      image: imageUrl || null,
+      likes: 0,
+      createdAt: Date.now()
+    };
+    const postId = await savePostToFirebase(newPost);
+    if (postId) {
+      showToast('✨ Пост добавлен!', 'success');
+      resetForm();
+    }
   }
-
-  savePosts(posts);
-  resetForm();
-  updateAdminStats();
-  renderAdminPostsList();
-  renderPosts();
-  updateStats();
 }
 
 function resetForm() {
@@ -1325,49 +1430,8 @@ function cancelEdit() {
   resetForm();
 }
 
-const categoryEmoji = { thoughts: '💭', songs: '🎵', stories: '📖', photos: '' };
-
-function renderAdminPostsList(search = '') {
-  const list = document.getElementById('adminPostsList');
-  let posts = getPosts().sort((a, b) => b.createdAt - a.createdAt);
-
-  if (search) {
-    const q = search.toLowerCase();
-    posts = posts.filter(p => p.title.toLowerCase().includes(q) || p.text.toLowerCase().includes(q) || (p.tags || []).some(t => t.toLowerCase().includes(q)));
-  }
-
-  if (posts.length === 0) {
-    list.innerHTML = `<div class="empty-list"><div class="emoji">${search ? '🔍' : '📝'}</div><h3>${search ? 'Ничего не найдено' : 'Пока нет постов'}</h3></div>`;
-    return;
-  }
-
-  list.innerHTML = posts.map(p => {
-    const thumbStyle = p.image ? `background-image:url('${p.image}')` : '';
-    const thumbContent = p.image ? '' : categoryEmoji[p.category];
-    const tags = (p.tags || []).map(t => `#${t}`).join(' ');
-    return `
-      <div class="post-item" data-category="${p.category}">
-        <div class="post-item-thumb" style="${thumbStyle}">${thumbContent}</div>
-        <div class="post-item-info">
-          <div class="post-item-title">${escapeHtml(p.title)}</div>
-          <div class="post-item-meta">
-            <span class="post-item-category">${categoryNames[p.category]}</span>
-            <span>📅 ${escapeHtml(p.date)}</span>
-            <span>♡ ${p.likes || 0}</span>
-            ${tags ? `<span>${escapeHtml(tags)}</span>` : ''}
-          </div>
-        </div>
-        <div class="post-item-actions">
-          <button class="icon-btn edit" onclick="editPost(${p.id})" title="Редактировать">✏️</button>
-          <button class="icon-btn delete" onclick="deletePost(${p.id})" title="Удалить">🗑️</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
 function editPost(id) {
-  const post = getPosts().find(p => p.id === id);
+  const post = allPosts.find(p => p.id === id);
   if (!post) return;
 
   editingId = id;
@@ -1391,22 +1455,21 @@ function editPost(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function deletePost(id) {
+async function deletePost(id) {
   if (!confirm('Удалить этот пост?')) return;
-  let posts = getPosts().filter(p => p.id !== id);
-  savePosts(posts);
-  if (editingId === id) cancelEdit();
-  updateAdminStats();
-  renderAdminPostsList(document.getElementById('searchBox').value);
-  renderPosts();
-  updateStats();
-  showToast('🗑️ Пост удалён', 'success');
+  const success = await deletePostFromFirebase(id);
+  if (success) {
+    if (editingId === id) cancelEdit();
+    showToast('️ Пост удалён', 'success');
+  }
 }
 
 function exportData() {
-  const posts = getPosts();
-  if (posts.length === 0) { showToast('Нечего экспортировать', 'error'); return; }
-  const blob = new Blob([JSON.stringify(posts, null, 2)], { type: 'application/json' });
+  if (allPosts.length === 0) { 
+    showToast('Нечего экспортировать', 'error'); 
+    return; 
+  }
+  const blob = new Blob([JSON.stringify(allPosts, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `evgenii-ai-backup-${new Date().toISOString().split('T')[0]}.json`;
@@ -1418,16 +1481,22 @@ function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     try {
       const imported = JSON.parse(e.target.result);
       if (!Array.isArray(imported)) throw new Error();
       if (!confirm(`Импортировать ${imported.length} постов? Текущие будут заменены.`)) return;
-      savePosts(imported);
-      updateAdminStats();
-      renderAdminPostsList();
-      renderPosts();
-      updateStats();
+      
+      // Удаляем все старые посты
+      for (const post of allPosts) {
+        await deletePostFromFirebase(post.id);
+      }
+      
+      // Добавляем новые
+      for (const post of imported) {
+        await savePostToFirebase(post);
+      }
+      
       showToast(`✅ Импортировано: ${imported.length} постов`, 'success');
     } catch {
       showToast('❌ Ошибка файла', 'error');
@@ -1444,16 +1513,17 @@ function showToast(message, type = 'success') {
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Init
+// ===== ИНИЦИАЛИЗАЦИЯ =====
 window.addEventListener('load', () => {
   setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 1500);
-  renderPosts();
-  updateStats();
+  setTodayDate();
+  loadPostsFromFirebase(); // Загружаем посты из Firebase
 });
 
-window.addEventListener('storage', () => { renderPosts(); updateStats(); });
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) { renderPosts(); updateStats(); }
+  if (!document.hidden) {
+    loadPostsFromFirebase(); // Перезагружаем при возврате на вкладку
+  }
 });
 </script>
 
