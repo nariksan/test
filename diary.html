@@ -50,135 +50,6 @@ a { color: inherit; text-decoration: none; }
               radial-gradient(circle at 85% 80%, rgba(78,205,196,0.06), transparent 50%);
 }
 
-/* ===== ЭКРАН АВТОРИЗАЦИИ ===== */
-.auth-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 5000;
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.auth-container {
-  width: 100%;
-  max-width: 450px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 40px 30px;
-  backdrop-filter: blur(20px);
-}
-
-.auth-logo {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 10px;
-}
-
-.auth-subtitle {
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 0.9rem;
-  margin-bottom: 30px;
-}
-
-.auth-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 25px;
-}
-
-.auth-tab {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  background: var(--card-2);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-align: center;
-}
-
-.auth-tab.active {
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  color: #fff;
-  border-color: transparent;
-}
-
-.auth-form { display: none; flex-direction: column; gap: 15px; }
-.auth-form.active { display: flex; }
-
-.auth-input {
-  padding: 14px 16px;
-  border-radius: 12px;
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 0.95rem;
-  font-family: inherit;
-  transition: border-color 0.3s;
-}
-.auth-input:focus { outline: none; border-color: var(--accent-2); }
-
-.auth-btn {
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
-}
-.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
-.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-.auth-hint {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  text-align: center;
-  margin-top: 15px;
-  line-height: 1.5;
-}
-
-.auth-error {
-  color: var(--danger);
-  font-size: 0.85rem;
-  text-align: center;
-  min-height: 20px;
-}
-
-.auth-divider {
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 0.8rem;
-  margin: 15px 0;
-  position: relative;
-}
-.auth-divider::before, .auth-divider::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 40%;
-  height: 1px;
-  background: var(--border);
-}
-.auth-divider::before { left: 0; }
-.auth-divider::after { right: 0; }
-
 /* ===== NAV ===== */
 nav {
   position: fixed;
@@ -686,6 +557,7 @@ footer {
 }
 
 .modal-content.wide { max-width: 900px; }
+.modal-content.small { max-width: 450px; }
 
 .modal-title {
   font-size: 1.5rem;
@@ -696,6 +568,147 @@ footer {
   gap: 10px;
 }
 
+/* ===== AUTH MODAL ===== */
+.auth-warning-icon {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.auth-warning-text {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.auth-warning-text strong {
+  color: var(--text);
+}
+
+.auth-choice-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.auth-choice-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.auth-choice-btn:hover {
+  background: var(--card-2);
+  transform: translateY(-2px);
+}
+
+.auth-choice-btn.login-btn {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+.auth-choice-btn.login-btn:hover {
+  background: rgba(78,205,196,0.1);
+}
+
+.auth-choice-btn.register-btn {
+  border-color: var(--accent-1);
+  color: var(--accent-1);
+}
+.auth-choice-btn.register-btn:hover {
+  background: rgba(255,107,107,0.1);
+}
+
+.auth-close-hint {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.3s;
+}
+.auth-close-hint:hover { color: var(--text); }
+
+/* ===== AUTH FORMS ===== */
+.auth-form-container { display: none; }
+.auth-form-container.active { display: block; }
+
+.auth-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: color 0.3s;
+}
+.auth-back-btn:hover { color: var(--text); }
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-input {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+.auth-input:focus { outline: none; border-color: var(--accent-2); }
+.auth-input::placeholder { color: var(--text-dim); }
+
+.auth-submit-btn {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 5px;
+}
+.auth-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
+
+.auth-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  text-align: center;
+  min-height: 20px;
+}
+
+.auth-switch-hint {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 15px;
+}
+
+.auth-switch-hint a {
+  color: var(--accent-2);
+  cursor: pointer;
+  text-decoration: none;
+}
+.auth-switch-hint a:hover { text-decoration: underline; }
+
+/* ===== FORM ===== */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -732,10 +745,10 @@ footer {
   font-size: 0.8rem;
   color: var(--text-dim);
   line-height: 1.5;
-  background: rgba(78,205,196,0.05);
+  background: rgba(255,179,71,0.05);
   padding: 12px;
   border-radius: 8px;
-  border-left: 3px solid var(--accent-2);
+  border-left: 3px solid var(--warning);
   margin-bottom: 15px;
 }
 
@@ -909,6 +922,7 @@ footer {
   .hero { padding-top: 80px; }
   .fab { bottom: 20px; right: 20px; width: 55px; height: 55px; }
   .user-badge span.user-name-text { display: none; }
+  .auth-choice-buttons { flex-direction: column; }
 }
 </style>
 </head>
@@ -916,46 +930,8 @@ footer {
 
 <div class="bg-gradient"></div>
 
-<!-- ===== ЭКРАН АВТОРИЗАЦИИ ===== -->
-<div class="auth-screen" id="authScreen">
-  <div class="auth-container">
-    <div class="auth-logo">EVGENII AI</div>
-    <div class="auth-subtitle">Творческий дневник</div>
-    
-    <div class="auth-tabs">
-      <div class="auth-tab active" onclick="switchAuthTab('login')">Вход</div>
-      <div class="auth-tab" onclick="switchAuthTab('register')">Регистрация</div>
-    </div>
-    
-    <!-- ФОРМА ВХОДА -->
-    <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
-      <input type="text" class="auth-input" id="loginPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
-      <input type="text" class="auth-input" id="loginName" placeholder="Ваше имя" required>
-      <input type="password" class="auth-input" id="loginPassword" placeholder="Пароль" required>
-      <div class="auth-error" id="loginError"></div>
-      <button type="submit" class="auth-btn">ВОЙТИ</button>
-      <div class="auth-hint">
-        Читаете без регистрации? Просто нажмите "Вход" с любыми данными для просмотра.
-      </div>
-    </form>
-    
-    <!-- ФОРМА РЕГИСТРАЦИИ -->
-    <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
-      <input type="text" class="auth-input" id="regPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
-      <input type="text" class="auth-input" id="regName" placeholder="Ваше имя" required>
-      <input type="password" class="auth-input" id="regPassword" placeholder="Придумайте пароль" minlength="4" required>
-      <input type="password" class="auth-input" id="regPasswordConfirm" placeholder="Повторите пароль" minlength="4" required>
-      <div class="auth-error" id="regError"></div>
-      <button type="submit" class="auth-btn">ЗАРЕГИСТРИРОВАТЬСЯ</button>
-      <div class="auth-hint">
-        После регистрации вы сможете публиковать свои записи.
-      </div>
-    </form>
-  </div>
-</div>
-
 <!-- ===== НАВИГАЦИЯ ===== -->
-<nav id="mainNav" style="display:none;">
+<nav>
   <div class="logo">EVGENII AI</div>
   <div class="nav-scroll">
     <ul class="nav-links">
@@ -971,15 +947,15 @@ footer {
       <div class="user-avatar" id="userAvatar">?</div>
       <span class="user-name-text" id="userNameDisplay">Гость</span>
     </div>
-    <button class="btn-small home" onclick="goToHome()"> На главную</button>
-    <button class="btn-small primary" id="writeBtn" onclick="openCreateModal()" style="display:none;">✏️ Написать</button>
-    <button class="btn-small admin" id="adminBtn" onclick="openAdminLogin()">️ Админ</button>
+    <button class="btn-small home" onclick="goToHome()">🏠 На главную</button>
+    <button class="btn-small primary" id="writeBtn" onclick="onWriteClick()">✏️ Написать</button>
     <button class="btn-small" id="logoutBtn" onclick="handleLogout()" style="display:none;">Выйти</button>
+    <button class="btn-small admin" id="adminBtn" onclick="openAdminLogin()">⚙️ Админ</button>
   </div>
 </nav>
 
 <!-- ===== MAIN VIEW ===== -->
-<div id="mainView" style="display:none;">
+<div id="mainView">
   <section class="hero">
     <div class="hero-badge">✨ Творческий дневник</div>
     <h1 class="hero-title">EVGENII AI</h1>
@@ -997,7 +973,7 @@ footer {
       <button class="filter-btn" data-filter="thoughts">💭 Мысли <span class="filter-count" id="count-thoughts">0</span></button>
       <button class="filter-btn" data-filter="songs">🎵 Песни <span class="filter-count" id="count-songs">0</span></button>
       <button class="filter-btn" data-filter="stories">📖 Истории <span class="filter-count" id="count-stories">0</span></button>
-      <button class="filter-btn" data-filter="photos"> Фото <span class="filter-count" id="count-photos">0</span></button>
+      <button class="filter-btn" data-filter="photos">📸 Фото <span class="filter-count" id="count-photos">0</span></button>
     </div>
   </div>
 
@@ -1012,7 +988,64 @@ footer {
 </div>
 
 <!-- ===== FAB ===== -->
-<button class="fab" id="fabBtn" onclick="openCreateModal()" style="display:none;" title="Создать запись">✏️</button>
+<button class="fab" id="fabBtn" onclick="onWriteClick()" title="Создать запись">✏️</button>
+
+<!-- ===== МОДАЛКА: ВЫБОР ВХОД/РЕГИСТРАЦИЯ ===== -->
+<div class="modal-overlay" id="authChoiceModal">
+  <div class="modal-content small">
+    <div class="auth-warning-icon">🔐</div>
+    <div class="modal-title" style="justify-content:center; margin-bottom:15px;">Только для авторов</div>
+    <div class="auth-warning-text">
+      <strong>Писать и публиковать</strong> могут только зарегистрированные пользователи.<br><br>
+      Читать дневник может любой — регистрация нужна только для создания записей.
+    </div>
+    <div class="auth-choice-buttons">
+      <button class="auth-choice-btn login-btn" onclick="showAuthForm('login')">🔑 Вход</button>
+      <button class="auth-choice-btn register-btn" onclick="showAuthForm('register')">📝 Регистрация</button>
+    </div>
+    <div class="auth-close-hint" onclick="closeAuthChoice()">✕ Закрыть и продолжить чтение</div>
+  </div>
+</div>
+
+<!-- ===== МОДАЛКА: ФОРМЫ АВТОРИЗАЦИИ ===== -->
+<div class="modal-overlay" id="authFormModal">
+  <div class="modal-content small">
+    
+    <!-- ФОРМА ВХОДА -->
+    <div class="auth-form-container" id="loginFormContainer">
+      <div class="auth-back-btn" onclick="backToChoice()">← Назад к выбору</div>
+      <div class="modal-title" style="justify-content:center;">🔑 Вход</div>
+      <form class="auth-form" onsubmit="handleLogin(event)">
+        <input type="text" class="auth-input" id="loginPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
+        <input type="text" class="auth-input" id="loginName" placeholder="Ваше имя" required>
+        <input type="password" class="auth-input" id="loginPassword" placeholder="Пароль" required>
+        <div class="auth-error" id="loginError"></div>
+        <button type="submit" class="auth-submit-btn">ВОЙТИ</button>
+      </form>
+      <div class="auth-switch-hint">
+        Нет аккаунта? <a onclick="showAuthForm('register')">Зарегистрироваться</a>
+      </div>
+    </div>
+    
+    <!-- ФОРМА РЕГИСТРАЦИИ -->
+    <div class="auth-form-container" id="registerFormContainer">
+      <div class="auth-back-btn" onclick="backToChoice()">← Назад к выбору</div>
+      <div class="modal-title" style="justify-content:center;">📝 Регистрация</div>
+      <form class="auth-form" onsubmit="handleRegister(event)">
+        <input type="text" class="auth-input" id="regPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
+        <input type="text" class="auth-input" id="regName" placeholder="Ваше имя" required>
+        <input type="password" class="auth-input" id="regPassword" placeholder="Придумайте пароль (мин. 4 символа)" minlength="4" required>
+        <input type="password" class="auth-input" id="regPasswordConfirm" placeholder="Повторите пароль" minlength="4" required>
+        <div class="auth-error" id="regError"></div>
+        <button type="submit" class="auth-submit-btn">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+      </form>
+      <div class="auth-switch-hint">
+        Уже есть аккаунт? <a onclick="showAuthForm('login')">Войти</a>
+      </div>
+    </div>
+    
+  </div>
+</div>
 
 <!-- ===== МОДАЛКА СОЗДАНИЯ/РЕДАКТИРОВАНИЯ ===== -->
 <div class="modal-overlay" id="createModal">
@@ -1022,8 +1055,8 @@ footer {
       <span id="modalTitleText">Новая запись</span>
     </div>
 
-    <div class="form-hint" id="moderationHint" style="display:none;">
-      ⚠️ <b>Внимание:</b> После публикации запись отправится на модерацию. Она появится на сайте после одобрения администратора.
+    <div class="form-hint">
+      ️ <b>Внимание:</b> После публикации запись отправится на модерацию. Она появится на сайте после одобрения администратора.
     </div>
 
     <div class="form-grid">
@@ -1060,16 +1093,16 @@ footer {
 
     <div class="form-actions">
       <button class="btn" onclick="closeCreateModal()">Отмена</button>
-      <button class="btn btn-primary" id="saveBtn" onclick="savePost()">✨ Отправить на модерацию</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="savePost()">📤 Отправить на модерацию</button>
     </div>
   </div>
 </div>
 
 <!-- ===== МОДАЛКА ВХОДА АДМИНА ===== -->
 <div class="modal-overlay" id="adminLoginModal">
-  <div class="modal-content" style="max-width:400px;">
-    <div class="modal-title">🔐 Вход для администратора</div>
-    <p style="color:var(--text-dim); margin-bottom:20px; font-size:0.9rem;">Введите пароль владельца сайта</p>
+  <div class="modal-content small">
+    <div class="modal-title" style="justify-content:center;">🔐 Вход для администратора</div>
+    <p style="color:var(--text-dim); margin-bottom:20px; font-size:0.9rem; text-align:center;">Введите пароль владельца сайта</p>
     <input type="password" class="form-input" id="adminPassword" placeholder="Пароль администратора" style="margin-bottom:15px;">
     <div class="auth-error" id="adminError" style="margin-bottom:15px;"></div>
     <div style="display:flex; gap:10px;">
@@ -1184,7 +1217,7 @@ const USERS_COLLECTION = 'diary_users';
 const POSTS_COLLECTION = 'diary_posts';
 
 // ===== СОСТОЯНИЕ =====
-let currentUser = null; // { id, phoneLast4, name, password }
+let currentUser = null;
 let isAdmin = false;
 let allPosts = [];
 let unsubscribePosts = null;
@@ -1193,36 +1226,90 @@ let adminEditingId = null;
 let currentFilter = 'all';
 let currentAdminTab = 'pending';
 
-// ===== ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ =====
+// ===== ПРИ ЗАГРУЗКЕ =====
 window.addEventListener('load', () => {
+  // Проверяем сохранённую сессию
   const savedUser = localStorage.getItem('diary_current_user');
   if (savedUser) {
     try {
       currentUser = JSON.parse(savedUser);
-      showMainApp();
+      updateUserUI();
     } catch(e) {
       localStorage.removeItem('diary_current_user');
     }
   }
+  
+  // Сразу загружаем посты (читать может любой)
+  loadPostsFromFirebase();
+  setTodayDate();
 });
 
-// ===== АВТОРИЗАЦИЯ =====
-function switchAuthTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-  
-  if (tab === 'login') {
-    document.querySelectorAll('.auth-tab')[0].classList.add('active');
-    document.getElementById('loginForm').classList.add('active');
+// ===== ОБНОВЛЕНИЕ UI ПОЛЬЗОВАТЕЛЯ =====
+function updateUserUI() {
+  if (currentUser) {
+    document.getElementById('userBadge').style.display = 'flex';
+    document.getElementById('userAvatar').textContent = currentUser.name[0].toUpperCase();
+    document.getElementById('userNameDisplay').textContent = currentUser.name;
+    document.getElementById('logoutBtn').style.display = 'inline-flex';
   } else {
-    document.querySelectorAll('.auth-tab')[1].classList.add('active');
-    document.getElementById('registerForm').classList.add('active');
+    document.getElementById('userBadge').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
   }
+}
+
+// ===== КНОПКА "НАПИСАТЬ" =====
+function onWriteClick() {
+  if (currentUser) {
+    // Пользователь авторизован — открываем форму создания
+    openCreateModal();
+  } else {
+    // Не авторизован — показываем выбор вход/регистрация
+    openAuthChoice();
+  }
+}
+
+// ===== МОДАЛКА ВЫБОРА =====
+function openAuthChoice() {
+  document.getElementById('authChoiceModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAuthChoice() {
+  document.getElementById('authChoiceModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function showAuthForm(type) {
+  // Закрываем выбор, открываем форму
+  document.getElementById('authChoiceModal').classList.remove('active');
+  document.getElementById('authFormModal').classList.add('active');
   
+  // Скрываем обе формы
+  document.getElementById('loginFormContainer').classList.remove('active');
+  document.getElementById('registerFormContainer').classList.remove('active');
+  
+  // Очищаем ошибки
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('regError').textContent = '';
+  
+  // Показываем нужную
+  if (type === 'login') {
+    document.getElementById('loginFormContainer').classList.add('active');
+    setTimeout(() => document.getElementById('loginPhone').focus(), 100);
+  } else {
+    document.getElementById('registerFormContainer').classList.add('active');
+    setTimeout(() => document.getElementById('regPhone').focus(), 100);
+  }
+}
+
+function backToChoice() {
+  document.getElementById('authFormModal').classList.remove('active');
+  document.getElementById('authChoiceModal').classList.add('active');
   document.getElementById('loginError').textContent = '';
   document.getElementById('regError').textContent = '';
 }
 
+// ===== РЕГИСТРАЦИЯ =====
 async function handleRegister(e) {
   e.preventDefault();
   const phone = document.getElementById('regPhone').value.trim();
@@ -1252,7 +1339,6 @@ async function handleRegister(e) {
   }
   
   try {
-    // Проверяем, существует ли пользователь
     const snapshot = await db.collection(USERS_COLLECTION)
       .where('phoneLast4', '==', phone)
       .where('name', '==', name)
@@ -1263,7 +1349,6 @@ async function handleRegister(e) {
       return;
     }
     
-    // Создаём пользователя
     const userData = {
       phoneLast4: phone,
       name: name,
@@ -1281,14 +1366,22 @@ async function handleRegister(e) {
     };
     
     localStorage.setItem('diary_current_user', JSON.stringify(currentUser));
-    showToast('✅ Регистрация успешна!', 'success');
-    showMainApp();
+    updateUserUI();
+    
+    document.getElementById('authFormModal').classList.remove('active');
+    document.body.style.overflow = '';
+    
+    showToast('✅ Регистрация успешна! Теперь вы можете писать.', 'success');
+    
+    // Сразу открываем форму создания
+    setTimeout(() => openCreateModal(), 500);
   } catch (error) {
     console.error(error);
     errorEl.textContent = 'Ошибка: ' + error.message;
   }
 }
 
+// ===== ВХОД =====
 async function handleLogin(e) {
   e.preventDefault();
   const phone = document.getElementById('loginPhone').value.trim();
@@ -1320,40 +1413,30 @@ async function handleLogin(e) {
     };
     
     localStorage.setItem('diary_current_user', JSON.stringify(currentUser));
+    updateUserUI();
+    
+    document.getElementById('authFormModal').classList.remove('active');
+    document.body.style.overflow = '';
+    
     showToast('👋 Добро пожаловать, ' + currentUser.name + '!', 'success');
-    showMainApp();
+    
+    // Сразу открываем форму создания
+    setTimeout(() => openCreateModal(), 500);
   } catch (error) {
     console.error(error);
     errorEl.textContent = 'Ошибка: ' + error.message;
   }
 }
 
+// ===== ВЫХОД =====
 function handleLogout() {
   if (!confirm('Выйти из аккаунта?')) return;
   currentUser = null;
   isAdmin = false;
   localStorage.removeItem('diary_current_user');
-  location.reload();
-}
-
-function showMainApp() {
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('mainNav').style.display = 'flex';
-  document.getElementById('mainView').style.display = 'block';
-  
-  // Показываем бейдж пользователя
-  document.getElementById('userBadge').style.display = 'flex';
-  document.getElementById('userAvatar').textContent = currentUser.name[0].toUpperCase();
-  document.getElementById('userNameDisplay').textContent = currentUser.name;
-  
-  // Показываем кнопку "Написать"
-  document.getElementById('writeBtn').style.display = 'inline-flex';
-  document.getElementById('fabBtn').style.display = 'flex';
-  document.getElementById('logoutBtn').style.display = 'inline-flex';
-  
-  // Загружаем посты
-  loadPostsFromFirebase();
-  setTodayDate();
+  updateUserUI();
+  renderPosts();
+  showToast('Вы вышли из аккаунта', 'success');
 }
 
 // ===== ЗАГРУЗКА ПОСТОВ =====
@@ -1382,10 +1465,10 @@ function loadPostsFromFirebase() {
     });
 }
 
-// ===== СОХРАНЕНИЕ ПОСТА =====
+// ===== FIREBASE ОПЕРАЦИИ =====
 async function savePostToFirebase(post) {
   if (!db) {
-    showToast('❌ База данных недоступна', 'error');
+    showToast(' База данных недоступна', 'error');
     return null;
   }
   try {
@@ -1433,7 +1516,6 @@ const categoryNames = { thoughts: 'Мысль', songs: 'Песня', stories: '�
 const categoryTextClass = { thoughts: '', songs: 'lyrics', stories: 'story', photos: '' };
 
 function getVisiblePosts() {
-  // Обычные пользователи видят только одобренные + свои (любые статусы)
   return allPosts.filter(post => {
     if (post.status === 'approved') return true;
     if (currentUser && post.authorId === currentUser.id) return true;
@@ -1452,7 +1534,7 @@ function renderPosts(filter = 'all') {
       <div class="empty-state">
         <div class="emoji">📝</div>
         <h3>Пока тут пусто</h3>
-        <p>${currentUser ? 'Нажми кнопку "️ Написать" и создай первую запись!' : 'Зарегистрируйтесь, чтобы писать свои записи.'}</p>
+        <p>${currentUser ? 'Нажми кнопку "✏️ Написать" и создай первую запись!' : 'Зарегистрируйтесь, чтобы писать свои записи.'}</p>
       </div>`;
     return;
   }
@@ -1463,12 +1545,11 @@ function renderPosts(filter = 'all') {
     const authorInitial = (post.author || '?')[0].toUpperCase();
     const isAuthor = currentUser && post.authorId === currentUser.id;
     
-    // Статус-бар для своих неподтверждённых постов
     let statusBar = '';
     if (isAuthor && post.status === 'pending') {
       statusBar = '<div class="post-status-bar pending">⏳ На модерации</div>';
     } else if (isAuthor && post.status === 'rejected') {
-      statusBar = `<div class="post-status-bar rejected"> Отклонено${post.adminNote ? ': ' + escapeHtml(post.adminNote) : ''}</div>`;
+      statusBar = `<div class="post-status-bar rejected">❌ Отклонено${post.adminNote ? ': ' + escapeHtml(post.adminNote) : ''}</div>`;
     }
     
     const editButtons = isAuthor && post.status !== 'pending' ? `
@@ -1596,7 +1677,7 @@ async function toggleLike(postId) {
 // ===== МОДАЛКА СОЗДАНИЯ =====
 function openCreateModal() {
   if (!currentUser) {
-    showToast('Сначала войдите в аккаунт', 'error');
+    openAuthChoice();
     return;
   }
   
@@ -1604,7 +1685,6 @@ function openCreateModal() {
   document.getElementById('modalIcon').textContent = '✨';
   document.getElementById('modalTitleText').textContent = 'Новая запись';
   document.getElementById('saveBtn').textContent = '📤 Отправить на модерацию';
-  document.getElementById('moderationHint').style.display = 'block';
   resetForm();
   document.getElementById('createModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1645,7 +1725,6 @@ async function savePost() {
   const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
 
   if (editingId) {
-    // Редактирование — отправляем на модерацию
     const postData = { 
       category, date, title, text, tags,
       status: 'pending',
@@ -1657,7 +1736,6 @@ async function savePost() {
       closeCreateModal();
     }
   } else {
-    // Новая запись
     const newPost = {
       category,
       date,
@@ -1687,7 +1765,6 @@ function editPost(id) {
   document.getElementById('modalIcon').textContent = '✏️';
   document.getElementById('modalTitleText').textContent = 'Редактирование';
   document.getElementById('saveBtn').textContent = '📤 Отправить на модерацию';
-  document.getElementById('moderationHint').style.display = 'block';
   
   document.getElementById('postCategory').value = post.category;
   document.getElementById('postDate').value = post.date;
@@ -1753,7 +1830,6 @@ function switchAdminTab(tab) {
 function renderAdminPosts() {
   const list = document.getElementById('adminPostsList');
   
-  // Считаем количества
   const pending = allPosts.filter(p => p.status === 'pending');
   const approved = allPosts.filter(p => p.status === 'approved');
   const rejected = allPosts.filter(p => p.status === 'rejected');
@@ -1763,14 +1839,13 @@ function renderAdminPosts() {
   document.getElementById('rejectedCount').textContent = rejected.length;
   document.getElementById('allCount').textContent = allPosts.length;
   
-  // Фильтруем по вкладке
   let filtered = allPosts;
   if (currentAdminTab !== 'all') {
     filtered = allPosts.filter(p => p.status === currentAdminTab);
   }
   
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><div class="emoji"></div><h3>Нет записей</h3></div>';
+    list.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><h3>Нет записей</h3></div>';
     return;
   }
   
@@ -1792,14 +1867,14 @@ function renderAdminPosts() {
           <span> ${post.date}</span>
           <span>📂 ${categoryNames[post.category]}</span>
           <span>♡ ${post.likes || 0}</span>
-          ${post.adminNote ? `<span style="color:var(--warning);">💬 ${escapeHtml(post.adminNote)}</span>` : ''}
+          ${post.adminNote ? `<span style="color:var(--warning);"> ${escapeHtml(post.adminNote)}</span>` : ''}
         </div>
         <div class="admin-post-text">${escapeHtml(post.text)}</div>
         <div class="admin-post-actions">
           ${post.status !== 'approved' ? `<button class="btn btn-success" onclick="approvePost('${post.id}')">✅ Одобрить</button>` : ''}
           ${post.status !== 'rejected' ? `<button class="btn btn-danger" onclick="rejectPost('${post.id}')">❌ Отклонить</button>` : ''}
           <button class="btn btn-warning" onclick="openAdminEdit('${post.id}')">✏️ Редактировать</button>
-          <button class="btn btn-danger" onclick="adminDeletePost('${post.id}')">️ Удалить</button>
+          <button class="btn btn-danger" onclick="adminDeletePost('${post.id}')">🗑️ Удалить</button>
         </div>
       </div>
     `;
@@ -1899,7 +1974,7 @@ function showToast(message, type = 'success') {
 }
 
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && currentUser) loadPostsFromFirebase();
+  if (!document.hidden) loadPostsFromFirebase();
 });
 </script>
 
