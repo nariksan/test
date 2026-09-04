@@ -155,10 +155,76 @@ body {
 }
 .login-btn:active { transform: scale(0.98); }
 
-/* ВЫБОР ПРОЕКТА (ИСПРАВЛЕНО) */
+/* ===== БАННЕР ПРОЕКТА ===== */
+.project-banner {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 40px;
+  text-align: center;
+  position: relative;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(176, 38, 255, 0.1));
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 60px rgba(0, 243, 255, 0.15), inset 0 0 60px rgba(0, 243, 255, 0.05);
+  animation: bannerPulse 4s ease-in-out infinite;
+}
+
+@keyframes bannerPulse {
+  0%, 100% { box-shadow: 0 0 60px rgba(0, 243, 255, 0.15), inset 0 0 60px rgba(0, 243, 255, 0.05); }
+  50% { box-shadow: 0 0 80px rgba(0, 243, 255, 0.25), inset 0 0 80px rgba(0, 243, 255, 0.1); }
+}
+
+.banner-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+  text-shadow: 0 0 40px rgba(0, 243, 255, 0.5);
+  animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.5)); }
+  50% { filter: drop-shadow(0 0 40px rgba(255, 0, 255, 0.8)); }
+}
+
+.banner-tagline {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(0.9rem, 3vw, 1.2rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.banner-divider {
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  margin: 15px auto;
+  border-radius: 2px;
+}
+
+.banner-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ВЫБОР ПРОЕКТА */
 .selector-header {
   display: flex;
-  align-items: baseline; /* Выравнивание по базовой линии текста */
+  align-items: baseline;
   justify-content: center;
   gap: 15px;
   flex-wrap: nowrap;
@@ -169,7 +235,7 @@ body {
 
 .selector-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.1rem, 5vw, 2rem); /* Адаптивный размер */
+  font-size: clamp(1.1rem, 5vw, 2rem);
   font-weight: 800;
   background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
   -webkit-background-clip: text;
@@ -191,7 +257,7 @@ body {
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Всегда 2 колонки */
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   width: 100%;
   max-width: 800px;
@@ -210,7 +276,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%; /* Одинаковая высота */
+  height: 100%;
 }
 
 .project-card:hover {
@@ -308,19 +374,23 @@ body {
 
 /* АДАПТИВ ДЛЯ ТЕЛЕФОНОВ */
 @media (max-width: 600px) {
-  .main-container { padding: 15px; justify-content: flex-start; padding-top: 40px; }
+  .main-container { padding: 15px; justify-content: flex-start; padding-top: 20px; }
+  
+  .project-banner {
+    padding: 20px 15px;
+    margin-bottom: 25px;
+  }
   
   .selector-header {
-    flex-direction: column; /* На очень маленьких экранах можно stacked, но попробуем row */
+    flex-direction: column;
     gap: 5px;
     margin-bottom: 25px;
   }
   
-  /* Если хотим строго в линию даже на телефоне: */
   .selector-header { flex-direction: row; flex-wrap: wrap; justify-content: center; }
   
   .selector-title { font-size: 1rem; }
-  .selector-subtitle { font-size: 0.8rem; width: 100%; margin-top: 5px; } /* Подзаголовок на всю ширину если не влезает */
+  .selector-subtitle { font-size: 0.8rem; width: 100%; margin-top: 5px; }
   
   .project-grid { gap: 12px; }
   .project-card { padding: 20px 10px; border-radius: 18px; }
@@ -352,6 +422,17 @@ body {
 
   <!-- ЭКРАН ВЫБОРА ПРОЕКТА -->
   <div class="project-selector" id="projectSelector">
+    
+    <!-- ===== БАННЕР ПРОЕКТА ===== -->
+    <div class="project-banner">
+      <h1 class="banner-logo">EVGENII<span style="font-size:0.3em; vertical-align:middle; margin-left:8px;">AI</span></h1>
+      <div class="banner-tagline">ТВОРЧЕСКАЯ ВСЕЛЕННАЯ</div>
+      <div class="banner-divider"></div>
+      <p class="banner-subtitle">
+        Где заканчиваюсь я — и начинается ИИ.<br>
+        Эксперимент на стыке человеческих эмоций и искусственного интеллекта
+      </p>
+    </div>
     
     <div class="selector-header">
       <h1 class="selector-title">ОДИН ПРОЕКТ — ДВЕ ВСЕЛЕННЫЕ</h1>
@@ -436,7 +517,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
   const name = document.getElementById('nameInput').value.trim();
   if (name) {
     localStorage.setItem('evgenii_user', name);
-    loadLicense(); // Загружаем правила из базы или показываем дефолтные
+    loadLicense();
     document.getElementById('licenseModal').classList.add('active');
   }
 });
@@ -466,7 +547,6 @@ function acceptLicense() {
   document.getElementById('projectSelector').classList.add('active');
 }
 
-// Загрузка правил (если есть в базе, иначе дефолт)
 function loadLicense() {
   const defaultText = `
     <h4>1. Авторство</h4>
@@ -480,7 +560,6 @@ function loadLicense() {
   if (db) {
     db.collection('settings').doc('license').get().then(doc => {
       if (doc.exists) {
-        // Можно парсить структуру из базы, здесь упрощенно выводим текст
         document.getElementById('licenseText').innerHTML = defaultText; 
       } else {
         document.getElementById('licenseText').innerHTML = defaultText;
