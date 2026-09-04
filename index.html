@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>EVGENII AI — Вход</title>
 <link rel="icon" type="image/png" href="favicon-48x48.png">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -10,7 +10,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600;800&display=swap');
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 :root {
   --neon-cyan: #00f3ff;
@@ -26,23 +26,25 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* ФОН И ЭФФЕКТЫ */
 .grid-bg {
   position: fixed;
   inset: 0;
   background-image: 
     linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
+  background-size: 40px 40px;
   animation: gridMove 20s linear infinite;
   z-index: 0;
+  pointer-events: none;
 }
 
-@keyframes gridMove {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(50px); }
-}
+@keyframes gridMove { 0% { transform: translateY(0); } 100% { transform: translateY(40px); } }
 
 .neon-orb {
   position: fixed;
@@ -50,543 +52,282 @@ body {
   filter: blur(100px);
   opacity: 0.4;
   z-index: 0;
-  animation: orbPulse 8s ease-in-out infinite;
+  pointer-events: none;
 }
+.orb-1 { width: 400px; height: 400px; background: var(--neon-purple); top: -100px; right: -100px; }
+.orb-2 { width: 300px; height: 300px; background: var(--neon-cyan); bottom: -50px; left: -50px; }
 
-.orb-1 { width: 500px; height: 500px; background: var(--neon-purple); top: -200px; right: -200px; }
-.orb-2 { width: 400px; height: 400px; background: var(--neon-cyan); bottom: -150px; left: -150px; animation-delay: -4s; }
-.orb-3 { width: 300px; height: 300px; background: var(--neon-pink); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -2s; }
-
-@keyframes orbPulse {
-  0%, 100% { transform: scale(1); opacity: 0.4; }
-  50% { transform: scale(1.2); opacity: 0.6; }
-}
-
-.preloader {
-  position: fixed;
-  inset: 0;
-  background: var(--dark-bg);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  transition: opacity 1s, visibility 1s;
-}
-
-.preloader.hidden { opacity: 0; visibility: hidden; }
-
-.preloader-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(3rem, 8vw, 5rem);
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: glitch 3s infinite;
-}
-
-@keyframes glitch {
-  0%, 91%, 100% { transform: translate(0); }
-  92% { transform: translate(-5px, 2px); }
-  93% { transform: translate(5px, -2px); }
-  94% { transform: translate(0); }
-}
-
-.preloader-bar {
-  width: 300px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  margin-top: 40px;
-  overflow: hidden;
-  position: relative;
-}
-
-.preloader-bar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
-  animation: loadProgress 2s ease-out forwards;
-}
-
-@keyframes loadProgress { to { width: 100%; } }
-
+/* КОНТЕЙНЕРЫ */
 .main-container {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 900px;
+  padding: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  min-height: 100vh;
 }
 
 .login-screen, .project-selector {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
-  max-width: 600px;
-  animation: fadeInUp 1s ease;
-  padding: 20px 0;
+  animation: fadeInUp 0.8s ease;
 }
 
-.project-selector { display: none; max-width: 800px; }
+.project-selector { display: none; }
 .project-selector.active { display: flex; }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+/* ЛОГОТИП И ВХОД */
 .login-logo {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(2.5rem, 7vw, 4rem);
+  font-size: clamp(2.5rem, 8vw, 4rem);
   font-weight: 900;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   margin-bottom: 10px;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 30px rgba(0, 243, 255, 0.5));
   text-align: center;
   white-space: nowrap;
 }
 
 .ai-badge {
   display: inline-block;
-  font-size: clamp(0.9rem, 3vw, 1.1rem);
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  padding: 6px 16px;
-  border-radius: 10px;
+  font-size: 0.4em;
+  vertical-align: middle;
+  margin-left: 10px;
+  padding: 4px 12px;
+  border-radius: 8px;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
   color: #000;
-  box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
-  margin-left: 10px;
   -webkit-text-fill-color: #000;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
 }
 
 .login-slogan {
   font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(1rem, 3vw, 1.2rem);
-  font-weight: 600;
+  font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 50px;
-  text-align: center;
-  letter-spacing: 0.1em;
+  margin-bottom: 40px;
   text-transform: uppercase;
-  padding: 0 10px;
+  letter-spacing: 2px;
+  text-align: center;
 }
 
-.login-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
+.login-form { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 20px; }
 
 .login-input {
   width: 100%;
-  padding: 20px 25px;
-  border: 2px solid rgba(0, 243, 255, 0.3);
+  padding: 18px;
   border-radius: 16px;
+  border: 1px solid rgba(0, 243, 255, 0.3);
   background: rgba(10, 10, 20, 0.6);
   color: #fff;
   font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  transition: all 0.3s ease;
   text-align: center;
+  outline: none;
   backdrop-filter: blur(10px);
+  transition: all 0.3s;
 }
-
-.login-input:focus {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 40px rgba(0, 243, 255, 0.4);
-  background: rgba(10, 10, 20, 0.8);
-}
+.login-input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
 
 .login-btn {
   width: 100%;
-  padding: 20px;
-  border: none;
+  padding: 18px;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-  background-size: 200% 200%;
-  animation: gradientFlow 4s ease infinite;
+  border: none;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
   color: #fff;
-  font-size: 1.1rem;
-  font-weight: 800;
   font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
   cursor: pointer;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  box-shadow: 0 10px 40px rgba(0, 243, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+  transition: transform 0.2s;
 }
+.login-btn:active { transform: scale(0.98); }
 
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.login-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 60px rgba(0, 243, 255, 0.6);
-}
-
-/* Project Selector */
+/* ВЫБОР ПРОЕКТА (ИСПРАВЛЕНО) */
 .selector-header {
   display: flex;
-  align-items: center;
+  align-items: baseline; /* Выравнивание по базовой линии текста */
   justify-content: center;
   gap: 15px;
   flex-wrap: nowrap;
-  margin-bottom: 35px;
-  padding: 0 10px;
+  margin-bottom: 40px;
+  text-align: center;
+  width: 100%;
 }
 
 .selector-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1rem, 4vw, 2rem);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+  font-size: clamp(1.1rem, 5vw, 2rem); /* Адаптивный размер */
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-transform: uppercase;
   white-space: nowrap;
-  margin: 0;
+  line-height: 1.2;
 }
 
 .selector-subtitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(0.85rem, 3vw, 1.1rem);
+  font-size: clamp(0.9rem, 3vw, 1.2rem);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
-  margin: 0;
+  letter-spacing: 1px;
 }
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* Всегда 2 колонки */
   gap: 20px;
   width: 100%;
+  max-width: 800px;
 }
 
 .project-card {
-  padding: 35px 25px;
   background: rgba(20, 20, 40, 0.4);
-  border: 2px solid rgba(0, 243, 255, 0.2);
+  border: 1px solid rgba(0, 243, 255, 0.15);
   border-radius: 24px;
-  cursor: pointer;
-  transition: all 0.5s ease;
+  padding: 30px 20px;
   text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Одинаковая высота */
 }
 
 .project-card:hover {
-  transform: translateY(-10px) scale(1.02);
+  transform: translateY(-5px);
   border-color: var(--neon-cyan);
-  box-shadow: 0 20px 60px rgba(0, 243, 255, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 243, 255, 0.15);
+  background: rgba(30, 30, 60, 0.6);
 }
 
-.project-card-icon {
+.project-icon {
   font-size: 3.5rem;
   margin-bottom: 15px;
-  display: block;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
 }
 
-.project-card-title {
+.project-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1rem, 3.5vw, 1.4rem);
+  font-size: clamp(1rem, 4vw, 1.4rem);
   font-weight: 700;
-  letter-spacing: 0.12em;
-  margin-bottom: 10px;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #fff, var(--neon-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
-.project-card-desc {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+.project-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
-  letter-spacing: 0.05em;
+  margin-bottom: 15px;
 }
 
-/* License Modal */
+.project-tag {
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--neon-cyan);
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* МОДАЛЬНОЕ ОКНО ЛИЦЕНЗИИ */
 .license-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 2, 3, 0.98);
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(5, 5, 8, 0.95);
   backdrop-filter: blur(20px);
-  z-index: 2000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  overflow-y: auto;
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
 }
-
-.license-modal.active {
-  display: flex;
-  opacity: 1;
-}
+.license-modal.active { display: flex; }
 
 .license-content {
-  width: 100%;
-  max-width: 700px;
-  max-height: 90vh;
-  background: linear-gradient(180deg, rgba(15, 21, 37, 0.95) 0%, rgba(10, 14, 26, 0.95) 100%);
-  border: 2px solid var(--neon-cyan);
+  background: #12121a;
+  border: 1px solid var(--neon-cyan);
   border-radius: 24px;
-  padding: 30px 20px 25px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 0 60px rgba(0, 243, 255, 0.3);
-  margin: auto;
-}
-
-.license-content::-webkit-scrollbar { width: 6px; }
-.license-content::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 3px; }
-
-.license-header {
   text-align: center;
-  margin-bottom: 30px;
-}
-
-.license-icon {
-  font-size: 3rem;
-  margin-bottom: 15px;
 }
 
 .license-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-transform: uppercase;
+  font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 20px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-.license-text {
-  font-size: 0.9rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 25px;
-}
-
-.license-text h4 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-cyan);
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  margin: 25px 0 12px;
-  text-transform: uppercase;
-}
-
-.license-text ul {
-  padding-left: 20px;
-  margin: 12px 0;
-}
-
-.license-text li {
-  margin-bottom: 10px;
-}
-
-.license-checkbox-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  padding: 18px;
-  margin: 25px 0;
-  background: rgba(0, 243, 255, 0.05);
-  border: 2px solid rgba(0, 243, 255, 0.2);
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.license-checkbox-wrapper.checked {
-  border-color: #00ff88;
-  background: rgba(0, 255, 136, 0.08);
-}
+.license-text { text-align: left; font-size: 0.9rem; color: #ccc; line-height: 1.6; margin-bottom: 20px; }
+.license-text h4 { color: var(--neon-cyan); margin: 15px 0 5px; font-family: 'Orbitron'; font-size: 0.9rem; }
+.license-text ul { padding-left: 20px; margin: 10px 0; }
 
 .license-checkbox {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  border: 2px solid rgba(0, 243, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.05); padding: 15px;
+  border-radius: 12px; margin-bottom: 20px; cursor: pointer;
+  border: 1px solid transparent; transition: 0.3s;
 }
+.license-checkbox.checked { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
+.license-checkbox div { width: 20px; height: 20px; border: 2px solid #555; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.license-checkbox.checked div { background: var(--neon-cyan); border-color: var(--neon-cyan); }
+.license-checkbox.checked div::after { content: '✓'; color: #000; font-weight: bold; font-size: 14px; }
 
-.license-checkbox-wrapper.checked .license-checkbox {
-  background: #00ff88;
-  border-color: #00ff88;
+.license-btn {
+  width: 100%; padding: 16px; border-radius: 12px; border: none;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+  color: #fff; font-weight: 700; font-family: 'Orbitron'; cursor: pointer;
+  opacity: 0.5; pointer-events: none; transition: 0.3s;
 }
+.license-btn.active { opacity: 1; pointer-events: all; box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
 
-.license-agree-btn {
-  width: 100%;
-  padding: 18px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 800;
-  font-family: 'Orbitron', sans-serif;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  opacity: 0.4;
-  pointer-events: none;
-  transition: all 0.3s;
-}
-
-.license-agree-btn:not(:disabled) {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.license-agree-btn:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 40px rgba(0, 243, 255, 0.5);
-}
-
-/* MOBILE RESPONSIVE */
-@media (max-width: 768px) {
-  body {
-    overflow-y: auto !important;
-  }
-  
-  .main-container {
-    padding: 10px;
-    align-items: flex-start;
-    padding-top: 30px;
-  }
-  
-  .login-screen, .project-selector {
-    padding: 5px 0;
-  }
-  
-  .login-logo {
-    font-size: clamp(2rem, 8vw, 3rem);
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
-  }
-  
-  .ai-badge {
-    font-size: 0.8rem;
-    padding: 4px 10px;
-    margin-left: 6px;
-  }
-  
-  .login-slogan {
-    font-size: clamp(0.85rem, 3vw, 1rem);
-    margin-bottom: 25px;
-    letter-spacing: 0.08em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-  
-  .login-form {
-    gap: 18px;
-  }
-  
-  .login-input {
-    padding: 16px 20px;
-    font-size: 0.95rem;
-  }
-  
-  .login-btn {
-    padding: 16px;
-    font-size: 1rem;
-  }
+/* АДАПТИВ ДЛЯ ТЕЛЕФОНОВ */
+@media (max-width: 600px) {
+  .main-container { padding: 15px; justify-content: flex-start; padding-top: 40px; }
   
   .selector-header {
-    gap: 10px;
+    flex-direction: column; /* На очень маленьких экранах можно stacked, но попробуем row */
+    gap: 5px;
     margin-bottom: 25px;
-    flex-wrap: nowrap;
   }
   
-  .selector-title {
-    font-size: clamp(0.9rem, 4vw, 1.3rem);
-    letter-spacing: 0.08em;
-  }
+  /* Если хотим строго в линию даже на телефоне: */
+  .selector-header { flex-direction: row; flex-wrap: wrap; justify-content: center; }
   
-  .selector-subtitle {
-    font-size: clamp(0.75rem, 2.8vw, 0.9rem);
-  }
+  .selector-title { font-size: 1rem; }
+  .selector-subtitle { font-size: 0.8rem; width: 100%; margin-top: 5px; } /* Подзаголовок на всю ширину если не влезает */
   
-  .project-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-  
-  .project-card {
-    padding: 25px 15px;
-    border-radius: 18px;
-  }
-  
-  .project-card-icon {
-    font-size: 2.8rem;
-    margin-bottom: 12px;
-  }
-  
-  .project-card-title {
-    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
-    letter-spacing: 0.08em;
-    margin-bottom: 8px;
-  }
-  
-  .project-card-desc {
-    font-size: 0.75rem;
-    line-height: 1.4;
-  }
-  
-  .license-content {
-    padding: 20px 15px;
-    border-radius: 18px;
-  }
-  
-  .license-title {
-    font-size: clamp(1rem, 4vw, 1.3rem);
-  }
-  
-  .license-text {
-    font-size: 0.85rem;
-  }
-}
-
-@media (min-width: 700px) {
-  .project-grid { 
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-  }
+  .project-grid { gap: 12px; }
+  .project-card { padding: 20px 10px; border-radius: 18px; }
+  .project-icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .project-title { font-size: 0.9rem; margin-bottom: 8px; }
+  .project-desc { font-size: 0.75rem; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .project-tag { font-size: 0.65rem; padding: 3px 8px; }
 }
 </style>
 </head>
@@ -595,91 +336,76 @@ body {
 <div class="grid-bg"></div>
 <div class="neon-orb orb-1"></div>
 <div class="neon-orb orb-2"></div>
-<div class="neon-orb orb-3"></div>
 
-<!-- Preloader -->
-<div class="preloader" id="preloader">
-  <div class="preloader-title">EVGENII AI</div>
-  <div class="preloader-bar"></div>
-</div>
-
-<!-- Main Container -->
 <div class="main-container">
   
-  <!-- Login Screen -->
+  <!-- ЭКРАН ВХОДА -->
   <div class="login-screen" id="loginScreen">
-    <div class="login-logo">
-      EVGENII<span class="ai-badge">AI</span>
-    </div>
-    <div class="login-slogan">Музыка. Мысли. Творчество.<br>Твоё пространство для вдохновения</div>
+    <div class="login-logo">EVGENII<span class="ai-badge">AI</span></div>
+    <div class="login-slogan">Музыка · Мысли · Творчество</div>
     
     <form class="login-form" id="loginForm">
-      <input 
-        type="text" 
-        class="login-input" 
-        id="nameInput" 
-        placeholder="Введите ваше имя" 
-        autocomplete="off" 
-        maxlength="30"
-        required
-      >
-      <button type="submit" class="login-btn">ВОЙТИ</button>
+      <input type="text" class="login-input" id="nameInput" placeholder="Введите ваше имя" required autocomplete="off">
+      <button type="submit" class="login-btn">ВОЙТИ В СИСТЕМУ</button>
     </form>
   </div>
 
-  <!-- Project Selector -->
+  <!-- ЭКРАН ВЫБОРА ПРОЕКТА -->
   <div class="project-selector" id="projectSelector">
+    
     <div class="selector-header">
       <h1 class="selector-title">ОДИН ПРОЕКТ — ДВЕ ВСЕЛЕННЫЕ</h1>
-      <p class="selector-subtitle">Куда направим энергию сегодня?</p>
+      <p class="selector-subtitle">КУДА НАПРАВИМ ЭНЕРГИЮ СЕГОДНЯ?</p>
     </div>
     
     <div class="project-grid">
+      
+      <!-- КАРТОЧКА МУЗЫКИ -->
       <div class="project-card" onclick="selectProject('music')">
-        <span class="project-card-icon">🎵</span>
-        <h2 class="project-card-title">МУЗЫКА</h2>
-        <p class="project-card-desc">Треки, плеер и обсуждения<br>Погрузись в мир звуков</p>
+        <div class="project-icon">🎵</div>
+        <h2 class="project-title">МУЗЫКА</h2>
+        <p class="project-desc">
+          Треки, плеер и живые обсуждения.<br>
+          Погрузись в мир звуков и ритмов.
+        </p>
+        <div class="project-tag">СЛУШАТЬ & ЧАТ</div>
       </div>
       
+      <!-- КАРТОЧКА ДНЕВНИКА -->
       <div class="project-card" onclick="selectProject('diary')">
-        <span class="project-card-icon">📝</span>
-        <h2 class="project-card-title">ДНЕВНИК</h2>
-        <p class="project-card-desc">Мысли, песни, истории и фото<br>Творческое пространство</p>
+        <div class="project-icon">📝</div>
+        <h2 class="project-title">ДНЕВНИК</h2>
+        <p class="project-desc">
+          Мысли, песни, истории и фото.<br>
+          Твоё личное творческое пространство.
+        </p>
+        <div class="project-tag">ЧИТАТЬ & ПИСАТЬ</div>
       </div>
+
     </div>
   </div>
 
 </div>
 
-<!-- License Modal -->
+<!-- МОДАЛКА ЛИЦЕНЗИИ -->
 <div class="license-modal" id="licenseModal">
   <div class="license-content">
-    <div class="license-header">
-      <div class="license-icon"></div>
-      <h2 class="license-title" id="licenseTitle">Загрузка...</h2>
-    </div>
-    
+    <h2 class="license-title">ЛИЦЕНЗИОННОЕ СОГЛАШЕНИЕ</h2>
     <div class="license-text" id="licenseText">
-      <div style="text-align:center;padding:40px;color:rgba(255,255,255,0.5)">
-        ⏳ Загрузка правил...
-      </div>
+      <p>Загрузка правил...</p>
     </div>
     
-    <div class="license-checkbox-wrapper" id="licenseCheckboxWrapper" onclick="toggleLicenseCheckbox()">
-      <div class="license-checkbox"></div>
-      <div class="license-checkbox-label">
-        Я <strong>ознакомился(ась)</strong> с условиями соглашения и принимаю их
-      </div>
+    <div class="license-checkbox" id="licenseCheckbox" onclick="toggleLicense()">
+      <div></div>
+      <span>Я ознакомился и принимаю условия</span>
     </div>
     
-    <button class="license-agree-btn" id="licenseAgreeBtn" disabled onclick="acceptLicense()">
-      Принять и продолжить
-    </button>
+    <button class="license-btn" id="licenseBtn" onclick="acceptLicense()">ПРИНЯТЬ И ВОЙТИ</button>
   </div>
 </div>
 
 <script>
-// ===== FIREBASE =====
+// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
   apiKey: "AIzaSyCw8S1fwhfKUMUtNsDFDbz-oFeSkRD_NOk",
   authDomain: "evgenii-music-b5adf.firebaseapp.com",
@@ -693,122 +419,7 @@ let db = null;
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
-  console.log('Firebase подключён');
-} catch (e) {
-  console.error('Ошибка Firebase:', e);
-}
-
-// ===== ПРАВИЛА ПО УМОЛЧАНИЮ =====
-const DEFAULT_LICENSE = {
-  title: 'Лицензионное соглашение',
-  sections: [
-    {
-      icon: '🎵',
-      title: '1. Авторство и концепция',
-      content: 'Проект <strong>EVGENII AI</strong> является авторским творческим проектом. Все идеи, тексты, музыкальные композиции и визуальный контент принадлежат автору.<br><br>Тексты песен создаются автором с использованием искусственного интеллекта в качестве вспомогательного инструмента. Доля участия ИИ варьируется от 20% до 50% в зависимости от конкретного произведения. Автор осуществляет полное творческое руководство, отбор, редактуру и финальное утверждение всего контента.',
-      type: 'text'
-    },
-    {
-      icon: '✅',
-      title: '2. Разрешено',
-      items: [
-        'Прослушивание всех музыкальных треков онлайн',
-        'Скачивание треков для личного некоммерческого использования',
-        'Делиться ссылками на треки и контент в социальных сетях с указанием авторства',
-        'Участие в обсуждениях и сообществах проекта',
-        'Чтение и взаимодействие с контентом творческого дневника',
-        'Использование материалов в образовательных целях с указанием источника'
-      ],
-      type: 'list'
-    },
-    {
-      icon: '🚫',
-      title: '3. Запрещено',
-      items: [
-        'Коммерческое использование контента без письменного разрешения автора',
-        'Загрузка треков на стриминговые платформы от своего имени',
-        'Использование музыкальных композиций и текстов для обучения сторонних AI-моделей',
-        'Присвоение авторства текстов, идей или музыкальных композиций',
-        'Копирование и распространение контента дневника без указания автора',
-        'Модификация, ремикширование или создание производных произведений без разрешения',
-        'Использование контента в рекламе или промо-материалах'
-      ],
-      type: 'list'
-    },
-    {
-      icon: '⚖️',
-      title: '4. Ответственность',
-      content: 'Проект <strong>EVGENII AI</strong> носит исключительно творческий и развлекательный характер. Весь контент предоставляется «как есть» (as is), без каких-либо явных или подразумеваемых гарантий.<br><br>Автор не несёт ответственности за возможные технические сбои, потерю данных или иные последствия, возникшие в результате использования сайта.',
-      type: 'text'
-    },
-    {
-      icon: '',
-      title: '5. Конфиденциальность',
-      content: 'Проект использует технологию Firebase для хранения данных обсуждений и настроек. Персональные данные пользователей (имя) хранятся локально в браузере и не передаются третьим лицам.',
-      type: 'text'
-    },
-    {
-      icon: '💬',
-      title: '6. Обратная связь',
-      content: 'По вопросам лицензирования, сотрудничества, коммерческого использования или иным вопросам — обращайтесь через раздел «Связь» на сайте или через официальные сообщества проекта.',
-      type: 'text'
-    },
-    {
-      icon: '',
-      title: '7. Изменения соглашения',
-      content: 'Автор оставляет за собой право вносить изменения в данное соглашение. Актуальная версия всегда доступна на сайте. Продолжение использования проекта означает принятие обновлённых условий.',
-      type: 'text'
-    }
-  ]
-};
-
-// ===== РЕНДЕР ПРАВИЛ =====
-function renderLicense(data) {
-  document.getElementById('licenseTitle').textContent = data.title || 'Лицензионное соглашение';
-  
-  const container = document.getElementById('licenseText');
-  container.innerHTML = data.sections.map(section => {
-    let content = '';
-    if (section.type === 'list' && section.items) {
-      content = '<ul>' + section.items.map(item => `<li>${item}</li>`).join('') + '</ul>';
-    } else if (section.content) {
-      content = `<p>${section.content}</p>`;
-    }
-    return `<h4>${section.icon || ''} ${section.title}</h4>${content}`;
-  }).join('');
-}
-
-// ===== ЗАГРУЗКА ПРАВИЛ ИЗ FIREBASE =====
-function loadLicenseFromFirebase() {
-  if (!db) {
-    renderLicense(DEFAULT_LICENSE);
-    return;
-  }
-  
-  db.collection('settings').doc('license').get().then(doc => {
-    if (doc.exists) {
-      renderLicense(doc.data());
-    } else {
-      // Создаём документ с правилами по умолчанию
-      db.collection('settings').doc('license').set(DEFAULT_LICENSE).then(() => {
-        renderLicense(DEFAULT_LICENSE);
-      }).catch(err => {
-        console.error('Ошибка создания документа:', err);
-        renderLicense(DEFAULT_LICENSE);
-      });
-    }
-  }).catch(err => {
-    console.error('Ошибка загрузки правил:', err);
-    renderLicense(DEFAULT_LICENSE);
-  });
-}
-
-// ===== ПРЕЛОАДЕР =====
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('preloader').classList.add('hidden');
-  }, 2000);
-});
+} catch (e) { console.error('Firebase error:', e); }
 
 // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
 const userName = localStorage.getItem('evgenii_user');
@@ -819,70 +430,74 @@ if (userName && licenseAccepted) {
   document.getElementById('projectSelector').classList.add('active');
 }
 
-// ===== ФОРМА ВХОДА =====
-document.getElementById('loginForm').addEventListener('submit', function(e) {
+// ===== ЛОГИКА ВХОДА =====
+document.getElementById('loginForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const name = document.getElementById('nameInput').value.trim();
-  
   if (name) {
     localStorage.setItem('evgenii_user', name);
-    loadLicenseFromFirebase();
+    loadLicense(); // Загружаем правила из базы или показываем дефолтные
     document.getElementById('licenseModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
   }
 });
 
 // ===== ЛИЦЕНЗИЯ =====
-let licenseCheckboxChecked = false;
+let isLicenseChecked = false;
 
-function toggleLicenseCheckbox() {
-  licenseCheckboxChecked = !licenseCheckboxChecked;
-  const wrapper = document.getElementById('licenseCheckboxWrapper');
-  const btn = document.getElementById('licenseAgreeBtn');
+function toggleLicense() {
+  isLicenseChecked = !isLicenseChecked;
+  const box = document.getElementById('licenseCheckbox');
+  const btn = document.getElementById('licenseBtn');
   
-  if (licenseCheckboxChecked) {
-    wrapper.classList.add('checked');
-    btn.disabled = false;
+  if (isLicenseChecked) {
+    box.classList.add('checked');
+    btn.classList.add('active');
   } else {
-    wrapper.classList.remove('checked');
-    btn.disabled = true;
+    box.classList.remove('checked');
+    btn.classList.remove('active');
   }
 }
 
 function acceptLicense() {
-  if (!licenseCheckboxChecked) return;
-  
+  if (!isLicenseChecked) return;
   localStorage.setItem('evgenii_agreement_accepted', 'true');
   document.getElementById('licenseModal').classList.remove('active');
-  document.body.style.overflow = '';
-  
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('projectSelector').classList.add('active');
 }
 
-// ===== ВЫБОР ПРОЕКТА =====
-function selectProject(project) {
-  const userName = localStorage.getItem('evgenii_user');
-  if (!userName) {
-    alert('Пожалуйста, введите имя');
-    return;
-  }
+// Загрузка правил (если есть в базе, иначе дефолт)
+function loadLicense() {
+  const defaultText = `
+    <h4>1. Авторство</h4>
+    <p>Проект EVGENII AI является авторским. Тексты создаются человеком с помощью ИИ (20-50%). Автор утверждает финальный контент.</p>
+    <h4>2. Разрешено</h4>
+    <ul><li>Слушать музыку онлайн</li><li>Скачивать для личного использования</li><li>Делиться ссылками с указанием автора</li></ul>
+    <h4>3. Запрещено</h4>
+    <ul><li>Коммерческое использование без разрешения</li><li>Загрузка на стриминги от своего имени</li><li>Обучение других нейросетей на этом контенте</li></ul>
+  `;
   
-  if (project === 'music') {
-    window.location.href = 'music.html';
-  } else if (project === 'diary') {
-    window.location.href = 'diary.html';
+  if (db) {
+    db.collection('settings').doc('license').get().then(doc => {
+      if (doc.exists) {
+        // Можно парсить структуру из базы, здесь упрощенно выводим текст
+        document.getElementById('licenseText').innerHTML = defaultText; 
+      } else {
+        document.getElementById('licenseText').innerHTML = defaultText;
+      }
+    }).catch(() => {
+      document.getElementById('licenseText').innerHTML = defaultText;
+    });
+  } else {
+    document.getElementById('licenseText').innerHTML = defaultText;
   }
 }
 
-// ===== КЛАВИАТУРА =====
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.getElementById('licenseModal').classList.contains('active')) {
-    if (!document.getElementById('licenseAgreeBtn').disabled) {
-      acceptLicense();
-    }
-  }
-});
+// ===== ВЫБОР ПРОЕКТА =====
+function selectProject(project) {
+  if (project === 'music') window.location.href = 'music.html';
+  if (project === 'diary') window.location.href = 'diary.html';
+}
 </script>
 
 </body>
