@@ -25,7 +25,6 @@ body {
   color: #fff;
   min-height: 100vh;
   overflow-x: hidden;
-  overflow-y: auto;
 }
 
 .grid-bg {
@@ -53,7 +52,6 @@ body {
 .orb-1 { width: 400px; height: 400px; background: var(--neon-purple); top: -100px; right: -100px; }
 .orb-2 { width: 300px; height: 300px; background: var(--neon-cyan); bottom: -50px; left: -50px; }
 
-/* ===== ГЛАВНЫЙ КОНТЕЙНЕР С ЦЕНТРИРОВАНИЕМ ===== */
 .main-container {
   position: relative;
   z-index: 10;
@@ -81,7 +79,6 @@ body {
 
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ===== КРАСИВЫЙ БАННЕР ВХОДА ===== */
 .login-banner {
   width: 100%;
   max-width: 600px;
@@ -90,10 +87,7 @@ body {
   border: 1px solid rgba(0, 243, 255, 0.2);
   border-radius: 32px;
   backdrop-filter: blur(20px);
-  box-shadow: 
-    0 0 80px rgba(0, 243, 255, 0.15),
-    0 0 120px rgba(176, 38, 255, 0.1),
-    inset 0 0 80px rgba(0, 243, 255, 0.05);
+  box-shadow: 0 0 80px rgba(0, 243, 255, 0.15), 0 0 120px rgba(176, 38, 255, 0.1), inset 0 0 80px rgba(0, 243, 255, 0.05);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -178,7 +172,6 @@ body {
   z-index: 1;
 }
 
-/* ===== ФОРМА ВХОДА ===== */
 .login-form {
   width: 100%;
   max-width: 400px;
@@ -204,10 +197,7 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-.login-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
+.login-input::placeholder { color: rgba(255, 255, 255, 0.4); }
 .login-input:focus {
   border-color: var(--neon-cyan);
   box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
@@ -234,10 +224,8 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 15px 40px rgba(0, 243, 255, 0.5);
 }
-
 .login-btn:active { transform: scale(0.98); }
 
-/* ===== БАННЕР ПРОЕКТА ===== */
 .project-banner {
   width: 100%;
   max-width: 700px;
@@ -267,7 +255,6 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 10px;
-  animation: logoGlow 3s ease-in-out infinite;
 }
 
 .project-banner-tagline {
@@ -323,12 +310,7 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
 }
-
-.logout-btn svg {
-  width: 14px;
-  height: 14px;
-  fill: currentColor;
-}
+.logout-btn svg { width: 14px; height: 14px; fill: currentColor; }
 
 .selector-header {
   display: flex;
@@ -417,12 +399,7 @@ body {
   z-index: 10;
 }
 
-.project-icon {
-  font-size: 3.5rem;
-  margin-bottom: 15px;
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
-}
-
+.project-icon { font-size: 3.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2)); }
 .project-title {
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(1rem, 4vw, 1.4rem);
@@ -432,7 +409,6 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
 }
-
 .project-desc {
   font-family: 'Inter', sans-serif;
   font-size: clamp(0.85rem, 2.5vw, 1rem);
@@ -440,7 +416,6 @@ body {
   line-height: 1.5;
   margin-bottom: 15px;
 }
-
 .project-tag {
   font-size: 0.75rem;
   padding: 4px 12px;
@@ -477,12 +452,7 @@ body {
   border-color: var(--neon-cyan);
   box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
 }
-
-.admin-gear svg {
-  width: 24px;
-  height: 24px;
-  fill: var(--neon-cyan);
-}
+.admin-gear svg { width: 24px; height: 24px; fill: var(--neon-cyan); }
 
 .modal-overlay {
   position: fixed;
@@ -495,7 +465,6 @@ body {
   justify-content: center;
   padding: 20px;
 }
-
 .modal-overlay.active { display: flex; }
 
 .modal-content {
@@ -531,7 +500,6 @@ body {
   outline: none;
   margin-bottom: 20px;
 }
-
 .modal-input:focus { border-color: var(--neon-cyan); }
 
 .modal-btn {
@@ -547,9 +515,7 @@ body {
   margin-bottom: 10px;
   transition: transform 0.2s;
 }
-
 .modal-btn:active { transform: scale(0.98); }
-
 .modal-btn-secondary {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -565,9 +531,7 @@ body {
   margin: 15px 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 .toggle-info { text-align: left; flex: 1; }
-
 .toggle-title {
   font-size: 1.1rem;
   font-weight: 700;
@@ -577,7 +541,6 @@ body {
   align-items: center;
   gap: 10px;
 }
-
 .toggle-desc { font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); }
 
 .toggle-switch {
@@ -591,12 +554,10 @@ body {
   flex-shrink: 0;
   margin-left: 15px;
 }
-
 .toggle-switch.active {
   background: linear-gradient(135deg, #ff6b6b, #ff0040);
   box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
 }
-
 .toggle-switch::after {
   content: '';
   position: absolute;
@@ -609,7 +570,6 @@ body {
   transition: all 0.3s;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
-
 .toggle-switch.active::after { left: 31px; }
 
 .status-indicator {
@@ -620,13 +580,11 @@ body {
   font-weight: 600;
   margin-top: 15px;
 }
-
 .status-indicator.online {
   background: rgba(0, 255, 136, 0.15);
   color: #00ff88;
   border: 1px solid rgba(0, 255, 136, 0.3);
 }
-
 .status-indicator.offline {
   background: rgba(255, 107, 107, 0.15);
   color: #ff6b6b;
@@ -634,11 +592,16 @@ body {
 }
 
 .license-modal {
-  position: fixed; inset: 0; z-index: 2000;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
   background: rgba(5, 5, 8, 0.95);
   backdrop-filter: blur(20px);
-  display: none; align-items: center; justify-content: center;
+  display: none;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
+  overflow-y: auto;
 }
 .license-modal.active { display: flex; }
 
@@ -649,52 +612,94 @@ body {
   padding: 30px;
   max-width: 600px;
   width: 100%;
-  max-height: 90vh;
+  max-height: calc(100vh - 40px);
   overflow-y: auto;
   text-align: center;
+  margin: auto;
 }
+
+.license-content::-webkit-scrollbar { width: 8px; }
+.license-content::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+.license-content::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 4px; }
 
 .license-title {
-  font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
   background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.license-text { text-align: left; font-size: 0.9rem; color: #ccc; line-height: 1.6; margin-bottom: 20px; }
-.license-text h4 { color: var(--neon-cyan); margin: 15px 0 5px; font-family: 'Orbitron'; font-size: 0.9rem; }
-.license-text ul { padding-left: 20px; margin: 10px 0; }
+.license-text {
+  text-align: left;
+  font-size: 0.9rem;
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+.license-text::-webkit-scrollbar { width: 6px; }
+.license-text::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+.license-text::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.3); border-radius: 3px; }
+.license-text h4 { color: var(--neon-cyan); margin: 15px 0 8px; font-family: 'Orbitron', sans-serif; font-size: 0.95rem; }
+.license-text ul { padding-left: 20px; margin: 8px 0; }
+.license-text ul li { margin-bottom: 4px; }
+.license-text p { margin-bottom: 10px; }
+.license-text .law-ref {
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 179, 71, 0.08);
+  border-left: 3px solid #ffb347;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: rgba(255, 179, 71, 0.9);
+}
 
 .license-checkbox {
-  display: flex; align-items: center; gap: 10px;
-  background: rgba(255,255,255,0.05); padding: 15px;
-  border-radius: 12px; margin-bottom: 20px; cursor: pointer;
-  border: 1px solid transparent; transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: 0.3s;
 }
 .license-checkbox.checked { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
-.license-checkbox div { width: 20px; height: 20px; border: 2px solid #555; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.license-checkbox div { width: 20px; height: 20px; border: 2px solid #555; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .license-checkbox.checked div { background: var(--neon-cyan); border-color: var(--neon-cyan); }
 .license-checkbox.checked div::after { content: '✓'; color: #000; font-weight: bold; font-size: 14px; }
 
 .license-btn {
-  width: 100%; padding: 16px; border-radius: 12px; border: none;
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
   background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-  color: #fff; font-weight: 700; font-family: 'Orbitron'; cursor: pointer;
-  opacity: 0.5; pointer-events: none; transition: 0.3s;
+  color: #fff;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  opacity: 0.5;
+  pointer-events: none;
+  transition: 0.3s;
 }
 .license-btn.active { opacity: 1; pointer-events: all; box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
+.license-btn.active:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 243, 255, 0.6); }
 
 @media (max-width: 600px) {
   .main-container { padding: 15px; }
-  
-  .login-banner {
-    padding: 35px 25px;
-    border-radius: 24px;
-  }
-  
+  .login-banner { padding: 35px 25px; border-radius: 24px; }
   .banner-logo { font-size: clamp(2.2rem, 10vw, 3.5rem); }
   .banner-ai-badge { font-size: 0.3em; padding: 4px 12px; }
   .banner-tagline { font-size: clamp(0.9rem, 3vw, 1.1rem); letter-spacing: 2px; }
-  
   .project-banner { padding: 20px 15px; margin-bottom: 25px; }
   .logout-btn { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.75rem; }
   .selector-header { flex-direction: row; flex-wrap: wrap; justify-content: center; }
@@ -710,6 +715,9 @@ body {
   .admin-gear svg { width: 20px; height: 20px; }
   .toggle-container { padding: 15px; }
   .toggle-title { font-size: 1rem; }
+  .license-content { padding: 20px; max-height: calc(100vh - 20px); }
+  .license-title { font-size: 1.2rem; }
+  .license-text { font-size: 0.85rem; max-height: 40vh; }
 }
 </style>
 </head>
@@ -721,7 +729,6 @@ body {
 
 <div class="main-container">
   
-  <!-- ЭКРАН ВХОДА С КРАСИВЫМ БАННЕРОМ -->
   <div class="login-screen" id="loginScreen">
     <div class="login-banner">
       <h1 class="banner-logo">EVGENII<span class="banner-ai-badge">AI</span></h1>
@@ -735,14 +742,11 @@ body {
     </div>
   </div>
 
-  <!-- ЭКРАН ВЫБОРА ПРОЕКТА -->
   <div class="project-selector" id="projectSelector">
     
     <div class="project-banner">
       <button class="logout-btn" onclick="logout()" title="Выйти из аккаунта">
-        <svg viewBox="0 0 24 24">
-          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         ВЫЙТИ
       </button>
       
@@ -764,20 +768,14 @@ body {
       <div class="project-card" id="musicCard" onclick="selectProject('music')">
         <div class="project-icon">🎵</div>
         <h2 class="project-title">МУЗЫКА</h2>
-        <p class="project-desc">
-          Треки, плеер и живые обсуждения.<br>
-          Погрузись в мир звуков и ритмов.
-        </p>
+        <p class="project-desc">Треки, плеер и живые обсуждения.<br>Погрузись в мир звуков и ритмов.</p>
         <div class="project-tag">СЛУШАТЬ & ЧАТ</div>
       </div>
       
       <div class="project-card" id="diaryCard" onclick="selectProject('diary')">
         <div class="project-icon">📝</div>
         <h2 class="project-title">ДНЕВНИК</h2>
-        <p class="project-desc">
-          Мысли, песни, истории и фото.<br>
-          Твоё личное творческое пространство.
-        </p>
+        <p class="project-desc">Мысли, песни, истории и фото.<br>Твоё личное творческое пространство.</p>
         <div class="project-tag">ЧИТАТЬ & ПИСАТЬ</div>
       </div>
     </div>
@@ -785,14 +783,10 @@ body {
 
 </div>
 
-<!-- ШЕСТЕРЕНКА АДМИНА -->
 <div class="admin-gear" onclick="openAdminLogin()" title="Админ-панель">
-  <svg viewBox="0 0 24 24">
-    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-  </svg>
+  <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
 </div>
 
-<!-- МОДАЛКА ВХОДА АДМИНА -->
 <div class="modal-overlay" id="adminLoginModal">
   <div class="modal-content">
     <h2 class="modal-title">🔐 ВХОД ДЛЯ АДМИНА</h2>
@@ -803,7 +797,6 @@ body {
   </div>
 </div>
 
-<!-- МОДАЛКА АДМИН-ПАНЕЛИ -->
 <div class="modal-overlay" id="adminPanelModal">
   <div class="modal-content">
     <h2 class="modal-title">⚙️ ПАНЕЛЬ УПРАВЛЕНИЯ</h2>
@@ -832,7 +825,6 @@ body {
   </div>
 </div>
 
-<!-- МОДАЛКА ЛИЦЕНЗИИ -->
 <div class="license-modal" id="licenseModal">
   <div class="license-content">
     <h2 class="license-title">ЛИЦЕНЗИОННОЕ СОГЛАШЕНИЕ</h2>
@@ -867,6 +859,7 @@ try {
 
 const ADMIN_PASSWORD = 'N130289s';
 let sectionStatus = { music: false, diary: false };
+let isLicenseChecked = false;
 
 const userName = localStorage.getItem('evgenii_user');
 const licenseAccepted = localStorage.getItem('evgenii_agreement_accepted') === 'true';
@@ -886,8 +879,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     document.getElementById('licenseModal').classList.add('active');
   }
 });
-
-let isLicenseChecked = false;
 
 function toggleLicense() {
   isLicenseChecked = !isLicenseChecked;
@@ -914,12 +905,34 @@ function acceptLicense() {
 
 function loadLicense() {
   const defaultText = `
-    <h4>1. Авторство</h4>
-    <p>Проект EVGENII AI является авторским. Тексты создаются человеком с помощью ИИ (20-50%). Автор утверждает финальный контент.</p>
-    <h4>2. Разрешено</h4>
-    <ul><li>Слушать музыку онлайн</li><li>Скачивать для личного использования</li><li>Делиться ссылками с указанием автора</li></ul>
-    <h4>3. Запрещено</h4>
-    <ul><li>Коммерческое использование без разрешения</li><li>Загрузка на стриминги от своего имени</li><li>Обучение других нейросетей на этом контенте</li></ul>
+    <h4>🎵 1. Авторство и концепция</h4>
+    <p>Все идеи и концепции принадлежат <strong>полностью автору</strong>. Тексты песен создаются автором при вспомогательном участии искусственного интеллекта, доля которого варьируется в зависимости от конкретного произведения — от ≈20% (подбор рифм, синонимов, шлифовка отдельных строк) до ≈50% (совместная проработка отдельных фрагментов). При этом автор осуществляет общее <strong>творческое руководство, отбор, редактуру и финальное утверждение</strong> текста. Вокал и аранжировка генерируются AI на основе авторских указаний. Правообладателем всего контента является автор проекта EVGENII AI.</p>
+    <div class="law-ref">📌 Правовая основа: ГК РФ ст. 1228, 1229, 1255, 1259.</div>
+    
+    <h4>️ 2. Ответственность</h4>
+    <p>Проект EVGENII AI носит исключительно <strong>развлекательный характер</strong> и является некоммерческим творческим проектом. Весь контент предоставляется «как есть», без каких-либо гарантий. Автор и правообладатель не несёт ответственности за возможные проблемы, убытки или последствия, возникшие в результате использования сайта, прослушивания контента или взаимодействия с сервисами проекта, за исключением случаев, прямо предусмотренных действующим законодательством.</p>
+    <div class="law-ref">📌 Правовая основа: ГК РФ ст. 15, 401.</div>
+    
+    <h4>✅ 3. Разрешено</h4>
+    <ul>
+      <li>Прослушивание всех треков онлайн</li>
+      <li>Скачивание для личного некоммерческого использования</li>
+      <li>Делиться ссылками на треки в соцсетях</li>
+      <li>Участие в обсуждениях и сообществах</li>
+    </ul>
+    <div class="law-ref">📌 Правовая основа: ГК РФ ст. 1273.</div>
+    
+    <h4> 4. Запрещено</h4>
+    <ul>
+      <li>Коммерческое использование без письменного разрешения</li>
+      <li>Загрузка на стриминговые платформы от своего имени</li>
+      <li>Использование треков для обучения сторонних AI-моделей</li>
+      <li>Присвоение авторства текстов или идей</li>
+    </ul>
+    <div class="law-ref">📌 Правовая основа: ГК РФ ст. 1270, 1301, КоАП РФ ст. 7.12, УК РФ ст. 146.</div>
+    
+    <h4>💬 5. Обратная связь</h4>
+    <p>По вопросам лицензирования, сотрудничества или коммерческого использования — пишите через раздел «Связь» на сайте.</p>
   `;
   
   if (db) {
