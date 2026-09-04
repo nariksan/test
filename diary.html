@@ -373,6 +373,21 @@ nav {
 .post-card[data-category="stories"] { --cat-color: var(--accent-3); }
 .post-card[data-category="photos"] { --cat-color: var(--accent-4); }
 
+.post-image {
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.post-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, var(--bg));
+}
+
 .post-status-bar {
   padding: 8px 20px;
   font-size: 0.75rem;
@@ -800,6 +815,11 @@ footer {
   border-radius: 8px;
   border-left: 3px solid var(--warning);
   margin-bottom: 15px;
+}
+
+.form-hint.owner {
+  background: rgba(78,205,196,0.05);
+  border-left-color: var(--accent-2);
 }
 
 .form-actions {
@@ -1241,10 +1261,10 @@ footer {
       Читать дневник может любой — регистрация нужна только для создания записей.
     </div>
     <div class="auth-choice-buttons">
-      <button class="auth-choice-btn login-btn" onclick="showAuthForm('login')">🔑 Вход</button>
+      <button class="auth-choice-btn login-btn" onclick="showAuthForm('login')"> Вход</button>
       <button class="auth-choice-btn register-btn" onclick="showAuthForm('register')">📝 Регистрация</button>
     </div>
-    <div class="auth-close-hint" onclick="closeAuthChoice()"> Закрыть и продолжить чтение</div>
+    <div class="auth-close-hint" onclick="closeAuthChoice()">✕ Закрыть и продолжить чтение</div>
   </div>
 </div>
 
@@ -1255,7 +1275,7 @@ footer {
     <!-- ФОРМА ВХОДА -->
     <div class="auth-form-container" id="loginFormContainer">
       <div class="auth-back-btn" onclick="backToChoice()">← Назад к выбору</div>
-      <div class="modal-title" style="justify-content:center;"> Вход</div>
+      <div class="modal-title" style="justify-content:center;">🔑 Вход</div>
       <form class="auth-form" onsubmit="handleLogin(event)">
         <input type="text" class="auth-input" id="loginPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
         <input type="text" class="auth-input" id="loginName" placeholder="Ваше имя" required>
@@ -1296,7 +1316,7 @@ footer {
       <span id="modalTitleText">Новая запись</span>
     </div>
 
-    <div class="form-hint">
+    <div class="form-hint" id="moderationHint">
       ⚠️ <b>Внимание:</b> После публикации запись отправится на модерацию. Она появится на сайте после одобрения администратора.
     </div>
 
@@ -1304,10 +1324,10 @@ footer {
       <div class="form-group">
         <label class="form-label">Категория</label>
         <select class="form-select" id="postCategory">
-          <option value="thoughts">💭 Мысль</option>
+          <option value="thoughts"> Мысль</option>
           <option value="songs">🎵 Песня</option>
           <option value="stories">📖 История</option>
-          <option value="photos">📸 Фото</option>
+          <option value="photos"> Фото</option>
         </select>
       </div>
 
@@ -1330,6 +1350,18 @@ footer {
         <label class="form-label">Теги (через запятую)</label>
         <input type="text" class="form-input" id="postTags" placeholder="ночь, город, лирика">
       </div>
+
+      <!-- ПОЛЕ ДЛЯ ФОТО (ТОЛЬКО ДЛЯ ВЛАДЕЛЬЦА) -->
+      <div class="form-group full" id="imageField" style="display:none;">
+        <label class="form-label">📸 Ссылка на фото</label>
+        <div class="form-hint owner">
+          💡 <b>Как добавить фото:</b><br>
+          1. Загрузи фото в папку <code>images</code> в своём репозитории GitHub.<br>
+          2. Открой файл, нажми кнопку <b>Raw</b> и скопируй ссылку.<br>
+          3. Вставь ссылку сюда.
+        </div>
+        <input type="url" class="form-input" id="postImage" placeholder="https://raw.githubusercontent.com/...">
+      </div>
     </div>
 
     <div class="form-actions">
@@ -1343,19 +1375,19 @@ footer {
 <div class="modal-overlay" id="adminPanelModal">
   <div class="modal-content wide">
     <div class="modal-title" style="justify-content:space-between;">
-      <span>️ Панель модерации</span>
-      <button class="btn" onclick="closeAdminPanel()"> Закрыть</button>
+      <span>⚙️ Панель модерации</span>
+      <button class="btn" onclick="closeAdminPanel()">✕ Закрыть</button>
     </div>
 
     <div class="admin-tabs">
       <div class="admin-tab active" data-tab="pending" onclick="switchAdminTab('pending')">
-         На модерации <span class="count" id="pendingCount">0</span>
+        ⏳ На модерации <span class="count" id="pendingCount">0</span>
       </div>
       <div class="admin-tab" data-tab="approved" onclick="switchAdminTab('approved')">
         ✅ Опубликовано <span class="count" id="approvedCount">0</span>
       </div>
       <div class="admin-tab" data-tab="rejected" onclick="switchAdminTab('rejected')">
-         Отклонено <span class="count" id="rejectedCount">0</span>
+        ❌ Отклонено <span class="count" id="rejectedCount">0</span>
       </div>
       <div class="admin-tab" data-tab="all" onclick="switchAdminTab('all')">
         📋 Все <span class="count" id="allCount">0</span>
@@ -1379,7 +1411,7 @@ footer {
         <label class="form-label">Категория</label>
         <select class="form-select" id="adminEditCategory">
           <option value="thoughts">💭 Мысль</option>
-          <option value="songs">🎵 Песня</option>
+          <option value="songs"> Песня</option>
           <option value="stories">📖 История</option>
           <option value="photos">📸 Фото</option>
         </select>
@@ -1403,6 +1435,11 @@ footer {
       <div class="form-group full">
         <label class="form-label">Теги (через запятую)</label>
         <input type="text" class="form-input" id="adminEditTags">
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Ссылка на фото</label>
+        <input type="url" class="form-input" id="adminEditImage" placeholder="https://raw.githubusercontent.com/...">
       </div>
 
       <div class="form-group full">
@@ -1451,7 +1488,7 @@ let adminEditingId = null;
 let currentFilter = 'all';
 let currentAdminTab = 'pending';
 
-// ===== ДАННЫЕ ВЛАДЕЛЬЦА (для автоматического создания) =====
+// ===== ДАННЫЕ ВЛАДЕЛЬЦА =====
 const OWNER_DATA = {
   phoneLast4: '3734',
   name: 'Евгений',
@@ -1461,10 +1498,8 @@ const OWNER_DATA = {
 
 // ===== ПРИ ЗАГРУЗКЕ =====
 window.addEventListener('load', async () => {
-  // Создаём владельца в базе, если его нет
   await ensureOwnerExists();
   
-  // Проверяем сохранённую сессию
   const savedUser = localStorage.getItem('diary_current_user');
   if (savedUser) {
     try {
@@ -1490,7 +1525,6 @@ async function ensureOwnerExists() {
       .get();
     
     if (snapshot.empty) {
-      // Владелец не найден - создаём
       await db.collection(USERS_COLLECTION).add({
         ...OWNER_DATA,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1511,17 +1545,20 @@ function updateUserUI() {
     document.getElementById('logoutNavBtn').style.display = 'inline-flex';
     document.getElementById('fabBtn').classList.add('visible');
     
-    // Показываем кнопку Админ только для владельца
+    // Показываем кнопку Админ и поле для фото только для владельца
     if (currentUser.isAdmin) {
       document.getElementById('adminNavBtn').style.display = 'inline-flex';
+      document.getElementById('imageField').style.display = 'flex';
     } else {
       document.getElementById('adminNavBtn').style.display = 'none';
+      document.getElementById('imageField').style.display = 'none';
     }
   } else {
     document.getElementById('userBadge').style.display = 'none';
     document.getElementById('logoutNavBtn').style.display = 'none';
     document.getElementById('adminNavBtn').style.display = 'none';
     document.getElementById('fabBtn').classList.remove('visible');
+    document.getElementById('imageField').style.display = 'none';
   }
 }
 
@@ -1680,7 +1717,7 @@ async function handleLogin(e) {
     document.getElementById('authFormModal').classList.remove('active');
     document.body.style.overflow = '';
     
-    showToast(' Добро пожаловать, ' + currentUser.name + '!', 'success');
+    showToast('👋 Добро пожаловать, ' + currentUser.name + '!', 'success');
     setTimeout(() => openCreateModal(), 500);
   } catch (error) {
     console.error(error);
@@ -1735,7 +1772,7 @@ async function savePostToFirebase(post) {
     return docRef.id;
   } catch (error) {
     console.error(error);
-    showToast(' Ошибка: ' + error.message, 'error');
+    showToast('❌ Ошибка: ' + error.message, 'error');
     return null;
   }
 }
@@ -1757,7 +1794,7 @@ async function updatePostInFirebase(postId, postData) {
 
 async function deletePostFromFirebase(postId) {
   if (!db) {
-    showToast(' База данных недоступна', 'error');
+    showToast('❌ База данных недоступна', 'error');
     return false;
   }
   try {
@@ -1802,22 +1839,27 @@ function renderPosts(filter = 'all') {
     const isLiked = liked.includes(post.id);
     const tagsHtml = (post.tags || []).map(t => `<span class="post-tag">#${t}</span>`).join('');
     const authorInitial = (post.author || '?')[0].toUpperCase();
-    const isAuthor = currentUser && post.authorId === currentUser.id;
+    
+    // Владелец может редактировать/удалять любой пост
+    const canEdit = currentUser && (currentUser.isAdmin || post.authorId === currentUser.id);
     
     let statusBar = '';
-    if (isAuthor && post.status === 'pending') {
-      statusBar = '<div class="post-status-bar pending">⏳ На модерации</div>';
-    } else if (isAuthor && post.status === 'rejected') {
+    if (canEdit && post.status === 'pending') {
+      statusBar = '<div class="post-status-bar pending"> На модерации</div>';
+    } else if (canEdit && post.status === 'rejected') {
       statusBar = `<div class="post-status-bar rejected">❌ Отклонено${post.adminNote ? ': ' + escapeHtml(post.adminNote) : ''}</div>`;
     }
     
-    const editButtons = isAuthor && post.status !== 'pending' ? `
+    const imageHtml = post.image ? `<div class="post-image" style="background-image:url('${post.image}')"></div>` : '';
+    
+    const editButtons = canEdit && post.status !== 'pending' ? `
       <button class="post-edit-btn" onclick="editPost('${post.id}')" title="Редактировать">✏️</button>
       <button class="post-edit-btn delete" onclick="deletePost('${post.id}')" title="Удалить">🗑️</button>
     ` : '';
 
     return `
       <article class="post-card" data-category="${post.category}">
+        ${imageHtml}
         ${statusBar}
         <div class="post-author">
           <div class="post-author-avatar">${authorInitial}</div>
@@ -1943,7 +1985,16 @@ function openCreateModal() {
   editingId = null;
   document.getElementById('modalIcon').textContent = '✨';
   document.getElementById('modalTitleText').textContent = 'Новая запись';
-  document.getElementById('saveBtn').textContent = '📤 Отправить на модерацию';
+  
+  // Для владельца - сразу публикация, для остальных - на модерацию
+  if (currentUser.isAdmin) {
+    document.getElementById('saveBtn').textContent = '🚀 Опубликовать';
+    document.getElementById('moderationHint').style.display = 'none';
+  } else {
+    document.getElementById('saveBtn').textContent = ' Отправить на модерацию';
+    document.getElementById('moderationHint').style.display = 'block';
+  }
+  
   resetForm();
   document.getElementById('createModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1959,6 +2010,7 @@ function resetForm() {
   document.getElementById('postTitle').value = '';
   document.getElementById('postText').value = '';
   document.getElementById('postTags').value = '';
+  document.getElementById('postImage').value = '';
   document.getElementById('postCategory').value = 'thoughts';
   setTodayDate();
 }
@@ -1975,6 +2027,7 @@ async function savePost() {
   const title = document.getElementById('postTitle').value.trim();
   const text = document.getElementById('postText').value.trim();
   const tagsRaw = document.getElementById('postTags').value.trim();
+  const image = document.getElementById('postImage').value.trim();
 
   if (!title || !text) {
     showToast('Заполни заголовок и текст!', 'error');
@@ -1983,15 +2036,18 @@ async function savePost() {
 
   const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
 
+  // Владелец публикует сразу, остальные - на модерацию
+  const status = currentUser.isAdmin ? 'approved' : 'pending';
+
   if (editingId) {
     const postData = { 
-      category, date, title, text, tags,
-      status: 'pending',
+      category, date, title, text, tags, image,
+      status: currentUser.isAdmin ? 'approved' : 'pending',
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     const success = await updatePostInFirebase(editingId, postData);
     if (success) {
-      showToast('✅ Запись отправлена на повторную модерацию', 'success');
+      showToast(currentUser.isAdmin ? '✅ Запись обновлена и опубликована' : '✅ Запись отправлена на повторную модерацию', 'success');
       closeCreateModal();
     }
   } else {
@@ -2001,15 +2057,16 @@ async function savePost() {
       title,
       text,
       tags,
+      image: image || null,
       likes: 0,
       author: currentUser.name,
       authorId: currentUser.id,
-      status: 'pending',
+      status: status,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     const postId = await savePostToFirebase(newPost);
     if (postId) {
-      showToast('📤 Запись отправлена на модерацию!', 'success');
+      showToast(currentUser.isAdmin ? '🚀 Запись опубликована!' : '📤 Запись отправлена на модерацию!', 'success');
       closeCreateModal();
     }
   }
@@ -2023,13 +2080,21 @@ function editPost(id) {
   editingId = id;
   document.getElementById('modalIcon').textContent = '✏️';
   document.getElementById('modalTitleText').textContent = 'Редактирование';
-  document.getElementById('saveBtn').textContent = '📤 Отправить на модерацию';
+  
+  if (currentUser.isAdmin) {
+    document.getElementById('saveBtn').textContent = '💾 Сохранить';
+    document.getElementById('moderationHint').style.display = 'none';
+  } else {
+    document.getElementById('saveBtn').textContent = ' Отправить на модерацию';
+    document.getElementById('moderationHint').style.display = 'block';
+  }
   
   document.getElementById('postCategory').value = post.category;
   document.getElementById('postDate').value = post.date;
   document.getElementById('postTitle').value = post.title;
   document.getElementById('postText').value = post.text;
   document.getElementById('postTags').value = (post.tags || []).join(', ');
+  document.getElementById('postImage').value = post.image || '';
 
   document.getElementById('createModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -2045,7 +2110,6 @@ async function deletePost(id) {
 
 // ===== АДМИН-ПАНЕЛЬ =====
 function openAdminPanel() {
-  // Проверяем, что это владелец
   if (!currentUser || !currentUser.isAdmin) {
     showToast('Доступ запрещён', 'error');
     return;
@@ -2093,7 +2157,7 @@ function renderAdminPosts() {
   
   list.innerHTML = filtered.map(post => {
     const statusLabels = {
-      pending: ' На модерации',
+      pending: '⏳ На модерации',
       approved: '✅ Опубликовано',
       rejected: '❌ Отклонено'
     };
@@ -2105,7 +2169,7 @@ function renderAdminPosts() {
           <span class="status-badge ${post.status}">${statusLabels[post.status]}</span>
         </div>
         <div class="admin-post-meta">
-          <span>👤 ${escapeHtml(post.author || 'Аноним')}</span>
+          <span> ${escapeHtml(post.author || 'Аноним')}</span>
           <span>📅 ${post.date}</span>
           <span>📂 ${categoryNames[post.category]}</span>
           <span>♡ ${post.likes || 0}</span>
@@ -2114,7 +2178,7 @@ function renderAdminPosts() {
         <div class="admin-post-text">${escapeHtml(post.text)}</div>
         <div class="admin-post-actions">
           ${post.status !== 'approved' ? `<button class="btn btn-success" onclick="approvePost('${post.id}')">✅ Одобрить</button>` : ''}
-          ${post.status !== 'rejected' ? `<button class="btn btn-danger" onclick="rejectPost('${post.id}')">❌ Отклонить</button>` : ''}
+          ${post.status !== 'rejected' ? `<button class="btn btn-danger" onclick="rejectPost('${post.id}')"> Отклонить</button>` : ''}
           <button class="btn btn-warning" onclick="openAdminEdit('${post.id}')">✏️ Редактировать</button>
           <button class="btn btn-danger" onclick="adminDeletePost('${post.id}')">🗑️ Удалить</button>
         </div>
@@ -2157,6 +2221,7 @@ function openAdminEdit(id) {
   document.getElementById('adminEditTitle').value = post.title;
   document.getElementById('adminEditText').value = post.text;
   document.getElementById('adminEditTags').value = (post.tags || []).join(', ');
+  document.getElementById('adminEditImage').value = post.image || '';
   document.getElementById('adminEditNote').value = post.adminNote || '';
   
   document.getElementById('adminEditModal').classList.add('active');
@@ -2173,6 +2238,7 @@ async function saveAdminEdit() {
   const title = document.getElementById('adminEditTitle').value.trim();
   const text = document.getElementById('adminEditText').value.trim();
   const tagsRaw = document.getElementById('adminEditTags').value.trim();
+  const image = document.getElementById('adminEditImage').value.trim();
   const note = document.getElementById('adminEditNote').value.trim();
   
   if (!title || !text) {
@@ -2182,7 +2248,7 @@ async function saveAdminEdit() {
   
   const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
   
-  const postData = { category, date, title, text, tags, adminNote: note };
+  const postData = { category, date, title, text, tags, image, adminNote: note };
   
   const success = await updatePostInFirebase(adminEditingId, postData);
   if (success) {
@@ -2222,4 +2288,3 @@ document.addEventListener('visibilitychange', () => {
 
 </body>
 </html>
-
