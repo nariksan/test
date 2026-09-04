@@ -31,7 +31,6 @@ body {
   align-items: center;
 }
 
-/* ФОН И ЭФФЕКТЫ */
 .grid-bg {
   position: fixed;
   inset: 0;
@@ -57,7 +56,6 @@ body {
 .orb-1 { width: 400px; height: 400px; background: var(--neon-purple); top: -100px; right: -100px; }
 .orb-2 { width: 300px; height: 300px; background: var(--neon-cyan); bottom: -50px; left: -50px; }
 
-/* КОНТЕЙНЕРЫ */
 .main-container {
   position: relative;
   z-index: 10;
@@ -84,7 +82,6 @@ body {
 
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ЛОГОТИП И ВХОД */
 .login-logo {
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(2.5rem, 8vw, 4rem);
@@ -155,7 +152,6 @@ body {
 }
 .login-btn:active { transform: scale(0.98); }
 
-/* ===== БАННЕР ПРОЕКТА ===== */
 .project-banner {
   width: 100%;
   max-width: 700px;
@@ -185,7 +181,6 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 10px;
-  text-shadow: 0 0 40px rgba(0, 243, 255, 0.5);
   animation: logoGlow 3s ease-in-out infinite;
 }
 
@@ -221,7 +216,6 @@ body {
   margin: 0 auto;
 }
 
-/* ВЫБОР ПРОЕКТА */
 .selector-header {
   display: flex;
   align-items: baseline;
@@ -321,7 +315,195 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* МОДАЛЬНОЕ ОКНО ЛИЦЕНЗИИ */
+/* ===== ШЕСТЕРЕНКА АДМИНА ===== */
+.admin-gear {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(20, 20, 40, 0.8);
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  opacity: 0.6;
+}
+
+.admin-gear:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+}
+
+.admin-gear svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--neon-cyan);
+}
+
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 8, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal-content {
+  background: #12121a;
+  border: 1px solid var(--neon-cyan);
+  border-radius: 24px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.modal-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  background: rgba(10, 10, 20, 0.6);
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  margin-bottom: 20px;
+}
+
+.modal-input:focus { border-color: var(--neon-cyan); }
+
+.modal-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+  color: #fff;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+}
+
+.modal-btn:active { transform: scale(0.98); }
+
+.modal-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== ПЕРЕКЛЮЧАТЕЛЬ ===== */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  margin: 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toggle-info {
+  text-align: left;
+  flex: 1;
+}
+
+.toggle-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.toggle-desc {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  margin-left: 15px;
+}
+
+.toggle-switch.active {
+  background: linear-gradient(135deg, #ff6b6b, #ff0040);
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  border-radius: 50%;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-switch.active::after {
+  left: 31px;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.status-indicator.online {
+  background: rgba(0, 255, 136, 0.15);
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.status-indicator.offline {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
 .license-modal {
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(5, 5, 8, 0.95);
@@ -372,32 +554,20 @@ body {
 }
 .license-btn.active { opacity: 1; pointer-events: all; box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
 
-/* АДАПТИВ ДЛЯ ТЕЛЕФОНОВ */
 @media (max-width: 600px) {
   .main-container { padding: 15px; justify-content: flex-start; padding-top: 20px; }
-  
-  .project-banner {
-    padding: 20px 15px;
-    margin-bottom: 25px;
-  }
-  
-  .selector-header {
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 25px;
-  }
-  
+  .project-banner { padding: 20px 15px; margin-bottom: 25px; }
   .selector-header { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-  
   .selector-title { font-size: 1rem; }
   .selector-subtitle { font-size: 0.8rem; width: 100%; margin-top: 5px; }
-  
   .project-grid { gap: 12px; }
   .project-card { padding: 20px 10px; border-radius: 18px; }
   .project-icon { font-size: 2.5rem; margin-bottom: 10px; }
   .project-title { font-size: 0.9rem; margin-bottom: 8px; }
   .project-desc { font-size: 0.75rem; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .project-tag { font-size: 0.65rem; padding: 3px 8px; }
+  .admin-gear { width: 45px; height: 45px; bottom: 15px; right: 15px; }
+  .admin-gear svg { width: 20px; height: 20px; }
 }
 </style>
 </head>
@@ -409,7 +579,6 @@ body {
 
 <div class="main-container">
   
-  <!-- ЭКРАН ВХОДА -->
   <div class="login-screen" id="loginScreen">
     <div class="login-logo">EVGENII<span class="ai-badge">AI</span></div>
     <div class="login-slogan">Музыка · Мысли · Творчество</div>
@@ -420,17 +589,15 @@ body {
     </form>
   </div>
 
-  <!-- ЭКРАН ВЫБОРА ПРОЕКТА -->
   <div class="project-selector" id="projectSelector">
     
-    <!-- ===== БАННЕР ПРОЕКТА ===== -->
     <div class="project-banner">
       <h1 class="banner-logo">EVGENII<span style="font-size:0.3em; vertical-align:middle; margin-left:8px;">AI</span></h1>
       <div class="banner-tagline">ТВОРЧЕСКАЯ ВСЕЛЕННАЯ</div>
       <div class="banner-divider"></div>
       <p class="banner-subtitle">
-        <br>
-        
+        Где заканчиваюсь я — и начинается ИИ.<br>
+        Эксперимент на стыке человеческих эмоций и искусственного интеллекта
       </p>
     </div>
     
@@ -440,8 +607,6 @@ body {
     </div>
     
     <div class="project-grid">
-      
-      <!-- КАРТОЧКА МУЗЫКИ -->
       <div class="project-card" onclick="selectProject('music')">
         <div class="project-icon">🎵</div>
         <h2 class="project-title">МУЗЫКА</h2>
@@ -452,7 +617,6 @@ body {
         <div class="project-tag">СЛУШАТЬ & ЧАТ</div>
       </div>
       
-      <!-- КАРТОЧКА ДНЕВНИКА -->
       <div class="project-card" onclick="selectProject('diary')">
         <div class="project-icon">📝</div>
         <h2 class="project-title">ДНЕВНИК</h2>
@@ -462,10 +626,48 @@ body {
         </p>
         <div class="project-tag">ЧИТАТЬ & ПИСАТЬ</div>
       </div>
-
     </div>
   </div>
 
+</div>
+
+<!-- ШЕСТЕРЕНКА АДМИНА -->
+<div class="admin-gear" onclick="openAdminLogin()" title="Админ-панель">
+  <svg viewBox="0 0 24 24">
+    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+  </svg>
+</div>
+
+<!-- МОДАЛКА ВХОДА АДМИНА -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal-content">
+    <h2 class="modal-title">🔐 ВХОД ДЛЯ АДМИНА</h2>
+    <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px; font-size: 0.9rem;">Введите пароль для доступа к панели управления</p>
+    <input type="password" class="modal-input" id="adminPassword" placeholder="Пароль администратора" autocomplete="off">
+    <button class="modal-btn" onclick="checkAdminPassword()">ВОЙТИ</button>
+    <button class="modal-btn modal-btn-secondary" onclick="closeAdminLogin()">ОТМЕНА</button>
+  </div>
+</div>
+
+<!-- МОДАЛКА АДМИН-ПАНЕЛИ -->
+<div class="modal-overlay" id="adminPanelModal">
+  <div class="modal-content">
+    <h2 class="modal-title">️ ПАНЕЛЬ УПРАВЛЕНИЯ</h2>
+    
+    <div class="toggle-container">
+      <div class="toggle-info">
+        <div class="toggle-title"> Технические работы</div>
+        <div class="toggle-desc">Закрыть сайт для пользователей</div>
+      </div>
+      <div class="toggle-switch" id="maintenanceToggle" onclick="toggleMaintenance()"></div>
+    </div>
+    
+    <div id="statusIndicator">
+      <span class="status-indicator online">● САЙТ РАБОТАЕТ</span>
+    </div>
+    
+    <button class="modal-btn modal-btn-secondary" onclick="closeAdminPanel()" style="margin-top: 20px;">ЗАКРЫТЬ</button>
+  </div>
 </div>
 
 <!-- МОДАЛКА ЛИЦЕНЗИИ -->
@@ -486,7 +688,6 @@ body {
 </div>
 
 <script>
-// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
   apiKey: "AIzaSyCw8S1fwhfKUMUtNsDFDbz-oFeSkRD_NOk",
   authDomain: "evgenii-music-b5adf.firebaseapp.com",
@@ -502,7 +703,9 @@ try {
   db = firebase.firestore();
 } catch (e) { console.error('Firebase error:', e); }
 
-// ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
+const ADMIN_PASSWORD = 'N130289s';
+let maintenanceMode = false;
+
 const userName = localStorage.getItem('evgenii_user');
 const licenseAccepted = localStorage.getItem('evgenii_agreement_accepted') === 'true';
 
@@ -511,7 +714,6 @@ if (userName && licenseAccepted) {
   document.getElementById('projectSelector').classList.add('active');
 }
 
-// ===== ЛОГИКА ВХОДА =====
 document.getElementById('loginForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const name = document.getElementById('nameInput').value.trim();
@@ -522,7 +724,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
   }
 });
 
-// ===== ЛИЦЕНЗИЯ =====
 let isLicenseChecked = false;
 
 function toggleLicense() {
@@ -559,11 +760,7 @@ function loadLicense() {
   
   if (db) {
     db.collection('settings').doc('license').get().then(doc => {
-      if (doc.exists) {
-        document.getElementById('licenseText').innerHTML = defaultText; 
-      } else {
-        document.getElementById('licenseText').innerHTML = defaultText;
-      }
+      document.getElementById('licenseText').innerHTML = defaultText; 
     }).catch(() => {
       document.getElementById('licenseText').innerHTML = defaultText;
     });
@@ -572,11 +769,110 @@ function loadLicense() {
   }
 }
 
-// ===== ВЫБОР ПРОЕКТА =====
 function selectProject(project) {
   if (project === 'music') window.location.href = 'music.html';
   if (project === 'diary') window.location.href = 'diary.html';
 }
+
+// ===== АДМИН-ПАНЕЛЬ =====
+function openAdminLogin() {
+  document.getElementById('adminLoginModal').classList.add('active');
+  document.getElementById('adminPassword').value = '';
+  setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+}
+
+function closeAdminLogin() {
+  document.getElementById('adminLoginModal').classList.remove('active');
+}
+
+function checkAdminPassword() {
+  const password = document.getElementById('adminPassword').value;
+  if (password === ADMIN_PASSWORD) {
+    closeAdminLogin();
+    openAdminPanel();
+  } else {
+    alert(' Неверный пароль!');
+    document.getElementById('adminPassword').value = '';
+  }
+}
+
+function openAdminPanel() {
+  document.getElementById('adminPanelModal').classList.add('active');
+  loadMaintenanceStatus();
+}
+
+function closeAdminPanel() {
+  document.getElementById('adminPanelModal').classList.remove('active');
+}
+
+function loadMaintenanceStatus() {
+  if (!db) {
+    updateMaintenanceUI(false);
+    return;
+  }
+  
+  db.collection('settings').doc('maintenance').get().then(doc => {
+    if (doc.exists) {
+      maintenanceMode = doc.data().enabled || false;
+    } else {
+      maintenanceMode = false;
+    }
+    updateMaintenanceUI(maintenanceMode);
+  }).catch(err => {
+    console.error('Ошибка загрузки статуса:', err);
+    updateMaintenanceUI(false);
+  });
+}
+
+function toggleMaintenance() {
+  if (!db) {
+    alert('Firebase не подключён');
+    return;
+  }
+  
+  const newStatus = !maintenanceMode;
+  const action = newStatus ? 'ВКЛЮЧИТЬ' : 'ВЫКЛЮЧИТЬ';
+  
+  if (confirm(`Вы уверены, что хотите ${action} технические работы?\n\nПри включении сайт будет недоступен для пользователей.`)) {
+    db.collection('settings').doc('maintenance').set({
+      enabled: newStatus,
+      updatedAt: new Date().toISOString()
+    }).then(() => {
+      maintenanceMode = newStatus;
+      updateMaintenanceUI(maintenanceMode);
+      alert(newStatus ? '✅ Технические работы включены' : '✅ Технические работы выключены');
+    }).catch(err => {
+      alert('❌ Ошибка: ' + err.message);
+    });
+  }
+}
+
+function updateMaintenanceUI(isMaintenance) {
+  const toggle = document.getElementById('maintenanceToggle');
+  const statusDiv = document.getElementById('statusIndicator');
+  
+  if (isMaintenance) {
+    toggle.classList.add('active');
+    statusDiv.innerHTML = '<span class="status-indicator offline">● ТЕХНИЧЕСКИЕ РАБОТЫ</span>';
+  } else {
+    toggle.classList.remove('active');
+    statusDiv.innerHTML = '<span class="status-indicator online">● САЙТ РАБОТАЕТ</span>';
+  }
+}
+
+// Закрытие модалок по клику на фон
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+});
+
+// Enter в поле пароля админа
+document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') checkAdminPassword();
+});
 </script>
 
 </body>
