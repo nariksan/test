@@ -271,6 +271,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100%;
+  position: relative;
 }
 
 .project-card:hover {
@@ -278,6 +279,28 @@ body {
   border-color: var(--neon-cyan);
   box-shadow: 0 10px 40px rgba(0, 243, 255, 0.15);
   background: rgba(30, 30, 60, 0.6);
+}
+
+.project-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(0.7);
+}
+
+.project-card.disabled::after {
+  content: '🔧 ТЕХ. РАБОТЫ';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 107, 107, 0.9);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  z-index: 10;
 }
 
 .project-icon {
@@ -315,7 +338,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* ===== ШЕСТЕРЕНКА АДМИНА ===== */
 .admin-gear {
   position: fixed;
   bottom: 20px;
@@ -348,7 +370,6 @@ body {
   fill: var(--neon-cyan);
 }
 
-/* ===== МОДАЛЬНЫЕ ОКНА ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -420,7 +441,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ===== ПЕРЕКЛЮЧАТЕЛЬ ===== */
 .toggle-container {
   display: flex;
   align-items: center;
@@ -428,7 +448,7 @@ body {
   padding: 20px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  margin: 20px 0;
+  margin: 15px 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -442,6 +462,9 @@ body {
   font-weight: 700;
   margin-bottom: 5px;
   color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .toggle-desc {
@@ -568,6 +591,8 @@ body {
   .project-tag { font-size: 0.65rem; padding: 3px 8px; }
   .admin-gear { width: 45px; height: 45px; bottom: 15px; right: 15px; }
   .admin-gear svg { width: 20px; height: 20px; }
+  .toggle-container { padding: 15px; }
+  .toggle-title { font-size: 1rem; }
 }
 </style>
 </head>
@@ -607,8 +632,8 @@ body {
     </div>
     
     <div class="project-grid">
-      <div class="project-card" onclick="selectProject('music')">
-        <div class="project-icon">🎵</div>
+      <div class="project-card" id="musicCard" onclick="selectProject('music')">
+        <div class="project-icon"></div>
         <h2 class="project-title">МУЗЫКА</h2>
         <p class="project-desc">
           Треки, плеер и живые обсуждения.<br>
@@ -617,7 +642,7 @@ body {
         <div class="project-tag">СЛУШАТЬ & ЧАТ</div>
       </div>
       
-      <div class="project-card" onclick="selectProject('diary')">
+      <div class="project-card" id="diaryCard" onclick="selectProject('diary')">
         <div class="project-icon">📝</div>
         <h2 class="project-title">ДНЕВНИК</h2>
         <p class="project-desc">
@@ -652,18 +677,26 @@ body {
 <!-- МОДАЛКА АДМИН-ПАНЕЛИ -->
 <div class="modal-overlay" id="adminPanelModal">
   <div class="modal-content">
-    <h2 class="modal-title">️ ПАНЕЛЬ УПРАВЛЕНИЯ</h2>
+    <h2 class="modal-title">⚙️ ПАНЕЛЬ УПРАВЛЕНИЯ</h2>
     
     <div class="toggle-container">
       <div class="toggle-info">
-        <div class="toggle-title"> Технические работы</div>
-        <div class="toggle-desc">Закрыть сайт для пользователей</div>
+        <div class="toggle-title"> Музыка</div>
+        <div class="toggle-desc">Закрыть раздел музыки</div>
       </div>
-      <div class="toggle-switch" id="maintenanceToggle" onclick="toggleMaintenance()"></div>
+      <div class="toggle-switch" id="musicToggle" onclick="toggleSection('music')"></div>
     </div>
     
-    <div id="statusIndicator">
-      <span class="status-indicator online">● САЙТ РАБОТАЕТ</span>
+    <div class="toggle-container">
+      <div class="toggle-info">
+        <div class="toggle-title">📝 Дневник</div>
+        <div class="toggle-desc">Закрыть раздел дневника</div>
+      </div>
+      <div class="toggle-switch" id="diaryToggle" onclick="toggleSection('diary')"></div>
+    </div>
+    
+    <div id="statusIndicator" style="margin-top: 20px;">
+      <span class="status-indicator online">● ВСЕ РАЗДЕЛЫ РАБОТАЮТ</span>
     </div>
     
     <button class="modal-btn modal-btn-secondary" onclick="closeAdminPanel()" style="margin-top: 20px;">ЗАКРЫТЬ</button>
@@ -704,7 +737,7 @@ try {
 } catch (e) { console.error('Firebase error:', e); }
 
 const ADMIN_PASSWORD = 'N130289s';
-let maintenanceMode = false;
+let sectionStatus = { music: false, diary: false };
 
 const userName = localStorage.getItem('evgenii_user');
 const licenseAccepted = localStorage.getItem('evgenii_agreement_accepted') === 'true';
@@ -712,6 +745,7 @@ const licenseAccepted = localStorage.getItem('evgenii_agreement_accepted') === '
 if (userName && licenseAccepted) {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('projectSelector').classList.add('active');
+  loadSectionStatus();
 }
 
 document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -746,6 +780,7 @@ function acceptLicense() {
   document.getElementById('licenseModal').classList.remove('active');
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('projectSelector').classList.add('active');
+  loadSectionStatus();
 }
 
 function loadLicense() {
@@ -770,8 +805,64 @@ function loadLicense() {
 }
 
 function selectProject(project) {
+  if (sectionStatus[project]) {
+    alert('🔧 Этот раздел временно недоступен. Ведутся технические работы.');
+    return;
+  }
   if (project === 'music') window.location.href = 'music.html';
   if (project === 'diary') window.location.href = 'diary.html';
+}
+
+function loadSectionStatus() {
+  if (!db) return;
+  
+  db.collection('settings').doc('sections').get().then(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      sectionStatus = {
+        music: data.music || false,
+        diary: data.diary || false
+      };
+    }
+    updateSectionUI();
+  }).catch(err => {
+    console.error('Ошибка загрузки статусов:', err);
+  });
+}
+
+function updateSectionUI() {
+  const musicCard = document.getElementById('musicCard');
+  const diaryCard = document.getElementById('diaryCard');
+  const musicToggle = document.getElementById('musicToggle');
+  const diaryToggle = document.getElementById('diaryToggle');
+  const statusDiv = document.getElementById('statusIndicator');
+  
+  if (sectionStatus.music) {
+    musicCard.classList.add('disabled');
+    musicToggle.classList.add('active');
+  } else {
+    musicCard.classList.remove('disabled');
+    musicToggle.classList.remove('active');
+  }
+  
+  if (sectionStatus.diary) {
+    diaryCard.classList.add('disabled');
+    diaryToggle.classList.add('active');
+  } else {
+    diaryCard.classList.remove('disabled');
+    diaryToggle.classList.remove('active');
+  }
+  
+  const bothDisabled = sectionStatus.music && sectionStatus.diary;
+  const oneDisabled = sectionStatus.music || sectionStatus.diary;
+  
+  if (bothDisabled) {
+    statusDiv.innerHTML = '<span class="status-indicator offline">● ВСЕ РАЗДЕЛЫ ЗАКРЫТЫ</span>';
+  } else if (oneDisabled) {
+    statusDiv.innerHTML = '<span class="status-indicator offline">● ЧАСТЬ РАЗДЕЛОВ ЗАКРЫТА</span>';
+  } else {
+    statusDiv.innerHTML = '<span class="status-indicator online">● ВСЕ РАЗДЕЛЫ РАБОТАЮТ</span>';
+  }
 }
 
 // ===== АДМИН-ПАНЕЛЬ =====
@@ -791,76 +882,46 @@ function checkAdminPassword() {
     closeAdminLogin();
     openAdminPanel();
   } else {
-    alert(' Неверный пароль!');
+    alert('❌ Неверный пароль!');
     document.getElementById('adminPassword').value = '';
   }
 }
 
 function openAdminPanel() {
   document.getElementById('adminPanelModal').classList.add('active');
-  loadMaintenanceStatus();
+  loadSectionStatus();
 }
 
 function closeAdminPanel() {
   document.getElementById('adminPanelModal').classList.remove('active');
 }
 
-function loadMaintenanceStatus() {
-  if (!db) {
-    updateMaintenanceUI(false);
-    return;
-  }
-  
-  db.collection('settings').doc('maintenance').get().then(doc => {
-    if (doc.exists) {
-      maintenanceMode = doc.data().enabled || false;
-    } else {
-      maintenanceMode = false;
-    }
-    updateMaintenanceUI(maintenanceMode);
-  }).catch(err => {
-    console.error('Ошибка загрузки статуса:', err);
-    updateMaintenanceUI(false);
-  });
-}
-
-function toggleMaintenance() {
+function toggleSection(section) {
   if (!db) {
     alert('Firebase не подключён');
     return;
   }
   
-  const newStatus = !maintenanceMode;
+  const newStatus = !sectionStatus[section];
+  const sectionName = section === 'music' ? 'Музыка' : 'Дневник';
   const action = newStatus ? 'ВКЛЮЧИТЬ' : 'ВЫКЛЮЧИТЬ';
   
-  if (confirm(`Вы уверены, что хотите ${action} технические работы?\n\nПри включении сайт будет недоступен для пользователей.`)) {
-    db.collection('settings').doc('maintenance').set({
-      enabled: newStatus,
+  if (confirm(`Вы уверены, что хотите ${action} технические работы для раздела "${sectionName}"?\n\nПри включении раздел будет недоступен для пользователей.`)) {
+    sectionStatus[section] = newStatus;
+    
+    db.collection('settings').doc('sections').set({
+      music: sectionStatus.music,
+      diary: sectionStatus.diary,
       updatedAt: new Date().toISOString()
     }).then(() => {
-      maintenanceMode = newStatus;
-      updateMaintenanceUI(maintenanceMode);
-      alert(newStatus ? '✅ Технические работы включены' : '✅ Технические работы выключены');
+      updateSectionUI();
+      alert(newStatus ? `✅ Раздел "${sectionName}" закрыт` : `✅ Раздел "${sectionName}" открыт`);
     }).catch(err => {
       alert('❌ Ошибка: ' + err.message);
     });
   }
 }
 
-function updateMaintenanceUI(isMaintenance) {
-  const toggle = document.getElementById('maintenanceToggle');
-  const statusDiv = document.getElementById('statusIndicator');
-  
-  if (isMaintenance) {
-    toggle.classList.add('active');
-    statusDiv.innerHTML = '<span class="status-indicator offline">● ТЕХНИЧЕСКИЕ РАБОТЫ</span>';
-  } else {
-    toggle.classList.remove('active');
-    statusDiv.innerHTML = '<span class="status-indicator online">● САЙТ РАБОТАЕТ</span>';
-  }
-}
-
-// Закрытие модалок по клику на фон
 document.querySelectorAll('.modal-overlay').forEach(modal => {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
@@ -869,7 +930,6 @@ document.querySelectorAll('.modal-overlay').forEach(modal => {
   });
 });
 
-// Enter в поле пароля админа
 document.getElementById('adminPassword').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') checkAdminPassword();
 });
