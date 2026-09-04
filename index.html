@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVGENII AI — Вход</title>
+<link rel="icon" type="image/png" href="favicon-48x48.png">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --neon-cyan: #00f3ff;
+  --neon-pink: #ff00ff;
+  --neon-purple: #b026ff;
+  --dark-bg: #050508;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--dark-bg);
+  color: #fff;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes gridMove {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50px); }
+}
+
+.neon-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  z-index: 0;
+  animation: orbPulse 8s ease-in-out infinite;
+}
+
+.orb-1 { width: 500px; height: 500px; background: var(--neon-purple); top: -200px; right: -200px; }
+.orb-2 { width: 400px; height: 400px; background: var(--neon-cyan); bottom: -150px; left: -150px; animation-delay: -4s; }
+.orb-3 { width: 300px; height: 300px; background: var(--neon-pink); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -2s; }
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.2); opacity: 0.6; }
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  background: var(--dark-bg);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 1s, visibility 1s;
+}
+
+.preloader.hidden { opacity: 0; visibility: hidden; }
+
+.preloader-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+  0%, 91%, 100% { transform: translate(0); }
+  92% { transform: translate(-5px, 2px); }
+  93% { transform: translate(5px, -2px); }
+  94% { transform: translate(0); }
+}
+
+.preloader-bar {
+  width: 300px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin-top: 40px;
+  overflow: hidden;
+  position: relative;
+}
+
+.preloader-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+  animation: loadProgress 2s ease-out forwards;
+}
+
+@keyframes loadProgress { to { width: 100%; } }
+
+.main-container {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-screen, .project-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  animation: fadeInUp 1s ease;
+}
+
+.project-selector { display: none; max-width: 800px; }
+.project-selector.active { display: flex; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(0, 243, 255, 0.5));
+}
+
+.ai-badge {
+  display: inline-block;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  padding: 8px 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+  color: #000;
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
+  margin-left: 15px;
+  -webkit-text-fill-color: #000;
+}
+
+.login-slogan {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 70px;
+  text-align: center;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 22px 30px;
+  border: 2px solid rgba(0, 243, 255, 0.3);
+  border-radius: 16px;
+  background: rgba(10, 10, 20, 0.6);
+  color: #fff;
+  font-size: 1.1rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.login-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 40px rgba(0, 243, 255, 0.4);
+  background: rgba(10, 10, 20, 0.8);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 24px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  background-size: 200% 200%;
+  animation: gradientFlow 4s ease infinite;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 40px rgba(0, 243, 255, 0.4);
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(0, 243, 255, 0.6);
+}
+
+.selector-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  margin-bottom: 15px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+}
+
+.selector-subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 70px;
+  text-align: center;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 35px;
+  width: 100%;
+}
+
+.project-card {
+  padding: 50px 40px;
+  background: rgba(20, 20, 40, 0.4);
+  border: 2px solid rgba(0, 243, 255, 0.2);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.project-card:hover {
+  transform: translateY(-15px) scale(1.03);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 30px 80px rgba(0, 243, 255, 0.3);
+}
+
+.project-card-icon {
+  font-size: 5rem;
+  margin-bottom: 30px;
+  display: block;
+}
+
+.project-card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #fff, var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.project-card-desc {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+}
+
+/* License Modal */
+.license-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 2, 3, 0.98);
+  backdrop-filter: blur(20px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.license-modal.active {
+  display: flex;
+  opacity: 1;
+}
+
+.license-content {
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  background: linear-gradient(180deg, rgba(15, 21, 37, 0.95) 0%, rgba(10, 14, 26, 0.95) 100%);
+  border: 2px solid var(--neon-cyan);
+  border-radius: 30px;
+  padding: 50px 40px 40px;
+  overflow-y: auto;
+  box-shadow: 0 0 60px rgba(0, 243, 255, 0.3);
+}
+
+.license-content::-webkit-scrollbar { width: 6px; }
+.license-content::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 3px; }
+
+.license-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.license-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.license-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+}
+
+.license-text {
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 30px;
+}
+
+.license-text h4 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--neon-cyan);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin: 30px 0 15px;
+  text-transform: uppercase;
+}
+
+.license-text ul {
+  padding-left: 25px;
+  margin: 15px 0;
+}
+
+.license-text li {
+  margin-bottom: 12px;
+}
+
+.license-checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 22px;
+  margin: 35px 0;
+  background: rgba(0, 243, 255, 0.05);
+  border: 2px solid rgba(0, 243, 255, 0.2);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.license-checkbox-wrapper.checked {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.08);
+}
+
+.license-checkbox {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 243, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.license-checkbox-wrapper.checked .license-checkbox {
+  background: #00ff88;
+  border-color: #00ff88;
+}
+
+.license-agree-btn {
+  width: 100%;
+  padding: 22px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.4;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.license-agree-btn:not(:disabled) {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.license-agree-btn:not(:disabled):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(0, 243, 255, 0.6);
+}
+
+@media (min-width: 700px) {
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="neon-orb orb-1"></div>
+<div class="neon-orb orb-2"></div>
+<div class="neon-orb orb-3"></div>
+
+<!-- Preloader -->
+<div class="preloader" id="preloader">
+  <div class="preloader-title">EVGENII AI</div>
+  <div class="preloader-bar"></div>
+</div>
+
+<!-- Main Container -->
+<div class="main-container">
+  
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-logo">
+      EVGENII<span class="ai-badge">AI</span>
+    </div>
+    <div class="login-slogan">Музыка. Мысли. Творчество.<br>Твоё пространство для вдохновения</div>
+    
+    <form class="login-form" id="loginForm">
+      <input 
+        type="text" 
+        class="login-input" 
+        id="nameInput" 
+        placeholder="Введите ваше имя" 
+        autocomplete="off" 
+        maxlength="30"
+        required
+      >
+      <button type="submit" class="login-btn">ВОЙТИ</button>
+    </form>
+  </div>
+
+  <!-- Project Selector -->
+  <div class="project-selector" id="projectSelector">
+    <h1 class="selector-title">ВЫБЕРИТЕ ПРОЕКТ</h1>
+    <p class="selector-subtitle">Куда направим энергию сегодня?</p>
+    
+    <div class="project-grid">
+      <div class="project-card" onclick="selectProject('music')">
+        <span class="project-card-icon">🎵</span>
+        <h2 class="project-card-title">МУЗЫКА</h2>
+        <p class="project-card-desc">Треки, плеер и обсуждения<br>Погрузись в мир звуков</p>
+      </div>
+      
+      <div class="project-card" onclick="selectProject('diary')">
+        <span class="project-card-icon">📝</span>
+        <h2 class="project-card-title">ДНЕВНИК</h2>
+        <p class="project-card-desc">Мысли, песни, истории и фото<br>Творческое пространство</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- License Modal -->
+<div class="license-modal" id="licenseModal">
+  <div class="license-content">
+    <div class="license-header">
+      <div class="license-icon">📜</div>
+      <h2 class="license-title" id="licenseTitle">Загрузка...</h2>
+    </div>
+    
+    <div class="license-text" id="licenseText">
+      <div style="text-align:center;padding:40px;color:rgba(255,255,255,0.5)">
+        ⏳ Загрузка правил...
+      </div>
+    </div>
+    
+    <div class="license-checkbox-wrapper" id="licenseCheckboxWrapper" onclick="toggleLicenseCheckbox()">
+      <div class="license-checkbox"></div>
+      <div class="license-checkbox-label">
+        Я <strong>ознакомился(ась)</strong> с условиями соглашения и принимаю их
+      </div>
+    </div>
+    
+    <button class="license-agree-btn" id="licenseAgreeBtn" disabled onclick="acceptLicense()">
+      Принять и продолжить
+    </button>
+  </div>
+</div>
+
+<script>
+// ===== FIREBASE =====
+const firebaseConfig = {
+  apiKey: "AIzaSyCw8S1fwhfKUMUtNsDFDbz-oFeSkRD_NOk",
+  authDomain: "evgenii-music-b5adf.firebaseapp.com",
+  projectId: "evgenii-music-b5adf",
+  storageBucket: "evgenii-music-b5adf.firebasestorage.app",
+  messagingSenderId: "518513745915",
+  appId: "1:518513745915:web:2d0e8dc9e1e6f37bccb55e"
+};
+
+let db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  console.log('Firebase подключён');
+} catch (e) {
+  console.error('Ошибка Firebase:', e);
+}
+
+// ===== ПРАВИЛА ПО УМОЛЧАНИЮ =====
+const DEFAULT_LICENSE = {
+  title: 'Лицензионное соглашение',
+  sections: [
+    {
+      icon: '🎵',
+      title: '1. Авторство и концепция',
+      content: 'Проект <strong>EVGENII AI</strong> является авторским творческим проектом. Все идеи, тексты, музыкальные композиции и визуальный контент принадлежат автору.<br><br>Тексты песен создаются автором с использованием искусственного интеллекта в качестве вспомогательного инструмента. Доля участия ИИ варьируется от 20% до 50% в зависимости от конкретного произведения. Автор осуществляет полное творческое руководство, отбор, редактуру и финальное утверждение всего контента.',
+      type: 'text'
+    },
+    {
+      icon: '✅',
+      title: '2. Разрешено',
+      items: [
+        'Прослушивание всех музыкальных треков онлайн',
+        'Скачивание треков для личного некоммерческого использования',
+        'Делиться ссылками на треки и контент в социальных сетях с указанием авторства',
+        'Участие в обсуждениях и сообществах проекта',
+        'Чтение и взаимодействие с контентом творческого дневника',
+        'Использование материалов в образовательных целях с указанием источника'
+      ],
+      type: 'list'
+    },
+    {
+      icon: '🚫',
+      title: '3. Запрещено',
+      items: [
+        'Коммерческое использование контента без письменного разрешения автора',
+        'Загрузка треков на стриминговые платформы от своего имени',
+        'Использование музыкальных композиций и текстов для обучения сторонних AI-моделей',
+        'Присвоение авторства текстов, идей или музыкальных композиций',
+        'Копирование и распространение контента дневника без указания автора',
+        'Модификация, ремикширование или создание производных произведений без разрешения',
+        'Использование контента в рекламе или промо-материалах'
+      ],
+      type: 'list'
+    },
+    {
+      icon: '⚖️',
+      title: '4. Ответственность',
+      content: 'Проект <strong>EVGENII AI</strong> носит исключительно творческий и развлекательный характер. Весь контент предоставляется «как есть» (as is), без каких-либо явных или подразумеваемых гарантий.<br><br>Автор не несёт ответственности за возможные технические сбои, потерю данных или иные последствия, возникшие в результате использования сайта.',
+      type: 'text'
+    },
+    {
+      icon: '🔒',
+      title: '5. Конфиденциальность',
+      content: 'Проект использует технологию Firebase для хранения данных обсуждений и настроек. Персональные данные пользователей (имя) хранятся локально в браузере и не передаются третьим лицам.',
+      type: 'text'
+    },
+    {
+      icon: '💬',
+      title: '6. Обратная связь',
+      content: 'По вопросам лицензирования, сотрудничества, коммерческого использования или иным вопросам — обращайтесь через раздел «Связь» на сайте или через официальные сообщества проекта.',
+      type: 'text'
+    },
+    {
+      icon: '📅',
+      title: '7. Изменения соглашения',
+      content: 'Автор оставляет за собой право вносить изменения в данное соглашение. Актуальная версия всегда доступна на сайте. Продолжение использования проекта означает принятие обновлённых условий.',
+      type: 'text'
+    }
+  ]
+};
+
+// ===== РЕНДЕР ПРАВИЛ =====
+function renderLicense(data) {
+  document.getElementById('licenseTitle').textContent = data.title || 'Лицензионное соглашение';
+  
+  const container = document.getElementById('licenseText');
+  container.innerHTML = data.sections.map(section => {
+    let content = '';
+    if (section.type === 'list' && section.items) {
+      content = '<ul>' + section.items.map(item => `<li>${item}</li>`).join('') + '</ul>';
+    } else if (section.content) {
+      content = `<p>${section.content}</p>`;
+    }
+    return `<h4>${section.icon || ''} ${section.title}</h4>${content}`;
+  }).join('');
+}
+
+// ===== ЗАГРУЗКА ПРАВИЛ ИЗ FIREBASE =====
+function loadLicenseFromFirebase() {
+  if (!db) {
+    renderLicense(DEFAULT_LICENSE);
+    return;
+  }
+  
+  db.collection('settings').doc('license').get().then(doc => {
+    if (doc.exists) {
+      renderLicense(doc.data());
+    } else {
+      // Создаём документ с правилами по умолчанию
+      db.collection('settings').doc('license').set(DEFAULT_LICENSE).then(() => {
+        renderLicense(DEFAULT_LICENSE);
+      }).catch(err => {
+        console.error('Ошибка создания документа:', err);
+        renderLicense(DEFAULT_LICENSE);
+      });
+    }
+  }).catch(err => {
+    console.error('Ошибка загрузки правил:', err);
+    renderLicense(DEFAULT_LICENSE);
+  });
+}
+
+// ===== ПРЕЛОАДЕР =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preloader').classList.add('hidden');
+  }, 2000);
+});
+
+// ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
+const userName = localStorage.getItem('evgenii_user');
+const licenseAccepted = localStorage.getItem('evgenii_agreement_accepted') === 'true';
+
+if (userName && licenseAccepted) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('projectSelector').classList.add('active');
+}
+
+// ===== ФОРМА ВХОДА =====
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('nameInput').value.trim();
+  
+  if (name) {
+    localStorage.setItem('evgenii_user', name);
+    loadLicenseFromFirebase();
+    document.getElementById('licenseModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+});
+
+// ===== ЛИЦЕНЗИЯ =====
+let licenseCheckboxChecked = false;
+
+function toggleLicenseCheckbox() {
+  licenseCheckboxChecked = !licenseCheckboxChecked;
+  const wrapper = document.getElementById('licenseCheckboxWrapper');
+  const btn = document.getElementById('licenseAgreeBtn');
+  
+  if (licenseCheckboxChecked) {
+    wrapper.classList.add('checked');
+    btn.disabled = false;
+  } else {
+    wrapper.classList.remove('checked');
+    btn.disabled = true;
+  }
+}
+
+function acceptLicense() {
+  if (!licenseCheckboxChecked) return;
+  
+  localStorage.setItem('evgenii_agreement_accepted', 'true');
+  document.getElementById('licenseModal').classList.remove('active');
+  document.body.style.overflow = '';
+  
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('projectSelector').classList.add('active');
+}
+
+// ===== ВЫБОР ПРОЕКТА =====
+function selectProject(project) {
+  const userName = localStorage.getItem('evgenii_user');
+  if (!userName) {
+    alert('Пожалуйста, введите имя');
+    return;
+  }
+  
+  if (project === 'music') {
+    window.location.href = 'music.html';
+  } else if (project === 'diary') {
+    window.location.href = 'diary.html';
+  }
+}
+
+// ===== КЛАВИАТУРА =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('licenseModal').classList.contains('active')) {
+    if (!document.getElementById('licenseAgreeBtn').disabled) {
+      acceptLicense();
+    }
+  }
+});
+</script>
+
+</body>
+</html>

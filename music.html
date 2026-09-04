@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVGENII AI</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png?v=2">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png?v=2">
+<link rel="shortcut icon" href="favicon-48x48.png?v=2">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EVGENII AI">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a1a">
+<meta name="application-name" content="EVGENII AI">
+<meta name="msapplication-TileColor" content="#0a0a1a">
+<meta name="msapplication-TileImage" content="favicon-144x144.png">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--cyan:#00e5ff;--magenta:#ff00e5;--purple:#b000ff;--gold:#ffb347;--green:#00ff88;--pink:#ff6b9d;--red:#ff0040;--dark-bg:#0a0a1a;--card-bg:rgba(20,20,40,.8);--card-border:rgba(0,229,255,.15);--text-primary:#fff;--text-secondary:rgba(255,255,255,.6)}
+body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+.bg-effects{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.3;animation:orbFloat 8s ease-in-out infinite}
+.bg-orb-1{width:300px;height:300px;background:var(--cyan);top:-100px;left:-100px}
+.bg-orb-2{width:250px;height:250px;background:var(--magenta);bottom:-80px;right:-80px;animation-delay:-3s}
+.bg-orb-3{width:200px;height:200px;background:var(--purple);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-5s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-30px) scale(1.1)}66%{transform:translate(-20px,20px) scale(.9)}}
+.page{display:none;position:relative;z-index:1;min-height:100vh;padding:20px 16px 120px;max-width:1200px;margin:0 auto}
+.page.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.maintenance-screen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;background:linear-gradient(135deg,#0a0a1a 0%,#1a0a2e 50%,#0a0a1a 100%);padding:40px 20px;text-align:center;opacity:0;pointer-events:none;transition:opacity .6s ease}
+.maintenance-screen.active{opacity:1;pointer-events:all}
+.maintenance-icon{font-size:5rem;margin-bottom:20px;animation:maintenanceFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,170,0,.4))}
+@keyframes maintenanceFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-15px) rotate(5deg)}}
+.maintenance-title{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,var(--gold),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;text-transform:uppercase}
+.maintenance-subtitle{font-size:1.1rem;color:var(--text-secondary);line-height:1.6;max-width:500px;margin-bottom:30px}
+.maintenance-subtitle strong{color:var(--gold)}
+.maintenance-gear{position:absolute;opacity:.05;font-size:15rem;animation:gearSpin 20s linear infinite}
+.maintenance-gear.g1{top:10%;left:10%}
+.maintenance-gear.g2{bottom:10%;right:10%;animation-direction:reverse;font-size:12rem}
+@keyframes gearSpin{to{transform:rotate(360deg)}}
+.maintenance-admin-trigger{margin-top:20px;padding:8px 16px;border:1px solid rgba(255,170,0,.2);border-radius:8px;background:transparent;color:rgba(255,170,0,.3);font-size:.7rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .3s ease;letter-spacing:1px;opacity:.3}
+.maintenance-admin-trigger:hover{opacity:1;border-color:rgba(255,170,0,.5);color:var(--gold);background:rgba(255,170,0,.05)}
+.maintenance-admin-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);backdrop-filter:blur(10px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.maintenance-admin-modal.active{opacity:1;pointer-events:all}
+.maintenance-admin-content{width:100%;max-width:400px;background:linear-gradient(180deg,#0f1525 0%,#0a0e1a 100%);border:1px solid rgba(255,170,0,.3);border-radius:24px;padding:30px 24px 24px;box-shadow:0 20px 60px rgba(255,170,0,.2)}
+.maintenance-admin-title{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px;text-align:center;margin-bottom:20px;color:var(--gold)}
+.login-screen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;background:linear-gradient(135deg,#0a0a1a 0%,#1a0a2e 50%,#0a0a1a 100%);transition:opacity .6s ease,transform .6s ease;padding:40px 20px}
+.login-screen.hidden{opacity:0;transform:scale(1.05);pointer-events:none}
+.login-container{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center}
+.login-banner{width:100%;aspect-ratio:16/10;border-radius:24px;overflow:hidden;margin-bottom:40px;border:1px solid rgba(0,229,255,.15);background:linear-gradient(135deg,#0d1b2a,#1a0a2e,#0d1b2a);position:relative;display:flex;align-items:center;justify-content:center}
+.login-banner-bg{position:absolute;width:100%;height:100%;background:radial-gradient(ellipse at 30% 50%,rgba(0,229,255,.15) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(255,0,229,.15) 0%,transparent 60%)}
+.login-geometric{position:absolute;width:100%;height:100%;top:0;left:0}
+.geo-shape{position:absolute;border:1.5px solid;opacity:.5;animation:geoFloat 6s ease-in-out infinite}
+.geo-shape:nth-child(1){width:70px;height:70px;border-color:var(--cyan);top:15%;left:15%;transform:rotate(45deg)}
+.geo-shape:nth-child(2){width:50px;height:50px;border-color:var(--magenta);top:20%;right:20%;border-radius:50%;animation-delay:-2s}
+.geo-shape:nth-child(3){width:60px;height:60px;border-color:var(--purple);bottom:20%;left:25%;transform:rotate(30deg);animation-delay:-4s}
+.geo-shape:nth-child(4){width:45px;height:45px;border-color:var(--cyan);bottom:25%;right:15%;border-radius:8px;animation-delay:-1s}
+@keyframes geoFloat{0%,100%{transform:translateY(0) rotate(45deg);opacity:.5}50%{transform:translateY(-10px) rotate(50deg);opacity:.8}}
+.login-logo{font-family:'Orbitron',sans-serif;font-size:2.8rem;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(--cyan),var(--purple),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:2;filter:drop-shadow(0 0 20px rgba(0,229,255,.3));display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+.ai-badge{display:inline-block;font-size:.9rem;font-weight:900;letter-spacing:3px;padding:4px 12px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--magenta));color:#000;box-shadow:0 0 15px rgba(0,229,255,.4);animation:aiPulse 2s ease-in-out infinite;vertical-align:middle;-webkit-text-fill-color:#000;text-shadow:none}
+@keyframes aiPulse{0%,100%{box-shadow:0 0 15px rgba(0,229,255,.4),0 0 30px rgba(255,0,229,.2)}50%{box-shadow:0 0 25px rgba(0,229,255,.7),0 0 50px rgba(255,0,229,.4)}}
+.login-slogan{font-size:.9rem;color:var(--text-secondary);margin-top:12px;text-align:center;position:relative;z-index:2;letter-spacing:1px}
+.login-greeting{font-size:1.5rem;color:var(--text-primary);margin-bottom:30px;font-weight:300;text-align:center}
+.login-form{display:flex;flex-direction:column;align-items:center;gap:20px;width:100%}
+.login-input{width:100%;padding:18px 24px;border:1px solid rgba(0,229,255,.2);border-radius:16px;background:rgba(20,20,40,.6);color:var(--text-primary);font-size:1rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .3s ease,box-shadow .3s ease;text-align:center}
+.login-input::placeholder{color:var(--text-secondary)}
+.login-input:focus{border-color:var(--cyan);box-shadow:0 0 25px rgba(0,229,255,.2)}
+.login-btn{width:100%;padding:18px;border:none;border-radius:16px;background:linear-gradient(135deg,var(--cyan),var(--purple),var(--magenta));background-size:200% 200%;animation:gradientShift 3s ease infinite;color:#fff;font-size:1.1rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:transform .2s ease,box-shadow .3s ease;box-shadow:0 8px 30px rgba(0,229,255,.3)}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,229,255,.4)}
+.login-btn:active{transform:translateY(0)}
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;padding-top:10px}
+.header-left{display:flex;flex-direction:column;gap:4px}
+.header-time{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:700;background:linear-gradient(135deg,var(--cyan),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header-greeting{font-size:.85rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:2px}
+.header-right{text-align:right}
+.header-name{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,var(--magenta),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header-name-label{font-size:.7rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px}
+.banner{position:relative;width:100%;aspect-ratio:16/10;border-radius:24px;overflow:hidden;margin-bottom:30px;border:1px solid var(--card-border);background:linear-gradient(135deg,#0d1b2a,#1a0a2e,#0d1b2a);max-width:800px;margin-left:auto;margin-right:auto}
+.banner-content{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 30% 50%,rgba(0,229,255,.15) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(255,0,229,.15) 0%,transparent 60%)}
+.banner-geometric{position:absolute;width:100%;height:100%;top:0;left:0}
+.geo-shape-banner{position:absolute;border:1px solid;opacity:.4;animation:geoFloat 6s ease-in-out infinite}
+.geo-shape-banner:nth-child(1){width:60px;height:60px;border-color:var(--cyan);top:15%;left:20%;transform:rotate(45deg)}
+.geo-shape-banner:nth-child(2){width:40px;height:40px;border-color:var(--magenta);top:20%;right:25%;border-radius:50%;animation-delay:-2s}
+.geo-shape-banner:nth-child(3){width:50px;height:50px;border-color:var(--purple);bottom:20%;left:30%;transform:rotate(30deg);animation-delay:-4s}
+.geo-shape-banner:nth-child(4){width:35px;height:35px;border-color:var(--cyan);bottom:25%;right:20%;border-radius:4px;animation-delay:-1s}
+.banner-title{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:2;filter:drop-shadow(0 0 15px rgba(0,229,255,.3));display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+.banner-slogan{font-size:.85rem;color:var(--text-secondary);margin-top:12px;text-align:center;position:relative;z-index:2}
+.section-title{font-size:.8rem;text-transform:uppercase;letter-spacing:3px;color:var(--text-secondary);margin-bottom:16px;font-weight:600}
+.release-section{margin-bottom:30px;max-width:800px;margin-left:auto;margin-right:auto}
+.release-card{display:flex;align-items:center;gap:16px;padding:16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;transition:transform .2s ease,box-shadow .3s ease;cursor:pointer;position:relative;overflow:hidden}
+.release-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,229,255,.1)}
+.release-cover{position:relative;width:70px;height:70px;border-radius:14px;overflow:visible;flex-shrink:0;background:linear-gradient(135deg,#1a2a3a,#2a1a3a);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transform-style:preserve-3d;transition:transform .5s ease,box-shadow .4s ease;box-shadow:0 10px 20px rgba(0,0,0,.4),inset 0 -8px 15px rgba(0,0,0,.3),inset 0 8px 15px rgba(255,255,255,.15)}
+.release-cover::before{content:'';position:absolute;top:4px;left:4px;right:40%;height:35%;background:linear-gradient(135deg,rgba(255,255,255,.4),transparent);border-radius:14px 14px 50% 50%;pointer-events:none;z-index:3}
+.release-cover img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+.release-card:hover .release-cover{transform:rotateX(-8deg) rotateY(10deg) scale(1.05);box-shadow:0 18px 35px rgba(0,229,255,.3),inset 0 -10px 20px rgba(0,0,0,.35)}
+.release-badge{position:absolute;top:6px;left:6px;background:var(--cyan);color:#000;font-size:.55rem;font-weight:700;padding:3px 6px;border-radius:6px;letter-spacing:.5px;z-index:4}
+.release-info{flex:1;min-width:0}
+.release-label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:2px;font-weight:600;margin-bottom:4px}
+.release-title{font-size:1.1rem;font-weight:600;margin-bottom:4px}
+.release-meta{font-size:.8rem;color:var(--text-secondary)}
+.quick-access-section{margin-bottom:30px;max-width:1000px;margin-left:auto;margin-right:auto}
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.quick-tile{padding:20px 16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;cursor:pointer;transition:transform .2s ease,box-shadow .3s ease,border-color .3s ease;position:relative;perspective:1000px}
+.quick-tile:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,229,255,.1);border-color:rgba(0,229,255,.3)}
+.quick-tile:active{transform:translateY(0)}
+.tile-icon{position:relative;width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:14px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.175,.885,.32,1.275),box-shadow .4s ease;box-shadow:0 10px 20px rgba(0,0,0,.3),0 6px 6px rgba(0,0,0,.2),inset 0 -8px 15px rgba(0,0,0,.3),inset 0 8px 15px rgba(255,255,255,.15);animation:iconFloat 4s ease-in-out infinite;overflow:visible}
+@keyframes iconFloat{0%,100%{transform:translateY(0) rotateX(0) rotateY(0)}50%{transform:translateY(-4px) rotateX(2deg) rotateY(-2deg)}}
+.quick-tile:nth-child(1) .tile-icon{animation-delay:0s}
+.quick-tile:nth-child(2) .tile-icon{animation-delay:.3s}
+.quick-tile:nth-child(3) .tile-icon{animation-delay:.6s}
+.quick-tile:nth-child(4) .tile-icon{animation-delay:.9s}
+.quick-tile:nth-child(5) .tile-icon{animation-delay:1.2s}
+.quick-tile:nth-child(6) .tile-icon{animation-delay:1.5s}
+.tile-icon::before{content:'';position:absolute;top:4px;left:6px;right:30%;height:40%;background:linear-gradient(135deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,.1) 50%,transparent 100%);border-radius:50% 50% 40% 40%/60% 60% 40% 40%;pointer-events:none;filter:blur(1px);z-index:1}
+.tile-icon::after{content:'';position:absolute;bottom:-8px;left:15%;right:15%;height:8px;background:radial-gradient(ellipse at center,rgba(0,0,0,.4) 0%,transparent 70%);border-radius:50%;filter:blur(4px);opacity:.7;transform:translateZ(-10px);transition:all .4s ease;z-index:-1}
+.quick-tile:hover .tile-icon{transform:translateY(-6px) translateZ(15px) rotateX(-15deg) rotateY(15deg) scale(1.08);animation-play-state:paused;box-shadow:0 20px 40px rgba(0,0,0,.5),0 15px 15px rgba(0,0,0,.3),inset 0 -10px 20px rgba(0,0,0,.35),inset 0 10px 20px rgba(255,255,255,.2),0 0 30px rgba(0,229,255,.3)}
+.quick-tile:hover .tile-icon::after{bottom:-12px;opacity:.9;filter:blur(6px)}
+.tile-icon.tracks{background:radial-gradient(circle at 30% 25%,#66f5ff 0%,transparent 40%),radial-gradient(circle at 70% 80%,#0088aa 0%,transparent 50%),linear-gradient(135deg,#00e5ff 0%,#0099bb 50%,#005566 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tile-icon.discussions{background:radial-gradient(circle at 30% 25%,#4dd0e1 0%,transparent 40%),radial-gradient(circle at 70% 80%,#006978 0%,transparent 50%),linear-gradient(135deg,#26c6da 0%,#00838f 50%,#004d40 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tile-icon.community{background:radial-gradient(circle at 30% 25%,#e040fb 0%,transparent 40%),radial-gradient(circle at 70% 80%,#7c1a99 0%,transparent 50%),linear-gradient(135deg,#b000ff 0%,#8e00cc 50%,#4a0080 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tile-icon.contact{background:radial-gradient(circle at 30% 25%,#69ffce 0%,transparent 40%),radial-gradient(circle at 70% 80%,#009966 0%,transparent 50%),linear-gradient(135deg,#00ff88 0%,#00cc6a 50%,#007744 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tile-icon.support{background:radial-gradient(circle at 30% 25%,#ffdf80 0%,transparent 40%),radial-gradient(circle at 70% 80%,#cc6699 0%,transparent 50%),linear-gradient(135deg,#ffb347 0%,#ff6b9d 50%,#cc3366 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tile-icon.about{background:radial-gradient(circle at 30% 25%,#ff66f5 0%,transparent 40%),radial-gradient(circle at 70% 80%,#990088 0%,transparent 50%),linear-gradient(135deg,#ff00e5 0%,#cc0099 50%,#800066 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tile-icon>*{position:relative;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));transition:transform .4s ease,filter .4s ease}
+.quick-tile:hover .tile-icon>*{transform:translateZ(10px) scale(1.15);filter:drop-shadow(0 4px 10px rgba(255,255,255,.3))}
+.tile-title{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.tile-desc{font-size:.75rem;color:var(--text-secondary)}
+.logout-btn{display:block;margin:20px auto 0;padding:12px 30px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:transparent;color:var(--text-secondary);font-size:.8rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .3s ease;letter-spacing:1px}
+.logout-btn:hover{border-color:rgba(255,0,0,.3);color:#ff6b6b}
+.admin-trigger{display:block;margin:10px auto 0;padding:8px 16px;border:1px solid rgba(255,255,255,.05);border-radius:8px;background:transparent;color:rgba(255,255,255,.2);font-size:.7rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .3s ease;letter-spacing:1px;opacity:.3}
+.admin-trigger:hover{opacity:1;border-color:rgba(0,229,255,.3);color:var(--cyan);background:rgba(0,229,255,.05)}
+.page-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-top:10px}
+.back-btn{width:44px;height:44px;border-radius:14px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--text-primary);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s ease;flex-shrink:0}
+.back-btn:hover{border-color:var(--cyan);background:rgba(0,229,255,.1)}
+.page-title{font-size:2.2rem;font-weight:900;letter-spacing:1px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.featured-release{position:relative;width:100%;max-width:600px;margin:0 auto 30px;border-radius:28px;overflow:hidden;border:1px solid var(--card-border);background:linear-gradient(180deg,#0d2030 0%,#1a0a2e 50%,#0d1020 100%);padding:30px 20px 36px;display:flex;flex-direction:column;align-items:center;cursor:pointer;perspective:1000px}
+.featured-release::before{content:'';position:absolute;top:0;left:0;right:0;height:200px;background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,.12) 0%,transparent 70%);pointer-events:none}
+.featured-cover{position:relative;width:200px;height:200px;border-radius:24px;overflow:visible;margin-bottom:20px;z-index:1;background:linear-gradient(135deg,#2a3a4a,#3a2a4a);display:flex;align-items:center;justify-content:center;font-size:4rem;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.175,.885,.32,1.275),box-shadow .4s ease;box-shadow:0 25px 50px rgba(0,0,0,.6),0 10px 20px rgba(0,0,0,.4),inset 0 -12px 20px rgba(0,0,0,.4),inset 0 12px 20px rgba(255,255,255,.15)}
+.featured-cover::before{content:'';position:absolute;top:8px;left:10px;right:50%;height:40%;background:linear-gradient(135deg,rgba(255,255,255,.35),transparent);border-radius:24px 24px 50% 50%;pointer-events:none;z-index:3;filter:blur(2px)}
+.featured-cover img{width:100%;height:100%;object-fit:cover;border-radius:24px}
+.featured-release:hover .featured-cover{transform:rotateX(-8deg) rotateY(10deg) translateZ(20px) scale(1.03);box-shadow:0 35px 70px rgba(0,229,255,.4),0 15px 30px rgba(0,0,0,.5),inset 0 -15px 25px rgba(0,0,0,.45)}
+.featured-badge{display:flex;align-items:center;gap:8px;margin-bottom:12px;z-index:1}
+.featured-badge-star{color:var(--cyan);font-size:1rem}
+.featured-badge-text{font-size:.85rem;color:var(--cyan);letter-spacing:2px;font-weight:600}
+.featured-title{font-size:1.8rem;font-weight:800;text-align:center;margin-bottom:6px;z-index:1}
+.featured-artist{font-family:'Orbitron',sans-serif;font-size:.9rem;color:var(--text-secondary);letter-spacing:4px;margin-bottom:24px;z-index:1}
+.play-btn-large{width:72px;height:72px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,229,255,.3);transition:transform .2s ease,box-shadow .3s ease;z-index:1}
+.play-btn-large:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(0,229,255,.4)}
+.play-btn-large:active{transform:scale(.95)}
+.play-btn-large svg{width:28px;height:28px;fill:#fff;margin-left:3px}
+.featured-download-btn{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:12px;border:1px solid var(--card-border);background:rgba(20,20,40,.8);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;transition:all .3s ease}
+.featured-download-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.1)}
+.featured-download-btn svg{width:20px;height:20px;fill:currentColor}
+.tracks-list{display:flex;flex-direction:column;gap:12px;max-width:800px;margin:0 auto}
+.track-item{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;transition:transform .2s ease,box-shadow .3s ease,border-color .3s ease;cursor:pointer}
+.track-item:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,229,255,.08);border-color:rgba(0,229,255,.25)}
+.track-item:active{transform:translateY(0)}
+.track-item.active{border-color:var(--cyan);background:rgba(0,229,255,.05)}
+.track-cover{width:56px;height:56px;border-radius:12px;overflow:visible;flex-shrink:0;background:linear-gradient(135deg,#1a2a3a,#2a1a3a);display:flex;align-items:center;justify-content:center;position:relative;transform-style:preserve-3d;transition:transform .5s ease,box-shadow .4s ease;box-shadow:0 8px 16px rgba(0,0,0,.4),inset 0 -6px 12px rgba(0,0,0,.3),inset 0 6px 12px rgba(255,255,255,.15)}
+.track-cover::before{content:'';position:absolute;top:3px;left:3px;right:35%;height:35%;background:linear-gradient(135deg,rgba(255,255,255,.4),transparent);border-radius:12px 12px 50% 50%;pointer-events:none;z-index:3}
+.track-cover img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+.track-item:hover .track-cover{transform:rotateX(-8deg) rotateY(10deg) scale(1.05);box-shadow:0 15px 30px rgba(0,229,255,.25),inset 0 -8px 15px rgba(0,0,0,.35)}
+.track-info{flex:1;min-width:0}
+.track-title{font-size:1rem;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-artist{font-size:.8rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-duration{font-size:.85rem;color:var(--text-secondary);font-weight:500;flex-shrink:0;font-family:'Orbitron',monospace;margin-right:8px}
+.track-download-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--card-border);background:rgba(20,20,40,.6);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s ease;position:relative}
+.track-download-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.1);transform:scale(1.05)}
+.track-download-btn:active{transform:scale(.95)}
+.track-download-btn svg{width:18px;height:18px;fill:currentColor}
+.about-content,.community-content{display:flex;flex-direction:column;gap:20px;max-width:800px;margin:0 auto}
+.about-card{background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;padding:24px 20px;line-height:1.6;font-size:1rem}
+.about-card .highlight{color:var(--cyan);font-weight:600}
+.about-card .evgenii-title{font-family:'Orbitron',sans-serif;color:var(--cyan);font-weight:700;letter-spacing:2px;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.about-quote{border-left:3px solid var(--cyan);padding-left:20px;margin:20px 0;font-style:italic;color:var(--cyan);font-size:1.05rem;line-height:1.7}
+.about-card p{margin-bottom:12px;color:var(--text-secondary)}
+.about-card p:last-child{margin-bottom:0}
+.community-card{background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;padding:24px 20px;display:flex;align-items:center;gap:20px;cursor:pointer;transition:all .3s ease;text-decoration:none;color:var(--text-primary);perspective:1000px}
+.community-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,229,255,.15);border-color:rgba(0,229,255,.3)}
+.community-card.coming-soon{opacity:.6;cursor:not-allowed}
+.community-card.coming-soon:hover{transform:none;box-shadow:none;border-color:var(--card-border)}
+.community-icon{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.175,.885,.32,1.275),box-shadow .4s ease;box-shadow:0 12px 24px rgba(0,0,0,.4),inset 0 -10px 20px rgba(0,0,0,.3),inset 0 10px 20px rgba(255,255,255,.2);position:relative;overflow:visible}
+.community-icon::before{content:'';position:absolute;top:5px;left:8px;right:35%;height:40%;background:linear-gradient(135deg,rgba(255,255,255,.5),transparent);border-radius:50%;filter:blur(1.5px);pointer-events:none;z-index:1}
+.community-icon::after{content:'';position:absolute;bottom:-8px;left:20%;right:20%;height:8px;background:radial-gradient(ellipse at center,rgba(0,0,0,.4) 0%,transparent 70%);border-radius:50%;filter:blur(4px);opacity:.7;transition:all .4s ease;z-index:-1}
+.community-card:hover .community-icon{transform:translateY(-4px) rotateX(-10deg) rotateY(15deg) scale(1.08);box-shadow:0 20px 40px rgba(0,229,255,.3),inset 0 -12px 25px rgba(0,0,0,.35),inset 0 12px 25px rgba(255,255,255,.25)}
+.community-card:hover .community-icon::after{bottom:-12px;opacity:.9}
+.community-icon.bip{background:radial-gradient(circle at 30% 25%,#66f5ff 0%,transparent 40%),radial-gradient(circle at 70% 80%,#0066aa 0%,transparent 50%),linear-gradient(135deg,#00e5ff 0%,#0099ff 50%,#005588 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.community-icon.telegram{background:radial-gradient(circle at 30% 25%,#66ccff 0%,transparent 40%),radial-gradient(circle at 70% 80%,#006699 0%,transparent 50%),linear-gradient(135deg,#0088cc 0%,#00a8e8 50%,#005577 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.community-icon.instagram{background:radial-gradient(circle at 30% 25%,#ffcc66 0%,transparent 40%),radial-gradient(circle at 70% 80%,#cc2244 0%,transparent 50%),linear-gradient(135deg,#f09433 0%,#e6683c 30%,#dc2743 60%,#bc1888 100%);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.community-info{flex:1;min-width:0}
+.community-name{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.community-desc{font-size:.85rem;color:var(--text-secondary)}
+.community-arrow{font-size:1.5rem;color:var(--text-secondary);transition:transform .3s ease}
+.community-card:hover .community-arrow{transform:translateX(5px);color:var(--cyan)}
+.community-card.coming-soon .community-arrow{transform:none}
+.community-badge{display:inline-block;padding:4px 10px;background:rgba(255,255,255,.1);border-radius:8px;font-size:.75rem;color:var(--text-secondary);margin-top:6px}
+.community-intro{background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;padding:24px 20px;margin-bottom:10px}
+.community-intro p{color:var(--text-secondary);line-height:1.6;font-size:1rem}
+.contact-form-container{background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-top:0}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.form-input,.form-textarea{width:100%;padding:14px 16px;border:1px solid var(--card-border);border-radius:12px;background:rgba(20,20,40,.8);color:var(--text-primary);font-family:'Inter',sans-serif;font-size:1rem;outline:none;transition:border-color .3s ease}
+.form-input:focus,.form-textarea:focus{border-color:var(--cyan)}
+.form-textarea{min-height:120px;resize:vertical}
+.submit-btn{width:100%;padding:16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;font-weight:700;font-size:1rem;cursor:pointer;transition:transform .2s ease,box-shadow .3s ease;text-transform:uppercase;letter-spacing:1px}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,229,255,.3)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.form-status{margin-top:12px;text-align:center;font-size:.9rem;min-height:20px}
+.form-status.success{color:#00ff88}
+.form-status.error{color:#ff6b6b}
+.contact-intro{background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;padding:24px 20px;margin-bottom:10px}
+.contact-intro p{color:var(--text-secondary);line-height:1.6;font-size:1rem}
+.vpn-warning{background:linear-gradient(135deg,rgba(255,170,0,.1),rgba(255,85,0,.05));border-left:3px solid #ffaa00;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.vpn-warning-icon{font-size:1.2rem;flex-shrink:0}
+.vpn-warning-text{color:var(--text-secondary);font-size:.85rem;line-height:1.4}
+.vpn-warning-text strong{color:#ffaa00}
+.sticky-player{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:600px;background:rgba(15,15,30,.95);backdrop-filter:blur(10px);border-top:1px solid var(--card-border);padding:12px 16px 20px;z-index:100;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);border-radius:24px 24px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+.sticky-player.visible{transform:translateX(-50%) translateY(0)}
+.player-top-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.player-mini-cover{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#2a3a4a,#3a2a4a);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem;overflow:hidden}
+.player-mini-cover img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.player-mini-info{flex:1;min-width:0}
+.player-mini-title{font-size:.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.player-mini-artist{font-size:.75rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-mini-controls{display:flex;align-items:center;gap:16px}
+.mini-play-btn{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,229,255,.3);transition:transform .2s ease}
+.mini-play-btn:hover{transform:scale(1.1)}
+.mini-play-btn svg{width:18px;height:18px;fill:#fff;margin-left:2px}
+.mini-skip-btn{background:none;border:none;color:var(--text-secondary);cursor:pointer;padding:4px;transition:color .2s ease}
+.mini-skip-btn:hover{color:var(--text-primary)}
+.mini-skip-btn svg{width:20px;height:20px;fill:currentColor}
+.player-progress-wrapper{display:flex;align-items:center;gap:10px}
+.player-time-mini{font-size:.7rem;color:var(--text-secondary);font-family:'Orbitron',monospace;min-width:35px}
+.player-time-mini.end{text-align:right}
+.player-bar-container{flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;cursor:pointer}
+.player-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:2px;width:0%;transition:width .1s linear}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,15,.85);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.modal-overlay.active{opacity:1;pointer-events:all}
+.modal-content{width:100%;max-width:440px;background:linear-gradient(180deg,#0f1525 0%,#0a0e1a 100%);border:1px solid var(--card-border);border-radius:28px;padding:30px 24px 24px;transform:translateY(30px) scale(.95);transition:transform .4s cubic-bezier(.175,.885,.32,1.275);max-height:90vh;overflow-y:auto}
+.modal-overlay.active .modal-content{transform:translateY(0) scale(1)}
+.modal-header{text-align:center;font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px}
+.modal-track-card{background:rgba(20,25,40,.8);border:1px solid var(--card-border);border-radius:20px;padding:24px 20px;text-align:center;margin-bottom:20px}
+.modal-cover{width:140px;height:140px;border-radius:20px;margin:0 auto 16px;background:linear-gradient(135deg,#2a3a4a,#3a2a4a);display:flex;align-items:center;justify-content:center;font-size:3rem;box-shadow:0 10px 30px rgba(0,0,0,.4);overflow:hidden}
+.modal-cover img{width:100%;height:100%;object-fit:cover;border-radius:20px}
+.modal-track-title{font-size:1.5rem;font-weight:700;margin-bottom:6px}
+.modal-track-artist{font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--text-secondary);letter-spacing:3px;margin-bottom:12px}
+.modal-track-duration{font-family:'Orbitron',monospace;font-size:1rem;color:var(--cyan)}
+.modal-info-text{text-align:center;font-size:.95rem;color:var(--text-secondary);line-height:1.5;margin-bottom:20px}
+.modal-warning{background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.3);border-radius:16px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;margin-bottom:24px}
+.modal-warning-icon{flex-shrink:0;color:#ff5050;font-size:1.2rem}
+.modal-warning-title{color:#ff6b6b;font-weight:700;font-size:.95rem;margin-bottom:4px}
+.modal-warning-text{color:rgba(255,150,150,.8);font-size:.85rem;line-height:1.5}
+.modal-download-btn{width:100%;padding:18px;border:none;border-radius:16px;background:linear-gradient(135deg,#00e5ff,#b000ff,#ff00e5);background-size:200% 200%;animation:gradientShift 3s ease infinite;color:#fff;font-size:1rem;font-weight:700;font-family:'Inter',sans-serif;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 30px rgba(0,229,255,.3);margin-bottom:12px;transition:transform .2s ease}
+.modal-download-btn:hover{transform:translateY(-2px)}
+.modal-download-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.modal-cancel-btn{width:100%;padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(20,20,40,.6);color:var(--text-secondary);font-size:1rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .3s ease}
+.modal-cancel-btn:hover{border-color:rgba(255,255,255,.2);color:var(--text-primary)}
+.support-wrapper{max-width:520px;margin:0 auto}
+.support-intro-new{background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;padding:24px 20px;margin-bottom:24px;text-align:center}
+.support-intro-new p{color:var(--text-secondary);line-height:1.6;font-size:1rem}
+.support-intro-new .heart-icon{font-size:2rem;display:block;margin-bottom:10px;animation:heartBeat 2s ease-in-out infinite}
+@keyframes heartBeat{0%,100%{transform:scale(1)}25%{transform:scale(1.1)}50%{transform:scale(1)}75%{transform:scale(1.05)}}
+.yandex-pay-card{position:relative;width:100%;aspect-ratio:16/10;border-radius:24px;overflow:hidden;background:linear-gradient(135deg,#1a0a2e 0%,#0d1b2a 50%,#1a0a2e 100%);border:1px solid rgba(255,204,0,.25);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(255,204,0,.1);padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .3s ease,box-shadow .3s ease;cursor:pointer}
+.yandex-pay-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 20%,rgba(255,204,0,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(176,0,255,.15) 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,rgba(0,229,255,.05) 0%,transparent 70%);pointer-events:none}
+.yandex-pay-card::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,.05) 50%,transparent 70%);transform:rotate(0deg);animation:cardShine 6s linear infinite;pointer-events:none}
+@keyframes cardShine{0%{transform:translateX(-100%) translateY(-100%) rotate(45deg)}100%{transform:translateX(100%) translateY(100%) rotate(45deg)}}
+.yandex-pay-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 25px 70px rgba(0,0,0,.6),0 0 50px rgba(255,204,0,.2)}
+.card-top-row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
+.card-logo{display:flex;align-items:center;gap:10px}
+.card-logo-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#ffcc00,#ff0000);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;color:#000;box-shadow:0 4px 15px rgba(255,204,0,.4);font-family:'Orbitron',sans-serif}
+.card-logo-text{display:flex;flex-direction:column;gap:2px}
+.card-logo-label{font-size:.65rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:2px;font-weight:600}
+.card-logo-name{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:#ffcc00;letter-spacing:1px;text-shadow:0 0 15px rgba(255,204,0,.4)}
+.card-chip{width:48px;height:36px;border-radius:8px;background:linear-gradient(135deg,#ffd700 0%,#b8860b 50%,#ffd700 100%);position:relative;box-shadow:inset 0 0 8px rgba(0,0,0,.3),0 2px 8px rgba(255,215,0,.3);overflow:hidden}
+.card-chip::before{content:'';position:absolute;inset:4px;border:1px solid rgba(0,0,0,.3);border-radius:4px}
+.card-chip::after{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(0,0,0,.3)}
+.card-number-block{position:relative;z-index:2;text-align:center;padding:8px 0}
+.card-number-label{font-size:.7rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;font-weight:600}
+.card-number{font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:700;letter-spacing:3px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.5);word-spacing:8px;user-select:all}
+.card-bottom-row{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:2}
+.card-holder{display:flex;flex-direction:column;gap:4px}
+.card-holder-label{font-size:.6rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1.5px}
+.card-holder-name{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;color:#fff;letter-spacing:2px}
+.copy-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid rgba(255,204,0,.4);border-radius:12px;background:rgba(255,204,0,.1);color:#ffcc00;font-size:.8rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .3s ease;text-transform:uppercase;letter-spacing:1px;backdrop-filter:blur(10px)}
+.copy-btn:hover{background:rgba(255,204,0,.2);border-color:#ffcc00;transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,204,0,.3)}
+.copy-btn:active{transform:translateY(0)}
+.copy-btn.copied{background:rgba(0,255,136,.15);border-color:#00ff88;color:#00ff88}
+.copy-btn svg{width:16px;height:16px;fill:currentColor}
+.support-hint{margin-top:20px;text-align:center;padding:16px 20px;background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:16px;color:var(--text-secondary);font-size:.9rem;line-height:1.5}
+.support-hint strong{color:#ffcc00;font-weight:700}
+.support-hint .hint-icon{font-size:1.2rem;margin-right:6px}
+.copy-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);padding:14px 24px;background:linear-gradient(135deg,rgba(0,255,136,.95),rgba(0,200,100,.95));color:#000;border-radius:14px;font-weight:700;font-size:.9rem;box-shadow:0 10px 30px rgba(0,255,136,.4);opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.175,.885,.32,1.275);z-index:5000;display:flex;align-items:center;gap:8px}
+.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.discussions-intro{background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;padding:24px 20px;margin-bottom:20px;max-width:800px;margin-left:auto;margin-right:auto}
+.discussions-intro p{color:var(--text-secondary);line-height:1.6;font-size:1rem}
+.discussions-container{max-width:800px;margin:0 auto;background:rgba(20,25,40,.6);border:1px solid var(--card-border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 280px);min-height:500px}
+.discussions-header{padding:16px 20px;border-bottom:1px solid var(--card-border);background:rgba(0,229,255,.03);flex-shrink:0}
+.discussions-title-row{display:flex;align-items:center;gap:10px;font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.discussions-title-icon{font-size:1.1rem}
+.discussions-title-text{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.discussions-count{margin-left:auto;font-size:.7rem;padding:3px 10px;border-radius:10px;background:rgba(0,229,255,.15);color:var(--cyan);font-family:'Orbitron',monospace}
+.discussions-list{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.discussions-list::-webkit-scrollbar{width:4px}
+.discussions-list::-webkit-scrollbar-track{background:transparent}
+.discussions-list::-webkit-scrollbar-thumb{background:rgba(0,229,255,.2);border-radius:2px}
+.discussion-item{display:flex;gap:12px;animation:messageFadeIn .3s ease}
+@keyframes messageFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.discussion-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;color:#fff;text-transform:uppercase}
+.discussion-body{flex:1;min-width:0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:12px 14px}
+.discussion-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.discussion-author{font-size:.85rem;font-weight:600;color:var(--cyan)}
+.discussion-time{font-size:.7rem;color:var(--text-secondary)}
+.discussion-track-ref{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);border-radius:8px;margin-bottom:8px;font-size:.75rem;color:var(--cyan)}
+.discussion-track-icon{font-size:.85rem}
+.discussion-track-name{font-weight:600}
+.discussion-text{font-size:.9rem;color:var(--text-secondary);line-height:1.5;word-break:break-word}
+.discussions-empty,.discussions-loading{text-align:center;padding:40px 20px;color:var(--text-secondary);font-size:.9rem}
+.discussions-empty-icon{font-size:2rem;margin-bottom:10px;opacity:.5}
+.discussions-loading::after{content:'...';animation:dots 1.5s steps(4,end) infinite}
+@keyframes dots{0%,20%{content:''}40%{content:'.'}60%{content:'..'}80%,100%{content:'...'}}
+.discussion-input-area{padding:14px 16px;border-top:1px solid var(--card-border);background:rgba(10,10,26,.5);flex-shrink:0}
+.discussion-attach-label{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--text-secondary);margin-bottom:10px;cursor:pointer;user-select:none}
+.discussion-attach-label input{accent-color:var(--cyan);cursor:pointer}
+.discussion-input-row{display:flex;gap:8px}
+.discussion-input{flex:1;padding:12px 14px;border:1px solid var(--card-border);border-radius:12px;background:rgba(20,20,40,.8);color:var(--text-primary);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .3s ease;resize:none;min-height:44px;max-height:100px}
+.discussion-input:focus{border-color:var(--cyan)}
+.discussion-input::placeholder{color:var(--text-secondary)}
+.discussion-send-btn{width:44px;height:44px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s ease,box-shadow .3s ease}
+.discussion-send-btn:hover{transform:scale(1.05);box-shadow:0 4px 15px rgba(0,229,255,.3)}
+.discussion-send-btn:active{transform:scale(.95)}
+.discussion-send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.discussion-send-btn svg{width:18px;height:18px;fill:#fff}
+.admin-container{max-width:900px;margin:0 auto}
+.admin-section{background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:24px}
+.admin-section-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.admin-section-title.maintenance{color:var(--gold)}
+.admin-login-form{max-width:400px;margin:0 auto;text-align:center}
+.admin-login-form h3{font-family:'Orbitron',sans-serif;font-size:1.2rem;letter-spacing:2px;margin-bottom:20px;color:var(--cyan)}
+.admin-form{display:flex;flex-direction:column;gap:16px}
+.admin-btn{padding:14px 20px;border:none;border-radius:12px;font-size:.9rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .3s ease;text-transform:uppercase;letter-spacing:1px}
+.admin-btn.primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;box-shadow:0 6px 20px rgba(0,229,255,.3)}
+.admin-btn.primary:hover{transform:translateY(-2px)}
+.admin-btn.danger{background:rgba(255,80,80,.15);border:1px solid rgba(255,80,80,.3);color:#ff6b6b}
+.admin-btn.danger:hover{background:rgba(255,80,80,.25);border-color:#ff6b6b}
+.admin-btn.secondary{background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.3);color:var(--cyan)}
+.admin-btn.secondary:hover{background:rgba(0,229,255,.25);border-color:var(--cyan)}
+.admin-btn.warning{background:linear-gradient(135deg,var(--gold),#ff8800);color:#000;box-shadow:0 6px 20px rgba(255,170,0,.3)}
+.admin-btn.warning:hover{transform:translateY(-2px)}
+.admin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.maintenance-toggle{display:flex;align-items:center;justify-content:space-between;padding:16px;background:rgba(0,0,0,.3);border-radius:12px;margin-bottom:16px;border:1px solid var(--card-border)}
+.maintenance-toggle-info{flex:1}
+.maintenance-toggle-title{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.maintenance-toggle-desc{font-size:.8rem;color:var(--text-secondary)}
+.maintenance-switch{position:relative;width:60px;height:32px;background:rgba(255,255,255,.1);border-radius:16px;cursor:pointer;transition:all .3s ease;flex-shrink:0;margin-left:16px}
+.maintenance-switch.active{background:linear-gradient(135deg,var(--gold),#ff8800);box-shadow:0 0 15px rgba(255,170,0,.4)}
+.maintenance-switch::after{content:'';position:absolute;top:3px;left:3px;width:26px;height:26px;background:#fff;border-radius:50%;transition:all .3s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.maintenance-switch.active::after{left:31px}
+.fade-in-up{opacity:0;transform:translateY(20px);animation:fadeInUp .6s ease forwards}
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+.page.active .fade-in-up:nth-child(1){animation-delay:.1s}
+.page.active .fade-in-up:nth-child(2){animation-delay:.2s}
+.page.active .fade-in-up:nth-child(3){animation-delay:.3s}
+.page.active .fade-in-up:nth-child(4){animation-delay:.4s}
+.page.active .fade-in-up:nth-child(5){animation-delay:.5s}
+.agreement-wrapper{max-width:800px;margin:-15px auto 25px;text-align:center;position:relative;z-index:2}
+.agreement-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border:1px solid rgba(0,229,255,.3);border-radius:50px;background:rgba(10,10,26,.8);backdrop-filter:blur(10px);color:var(--cyan);font-size:.8rem;font-weight:600;font-family:'Orbitron',sans-serif;letter-spacing:1px;cursor:pointer;transition:all .3s ease;box-shadow:0 4px 15px rgba(0,0,0,.3);text-transform:uppercase}
+.agreement-btn:hover{background:rgba(0,229,255,.1);border-color:var(--cyan);box-shadow:0 0 20px rgba(0,229,255,.2);transform:translateY(-2px)}
+.agreement-btn svg{width:16px;height:16px;fill:currentColor}
+.license-modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,15,.92);backdrop-filter:blur(12px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.license-modal-overlay.active{opacity:1;pointer-events:all}
+.license-modal-content{width:100%;max-width:500px;background:linear-gradient(180deg,#0f1525 0%,#0a0e1a 100%);border:1px solid rgba(0,229,255,.25);border-radius:24px;padding:30px 24px;transform:translateY(20px) scale(.95);transition:transform .4s cubic-bezier(.175,.885,.32,1.275);max-height:85vh;overflow-y:auto;position:relative}
+.license-modal-overlay.active .license-modal-content{transform:translateY(0) scale(1)}
+.license-modal-content::-webkit-scrollbar{width:4px}
+.license-modal-content::-webkit-scrollbar-thumb{background:rgba(0,229,255,.3);border-radius:2px}
+.license-close-btn{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--card-border);background:transparent;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s ease}
+.license-close-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.1)}
+.license-modal-header{text-align:center;margin-bottom:24px;padding-top:10px}
+.license-modal-icon{font-size:2.5rem;margin-bottom:12px;filter:drop-shadow(0 0 15px rgba(0,229,255,.4))}
+.license-modal-title{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.license-text-block{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:16px;padding:20px;margin-bottom:20px;font-size:.85rem;line-height:1.7;color:var(--text-secondary)}
+.license-text-block h4{font-family:'Orbitron',sans-serif;color:var(--cyan);font-size:.8rem;font-weight:700;letter-spacing:1px;margin-bottom:8px;margin-top:16px}
+.license-text-block h4:first-child{margin-top:0}
+.license-text-block ul{padding-left:18px;margin:8px 0}
+.license-text-block li{margin-bottom:6px}
+.license-text-block li::marker{color:var(--cyan)}
+.license-text-block strong{color:var(--text-primary)}
+.license-text-block blockquote{border-left:3px solid var(--cyan);padding-left:14px;margin:10px 0;font-style:italic;color:var(--text-primary)}
+.license-law-ref{margin-top:12px;padding:10px 14px;background:rgba(255,179,71,.06);border-left:3px solid var(--gold);border-radius:6px;font-size:.75rem;font-style:italic;color:rgba(255,179,71,.85);line-height:1.5}
+.license-checkbox-wrapper{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;margin-bottom:16px;background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.15);border-radius:12px;cursor:pointer;transition:all .3s ease;user-select:none}
+.license-checkbox-wrapper:hover{border-color:rgba(0,229,255,.35);background:rgba(0,229,255,.05)}
+.license-checkbox-wrapper.checked{border-color:var(--green);background:rgba(0,255,136,.05)}
+.license-checkbox{width:22px;height:22px;border-radius:6px;flex-shrink:0;margin-top:1px;border:2px solid rgba(0,229,255,.4);background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;transition:all .3s ease}
+.license-checkbox-wrapper.checked .license-checkbox{background:var(--green);border-color:var(--green);box-shadow:0 0 12px rgba(0,255,136,.4)}
+.license-checkbox svg{width:14px;height:14px;fill:#000;opacity:0;transition:opacity .2s ease}
+.license-checkbox-wrapper.checked .license-checkbox svg{opacity:1}
+.license-checkbox-label{font-size:.85rem;color:var(--text-secondary);line-height:1.5}
+.license-checkbox-label strong{color:var(--text-primary)}
+.license-agree-btn{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;font-size:.95rem;font-weight:700;font-family:'Inter',sans-serif;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:transform .2s ease,box-shadow .3s ease,opacity .3s ease;box-shadow:0 8px 25px rgba(0,229,255,.3)}
+.license-agree-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 35px rgba(0,229,255,.4)}
+.license-agree-btn:active:not(:disabled){transform:translateY(0)}
+.license-agree-btn:disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.5)}
+@media(min-width:768px){.quick-grid{grid-template-columns:repeat(3,1fr);gap:16px}.banner-title{font-size:3rem}.featured-title{font-size:2.2rem}.featured-cover{width:250px;height:250px}.page-title{font-size:2.8rem}.login-logo{font-size:3.5rem}.track-item{padding:18px}.track-cover{width:70px;height:70px}.card-number{font-size:1.8rem}.ai-badge{font-size:1.1rem;padding:5px 16px}}
+@media(min-width:1024px){.quick-grid{grid-template-columns:repeat(4,1fr)}body{padding-bottom:0}.sticky-player{max-width:500px}}
+@media(max-width:380px){.banner-title{font-size:1.6rem;letter-spacing:4px}.featured-title{font-size:1.4rem}.featured-cover{width:160px;height:160px}.page-title{font-size:1.8rem}.login-logo{font-size:2.2rem}.ai-badge{font-size:.7rem;padding:3px 8px;letter-spacing:2px}.card-number{font-size:1.15rem;letter-spacing:2px;word-spacing:5px}.yandex-pay-card{padding:20px}}
+</style>
+</head>
+<body>
+<div class="bg-effects"><div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div><div class="bg-orb bg-orb-3"></div></div>
+
+<div class="maintenance-screen" id="siteMaintenanceScreen">
+<div class="maintenance-gear g1">⚙</div><div class="maintenance-gear g2">⚙</div>
+<div class="maintenance-icon">🔧</div>
+<div class="maintenance-title">Технические работы</div>
+<div class="maintenance-subtitle">Извините, сайт временно недоступен.<br>Мы работаем над улучшением.<br><br><strong>Скоро всё заработает!</strong></div>
+<button class="maintenance-admin-trigger" onclick="showMaintenanceAdminModal()">⚙️</button>
+</div>
+
+<div class="maintenance-admin-modal" id="maintenanceAdminModal">
+<div class="maintenance-admin-content">
+<div class="maintenance-admin-title">🔐 ВХОД ДЛЯ АДМИНА</div>
+<div class="form-group"><label class="form-label">Пароль администратора</label><input type="password" class="form-input" id="maintenanceAdminPassword" placeholder="Введите пароль" autocomplete="off"></div>
+<div style="display:flex;gap:12px"><button class="admin-btn warning" onclick="maintenanceAdminLogin()" style="flex:1">ВОЙТИ</button><button class="admin-btn danger" onclick="closeMaintenanceAdminModal()" style="flex:1">ОТМЕНА</button></div>
+<div class="form-status" id="maintenanceAdminStatus"></div>
+</div>
+</div>
+
+<div class="license-modal-overlay" id="licenseModal">
+<div class="license-modal-content">
+    <button class="license-close-btn" id="licenseCloseBtn" onclick="closeLicenseModal()">✕</button>
+    <div class="license-modal-header"><div class="license-modal-icon">📜</div><div class="license-modal-title">СОГЛАШЕНИЕ</div></div>
+    <div class="license-text-block">
+        <h4>🎵 1. Авторство и концепция</h4>
+        <blockquote>Все идеи и концепции принадлежат <strong>полностью автору</strong>. Тексты песен создаются автором при вспомогательном участии искусственного интеллекта, доля которого варьируется в зависимости от конкретного произведения — от ≈20% (подбор рифм, синонимов, шлифовка отдельных строк) до ≈50% (совместная проработка отдельных фрагментов). При этом автор осуществляет общее <strong>творческое руководство, отбор, редактуру и финальное утверждение</strong> текста. Вокал и аранжировка генерируются AI на основе авторских указаний. Правообладателем всего контента является автор проекта EVGENII AI.</blockquote>
+        <div class="license-law-ref">📌 Правовая основа: ГК РФ ст. 1228, 1229, 1255, 1259.</div>
+        <h4>✅ 2. Разрешено</h4>
+        <ul><li>Прослушивание всех треков онлайн</li><li>Скачивание для <strong>личного некоммерческого</strong> использования</li><li>Делиться ссылками на треки в соцсетях</li><li>Участие в обсуждениях и сообществах</li></ul>
+        <div class="license-law-ref">📌 Правовая основа: ГК РФ ст. 1273.</div>
+        <h4>🚫 3. Запрещено</h4>
+        <ul><li>Коммерческое использование без письменного разрешения</li><li>Загрузка на стриминговые платформы от своего имени</li><li>Использование треков для обучения сторонних AI-моделей</li><li>Присвоение авторства текстов или идей</li></ul>
+        <div class="license-law-ref">📌 Правовая основа: ГК РФ ст. 1270, 1301, КоАП РФ ст. 7.12, УК РФ ст. 146.</div>
+        <h4>⚖️ 4. Ответственность</h4>
+        <blockquote>Проект EVGENII AI носит исключительно <strong>развлекательный характер</strong> и является некоммерческим творческим проектом. Весь контент предоставляется «как есть», без каких-либо гарантий. Автор и правообладатель не несёт ответственности за возможные проблемы, убытки или последствия, возникшие в результате использования сайта, прослушивания контента или взаимодействия с сервисами проекта, за исключением случаев, прямо предусмотренных действующим законодательством.</blockquote>
+        <div class="license-law-ref">📌 Правовая основа: ГК РФ ст. 15, 401.</div>
+        <h4>💬 5. Обратная связь</h4>
+        <p>По вопросам лицензирования, сотрудничества или коммерческого использования — пишите через раздел «Связь» на сайте.</p>
+    </div>
+    <div class="license-checkbox-wrapper" id="licenseCheckboxWrapper" onclick="toggleLicenseCheckbox()">
+        <div class="license-checkbox"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+        <div class="license-checkbox-label">Я <strong>ознакомился(ась)</strong> с условиями соглашения и принимаю их</div>
+    </div>
+    <button class="license-agree-btn" id="licenseAgreeBtn" disabled onclick="acceptLicense()">ПРИНЯТЬ И ПРОДОЛЖИТЬ</button>
+</div>
+</div>
+
+<div class="login-screen" id="loginScreen">
+<div class="login-container">
+<div class="login-banner"><div class="login-banner-bg"></div><div class="login-geometric"><div class="geo-shape"></div><div class="geo-shape"></div><div class="geo-shape"></div><div class="geo-shape"></div></div>
+<div style="position:relative;z-index:2;text-align:center"><div class="login-logo">EVGENII<span class="ai-badge">AI</span></div><div class="login-slogan">Где заканчиваюсь я — и начинается ИИ</div></div>
+</div>
+<div class="login-greeting" id="loginGreeting">Добрый вечер</div>
+<form class="login-form" id="loginForm"><input type="text" class="login-input" id="nameInput" placeholder="Введите ваше имя" autocomplete="off" maxlength="20"><button type="submit" class="login-btn">ВОЙТИ</button></form>
+</div>
+</div>
+
+<div class="page" id="homePage">
+<div class="header fade-in-up"><div class="header-left"><div class="header-time" id="headerTime">00:00</div><div class="header-greeting" id="headerGreeting">ДОБРЫЙ ДЕНЬ</div></div><div class="header-right"><div class="header-name-label">ГОСТЬ</div><div class="header-name" id="headerName">ИМЯ</div></div></div>
+<div class="banner fade-in-up"><div class="banner-content"><div class="banner-geometric"><div class="geo-shape-banner"></div><div class="geo-shape-banner"></div><div class="geo-shape-banner"></div><div class="geo-shape-banner"></div></div><div class="banner-title">EVGENII<span class="ai-badge">AI</span></div><div class="banner-slogan">Где заканчиваюсь я — и начинается ИИ</div></div></div>
+<div class="agreement-wrapper fade-in-up" style="animation-delay:.25s"><button class="agreement-btn" id="agreementBtn" onclick="openLicenseModal(false)"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 9h-2v2h2v-2zm0-4h-2v2h2V7zm-3 8H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm5-1V3.5L18.5 7H15z"/></svg> Лицензионное соглашение</button></div>
+<div class="release-section fade-in-up"><div class="section-title">НОВЫЙ РЕЛИЗ</div><div class="release-card" id="homeReleaseCard" onclick="playNewRelease()"></div></div>
+<div class="quick-access-section fade-in-up"><div class="section-title">БЫСТРЫЙ ДОСТУП</div><div class="quick-grid">
+<div class="quick-tile" onclick="navigateTo('tracksPage')"><div class="tile-icon tracks">🎵</div><div class="tile-title">Все треки</div><div class="tile-desc">Полная дискография</div></div>
+<div class="quick-tile" onclick="navigateTo('discussionsPage');loadDiscussions()"><div class="tile-icon discussions">💬</div><div class="tile-title">Обсуждения</div><div class="tile-desc">Общий чат слушателей</div></div>
+<div class="quick-tile" onclick="navigateTo('communityPage')"><div class="tile-icon community">🌐</div><div class="tile-title">Сообщества</div><div class="tile-desc">Bip &amp; Telegram</div></div>
+<div class="quick-tile" onclick="navigateTo('contactPage')"><div class="tile-icon contact">✉️</div><div class="tile-title">Связь</div><div class="tile-desc">Написать автору</div></div>
+<div class="quick-tile" onclick="navigateTo('supportPage')"><div class="tile-icon support">💜</div><div class="tile-title">Поддержать</div><div class="tile-desc">Сказать спасибо</div></div>
+<div class="quick-tile" onclick="navigateTo('aboutPage')"><div class="tile-icon about">ℹ️</div><div class="tile-title">О проекте</div><div class="tile-desc">Узнать больше</div></div>
+</div></div>
+<button class="logout-btn" id="logoutBtn">ВЫЙТИ</button><button class="admin-trigger" onclick="showAdminLogin()">⚙️</button>
+</div>
+
+<div class="page" id="adminPage"><div class="page-header fade-in-up"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">⚙️ Админ-панель</div></div>
+<div class="admin-container">
+<div class="admin-section fade-in-up" id="adminLoginSection"><div class="admin-login-form"><h3>🔐 АВТОРИЗАЦИЯ</h3><div class="form-group"><label class="form-label">Пароль администратора</label><input type="password" class="form-input" id="adminPasswordInput" placeholder="Введите пароль" autocomplete="off"></div><button class="admin-btn primary" onclick="adminLogin()" style="width:100%">ВОЙТИ В АДМИНКУ</button><div class="form-status" id="adminLoginStatus"></div></div></div>
+<div id="adminContent" style="display:none"><div class="admin-section fade-in-up"><div class="admin-section-title maintenance">🔧 ТЕХНИЧЕСКИЕ РАБОТЫ</div><div class="maintenance-toggle"><div class="maintenance-toggle-info"><div class="maintenance-toggle-title">🌐 Для всего сайта</div><div class="maintenance-toggle-desc">Закрыть весь сайт для пользователей (админ сможет войти)</div></div><div class="maintenance-switch" id="siteMaintenanceSwitch" onclick="toggleSiteMaintenance()"></div></div></div></div>
+</div></div>
+
+<div class="page" id="tracksPage"><div class="page-header fade-in-up"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Все треки</div></div>
+<div class="featured-release fade-in-up" id="featuredRelease" onclick="playNewRelease()"></div>
+<div class="tracks-list fade-in-up" id="allTracksList"></div>
+</div>
+
+<div class="page" id="aboutPage"><div class="page-header fade-in-up"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">О проекте</div></div>
+<div class="about-content fade-in-up">
+<div class="about-card"><p><span class="evgenii-title">EVGENII <span class="ai-badge">AI</span></span> — это эксперимент на стыке человеческих эмоций и искусственного интеллекта.</p><div class="about-quote">«Я придумываю текст и стиль исполнения. А выучить и воплотить в песню доверяю ИИ.»</div></div>
+<div class="about-card"><p>Искусственный интеллект становится моим <span class="highlight">голосом</span>. Он заучивает мои слова, учится чувствовать ритм, подбирать интонации.</p><p>Это не замена человеку — это <span class="highlight">новый инструмент выражения</span>.</p></div>
+<div class="about-card"><p>Вместе мы создаём что-то третье. Не совсем человеческое, не совсем машинное. Что-то среднее, где технологии усиливают эмоции, а не заменяют их.</p></div>
+</div></div>
+
+<div class="page" id="communityPage"><div class="page-header fade-in-up"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Сообщества</div></div>
+<div class="community-content fade-in-up">
+<div class="community-intro"><p>Присоединяйтесь к нашим сообществам, чтобы быть в курсе новых релизов и эксклюзивного контента</p></div>
+<a href="#" class="community-card coming-soon" onclick="event.preventDefault()"><div class="community-icon bip">🎵</div><div class="community-info"><div class="community-name">Bip</div><div class="community-desc">Музыкальная платформа</div><span class="community-badge">Скоро</span></div><div class="community-arrow">→</div></a>
+<a href="#" class="community-card coming-soon" onclick="event.preventDefault()"><div class="community-icon telegram">✈️</div><div class="community-info"><div class="community-name">Telegram</div><div class="community-desc">Новости и обновления</div><span class="community-badge">Скоро</span></div><div class="community-arrow">→</div></a>
+<a href="#" class="community-card coming-soon" onclick="event.preventDefault()"><div class="community-icon instagram">📷</div><div class="community-info"><div class="community-name">Instagram</div><div class="community-desc">Визуальный контент</div><span class="community-badge">Скоро</span></div><div class="community-arrow">→</div></a>
+</div></div>
+
+<div class="page" id="contactPage"><div class="page-header fade-in-up"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Связь</div></div>
+<div class="contact-intro fade-in-up"><p>Есть вопрос, предложение или хотите сотрудничать? Напишите мне — я обязательно отвечу!</p></div>
+<div class="contact-form-container fade-in-up">
+<h3 style="margin-bottom:20px;font-family:'Orbitron';letter-spacing:2px;text-align:center">НАПИСАТЬ АВТОРУ</h3>
+<form id="contactForm">
+<div class="form-group"><label class="form-label">Ваше имя</label><input type="text" class="form-input" name="name" placeholder="Как к вам обращаться?" required maxlength="50"></div>
+<div class="form-group"><label class="form-label">Email или Telegram</label><input type="text" class="form-input" name="contact" placeholder="Для обратной связи" required maxlength="100"></div>
+<div class="form-group"><label class="form-label">Сообщение</label><textarea class="form-textarea" name="message" placeholder="Напишите ваш вопрос, предложение или отзыв..." required maxlength="1000"></textarea></div>
+<div class="vpn-warning"><div class="vpn-warning-icon">🔐</div><div class="vpn-warning-text"><strong>Важно:</strong> Сообщения отправляются в Telegram. Включите <strong>VPN</strong> для отправки.</div></div>
+<button type="submit" class="submit-btn" id="submitBtn"><span>ОТПРАВИТЬ СООБЩЕНИЕ</span></button>
+<div class="form-status" id="formStatus"></div>
+</form>
+</div></div>
+
+<div class="page" id="supportPage"><div class="page-header fade-in-up"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Поддержать</div></div>
+<div class="support-wrapper">
+<div class="support-intro-new fade-in-up"><span class="heart-icon">💜</span><p>Твоя поддержка помогает создавать новую музыку. Каждая чашка кофе, каждый рубль — это новый трек, новая эмоция, новая история.</p></div>
+<div class="yandex-pay-card fade-in-up" onclick="copyCardNumber()">
+<div class="card-top-row"><div class="card-logo"><div class="card-logo-icon">Я</div><div class="card-logo-text"><span class="card-logo-label">Pay с помощью</span><span class="card-logo-name">YANDEX PAY</span></div></div><div class="card-chip"></div></div>
+<div class="card-number-block"><div class="card-number-label">Номер карты</div><div class="card-number" id="cardNumber">2204 3110 0721 9604</div></div>
+<div class="card-bottom-row"><div class="card-holder"><span class="card-holder-label">Получатель</span><span class="card-holder-name">EVGENII</span></div>
+<button class="copy-btn" id="copyBtn" onclick="event.stopPropagation();copyCardNumber()"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg><span id="copyBtnText">Копировать</span></button>
+</div>
+</div>
+<div class="support-hint fade-in-up"><span class="hint-icon">💡</span>Нажми на карту или кнопку <strong>«Копировать»</strong>, чтобы скопировать номер. Перевести можно через приложение любого банка — <strong>любая сумма</strong>.</div>
+</div></div>
+
+<div class="page" id="discussionsPage"><div class="page-header fade-in-up"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Обсуждения</div></div>
+<div class="discussions-intro fade-in-up"><p>Общее пространство для разговоров о музыке, треках и проекте. Делись впечатлениями, задавай вопросы, обсуждай с другими слушателями. Можешь прикрепить текущий играющий трек — чтобы все поняли, о чём речь 🎧</p></div>
+<div class="discussions-container fade-in-up">
+<div class="discussions-header"><div class="discussions-title-row"><span class="discussions-title-icon">💬</span><span class="discussions-title-text">ОБЩИЙ ЧАТ</span><span class="discussions-count" id="discussionsCount">0</span></div></div>
+<div class="discussions-list" id="discussionsList"><div class="discussions-loading">Загрузка обсуждений</div></div>
+<div class="discussion-input-area">
+<label class="discussion-attach-label"><input type="checkbox" id="discussionAttachToggle"><span id="discussionAttachText">🎵 Прикрепить текущий трек</span></label>
+<div class="discussion-input-row"><textarea class="discussion-input" id="discussionInput" placeholder="Написать в чат..." maxlength="500" rows="1"></textarea>
+<button class="discussion-send-btn" id="discussionSendBtn" onclick="sendDiscussion()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div>
+</div>
+</div>
+</div>
+
+<div class="copy-toast" id="copyToast"><span>✓</span><span id="copyToastText">Номер карты скопирован!</span></div>
+
+<div class="sticky-player" id="stickyPlayer">
+<div class="player-top-row"><div class="player-mini-cover" id="playerCover">🎵</div><div class="player-mini-info"><div class="player-mini-title" id="playerTitle">Название трека</div><div class="player-mini-artist" id="playerArtist">Исполнитель</div></div><div class="player-mini-controls"><button class="mini-skip-btn" onclick="skipBackward()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button><button class="mini-play-btn" onclick="togglePlay()"><svg viewBox="0 0 24 24" id="miniPlayIcon"><polygon points="5,3 19,12 5,21"/></svg></button><button class="mini-skip-btn" onclick="skipForward()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button></div></div>
+<div class="player-progress-wrapper"><span class="player-time-mini" id="playerCurrentTime">0:00</span><div class="player-bar-container" onclick="seek(event)"><div class="player-bar-fill" id="playerBarFill"></div></div><span class="player-time-mini end" id="playerTotalTime">0:00</span></div>
+</div>
+
+<div class="modal-overlay" id="downloadModal"><div class="modal-content">
+<div class="modal-header">СКАЧИВАНИЕ ТРЕКА</div>
+<div class="modal-track-card"><div class="modal-cover" id="modalCover">🎵</div><div class="modal-track-title" id="modalTitle">Название</div><div class="modal-track-artist" id="modalArtist">EVGENII AI</div><div class="modal-track-duration" id="modalDuration">0:00</div></div>
+<div class="modal-info-text">Трек будет загружен на ваше устройство в высоком качестве</div>
+<div class="modal-warning"><div class="modal-warning-icon">⚠</div><div><div class="modal-warning-title">Внимание!</div><div class="modal-warning-text">Скачивание происходит не сразу.<br>Пожалуйста, подождите несколько секунд.</div></div></div>
+<button class="modal-download-btn" id="modalDownloadBtn" onclick="startDownload()">СКАЧАТЬ ТРЕК</button>
+<button class="modal-cancel-btn" onclick="closeDownloadModal()">Отмена</button>
+</div></div>
+
+<!-- 🔧 ИСПРАВЛЕНО: preload="auto" и playsinline для работы в фоне -->
+<audio id="audioPlayer" preload="auto" playsinline></audio>
+
+<script>
+var firebaseConfig = {apiKey:"AIzaSyCw8S1fwhfKUMUtNsDFDbz-oFeSkRD_NOk",authDomain:"evgenii-music-b5adf.firebaseapp.com",projectId:"evgenii-music-b5adf",storageBucket:"evgenii-music-b5adf.firebasestorage.app",messagingSenderId:"518513745915",appId:"1:518513745915:web:2d0e8dc9e1e6f37bccb55e"};
+var db = null;
+try { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); console.log('Firebase подключён'); } catch (e) { console.error('Ошибка Firebase:', e); }
+var TELEGRAM_BOT_TOKEN = '8620797853:AAGE9OaW5GIun46NFaGxxGMIUL8LRxPvTrY';
+var TELEGRAM_CHAT_ID = '5129595944';
+var ADMIN_PASSWORD = 'evgenii2024';
+var isAdminLoggedIn = false;
+
+var licenseForceMode = false;
+var licenseCheckboxChecked = false;
+function isLicenseAccepted() { try { return localStorage.getItem('evgenii_agreement_accepted') === 'true'; } catch(e) { return false; } }
+function openLicenseModal(force) {
+  licenseForceMode = force;
+  licenseCheckboxChecked = isLicenseAccepted();
+  var wrapper = document.getElementById('licenseCheckboxWrapper');
+  var agreeBtn = document.getElementById('licenseAgreeBtn');
+  var closeBtn = document.getElementById('licenseCloseBtn');
+  if (licenseCheckboxChecked) wrapper.classList.add('checked'); else wrapper.classList.remove('checked');
+  agreeBtn.disabled = !licenseCheckboxChecked;
+  closeBtn.style.display = force ? 'none' : 'flex';
+  document.getElementById('licenseModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLicenseModal() { if (licenseForceMode) return; document.getElementById('licenseModal').classList.remove('active'); document.body.style.overflow = ''; }
+function toggleLicenseCheckbox() {
+  licenseCheckboxChecked = !licenseCheckboxChecked;
+  var wrapper = document.getElementById('licenseCheckboxWrapper');
+  var agreeBtn = document.getElementById('licenseAgreeBtn');
+  if (licenseCheckboxChecked) { wrapper.classList.add('checked'); agreeBtn.disabled = false; } else { wrapper.classList.remove('checked'); agreeBtn.disabled = true; }
+}
+function acceptLicense() {
+  if (!licenseCheckboxChecked) return;
+  try { localStorage.setItem('evgenii_agreement_accepted', 'true'); } catch(e) {}
+  licenseForceMode = false;
+  document.getElementById('licenseModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.getElementById('licenseModal').addEventListener('click', function(e) { if (e.target === this) closeLicenseModal(); });
+
+var maintenanceUnsubscribe = null;
+var siteMaintenance = false;
+function loadMaintenanceSettings() {
+  if (!db) return;
+  if (maintenanceUnsubscribe) maintenanceUnsubscribe();
+  maintenanceUnsubscribe = db.collection('settings').doc('maintenance').onSnapshot(function(doc) {
+    if (doc.exists) { siteMaintenance = doc.data().siteMode || false; } else { siteMaintenance = false; }
+    updateMaintenanceUI();
+  }, function(error) { console.error('Ошибка загрузки настроек тех работ:', error); });
+}
+function updateMaintenanceUI() {
+  var siteSwitch = document.getElementById('siteMaintenanceSwitch');
+  if (siteSwitch) siteSwitch.classList.toggle('active', siteMaintenance);
+  var siteScreen = document.getElementById('siteMaintenanceScreen');
+  if (siteScreen) { if (siteMaintenance && !isAdminLoggedIn) { siteScreen.classList.add('active'); } else { siteScreen.classList.remove('active'); } }
+}
+function toggleSiteMaintenance() {
+  if (!db) return;
+  var newValue = !siteMaintenance;
+  if (newValue) { var confirmed = confirm('ВНИМАНИЕ!\nЭто закроет весь сайт для всех пользователей.\nАдмин сможет войти через скрытую кнопку на экране тех работ.\nПродолжить?'); if (!confirmed) return; }
+  db.collection('settings').doc('maintenance').set({siteMode: newValue}, {merge: true}).then(function() { siteMaintenance = newValue; updateMaintenanceUI(); alert(newValue ? 'Тех работы для всего сайта ВКЛЮЧЕНЫ' : 'Тех работы для всего сайта ВЫКЛЮЧЕНЫ'); }).catch(function(error) { alert('Ошибка: ' + error.message); });
+}
+function showMaintenanceAdminModal() { document.getElementById('maintenanceAdminModal').classList.add('active'); document.getElementById('maintenanceAdminPassword').value = ''; document.getElementById('maintenanceAdminStatus').textContent = ''; }
+function closeMaintenanceAdminModal() { document.getElementById('maintenanceAdminModal').classList.remove('active'); }
+function maintenanceAdminLogin() {
+  var password = document.getElementById('maintenanceAdminPassword').value;
+  var status = document.getElementById('maintenanceAdminStatus');
+  if (password === ADMIN_PASSWORD) {
+    isAdminLoggedIn = true;
+    status.textContent = 'Успешный вход!';
+    status.className = 'form-status success';
+    setTimeout(function() { closeMaintenanceAdminModal(); updateMaintenanceUI(); var savedName = localStorage.getItem('evgenii_user') || 'Админ'; showMainScreen(savedName); navigateTo('adminPage'); document.getElementById('adminLoginSection').style.display = 'none'; document.getElementById('adminContent').style.display = 'block'; }, 500);
+  } else { status.textContent = 'Неверный пароль'; status.className = 'form-status error'; }
+}
+document.getElementById('maintenanceAdminModal').addEventListener('click', function(e) { if (e.target === this) closeMaintenanceAdminModal(); });
+
+var newRelease = { id: 'new-release', title: 'Спускаемся.', subtitle: 'New Release', file: 'tracks/song24.mp3', duration: '5:04', cover: 'cover/cover00.png' };
+
+var allTracks = [
+  { id: 2,  title: 'Я хоче домой', subtitle: '', file: 'tracks/song23.mp3', duration: '3:41', cover: 'cover/cover2.png' },
+  { id: 3,  title: 'Мужчина прав', subtitle: '', file: 'tracks/song15.mp3', duration: '3:35', cover: 'cover/cover00.png' },
+  { id: 4,  title: 'Корпоративный сад', subtitle: '', file: 'tracks/song20.mp3', duration: '4:09', cover: 'cover/cover.jpg' },
+  { id: 5,  title: 'Последний трек.', subtitle: '', file: 'tracks/song21.mp3', duration: '4:18', cover: 'cover/cover.jpg' },
+  { id: 6,  title: 'Воздух Густеет.', subtitle: '', file: 'tracks/song22.mp3', duration: '3:23', cover: 'cover/cover.jpg' },
+  { id: 7,  title: 'Тихий ток.', subtitle: '', file: 'tracks/song19.mp3', duration: '3:47', cover: 'cover/cover.jpg' },
+  { id: 8,  title: 'Семья.', subtitle: '', file: 'tracks/song24.mp3', duration: '2:34', cover: 'cover/cover.jpg' },
+  { id: 9,  title: 'Пустой код', subtitle: '', file: 'tracks/song.mp3', duration: '3:20', cover: 'cover/cover.jpg' },
+  { id: 10,  title: 'А мне похуй', subtitle: '', file: 'tracks/song2.mp3', duration: '3:11', cover: 'cover/cover.jpg' },
+  { id: 11, title: 'Нейронный Дождь', subtitle: '', file: 'tracks/song3.mp3', duration: '4:03', cover: 'cover/cover.jpg' },
+  { id: 12, title: 'Бункер', subtitle: '', file: 'tracks/song4.mp3', duration: '3:01', cover: 'cover/cover.jpg' },
+  { id: 13, title: 'Поезд на юг', subtitle: '', file: 'tracks/song5.mp3', duration: '3:23', cover: 'cover/cover.jpg' },
+  { id: 14, title: 'Сгоревший экран', subtitle: '', file: 'tracks/song6.mp3', duration: '3:39', cover: 'cover/cover.jpg' },
+  { id: 15, title: 'Ёлка горит, а мне похуй', subtitle: '', file: 'tracks/song7.mp3', duration: '2:30', cover: 'cover/cover.jpg' },
+  { id: 16, title: '19_11', subtitle: '', file: 'tracks/song8.mp3', duration: '2:59', cover: 'cover/cover.jpg' },
+  { id: 17, title: 'Маленький демон', subtitle: '', file: 'tracks/song9.mp3', duration: '4:32', cover: 'cover/cover.jpg' },
+  { id: 18, title: 'Бот как поэт', subtitle: '', file: 'tracks/song10.mp3', duration: '2:34', cover: 'cover/cover.jpg' },
+  { id: 19, title: 'Телефон Не Звонит', subtitle: '', file: 'tracks/song11.mp3', duration: '3:14', cover: 'cover/cover.jpg' },
+  { id: 20, title: 'Белая ткань', subtitle: '', file: 'tracks/song12.mp3', duration: '3:28', cover: 'cover/cover.jpg' },
+  { id: 21, title: 'Лишний', subtitle: '', file: 'tracks/song13.mp3', duration: '4:04', cover: 'cover/cover.jpg' },
+  { id: 22, title: 'Тишина', subtitle: '', file: 'tracks/song14.mp3', duration: '4:48', cover: 'cover/cover.jpg' },
+  { id: 23, title: 'Братья', subtitle: '', file: 'tracks/song1.mp3', duration: '4:19', cover: 'cover/cover.jpg' },
+  { id: 24, title: 'Черная жидкость', subtitle: '', file: 'tracks/song17.mp3', duration: '4:24', cover: 'cover/cover.jpg' },
+  { id: 25, title: 'Тень на стене', subtitle: '', file: 'tracks/song18.mp3', duration: '3:25', cover: 'cover/cover.jpg' },
+  { id: 26, title: 'На Пределе', subtitle: '', file: 'tracks/song16.mp3', duration: '3:24', cover: 'cover/cover1.png' }
+];
+
+function renderNewRelease() {
+  var h = document.getElementById('homeReleaseCard');
+  if (h) {
+    h.innerHTML = '<div class="release-cover"><span class="release-badge">NEW</span>' +
+      (newRelease.cover ? '<img src="' + newRelease.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">' : '') +
+      '</div><div class="release-info"><div class="release-label">ПРЕМЬЕРА</div><div class="release-title">' +
+      newRelease.title + '</div><div class="release-meta">' +
+      newRelease.subtitle.toUpperCase() + ' · ' + newRelease.duration + '</div></div>';
+  }
+  var f = document.getElementById('featuredRelease');
+  if (f) {
+    f.innerHTML = '<button class="featured-download-btn" onclick="event.stopPropagation();openDownloadModal(newRelease)"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></button>' +
+      '<div class="featured-cover">' + (newRelease.cover ? '<img src="' + newRelease.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">' : '') + '</div>' +
+      '<div class="featured-badge"><span class="featured-badge-star">★</span><span class="featured-badge-text">Новый релиз</span></div>' +
+      '<div class="featured-title">' + newRelease.title + '</div>' +
+      '<div class="featured-artist">EVGENII AI</div>' +
+      '<div style="display:flex;gap:12px;align-items:center;z-index:1"><button class="play-btn-large" onclick="event.stopPropagation();playNewRelease()"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button></div>';
+  }
+}
+
+function renderAllTracksList() {
+  var list = document.getElementById('allTracksList');
+  if (!list) return;
+  list.innerHTML = '';
+  allTracks.forEach(function(track, index) {
+    var el = document.createElement('div');
+    el.className = 'track-item';
+    el.dataset.id = track.id;
+    var coverHtml = track.cover
+      ? '<img src="' + track.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">'
+      : '🎵';
+    var playlistIndex = index + 1;
+    el.innerHTML = '<div class="track-cover" onclick="playTrack(allTracks[' + index + '],' + playlistIndex + ')">' + coverHtml + '</div>' +
+      '<div class="track-info" onclick="playTrack(allTracks[' + index + '],' + playlistIndex + ')">' +
+      '<div class="track-title">' + escapeHtml(track.title) + '</div>' +
+      '<div class="track-artist">' + escapeHtml(track.subtitle || 'EVGENII AI') + '</div></div>' +
+      '<div class="track-duration">' + track.duration + '</div>' +
+      '<button class="track-download-btn" onclick="event.stopPropagation();openDownloadModal(allTracks[' + index + '])">' +
+      '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></button>';
+    list.appendChild(el);
+  });
+}
+
+var audio = document.getElementById('audioPlayer');
+var currentTrack = null;
+var isPlaying = false;
+var simulationInterval = null;
+var currentTrackIndex = -1;
+var playlist = [newRelease].concat(allTracks);
+var isHandlingTrackEnd = false; // 🔧 Флаг для предотвращения двойного вызова
+
+function stopPlayer() {
+  audio.pause();
+  clearInterval(simulationInterval);
+  setPlayingState(false);
+  document.getElementById('playerBarFill').style.width = '0%';
+  document.getElementById('playerCurrentTime').textContent = '0:00';
+  document.getElementById('stickyPlayer').classList.remove('visible');
+  isHandlingTrackEnd = false;
+  updateAttachLabel();
+}
+
+function playTrack(track, index) {
+  stopPlayer();
+  currentTrack = track;
+  currentTrackIndex = (index !== undefined && index >= 0) ? index : playlist.findIndex(function(t) { return t.id === track.id; });
+  document.getElementById('playerTitle').textContent = track.title;
+  document.getElementById('playerArtist').textContent = track.subtitle || 'EVGENII AI';
+  var pc = document.getElementById('playerCover');
+  if (track.cover) {
+    pc.innerHTML = '<img src="' + track.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">';
+  } else {
+    pc.textContent = '🎵';
+  }
+  document.getElementById('playerTotalTime').textContent = track.duration;
+  document.getElementById('stickyPlayer').classList.add('visible');
+  document.querySelectorAll('.track-item').forEach(function(el) { el.classList.remove('active'); });
+  var ae = document.querySelector('.track-item[data-id="' + track.id + '"]');
+  if (ae) ae.classList.add('active');
+  audio.src = track.file;
+  audio.play().then(function() {
+    setPlayingState(true);
+    updateAttachLabel();
+    updateMediaSession();
+  }).catch(function() {
+    startSimulation();
+    updateAttachLabel();
+  });
+}
+
+function playNewRelease() { playTrack(newRelease, 0); }
+
+function togglePlay() {
+  if (!currentTrack) return;
+  if (isPlaying) { 
+    audio.pause(); 
+    clearInterval(simulationInterval); 
+    setPlayingState(false); 
+  } else { 
+    audio.play().catch(function() { startSimulation(); }); 
+    setPlayingState(true); 
+  }
+}
+
+// 🔧 ИСПРАВЛЕНО: добавлен playbackState для Media Session
+function setPlayingState(state) {
+  isPlaying = state;
+  document.getElementById('miniPlayIcon').innerHTML = state
+    ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+    : '<polygon points="5,3 19,12 5,21"/>';
+  
+  // Сообщаем ОС, что аудио играет (важно для заблокированного экрана!)
+  if ('mediaSession' in navigator) {
+    try {
+      navigator.mediaSession.playbackState = state ? 'playing' : 'paused';
+    } catch(e) {}
+  }
+}
+
+function skipForward() { playNextTrack(); }
+function skipBackward() { playPreviousTrack(); }
+
+function playNextTrack() {
+  var n = currentTrackIndex < playlist.length - 1 ? currentTrackIndex + 1 : 0;
+  playTrack(playlist[n], n);
+}
+
+function playPreviousTrack() {
+  var n = currentTrackIndex > 0 ? currentTrackIndex - 1 : playlist.length - 1;
+  playTrack(playlist[n], n);
+}
+
+function seek(event) {
+  if (!currentTrack) return;
+  audio.currentTime = (event.offsetX / event.currentTarget.offsetWidth) * (audio.duration || pd(currentTrack.duration));
+}
+
+// 🔧 ИСПРАВЛЕНО: добавлена установка playbackState и setPositionState
+function updateMediaSession() {
+  if ('mediaSession' in navigator && currentTrack) {
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentTrack.title,
+        artist: currentTrack.subtitle || 'EVGENII AI',
+        album: 'EVGENII AI',
+        artwork: currentTrack.cover ? [
+          {src:currentTrack.cover,sizes:'96x96',type:'image/png'},
+          {src:currentTrack.cover,sizes:'128x128',type:'image/png'},
+          {src:currentTrack.cover,sizes:'192x192',type:'image/png'},
+          {src:currentTrack.cover,sizes:'256x256',type:'image/png'},
+          {src:currentTrack.cover,sizes:'384x384',type:'image/png'},
+          {src:currentTrack.cover,sizes:'512x512',type:'image/png'}
+        ] : []
+      });
+      
+      // Устанавливаем playbackState явно
+      navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+      
+      // Обработка seek из системного плеера
+      navigator.mediaSession.setActionHandler('seekto', function(details) {
+        if (details.seekTime !== undefined) {
+          audio.currentTime = details.seekTime;
+        }
+      });
+    } catch(e) { 
+      console.log('MediaSession error:', e); 
+    }
+  }
+}
+
+// Обновляем позицию для системного плеера (регулярно)
+function updateMediaSessionPosition() {
+  if ('mediaSession' in navigator && currentTrack && audio.duration) {
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        playbackRate: audio.playbackRate || 1.0,
+        position: audio.currentTime
+      });
+    } catch(e) {}
+  }
+}
+
+if ('mediaSession' in navigator) {
+  navigator.mediaSession.setActionHandler('play', function() { togglePlay(); });
+  navigator.mediaSession.setActionHandler('pause', function() { togglePlay(); });
+  navigator.mediaSession.setActionHandler('previoustrack', function() { playPreviousTrack(); });
+  navigator.mediaSession.setActionHandler('nexttrack', function() { playNextTrack(); });
+}
+
+// 🔧 ИСПРАВЛЕНО: улучшенная симуляция с защитой от зависания в фоне
+function startSimulation() {
+  setPlayingState(true);
+  var c = 0;
+  var d = pd(currentTrack.duration);
+  if (d <= 0) d = 180; // Если duration 0:00, берём 3 минуты
+  clearInterval(simulationInterval);
+  
+  simulationInterval = setInterval(function() {
+    // Если аудио снова заиграло нормально, останавливаем симуляцию
+    if (!audio.paused && audio.currentTime > 0 && !audio.ended) {
+      clearInterval(simulationInterval);
+      return;
+    }
+    
+    c++;
+    if (c >= d) {
+      clearInterval(simulationInterval);
+      handleTrackEnd();
+    } else {
+      document.getElementById('playerBarFill').style.width = (c / d * 100) + '%';
+      document.getElementById('playerCurrentTime').textContent = ft(c);
+    }
+  }, 1000);
+}
+
+// 🔧 НОВАЯ ФУНКЦИЯ: единая точка обработки окончания трека
+function handleTrackEnd() {
+  if (isHandlingTrackEnd || !isPlaying) return;
+  isHandlingTrackEnd = true;
+  
+  clearInterval(simulationInterval);
+  setPlayingState(false);
+  document.getElementById('playerBarFill').style.width = '0%';
+  document.getElementById('playerCurrentTime').textContent = '0:00';
+  
+  // Небольшая задержка перед переключением для стабильности
+  setTimeout(function() {
+    isHandlingTrackEnd = false;
+    playNextTrack();
+  }, 200);
+}
+
+function pd(s) { 
+  if (!s || s === '0:00') return 0;
+  var p = s.split(':'); 
+  return parseInt(p[0]) * 60 + parseInt(p[1]); 
+}
+function ft(s) { 
+  if (isNaN(s)) return '0:00'; 
+  return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0'); 
+}
+
+// 🔧 ИСПРАВЛЕНО: добавлена проверка окончания в timeupdate + обновление позиции MediaSession
+audio.addEventListener('timeupdate', function() {
+  if (!currentTrack) return;
+  var d = audio.duration || pd(currentTrack.duration);
+  if (d <= 0) return;
+  
+  document.getElementById('playerBarFill').style.width = (audio.currentTime / d * 100) + '%';
+  document.getElementById('playerCurrentTime').textContent = ft(audio.currentTime);
+  
+  // Обновляем позицию системного плеера
+  updateMediaSessionPosition();
+  
+  // 🔧 ПРОВЕРКА: трек закончился (с запасом 0.3 сек для надёжности)
+  if (audio.duration && audio.currentTime >= audio.duration - 0.3 && isPlaying) {
+    handleTrackEnd();
+  }
+});
+
+audio.addEventListener('loadedmetadata', function() {
+  if (audio.duration && !isNaN(audio.duration)) {
+    document.getElementById('playerTotalTime').textContent = ft(audio.duration);
+  }
+  updateMediaSession();
+});
+
+audio.addEventListener('play', function() {
+  setPlayingState(true);
+  updateMediaSession();
+});
+
+audio.addEventListener('pause', function() {
+  if (!isHandlingTrackEnd) {
+    setPlayingState(false);
+  }
+});
+
+// 🔧 ИСПРАВЛЕНО: ended с защитой от двойного вызова
+audio.addEventListener('ended', function() {
+  handleTrackEnd();
+});
+
+// 🔧 НОВОЕ: обработка разблокировки экрана
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden && currentTrack && isPlaying) {
+    // Проверяем, не закончился ли трек пока экран был заблокирован
+    if (audio.ended || (audio.duration && audio.currentTime >= audio.duration - 0.5)) {
+      handleTrackEnd();
+    } else if (audio.paused) {
+      // Пытаемся возобновить воспроизведение после разблокировки
+      audio.play().catch(function() {
+        // Если браузер не дал играть - запускаем симуляцию
+        startSimulation();
+      });
+    }
+  }
+});
+
+var downloadTrack = null;
+function openDownloadModal(track) {
+  downloadTrack = track;
+  var mc = document.getElementById('modalCover');
+  if (track.cover) { mc.innerHTML = '<img src="' + track.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">'; }
+  else { mc.textContent = '🎵'; }
+  document.getElementById('modalTitle').textContent = track.title;
+  document.getElementById('modalArtist').textContent = 'EVGENII AI';
+  document.getElementById('modalDuration').textContent = track.duration;
+  var b = document.getElementById('modalDownloadBtn');
+  b.textContent = 'СКАЧАТЬ ТРЕК';
+  b.disabled = false;
+  document.getElementById('downloadModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeDownloadModal() { document.getElementById('downloadModal').classList.remove('active'); document.body.style.overflow = ''; downloadTrack = null; }
+function startDownload() {
+  if (!downloadTrack) return;
+  var b = document.getElementById('modalDownloadBtn');
+  b.textContent = 'ЗАГРУЗКА...';
+  b.disabled = true;
+  var l = document.createElement('a');
+  l.href = downloadTrack.file;
+  l.download = downloadTrack.title + '.mp3';
+  l.style.display = 'none';
+  document.body.appendChild(l);
+  setTimeout(function() { l.click(); document.body.removeChild(l); b.textContent = 'ТРЕК ЗАГРУЖЕН'; setTimeout(function() { closeDownloadModal(); }, 1500); }, 1500);
+}
+document.getElementById('downloadModal').addEventListener('click', function(e) { if (e.target === this) closeDownloadModal(); });
+
+var discussionsUnsubscribe = null;
+var discussionsData = [];
+function getCurrentPlayingTrack() { if (currentTrack) return currentTrack; return null; }
+function updateAttachLabel() {
+  var label = document.getElementById('discussionAttachText');
+  var toggle = document.getElementById('discussionAttachToggle');
+  if (!label || !toggle) return;
+  var current = getCurrentPlayingTrack();
+  if (current) { label.textContent = '🎵 Прикрепить: ' + current.title; toggle.disabled = false; toggle.parentElement.style.opacity = '1'; }
+  else { label.textContent = '🎵 Сначала включи любой трек'; toggle.disabled = true; toggle.checked = false; toggle.parentElement.style.opacity = '0.5'; }
+}
+function loadDiscussions() {
+  if (!db) return;
+  var list = document.getElementById('discussionsList');
+  if (!list) return;
+  list.innerHTML = '<div class="discussions-loading">Загрузка обсуждений</div>';
+  if (discussionsUnsubscribe) discussionsUnsubscribe();
+  discussionsUnsubscribe = db.collection('discussions').orderBy('createdAt', 'desc').limit(100).onSnapshot(function(snapshot) {
+    discussionsData = [];
+    snapshot.forEach(function(doc) { discussionsData.push({ id: doc.id, ...doc.data() }); });
+    renderDiscussions();
+  }, function(error) { console.error(error); list.innerHTML = '<div class="discussions-empty"><div class="discussions-empty-icon">⚠️</div>Ошибка: ' + error.message + '</div>'; });
+}
+function renderDiscussions() {
+  var list = document.getElementById('discussionsList');
+  var count = document.getElementById('discussionsCount');
+  if (!list) return;
+  if (discussionsData.length === 0) {
+    list.innerHTML = '<div class="discussions-empty"><div class="discussions-empty-icon">💬</div>Пока нет сообщений.<br>Будь первым!</div>';
+    if (count) count.textContent = '0';
+    return;
+  }
+  if (count) count.textContent = discussionsData.length;
+  var reversed = discussionsData.slice().reverse();
+  list.innerHTML = reversed.map(function(d) {
+    var initial = (d.userName || '?')[0].toUpperCase();
+    var time = formatDiscussionTime(d.createdAt);
+    var trackHtml = d.trackTitle ? '<div class="discussion-track-ref"><span class="discussion-track-icon">🎵</span><span class="discussion-track-name">' + escapeHtml(d.trackTitle) + '</span></div>' : '';
+    return '<div class="discussion-item"><div class="discussion-avatar">' + escapeHtml(initial) + '</div>' +
+      '<div class="discussion-body"><div class="discussion-header"><span class="discussion-author">' + escapeHtml(d.userName) + '</span>' +
+      '<span class="discussion-time">' + time + '</span></div>' + trackHtml +
+      '<div class="discussion-text">' + escapeHtml(d.text) + '</div></div></div>';
+  }).join('');
+  list.scrollTop = list.scrollHeight;
+}
+function formatDiscussionTime(timestamp) {
+  if (!timestamp) return '';
+  var date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  var now = new Date();
+  var diff = Math.floor((now - date) / 1000);
+  if (diff < 60) return 'только что';
+  if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
+  if (diff < 604800) return Math.floor(diff / 86400) + ' дн назад';
+  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+}
+function sendDiscussion() {
+  if (!db) return;
+  var input = document.getElementById('discussionInput');
+  var text = input.value.trim();
+  if (!text) return;
+  var userName = localStorage.getItem('evgenii_user') || 'Гость';
+  var btn = document.getElementById('discussionSendBtn');
+  var attachToggle = document.getElementById('discussionAttachToggle');
+  btn.disabled = true;
+  var data = { userName: userName, text: text, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+  if (attachToggle && attachToggle.checked) { var current = getCurrentPlayingTrack(); if (current) { data.trackId = String(current.id); data.trackTitle = current.title; } }
+  db.collection('discussions').add(data).then(function() { input.value = ''; input.style.height = 'auto'; }).catch(function(e) { alert('Ошибка: ' + e.message); }).finally(function() { btn.disabled = false; input.focus(); });
+}
+document.getElementById('discussionInput').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
+document.getElementById('discussionInput').addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendDiscussion(); } });
+
+function showAdminLogin() { navigateTo('adminPage'); document.getElementById('adminLoginSection').style.display = 'block'; document.getElementById('adminContent').style.display = 'none'; document.getElementById('adminPasswordInput').value = ''; document.getElementById('adminLoginStatus').textContent = ''; }
+function adminLogin() {
+  var password = document.getElementById('adminPasswordInput').value;
+  var status = document.getElementById('adminLoginStatus');
+  if (password === ADMIN_PASSWORD) {
+    isAdminLoggedIn = true;
+    status.textContent = 'Успешный вход!';
+    status.className = 'form-status success';
+    setTimeout(function() { document.getElementById('adminLoginSection').style.display = 'none'; document.getElementById('adminContent').style.display = 'block'; updateMaintenanceUI(); }, 500);
+  } else { status.textContent = 'Неверный пароль'; status.className = 'form-status error'; }
+}
+
+function getGreeting(h) { if (h >= 5 && h < 12) return 'ДОБРОЕ УТРО'; if (h >= 12 && h < 17) return 'ДОБРЫЙ ДЕНЬ'; if (h >= 17 && h < 22) return 'ДОБРЫЙ ВЕЧЕР'; return 'ДОБРОЙ НОЧИ'; }
+function getLoginGreeting(h) { if (h >= 5 && h < 12) return 'Доброе утро'; if (h >= 12 && h < 17) return 'Добрый день'; if (h >= 17 && h < 22) return 'Добрый вечер'; return 'Доброй ночи'; }
+function updateTime() { var n = new Date(); document.getElementById('headerTime').textContent = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0'); document.getElementById('headerGreeting').textContent = getGreeting(n.getHours()); }
+function escapeHtml(text) { var d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
+
+var currentPage = 'homePage';
+function navigateTo(pageId) {
+  if (currentPage === pageId) return;
+  var ce = document.getElementById(currentPage);
+  var ne = document.getElementById(pageId);
+  if (ce) ce.classList.remove('active');
+  if (ne) ne.classList.add('active');
+  window.scrollTo(0, 0);
+  currentPage = pageId;
+  if (pageId === 'discussionsPage') loadDiscussions();
+  if (pageId === 'adminPage' && !isAdminLoggedIn) showAdminLogin();
+}
+function goBack() { navigateTo('homePage'); }
+
+var loginScreen = document.getElementById('loginScreen');
+var loginForm = document.getElementById('loginForm');
+var nameInput = document.getElementById('nameInput');
+var loginGreeting = document.getElementById('loginGreeting');
+var headerName = document.getElementById('headerName');
+var logoutBtn = document.getElementById('logoutBtn');
+loginGreeting.textContent = getLoginGreeting(new Date().getHours());
+loginScreen.addEventListener('transitionend', function() { if (loginScreen.classList.contains('hidden')) { loginScreen.style.display = 'none'; } });
+var savedName = null;
+try { savedName = localStorage.getItem('evgenii_user'); } catch(e) {}
+if (savedName) { showMainScreen(savedName); if (!isLicenseAccepted()) { setTimeout(function() { openLicenseModal(true); }, 400); } }
+loadMaintenanceSettings();
+loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  var name = nameInput.value.trim();
+  if (name) {
+    try { localStorage.setItem('evgenii_user', name); } catch(err) {}
+    showMainScreen(name);
+    if (!isLicenseAccepted()) { setTimeout(function() { openLicenseModal(true); }, 400); }
+  } else {
+    nameInput.style.borderColor = '#ff4444';
+    nameInput.style.boxShadow = '0 0 15px rgba(255, 68, 68, 0.2)';
+    setTimeout(function() { nameInput.style.borderColor = ''; nameInput.style.boxShadow = ''; }, 1500);
+  }
+});
+function showMainScreen(name) {
+  loginScreen.classList.add('hidden');
+  loginScreen.style.display = 'none';
+  document.getElementById('homePage').classList.add('active');
+  headerName.textContent = name.toUpperCase();
+  updateTime();
+  renderNewRelease();
+  renderAllTracksList();
+  updateAttachLabel();
+}
+logoutBtn.addEventListener('click', function() {
+  try { localStorage.removeItem('evgenii_user'); } catch(e) {}
+  var pages = ['homePage','tracksPage','aboutPage','communityPage','contactPage','supportPage','discussionsPage','adminPage'];
+  pages.forEach(function(p) { var el = document.getElementById(p); if (el) el.classList.remove('active'); });
+  currentPage = 'homePage';
+  loginScreen.style.display = 'flex';
+  loginScreen.classList.remove('hidden');
+  nameInput.value = '';
+  loginGreeting.textContent = getLoginGreeting(new Date().getHours());
+  stopPlayer();
+  if (discussionsUnsubscribe) { discussionsUnsubscribe(); discussionsUnsubscribe = null; }
+  if (maintenanceUnsubscribe) { maintenanceUnsubscribe(); maintenanceUnsubscribe = null; }
+  isAdminLoggedIn = false;
+});
+setInterval(updateTime, 1000);
+updateTime();
+
+var contactForm = document.getElementById('contactForm');
+var formSubmitBtn = document.getElementById('submitBtn');
+var formStatus = document.getElementById('formStatus');
+if (contactForm) {
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    var name = formData.get('name');
+    var contact = formData.get('contact');
+    var messageText = formData.get('message');
+    formSubmitBtn.disabled = true;
+    formSubmitBtn.innerHTML = '<span>ОТПРАВКА...</span>';
+    formStatus.textContent = '';
+    formStatus.className = 'form-status';
+    var message = '📩 <b>НОВОЕ СООБЩЕНИЕ С САЙТА</b>\n' + '👤 <b>Имя:</b> ' + name + '\n' + '📧 <b>Контакт:</b> ' + contact + '\n' + '💬 <b>Сообщение:</b>\n' + messageText + '\n' + '⏰ <b>Время:</b> ' + new Date().toLocaleString('ru-RU');
+    var telegramURL = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage';
+    fetch(telegramURL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' }) })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.ok) { formStatus.textContent = 'Сообщение отправлено! Я отвечу вам скоро.'; formStatus.className = 'form-status success'; contactForm.reset(); }
+      else { throw new Error(data.description || 'Ошибка Telegram API'); }
+    }).catch(function(error) { console.error(error); formStatus.textContent = 'Ошибка: ' + error.message; formStatus.className = 'form-status error'; })
+    .finally(function() { formSubmitBtn.disabled = false; formSubmitBtn.innerHTML = '<span>ОТПРАВИТЬ СООБЩЕНИЕ</span>'; });
+  });
+}
+
+var CARD_NUMBER = '2204311007219604';
+var copyTimeout = null;
+function copyCardNumber() {
+  var btn = document.getElementById('copyBtn');
+  var btnText = document.getElementById('copyBtnText');
+  var toast = document.getElementById('copyToast');
+  function showCopySuccess() {
+    btn.classList.add('copied');
+    btnText.textContent = 'Скопировано!';
+    toast.classList.add('show');
+    if (copyTimeout) clearTimeout(copyTimeout);
+    copyTimeout = setTimeout(function() { btn.classList.remove('copied'); btnText.textContent = 'Копировать'; toast.classList.remove('show'); }, 2500);
+  }
+  function fallbackCopy() {
+    var textarea = document.createElement('textarea');
+    textarea.value = CARD_NUMBER;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try { document.execCommand('copy'); showCopySuccess(); }
+    catch (err) { console.error(err); alert('Номер карты: ' + CARD_NUMBER); }
+    document.body.removeChild(textarea);
+  }
+  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(CARD_NUMBER).then(function() { showCopySuccess(); }).catch(function() { fallbackCopy(); }); }
+  else { fallbackCopy(); }
+}
+updateAttachLabel();
+</script>
+</body>
+</html>
