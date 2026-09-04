@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVGENII AI — Творческий дневник</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --card: rgba(255,255,255,0.03);
+    --card-hover: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e8e8;
+    --text-dim: rgba(255,255,255,0.5);
+    --accent-1: #ff6b6b;
+    --accent-2: #4ecdc4;
+    --accent-3: #ffe66d;
+    --accent-4: #a8e6cf;
+    --accent-5: #c7ceea;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== PRELOADER ===== */
+  .preloader {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    transition: opacity .8s, visibility .8s;
+  }
+  .preloader.hidden { opacity: 0; visibility: hidden; }
+  .preloader-title {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
+    letter-spacing: .1em;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glitch 2s infinite;
+  }
+  .preloader-sub {
+    margin-top: 15px;
+    font-size: .85rem;
+    color: var(--text-dim);
+    letter-spacing: .3em;
+    text-transform: uppercase;
+  }
+  @keyframes glitch {
+    0%, 90%, 100% { transform: translate(0); opacity: 1; }
+    91% { transform: translate(-2px, 1px); opacity: .8; }
+    92% { transform: translate(2px, -1px); opacity: .9; }
+    93% { transform: translate(-1px, 2px); opacity: .7; }
+  }
+
+  /* ===== BACKGROUND ===== */
+  .bg-noise {
+    position: fixed; inset: 0;
+    z-index: 0;
+    opacity: .03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .bg-gradient {
+    position: fixed; inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,107,107,.06), transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(78,205,196,.06), transparent 50%);
+    pointer-events: none;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; width: 100%;
+    padding: 20px 50px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-size: 1.3rem; font-weight: 900;
+    letter-spacing: .15em;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .nav-links { display: flex; gap: 30px; list-style: none; }
+  .nav-links a {
+    font-size: .85rem; font-weight: 500;
+    color: var(--text-dim);
+    transition: color .3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; left: 0;
+    width: 0; height: 2px;
+    background: var(--accent-1);
+    transition: width .3s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 0 20px;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    font-size: .8rem;
+    color: var(--text-dim);
+    margin-bottom: 30px;
+    letter-spacing: .1em;
+  }
+  .hero-title {
+    font-size: clamp(3rem, 10vw, 7rem);
+    font-weight: 900;
+    letter-spacing: .05em;
+    line-height: 1;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 8s ease infinite;
+    background-size: 200% 200%;
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--text-dim);
+    max-width: 600px;
+    margin-bottom: 50px;
+  }
+  .hero-stats {
+    display: flex; gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label {
+    font-size: .75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    margin-top: 5px;
+  }
+
+  /* ===== CATEGORIES FILTER ===== */
+  .categories {
+    position: relative; z-index: 1;
+    padding: 60px 50px;
+    text-align: center;
+  }
+  .categories-title {
+    font-size: .85rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    margin-bottom: 30px;
+  }
+  .filter-buttons {
+    display: flex; gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 12px 28px;
+    border-radius: 50px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .3s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .filter-btn:hover {
+    background: var(--card-hover);
+    color: var(--text);
+    transform: translateY(-2px);
+  }
+  .filter-btn.active {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: #fff;
+    border-color: transparent;
+  }
+  .filter-count {
+    font-size: .75rem;
+    opacity: .7;
+  }
+
+  /* ===== POSTS GRID ===== */
+  .posts-section {
+    position: relative; z-index: 1;
+    padding: 0 50px 100px;
+  }
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .post-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all .4s cubic-bezier(.23,1,.32,1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .post-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255,255,255,.15);
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  .post-card.hidden {
+    display: none;
+  }
+
+  /* Category Colors */
+  .post-card[data-category="thoughts"] { --cat-color: var(--accent-1); }
+  .post-card[data-category="songs"] { --cat-color: var(--accent-2); }
+  .post-card[data-category="stories"] { --cat-color: var(--accent-3); }
+  .post-card[data-category="photos"] { --cat-color: var(--accent-4); }
+
+  .post-header {
+    padding: 25px 25px 0;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .post-category {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: var(--cat-color);
+    color: var(--bg);
+  }
+  .post-date {
+    font-size: .75rem;
+    color: var(--text-dim);
+  }
+
+  .post-content {
+    padding: 20px 25px;
+    flex: 1;
+  }
+  .post-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .post-text {
+    color: var(--text-dim);
+    font-size: .95rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+  }
+  .post-text.lyrics {
+    font-style: italic;
+    border-left: 3px solid var(--cat-color);
+    padding-left: 15px;
+    color: var(--text);
+  }
+  .post-text.story {
+    font-family: 'Georgia', serif;
+    font-size: 1rem;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(135deg, var(--cat-color), rgba(255,255,255,.1));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .post-image::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, var(--bg));
+  }
+
+  .post-footer {
+    padding: 0 25px 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: auto;
+  }
+  .post-tags {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .post-tag {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: .7rem;
+    background: rgba(255,255,255,.05);
+    color: var(--text-dim);
+  }
+  .post-likes {
+    font-size: .85rem;
+    color: var(--text-dim);
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 50px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: .15em;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+  }
+  .footer-text {
+    font-size: .85rem;
+    color: var(--text-dim);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 15px 20px; }
+    .nav-links { gap: 15px; }
+    .nav-links a { font-size: .75rem; }
+    .categories, .posts-section { padding-left: 20px; padding-right: 20px; }
+    .posts-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader">
+  <div class="preloader-title">EVGENII AI</div>
+  <div class="preloader-sub">Загрузка творческого пространства</div>
+</div>
+
+<!-- BACKGROUND -->
+<div class="bg-noise"></div>
+<div class="bg-gradient"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">EVGENII AI</div>
+  <ul class="nav-links">
+    <li><a href="#thoughts">Мысли</a></li>
+    <li><a href="#songs">Песни</a></li>
+    <li><a href="#stories">Истории</a></li>
+    <li><a href="#photos">Фото</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">✨ Творческий дневник</div>
+  <h1 class="hero-title">EVGENII AI</h1>
+  <p class="hero-subtitle">
+    Место, где рождаются мысли, звучат песни, оживают истории и застывают моменты.
+    Мой личный космос идей и вдохновения.
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">24</div>
+      <div class="stat-label">Мысли</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Песни</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Истории</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">47</div>
+      <div class="stat-label">Фото</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <div class="categories-title">Фильтр по категориям</div>
+  <div class="filter-buttons">
+    <button class="filter-btn active" data-filter="all">
+      Всё <span class="filter-count">91</span>
+    </button>
+    <button class="filter-btn" data-filter="thoughts">
+      💭 Мысли <span class="filter-count">24</span>
+    </button>
+    <button class="filter-btn" data-filter="songs">
+      🎵 Песни <span class="filter-count">12</span>
+    </button>
+    <button class="filter-btn" data-filter="stories">
+      📖 Истории <span class="filter-count">8</span>
+    </button>
+    <button class="filter-btn" data-filter="photos">
+      📸 Фото <span class="filter-count">47</span>
+    </button>
+  </div>
+</div>
+
+<!-- POSTS -->
+<section class="posts-section">
+  <div class="posts-grid">
+
+    <!-- THOUGHT 1 -->
+    <article class="post-card" data-category="thoughts">
+      <div class="post-header">
+        <span class="post-category">Мысль</span>
+        <span class="post-date">4 сентября 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Почему тишина громче слов</h3>
+        <p class="post-text">
+          Иногда понимаешь, что самые важные вещи происходят в паузах между словами.
+          В тех моментах, когда никто не говорит, но все всё понимают.
+          Может, именно там и живёт настоящая связь между людьми?
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#философия</span>
+          <span class="post-tag">#жизнь</span>
+        </div>
+        <div class="post-likes">♡ 47</div>
+      </div>
+    </article>
+
+    <!-- SONG 1 -->
+    <article class="post-card" data-category="songs">
+      <div class="post-header">
+        <span class="post-category">Песня</span>
+        <span class="post-date">2 сентября 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Ночной город (фрагмент)</h3>
+        <p class="post-text lyrics">
+          Огни фонарей рисуют тени на асфальте,<br>
+          Я иду туда, где меня никто не ждёт.<br>
+          Ночной город шепчет мне свои секреты,<br>
+          А я ему пою про то, что не найдёт...
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#ночь</span>
+          <span class="post-tag">#город</span>
+          <span class="post-tag">#лирика</span>
+        </div>
+        <div class="post-likes">♡ 89</div>
+      </div>
+    </article>
+
+    <!-- STORY 1 -->
+    <article class="post-card" data-category="stories">
+      <div class="post-header">
+        <span class="post-category">История</span>
+        <span class="post-date">30 августа 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Последний поезд (глава 1)</h3>
+        <p class="post-text story">
+          Платформа была пуста, если не считать старого человека с чемоданом.
+          Он смотрел на часы, хотя поезд уже опаздывал на час. "Он придёт", —
+          говорил он себе. Но в глубине души знал — этот поезд последний.
+          И не только для него...
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#драма</span>
+          <span class="post-tag">#путешествие</span>
+        </div>
+        <div class="post-likes">♡ 156</div>
+      </div>
+    </article>
+
+    <!-- PHOTO 1 -->
+    <article class="post-card" data-category="photos">
+      <div class="post-image">🌅</div>
+      <div class="post-header">
+        <span class="post-category">Фото</span>
+        <span class="post-date">28 августа 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Рассвет на крыше</h3>
+        <p class="post-text">
+          Встал в 5 утра, чтобы поймать этот момент. Город ещё спал,
+          а небо уже горело. Иногда стоит потерпеть бессонницу ради таких кадров.
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#рассвет</span>
+          <span class="post-tag">#город</span>
+        </div>
+        <div class="post-likes">♡ 234</div>
+      </div>
+    </article>
+
+    <!-- THOUGHT 2 -->
+    <article class="post-card" data-category="thoughts">
+      <div class="post-header">
+        <span class="post-category">Мысль</span>
+        <span class="post-date">27 августа 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">О творчестве и страхе</h3>
+        <p class="post-text">
+          Каждый раз, когда берусь за что-то новое, внутри поднимается волна страха.
+          "А вдруг не получится? А вдруг это плохо?" Но потом понимаю —
+          именно этот страх и есть признак того, что ты делаешь что-то важное.
+          Если не страшно, значит, не растишь.
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#творчество</span>
+          <span class="post-tag">#рост</span>
+        </div>
+        <div class="post-likes">♡ 78</div>
+      </div>
+    </article>
+
+    <!-- SONG 2 -->
+    <article class="post-card" data-category="songs">
+      <div class="post-header">
+        <span class="post-category">Песня</span>
+        <span class="post-date">25 августа 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Между строк (припев)</h3>
+        <p class="post-text lyrics">
+          Мы говорим, но не слышим друг друга,<br>
+          Читаем между строк то, что не сказали.<br>
+          И каждый день — как новая услуга,<br>
+          Что мы друг другу молча оказали...
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#отношения</span>
+          <span class="post-tag">#припев</span>
+        </div>
+        <div class="post-likes">♡ 112</div>
+      </div>
+    </article>
+
+    <!-- STORY 2 -->
+    <article class="post-card" data-category="stories">
+      <div class="post-header">
+        <span class="post-category">История</span>
+        <span class="post-date">23 августа 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Человек из зеркала</h3>
+        <p class="post-text story">
+          Он проснулся и не узнал себя. Не потому, что изменился внешне —
+          нет, лицо было то же. Но в глазах было что-то другое. Что-то,
+          чего он не помнил вчера. "Кто ты?" — спросил он отражение.
+          И зеркало молча улыбнулось в ответ...
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#фэнтези</span>
+          <span class="post-tag">#загадка</span>
+        </div>
+        <div class="post-likes">♡ 198</div>
+      </div>
+    </article>
+
+    <!-- PHOTO 2 -->
+    <article class="post-card" data-category="photos">
+      <div class="post-image">🌃</div>
+      <div class="post-header">
+        <span class="post-category">Фото</span>
+        <span class="post-date">20 августа 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Неоновые ночи</h3>
+        <p class="post-text">
+          Дождь превратил асфальт в зеркало. Город стал вдвое больше —
+          реальный и отражённый. walked through this doubled world
+          и чувствовал себя героем киберпанка.
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#ночь</span>
+          <span class="post-tag">#дождь</span>
+          <span class="post-tag">#неон</span>
+        </div>
+        <div class="post-likes">♡ 301</div>
+      </div>
+    </article>
+
+    <!-- THOUGHT 3 -->
+    <article class="post-card" data-category="thoughts">
+      <div class="post-header">
+        <span class="post-category">Мысль</span>
+        <span class="post-date">18 августа 2026</span>
+      </div>
+      <div class="post-content">
+        <h3 class="post-title">Простые вещи</h3>
+        <p class="post-text">
+          Заметил странную вещь: самые счастливые моменты — самые простые.
+          Не путешествия, не покупки, не достижения. А чашка кофе утром,
+          разговор с другом, случайная улыбка прохожего.
+          Счастье — это не пункт назначения. Это способ путешествовать.
+        </p>
+      </div>
+      <div class="post-footer">
+        <div class="post-tags">
+          <span class="post-tag">#счастье</span>
+          <span class="post-tag">#простота</span>
+        </div>
+        <div class="post-likes">♡ 145</div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">EVGENII AI</div>
+  <p class="footer-text">© 2026 · Творческий дневник Евгения · Все мысли, песни и истории — мои</p>
+</footer>
+
+<script>
+// ===== PRELOADER =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preloader').classList.add('hidden');
+  }, 1800);
+});
+
+// ===== FILTER =====
+const filterBtns = document.querySelectorAll('.filter-btn');
+const postCards = document.querySelectorAll('.post-card');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Update active button
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const filter = btn.dataset.filter;
+
+    // Filter posts
+    postCards.forEach(card => {
+      if (filter === 'all' || card.dataset.category === filter) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+
+// ===== SMOOTH SCROLL =====
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
