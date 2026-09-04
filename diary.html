@@ -8,7 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -35,6 +35,7 @@ body {
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
+  overflow-y: auto;
   line-height: 1.6;
 }
 
@@ -86,30 +87,48 @@ nav {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 20px 50px;
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
   backdrop-filter: blur(20px);
-  background: rgba(10, 10, 15, 0.7);
+  background: rgba(10, 10, 15, 0.85);
   border-bottom: 1px solid var(--border);
+  gap: 15px;
 }
 
 .logo {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 900;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-scroll {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-links {
   display: flex;
-  gap: 30px;
+  gap: 20px;
   list-style: none;
   align-items: center;
+  white-space: nowrap;
+  padding: 5px 0;
 }
 
 .nav-links a {
@@ -117,8 +136,8 @@ nav {
   font-weight: 500;
   color: var(--text-dim);
   transition: color 0.3s;
-  position: relative;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .nav-links a:hover { color: var(--text); }
@@ -138,6 +157,21 @@ nav {
   color: var(--accent-1);
 }
 
+.home-link {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(255, 230, 109, 0.1);
+  border: 1px solid rgba(255, 230, 109, 0.3);
+  font-size: 0.75rem;
+  color: var(--accent-3) !important;
+  cursor: pointer;
+}
+
+.home-link:hover {
+  background: rgba(255, 230, 109, 0.2);
+  border-color: var(--accent-3);
+}
+
 /* Hero */
 .hero {
   min-height: 100vh;
@@ -148,7 +182,7 @@ nav {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 0 20px;
+  padding: 80px 20px 0;
 }
 
 .hero-badge {
@@ -217,7 +251,7 @@ nav {
 .categories {
   position: relative;
   z-index: 1;
-  padding: 60px 50px;
+  padding: 60px 20px;
   text-align: center;
 }
 
@@ -231,13 +265,13 @@ nav {
 
 .filter-buttons {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .filter-btn {
-  padding: 12px 28px;
+  padding: 12px 24px;
   border-radius: 50px;
   background: var(--card);
   border: 1px solid var(--border);
@@ -272,13 +306,13 @@ nav {
 .posts-section {
   position: relative;
   z-index: 1;
-  padding: 0 50px 100px;
+  padding: 0 20px 100px;
 }
 
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -305,8 +339,6 @@ nav {
   border-color: rgba(255, 255, 255, 0.15);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
-
-.post-card.hidden { display: none; }
 
 .post-card[data-category="thoughts"] { --cat-color: var(--accent-1); }
 .post-card[data-category="songs"] { --cat-color: var(--accent-2); }
@@ -342,7 +374,7 @@ nav {
 }
 
 .post-title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 12px;
   line-height: 1.3;
@@ -390,6 +422,8 @@ nav {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .post-tags {
@@ -460,7 +494,7 @@ footer {
   display: none;
   position: relative;
   z-index: 1;
-  padding: 100px 50px 50px;
+  padding: 100px 20px 50px;
 }
 
 .admin-panel.active { display: block; }
@@ -479,7 +513,7 @@ footer {
 }
 
 .admin-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
@@ -490,7 +524,7 @@ footer {
 }
 
 .btn {
-  padding: 10px 20px;
+  padding: 10px 18px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--card);
@@ -530,8 +564,8 @@ footer {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
   margin-bottom: 40px;
 }
 
@@ -539,7 +573,7 @@ footer {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 25px;
+  padding: 20px;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -561,12 +595,12 @@ footer {
 .stat-icon.photos { background: rgba(168, 230, 207, 0.15); }
 
 .stat-info .num {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 900;
 }
 
 .stat-info .label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -576,14 +610,14 @@ footer {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 24px;
-  padding: 35px;
+  padding: 25px;
   margin-bottom: 40px;
 }
 
 .form-title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -591,8 +625,12 @@ footer {
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (min-width: 700px) {
+  .form-grid { grid-template-columns: 1fr 1fr; }
 }
 
 .form-group {
@@ -686,6 +724,7 @@ footer {
   gap: 10px;
   margin-top: 25px;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .posts-header {
@@ -698,7 +737,7 @@ footer {
 }
 
 .posts-title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 
@@ -709,7 +748,8 @@ footer {
   border: 1px solid var(--border);
   color: var(--text);
   font-size: 0.9rem;
-  min-width: 250px;
+  min-width: 200px;
+  flex: 1;
 }
 
 .search-box:focus {
@@ -727,10 +767,10 @@ footer {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 20px;
+  padding: 15px;
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
   transition: all 0.3s;
 }
@@ -746,8 +786,8 @@ footer {
 .post-item[data-category="photos"] { --cat-color: var(--accent-4); }
 
 .post-item-thumb {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   border-radius: 12px;
   background: linear-gradient(135deg, var(--cat-color), rgba(255, 255, 255, 0.1));
   background-size: cover;
@@ -755,7 +795,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
@@ -767,20 +807,21 @@ footer {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 0.95rem;
 }
 
 .post-item-meta {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
   display: flex;
-  gap: 15px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .post-item-category {
   padding: 3px 10px;
   border-radius: 10px;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -853,6 +894,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 10px;
+  max-width: 90%;
 }
 
 .toast.show {
@@ -864,16 +906,17 @@ footer {
 .toast.error { border-color: var(--danger); }
 
 @media (max-width: 768px) {
-  nav { padding: 15px 20px; }
+  nav { padding: 12px 15px; }
+  .logo { font-size: 1rem; }
   .nav-links { gap: 15px; }
-  .nav-links a { font-size: 0.75rem; }
-  .categories, .posts-section, .admin-panel { padding-left: 20px; padding-right: 20px; }
+  .nav-links a { font-size: 0.8rem; }
+  .categories, .posts-section, .admin-panel { padding-left: 15px; padding-right: 15px; }
   .posts-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 30px; }
-  .form-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 25px; }
   .post-item { grid-template-columns: 1fr; }
   .post-item-thumb { width: 100%; height: 120px; }
   .post-item-actions { justify-content: flex-end; }
+  .hero { padding-top: 70px; }
 }
 </style>
 </head>
@@ -888,15 +931,17 @@ footer {
 
 <nav>
   <div class="logo">EVGENII AI</div>
-  <ul class="nav-links">
-    <li><a onclick="showMainView()">Главная</a></li>
-    <li><a onclick="filterPosts('thoughts')">Мысли</a></li>
-    <li><a onclick="filterPosts('songs')">Песни</a></li>
-    <li><a onclick="filterPosts('stories')">Истории</a></li>
-    <li><a onclick="filterPosts('photos')">Фото</a></li>
-    <li><a class="admin-link" onclick="toggleAdminPanel()"> Админ</a></li>
-    <li><a class="admin-link" onclick="goToIndex()" style="border-color:var(--accent-3);color:var(--accent-3)">← Назад</a></li>
-  </ul>
+  <div class="nav-scroll">
+    <ul class="nav-links">
+      <li><a onclick="showMainView()">Главная</a></li>
+      <li><a onclick="filterPosts('thoughts')">Мысли</a></li>
+      <li><a onclick="filterPosts('songs')">Песни</a></li>
+      <li><a onclick="filterPosts('stories')">Истории</a></li>
+      <li><a onclick="filterPosts('photos')">Фото</a></li>
+      <li><a class="home-link" onclick="goToHome()">🏠 На главную</a></li>
+      <li><a class="admin-link" onclick="toggleAdminPanel()">⚙ Админ</a></li>
+    </ul>
+  </div>
 </nav>
 
 <!-- MAIN VIEW -->
@@ -918,7 +963,7 @@ footer {
       <button class="filter-btn" data-filter="thoughts">💭 Мысли <span class="filter-count" id="count-thoughts">0</span></button>
       <button class="filter-btn" data-filter="songs">🎵 Песни <span class="filter-count" id="count-songs">0</span></button>
       <button class="filter-btn" data-filter="stories">📖 Истории <span class="filter-count" id="count-stories">0</span></button>
-      <button class="filter-btn" data-filter="photos">📸 Фото <span class="filter-count" id="count-photos">0</span></button>
+      <button class="filter-btn" data-filter="photos"> Фото <span class="filter-count" id="count-photos">0</span></button>
     </div>
   </div>
 
@@ -957,9 +1002,9 @@ footer {
         <label class="form-label">Категория</label>
         <select class="form-select" id="postCategory">
           <option value="thoughts">💭 Мысль</option>
-          <option value="songs"> Песня</option>
+          <option value="songs">🎵 Песня</option>
           <option value="stories">📖 История</option>
-          <option value="photos"> Фото</option>
+          <option value="photos">📸 Фото</option>
         </select>
       </div>
 
@@ -986,7 +1031,7 @@ footer {
       <div class="form-group full">
         <label class="form-label">Ссылка на фото</label>
         <div class="form-hint">
-           <b>Как добавить фото:</b><br>
+          📌 <b>Как добавить фото:</b><br>
           1. Загрузи фото в папку <code>images</code> в своём репозитории GitHub.<br>
           2. Открой файл, нажми кнопку <b>Raw</b> и скопируй ссылку.<br>
           3. Вставь ссылку сюда.
@@ -1050,99 +1095,6 @@ const ADMIN_PASSWORD = 'N130289s';
 let allPosts = [];
 let unsubscribePosts = null;
 
-// ===== ЗАГРУЗКА ПОСТОВ ИЗ FIREBASE =====
-function loadPostsFromFirebase() {
-  if (!db) {
-    console.error('Firebase не подключён');
-    return;
-  }
-
-  // Отписываемся от предыдущего слушателя
-  if (unsubscribePosts) {
-    unsubscribePosts();
-  }
-
-  // Слушаем изменения в коллекции posts в реальном времени
-  unsubscribePosts = db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-    allPosts = [];
-    snapshot.forEach(doc => {
-      allPosts.push({ id: doc.id, ...doc.data() });
-    });
-    
-    console.log('Загружено постов:', allPosts.length);
-    renderPosts();
-    updateStats();
-    renderAdminPostsList();
-  }, error => {
-    console.error('Ошибка загрузки постов:', error);
-  });
-}
-
-// ===== СОХРАНЕНИЕ ПОСТА В FIREBASE =====
-async function savePostToFirebase(post) {
-  if (!db) {
-    showToast('❌ Firebase не подключён', 'error');
-    return null;
-  }
-
-  try {
-    const docRef = await db.collection('posts').add(post);
-    console.log('Пост сохранён с ID:', docRef.id);
-    return docRef.id;
-  } catch (error) {
-    console.error('Ошибка сохранения:', error);
-    showToast('❌ Ошибка сохранения: ' + error.message, 'error');
-    return null;
-  }
-}
-
-// ===== ОБНОВЛЕНИЕ ПОСТА В FIREBASE =====
-async function updatePostInFirebase(postId, postData) {
-  if (!db) {
-    showToast('❌ Firebase не подключён', 'error');
-    return false;
-  }
-
-  try {
-    await db.collection('posts').doc(postId).update(postData);
-    console.log('Пост обновлён:', postId);
-    return true;
-  } catch (error) {
-    console.error('Ошибка обновления:', error);
-    showToast('❌ Ошибка обновления: ' + error.message, 'error');
-    return false;
-  }
-}
-
-// ===== УДАЛЕНИЕ ПОСТА ИЗ FIREBASE =====
-async function deletePostFromFirebase(postId) {
-  if (!db) {
-    showToast('❌ Firebase не подключён', 'error');
-    return false;
-  }
-
-  try {
-    await db.collection('posts').doc(postId).delete();
-    console.log('Пост удалён:', postId);
-    return true;
-  } catch (error) {
-    console.error('Ошибка удаления:', error);
-    showToast('❌ Ошибка удаления: ' + error.message, 'error');
-    return false;
-  }
-}
-
-// ===== ОБНОВЛЕНИЕ ЛАЙКОВ В FIREBASE =====
-async function updateLikesInFirebase(postId, likes) {
-  if (!db) return;
-
-  try {
-    await db.collection('posts').doc(postId).update({ likes: likes });
-  } catch (error) {
-    console.error('Ошибка обновления лайков:', error);
-  }
-}
-
 // ===== НАВИГАЦИЯ =====
 function showMainView() {
   document.getElementById('mainView').style.display = 'block';
@@ -1156,14 +1108,103 @@ function toggleAdminPanel() {
     document.getElementById('mainView').style.display = 'none';
     document.getElementById('adminPanel').classList.add('active');
     renderAdminPostsList();
+    updateAdminStats();
     window.scrollTo(0, 0);
   } else if (password !== null) {
     alert('❌ Неверный пароль!');
   }
 }
 
-function goToIndex() {
+// КНОПКА "НА ГЛАВНУЮ" - возврат на страницу выбора проектов
+function goToHome() {
   window.location.href = 'index.html';
+}
+
+// ===== ЗАГРУЗКА ПОСТОВ ИЗ FIREBASE =====
+function loadPostsFromFirebase() {
+  if (!db) {
+    console.error('Firebase не подключён');
+    return;
+  }
+
+  if (unsubscribePosts) {
+    unsubscribePosts();
+  }
+
+  unsubscribePosts = db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+    allPosts = [];
+    snapshot.forEach(doc => {
+      allPosts.push({ id: doc.id, ...doc.data() });
+    });
+    
+    console.log('Загружено постов:', allPosts.length);
+    renderPosts();
+    updateStats();
+    if (document.getElementById('adminPanel').classList.contains('active')) {
+      renderAdminPostsList();
+      updateAdminStats();
+    }
+  }, error => {
+    console.error('Ошибка загрузки постов:', error);
+  });
+}
+
+// ===== FIREBASE ОПЕРАЦИИ =====
+async function savePostToFirebase(post) {
+  if (!db) {
+    showToast('❌ Firebase не подключён', 'error');
+    return null;
+  }
+  try {
+    const docRef = await db.collection('posts').add(post);
+    console.log('Пост сохранён:', docRef.id);
+    return docRef.id;
+  } catch (error) {
+    console.error('Ошибка сохранения:', error);
+    showToast('❌ Ошибка: ' + error.message, 'error');
+    return null;
+  }
+}
+
+async function updatePostInFirebase(postId, postData) {
+  if (!db) {
+    showToast('❌ Firebase не подключён', 'error');
+    return false;
+  }
+  try {
+    await db.collection('posts').doc(postId).update(postData);
+    console.log('Пост обновлён:', postId);
+    return true;
+  } catch (error) {
+    console.error('Ошибка обновления:', error);
+    showToast('❌ Ошибка: ' + error.message, 'error');
+    return false;
+  }
+}
+
+async function deletePostFromFirebase(postId) {
+  if (!db) {
+    showToast('❌ Firebase не подключён', 'error');
+    return false;
+  }
+  try {
+    await db.collection('posts').doc(postId).delete();
+    console.log('Пост удалён:', postId);
+    return true;
+  } catch (error) {
+    console.error('Ошибка удаления:', error);
+    showToast('❌ Ошибка: ' + error.message, 'error');
+    return false;
+  }
+}
+
+async function updateLikesInFirebase(postId, likes) {
+  if (!db) return;
+  try {
+    await db.collection('posts').doc(postId).update({ likes: likes });
+  } catch (error) {
+    console.error('Ошибка обновления лайков:', error);
+  }
 }
 
 // ===== РЕНДЕР =====
@@ -1321,7 +1362,7 @@ function renderAdminPostsList(search = '') {
           </div>
         </div>
         <div class="post-item-actions">
-          <button class="icon-btn edit" onclick="editPost('${p.id}')" title="Редактировать">✏️</button>
+          <button class="icon-btn edit" onclick="editPost('${p.id}')" title="Редактировать">️</button>
           <button class="icon-btn delete" onclick="deletePost('${p.id}')" title="Удалить">🗑️</button>
         </div>
       </div>
@@ -1357,6 +1398,7 @@ function updatePreview(url) {
     preview.style.display = 'block';
     box.style.display = 'none';
     removeBtn.style.display = 'inline-block';
+    box.classList.add('has-image');
   } else {
     clearImage();
   }
@@ -1366,6 +1408,7 @@ function clearImage() {
   document.getElementById('imageUrl').value = '';
   document.getElementById('imagePreview').style.display = 'none';
   document.getElementById('previewBox').style.display = 'flex';
+  document.getElementById('previewBox').classList.remove('has-image');
   document.getElementById('removeImage').style.display = 'none';
 }
 
@@ -1385,15 +1428,13 @@ async function savePost() {
   const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
 
   if (editingId) {
-    // Обновление существующего поста
-    const postData = { category, date, title, text, tags, image: imageUrl || undefined };
+    const postData = { category, date, title, text, tags, image: imageUrl || null };
     const success = await updatePostInFirebase(editingId, postData);
     if (success) {
       showToast('✅ Пост обновлён', 'success');
       cancelEdit();
     }
   } else {
-    // Создание нового поста
     const newPost = {
       category,
       date,
@@ -1460,7 +1501,7 @@ async function deletePost(id) {
   const success = await deletePostFromFirebase(id);
   if (success) {
     if (editingId === id) cancelEdit();
-    showToast('️ Пост удалён', 'success');
+    showToast('🗑️ Пост удалён', 'success');
   }
 }
 
@@ -1474,7 +1515,7 @@ function exportData() {
   a.href = URL.createObjectURL(blob);
   a.download = `evgenii-ai-backup-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
-  showToast('💾 Бэкап сохранён', 'success');
+  showToast(' Бэкап сохранён', 'success');
 }
 
 function importData(event) {
@@ -1487,12 +1528,10 @@ function importData(event) {
       if (!Array.isArray(imported)) throw new Error();
       if (!confirm(`Импортировать ${imported.length} постов? Текущие будут заменены.`)) return;
       
-      // Удаляем все старые посты
       for (const post of allPosts) {
         await deletePostFromFirebase(post.id);
       }
       
-      // Добавляем новые
       for (const post of imported) {
         await savePostToFirebase(post);
       }
@@ -1517,12 +1556,12 @@ function showToast(message, type = 'success') {
 window.addEventListener('load', () => {
   setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 1500);
   setTodayDate();
-  loadPostsFromFirebase(); // Загружаем посты из Firebase
+  loadPostsFromFirebase();
 });
 
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
-    loadPostsFromFirebase(); // Перезагружаем при возврате на вкладку
+    loadPostsFromFirebase();
   }
 });
 </script>
