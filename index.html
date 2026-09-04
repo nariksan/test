@@ -243,41 +243,50 @@ body {
   box-shadow: 0 20px 60px rgba(0, 243, 255, 0.6);
 }
 
+/* Project Selector */
+.selector-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: nowrap;
+  margin-bottom: 35px;
+  padding: 0 10px;
+}
+
 .selector-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  font-size: clamp(1rem, 4vw, 2rem);
   font-weight: 700;
-  letter-spacing: 0.15em;
-  margin-bottom: 15px;
-  text-align: center;
+  letter-spacing: 0.1em;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-transform: uppercase;
-  padding: 0 10px;
+  white-space: nowrap;
+  margin: 0;
 }
 
 .selector-subtitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  font-size: clamp(0.85rem, 3vw, 1.1rem);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 40px;
-  text-align: center;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0 10px;
+  white-space: nowrap;
+  margin: 0;
 }
 
 .project-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 25px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
   width: 100%;
 }
 
 .project-card {
-  padding: 40px 30px;
+  padding: 35px 25px;
   background: rgba(20, 20, 40, 0.4);
   border: 2px solid rgba(0, 243, 255, 0.2);
   border-radius: 24px;
@@ -294,17 +303,17 @@ body {
 }
 
 .project-card-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
+  font-size: 3.5rem;
+  margin-bottom: 15px;
   display: block;
 }
 
 .project-card-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.3rem, 4vw, 1.6rem);
+  font-size: clamp(1rem, 3.5vw, 1.4rem);
   font-weight: 700;
   letter-spacing: 0.12em;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   text-transform: uppercase;
   background: linear-gradient(135deg, #fff, var(--neon-cyan));
   -webkit-background-clip: text;
@@ -313,10 +322,10 @@ body {
 
 .project-card-desc {
   font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-size: clamp(0.8rem, 2.5vw, 0.95rem);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.6);
-  line-height: 1.6;
+  line-height: 1.5;
   letter-spacing: 0.05em;
 }
 
@@ -473,35 +482,111 @@ body {
   }
   
   .main-container {
-    padding: 15px;
+    padding: 10px;
     align-items: flex-start;
-    padding-top: 40px;
+    padding-top: 30px;
   }
   
   .login-screen, .project-selector {
-    padding: 10px 0;
+    padding: 5px 0;
+  }
+  
+  .login-logo {
+    font-size: clamp(2rem, 8vw, 3rem);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  
+  .ai-badge {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    margin-left: 6px;
   }
   
   .login-slogan {
-    margin-bottom: 35px;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    margin-bottom: 25px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  
+  .login-form {
+    gap: 18px;
+  }
+  
+  .login-input {
+    padding: 16px 20px;
+    font-size: 0.95rem;
+  }
+  
+  .login-btn {
+    padding: 16px;
+    font-size: 1rem;
+  }
+  
+  .selector-header {
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: nowrap;
+  }
+  
+  .selector-title {
+    font-size: clamp(0.9rem, 4vw, 1.3rem);
+    letter-spacing: 0.08em;
   }
   
   .selector-subtitle {
-    margin-bottom: 30px;
+    font-size: clamp(0.75rem, 2.8vw, 0.9rem);
+  }
+  
+  .project-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
   }
   
   .project-card {
-    padding: 30px 20px;
+    padding: 25px 15px;
+    border-radius: 18px;
   }
   
   .project-card-icon {
-    font-size: 3rem;
-    margin-bottom: 15px;
+    font-size: 2.8rem;
+    margin-bottom: 12px;
+  }
+  
+  .project-card-title {
+    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  
+  .project-card-desc {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  .license-content {
+    padding: 20px 15px;
+    border-radius: 18px;
+  }
+  
+  .license-title {
+    font-size: clamp(1rem, 4vw, 1.3rem);
+  }
+  
+  .license-text {
+    font-size: 0.85rem;
   }
 }
 
 @media (min-width: 700px) {
-  .project-grid { grid-template-columns: repeat(2, 1fr); }
+  .project-grid { 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
 }
 </style>
 </head>
@@ -544,8 +629,10 @@ body {
 
   <!-- Project Selector -->
   <div class="project-selector" id="projectSelector">
-    <h1 class="selector-title">ВЫБЕРИТЕ ПРОЕКТ</h1>
-    <p class="selector-subtitle">Куда направим энергию сегодня?</p>
+    <div class="selector-header">
+      <h1 class="selector-title">ОДИН ПРОЕКТ — ДВЕ ВСЕЛЕННЫЕ</h1>
+      <p class="selector-subtitle">Куда направим энергию сегодня?</p>
+    </div>
     
     <div class="project-grid">
       <div class="project-card" onclick="selectProject('music')">
@@ -568,7 +655,7 @@ body {
 <div class="license-modal" id="licenseModal">
   <div class="license-content">
     <div class="license-header">
-      <div class="license-icon">📜</div>
+      <div class="license-icon"></div>
       <h2 class="license-title" id="licenseTitle">Загрузка...</h2>
     </div>
     
@@ -655,7 +742,7 @@ const DEFAULT_LICENSE = {
       type: 'text'
     },
     {
-      icon: '🔒',
+      icon: '',
       title: '5. Конфиденциальность',
       content: 'Проект использует технологию Firebase для хранения данных обсуждений и настроек. Персональные данные пользователей (имя) хранятся локально в браузере и не передаются третьим лицам.',
       type: 'text'
@@ -667,7 +754,7 @@ const DEFAULT_LICENSE = {
       type: 'text'
     },
     {
-      icon: '📅',
+      icon: '',
       title: '7. Изменения соглашения',
       content: 'Автор оставляет за собой право вносить изменения в данное соглашение. Актуальная версия всегда доступна на сайте. Продолжение использования проекта означает принятие обновлённых условий.',
       type: 'text'
