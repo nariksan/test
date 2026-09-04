@@ -26,6 +26,7 @@
   --accent-4: #a8e6cf;
   --success: #4ecdc4;
   --danger: #ff6b6b;
+  --warning: #ffb347;
 }
 
 html { scroll-behavior: smooth; }
@@ -49,36 +50,136 @@ a { color: inherit; text-decoration: none; }
               radial-gradient(circle at 85% 80%, rgba(78,205,196,0.06), transparent 50%);
 }
 
-/* Preloader */
-.preloader {
+/* ===== ЭКРАН АВТОРИЗАЦИИ ===== */
+.auth-screen {
   position: fixed;
   inset: 0;
+  z-index: 5000;
   background: var(--bg);
-  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  transition: opacity 0.8s, visibility 0.8s;
-}
-.preloader.hidden { opacity: 0; visibility: hidden; }
-.preloader-title {
-  font-size: clamp(2rem, 6vw, 4rem);
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.preloader-sub {
-  margin-top: 15px;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
+  padding: 20px;
 }
 
-/* Nav */
+.auth-container {
+  width: 100%;
+  max-width: 450px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 30px;
+  backdrop-filter: blur(20px);
+}
+
+.auth-logo {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.auth-tab.active {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+  border-color: transparent;
+}
+
+.auth-form { display: none; flex-direction: column; gap: 15px; }
+.auth-form.active { display: flex; }
+
+.auth-input {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+.auth-input:focus { outline: none; border-color: var(--accent-2); }
+
+.auth-btn {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.auth-hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 15px;
+  line-height: 1.5;
+}
+
+.auth-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  text-align: center;
+  min-height: 20px;
+}
+
+.auth-divider {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin: 15px 0;
+  position: relative;
+}
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--border);
+}
+.auth-divider::before { left: 0; }
+.auth-divider::after { right: 0; }
+
+/* ===== NAV ===== */
 nav {
   position: fixed;
   top: 0;
@@ -139,6 +240,31 @@ nav {
   flex-shrink: 0;
 }
 
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+}
+
 .btn-small {
   padding: 8px 16px;
   border-radius: 20px;
@@ -160,8 +286,10 @@ nav {
 .btn-small.primary:hover { box-shadow: 0 0 20px rgba(255,107,107,0.4); }
 .btn-small.home { border-color: var(--accent-3); color: var(--accent-3); }
 .btn-small.home:hover { background: rgba(255,230,109,0.15); }
+.btn-small.admin { border-color: var(--warning); color: var(--warning); }
+.btn-small.admin:hover { background: rgba(255,179,71,0.15); }
 
-/* Hero */
+/* ===== HERO ===== */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -237,7 +365,7 @@ nav {
   margin-top: 5px;
 }
 
-/* Categories */
+/* ===== CATEGORIES ===== */
 .categories {
   position: relative;
   z-index: 1;
@@ -282,7 +410,7 @@ nav {
 }
 .filter-count { font-size: 0.75rem; opacity: 0.7; }
 
-/* Posts */
+/* ===== POSTS ===== */
 .posts-section {
   position: relative;
   z-index: 1;
@@ -324,6 +452,29 @@ nav {
 .post-card[data-category="songs"] { --cat-color: var(--accent-2); }
 .post-card[data-category="stories"] { --cat-color: var(--accent-3); }
 .post-card[data-category="photos"] { --cat-color: var(--accent-4); }
+
+.post-status-bar {
+  padding: 8px 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.post-status-bar.pending {
+  background: rgba(255,179,71,0.15);
+  color: var(--warning);
+  border-bottom: 1px solid rgba(255,179,71,0.2);
+}
+
+.post-status-bar.rejected {
+  background: rgba(255,107,107,0.15);
+  color: var(--danger);
+  border-bottom: 1px solid rgba(255,107,107,0.2);
+}
 
 .post-author {
   padding: 15px 20px 0;
@@ -399,22 +550,6 @@ nav {
   font-size: 1rem;
 }
 
-.post-image {
-  width: 100%;
-  height: 250px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.post-image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 60%, var(--bg));
-}
-
 .post-footer {
   padding: 0 20px 20px;
   display: flex;
@@ -480,7 +615,7 @@ nav {
 }
 .empty-state .emoji { font-size: 4rem; margin-bottom: 20px; }
 
-/* Footer */
+/* ===== FOOTER ===== */
 footer {
   position: relative;
   z-index: 1;
@@ -499,7 +634,7 @@ footer {
 }
 .footer-text { font-size: 0.85rem; color: var(--text-dim); }
 
-/* Floating Action Button */
+/* ===== FAB ===== */
 .fab {
   position: fixed;
   bottom: 30px;
@@ -524,7 +659,7 @@ footer {
   box-shadow: 0 15px 40px rgba(255,107,107,0.6);
 }
 
-/* Modal */
+/* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -549,6 +684,8 @@ footer {
   max-height: 90vh;
   overflow-y: auto;
 }
+
+.modal-content.wide { max-width: 900px; }
 
 .modal-title {
   font-size: 1.5rem;
@@ -602,21 +739,6 @@ footer {
   margin-bottom: 15px;
 }
 
-.image-preview-box {
-  border: 2px dashed var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  text-align: center;
-  min-height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  transition: all 0.3s;
-}
-.image-preview-box.has-image { border-style: solid; border-color: var(--accent-2); }
-.image-preview { max-width: 100%; max-height: 200px; border-radius: 8px; display: none; }
-
 .form-actions {
   display: flex;
   gap: 10px;
@@ -648,8 +770,111 @@ footer {
 .btn-primary:hover { box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
 .btn-danger { border-color: var(--danger); color: var(--danger); }
 .btn-danger:hover { background: rgba(255,107,107,0.15); }
+.btn-success { border-color: var(--success); color: var(--success); }
+.btn-success:hover { background: rgba(78,205,196,0.15); }
+.btn-warning { border-color: var(--warning); color: var(--warning); }
+.btn-warning:hover { background: rgba(255,179,71,0.15); }
 
-/* Toast */
+/* ===== ADMIN PANEL ===== */
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.admin-tab {
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-tab:hover { background: var(--card-2); }
+.admin-tab.active {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+  border-color: transparent;
+}
+
+.admin-tab .count {
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
+
+.admin-post-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: all 0.3s;
+}
+.admin-post-item:hover { border-color: rgba(255,255,255,0.15); }
+
+.admin-post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-post-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.admin-post-meta {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.admin-post-text {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  max-height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.admin-post-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.status-badge.pending { background: rgba(255,179,71,0.15); color: var(--warning); }
+.status-badge.approved { background: rgba(78,205,196,0.15); color: var(--success); }
+.status-badge.rejected { background: rgba(255,107,107,0.15); color: var(--danger); }
+
+/* ===== TOAST ===== */
 .toast {
   position: fixed;
   bottom: 30px;
@@ -683,19 +908,54 @@ footer {
   .form-grid { grid-template-columns: 1fr; }
   .hero { padding-top: 80px; }
   .fab { bottom: 20px; right: 20px; width: 55px; height: 55px; }
+  .user-badge span.user-name-text { display: none; }
 }
 </style>
 </head>
 <body>
 
-<div class="preloader" id="preloader">
-  <div class="preloader-title">EVGENII AI</div>
-  <div class="preloader-sub">Загрузка творческого пространства</div>
-</div>
-
 <div class="bg-gradient"></div>
 
-<nav>
+<!-- ===== ЭКРАН АВТОРИЗАЦИИ ===== -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-container">
+    <div class="auth-logo">EVGENII AI</div>
+    <div class="auth-subtitle">Творческий дневник</div>
+    
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchAuthTab('login')">Вход</div>
+      <div class="auth-tab" onclick="switchAuthTab('register')">Регистрация</div>
+    </div>
+    
+    <!-- ФОРМА ВХОДА -->
+    <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+      <input type="text" class="auth-input" id="loginPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
+      <input type="text" class="auth-input" id="loginName" placeholder="Ваше имя" required>
+      <input type="password" class="auth-input" id="loginPassword" placeholder="Пароль" required>
+      <div class="auth-error" id="loginError"></div>
+      <button type="submit" class="auth-btn">ВОЙТИ</button>
+      <div class="auth-hint">
+        Читаете без регистрации? Просто нажмите "Вход" с любыми данными для просмотра.
+      </div>
+    </form>
+    
+    <!-- ФОРМА РЕГИСТРАЦИИ -->
+    <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+      <input type="text" class="auth-input" id="regPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
+      <input type="text" class="auth-input" id="regName" placeholder="Ваше имя" required>
+      <input type="password" class="auth-input" id="regPassword" placeholder="Придумайте пароль" minlength="4" required>
+      <input type="password" class="auth-input" id="regPasswordConfirm" placeholder="Повторите пароль" minlength="4" required>
+      <div class="auth-error" id="regError"></div>
+      <button type="submit" class="auth-btn">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+      <div class="auth-hint">
+        После регистрации вы сможете публиковать свои записи.
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== НАВИГАЦИЯ ===== -->
+<nav id="mainNav" style="display:none;">
   <div class="logo">EVGENII AI</div>
   <div class="nav-scroll">
     <ul class="nav-links">
@@ -707,13 +967,19 @@ footer {
     </ul>
   </div>
   <div class="nav-right">
-    <button class="btn-small home" onclick="goToHome()">🏠 На главную</button>
-    <button class="btn-small primary" onclick="openCreateModal()">️ Написать</button>
+    <div class="user-badge" id="userBadge" style="display:none;">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span class="user-name-text" id="userNameDisplay">Гость</span>
+    </div>
+    <button class="btn-small home" onclick="goToHome()"> На главную</button>
+    <button class="btn-small primary" id="writeBtn" onclick="openCreateModal()" style="display:none;">✏️ Написать</button>
+    <button class="btn-small admin" id="adminBtn" onclick="openAdminLogin()">️ Админ</button>
+    <button class="btn-small" id="logoutBtn" onclick="handleLogout()" style="display:none;">Выйти</button>
   </div>
 </nav>
 
-<!-- MAIN VIEW -->
-<div id="mainView">
+<!-- ===== MAIN VIEW ===== -->
+<div id="mainView" style="display:none;">
   <section class="hero">
     <div class="hero-badge">✨ Творческий дневник</div>
     <h1 class="hero-title">EVGENII AI</h1>
@@ -731,7 +997,7 @@ footer {
       <button class="filter-btn" data-filter="thoughts">💭 Мысли <span class="filter-count" id="count-thoughts">0</span></button>
       <button class="filter-btn" data-filter="songs">🎵 Песни <span class="filter-count" id="count-songs">0</span></button>
       <button class="filter-btn" data-filter="stories">📖 Истории <span class="filter-count" id="count-stories">0</span></button>
-      <button class="filter-btn" data-filter="photos">📸 Фото <span class="filter-count" id="count-photos">0</span></button>
+      <button class="filter-btn" data-filter="photos"> Фото <span class="filter-count" id="count-photos">0</span></button>
     </div>
   </div>
 
@@ -745,10 +1011,10 @@ footer {
   </footer>
 </div>
 
-<!-- FAB -->
-<button class="fab" onclick="openCreateModal()" title="Создать запись">✏️</button>
+<!-- ===== FAB ===== -->
+<button class="fab" id="fabBtn" onclick="openCreateModal()" style="display:none;" title="Создать запись">✏️</button>
 
-<!-- CREATE/EDIT MODAL -->
+<!-- ===== МОДАЛКА СОЗДАНИЯ/РЕДАКТИРОВАНИЯ ===== -->
 <div class="modal-overlay" id="createModal">
   <div class="modal-content">
     <div class="modal-title">
@@ -756,12 +1022,16 @@ footer {
       <span id="modalTitleText">Новая запись</span>
     </div>
 
+    <div class="form-hint" id="moderationHint" style="display:none;">
+      ⚠️ <b>Внимание:</b> После публикации запись отправится на модерацию. Она появится на сайте после одобрения администратора.
+    </div>
+
     <div class="form-grid">
       <div class="form-group">
         <label class="form-label">Категория</label>
         <select class="form-select" id="postCategory">
           <option value="thoughts">💭 Мысль</option>
-          <option value="songs"> Песня</option>
+          <option value="songs">🎵 Песня</option>
           <option value="stories">📖 История</option>
           <option value="photos">📸 Фото</option>
         </select>
@@ -786,29 +1056,104 @@ footer {
         <label class="form-label">Теги (через запятую)</label>
         <input type="text" class="form-input" id="postTags" placeholder="ночь, город, лирика">
       </div>
-
-      <div class="form-group full">
-        <label class="form-label">Ссылка на фото</label>
-        <div class="form-hint">
-          📌 <b>Как добавить фото:</b><br>
-          1. Загрузи фото в папку <code>images</code> в своём репозитории GitHub.<br>
-          2. Открой файл, нажми кнопку <b>Raw</b> и скопируй ссылку.<br>
-          3. Вставь ссылку сюда.
-        </div>
-        <input type="url" class="form-input" id="imageUrl" placeholder="https://raw.githubusercontent.com/..." oninput="updatePreview(this.value)">
-        
-        <div class="image-preview-box" id="previewBox" style="margin-top: 15px;">
-          <span style="color: var(--text-dim); font-size: 2rem;">🖼️</span>
-          <span style="color: var(--text-dim); margin-top: 10px;">Предпросмотр появится здесь</span>
-        </div>
-        <img id="imagePreview" class="image-preview">
-        <button type="button" class="btn btn-danger" id="removeImage" style="display:none; margin-top: 10px;" onclick="clearImage()">Удалить фото</button>
-      </div>
     </div>
 
     <div class="form-actions">
       <button class="btn" onclick="closeCreateModal()">Отмена</button>
-      <button class="btn btn-primary" id="saveBtn" onclick="savePost()">✨ Опубликовать</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="savePost()">✨ Отправить на модерацию</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== МОДАЛКА ВХОДА АДМИНА ===== -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal-content" style="max-width:400px;">
+    <div class="modal-title">🔐 Вход для администратора</div>
+    <p style="color:var(--text-dim); margin-bottom:20px; font-size:0.9rem;">Введите пароль владельца сайта</p>
+    <input type="password" class="form-input" id="adminPassword" placeholder="Пароль администратора" style="margin-bottom:15px;">
+    <div class="auth-error" id="adminError" style="margin-bottom:15px;"></div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn" onclick="closeAdminLogin()" style="flex:1;">Отмена</button>
+      <button class="btn btn-primary" onclick="checkAdminPassword()" style="flex:1;">Войти</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== АДМИН-ПАНЕЛЬ ===== -->
+<div class="modal-overlay" id="adminPanelModal">
+  <div class="modal-content wide">
+    <div class="modal-title" style="justify-content:space-between;">
+      <span>⚙️ Панель модерации</span>
+      <button class="btn" onclick="closeAdminPanel()">✕ Закрыть</button>
+    </div>
+
+    <div class="admin-tabs">
+      <div class="admin-tab active" data-tab="pending" onclick="switchAdminTab('pending')">
+        ⏳ На модерации <span class="count" id="pendingCount">0</span>
+      </div>
+      <div class="admin-tab" data-tab="approved" onclick="switchAdminTab('approved')">
+        ✅ Опубликовано <span class="count" id="approvedCount">0</span>
+      </div>
+      <div class="admin-tab" data-tab="rejected" onclick="switchAdminTab('rejected')">
+        ❌ Отклонено <span class="count" id="rejectedCount">0</span>
+      </div>
+      <div class="admin-tab" data-tab="all" onclick="switchAdminTab('all')">
+        📋 Все <span class="count" id="allCount">0</span>
+      </div>
+    </div>
+
+    <div id="adminPostsList"></div>
+  </div>
+</div>
+
+<!-- ===== МОДАЛКА РЕДАКТИРОВАНИЯ АДМИНОМ ===== -->
+<div class="modal-overlay" id="adminEditModal">
+  <div class="modal-content">
+    <div class="modal-title">
+      <span>✏️</span>
+      <span>Редактирование записи</span>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Категория</label>
+        <select class="form-select" id="adminEditCategory">
+          <option value="thoughts">💭 Мысль</option>
+          <option value="songs"> Песня</option>
+          <option value="stories">📖 История</option>
+          <option value="photos">📸 Фото</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Дата</label>
+        <input type="text" class="form-input" id="adminEditDate">
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Заголовок</label>
+        <input type="text" class="form-input" id="adminEditTitle">
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Текст</label>
+        <textarea class="form-textarea" id="adminEditText" style="min-height:200px;"></textarea>
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Теги (через запятую)</label>
+        <input type="text" class="form-input" id="adminEditTags">
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Комментарий модератора (необязательно)</label>
+        <input type="text" class="form-input" id="adminEditNote" placeholder="Например: Исправьте орфографию">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" onclick="closeAdminEdit()">Отмена</button>
+      <button class="btn btn-primary" onclick="saveAdminEdit()">💾 Сохранить</button>
     </div>
   </div>
 </div>
@@ -833,31 +1178,185 @@ try {
   console.log('Firebase подключён');
 } catch (e) { console.error('Ошибка Firebase:', e); }
 
-// ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
-const userName = localStorage.getItem('evgenii_user');
-const licenseAccepted = localStorage.getItem('evgenii_agreement_accepted') === 'true';
+// ===== КОНСТАНТЫ =====
+const ADMIN_PASSWORD = 'N130289s';
+const USERS_COLLECTION = 'diary_users';
+const POSTS_COLLECTION = 'diary_posts';
 
-if (!userName || !licenseAccepted) {
-  window.location.href = 'index.html';
-}
-
-// ===== ДАННЫЕ =====
+// ===== СОСТОЯНИЕ =====
+let currentUser = null; // { id, phoneLast4, name, password }
+let isAdmin = false;
 let allPosts = [];
 let unsubscribePosts = null;
 let editingId = null;
+let adminEditingId = null;
 let currentFilter = 'all';
+let currentAdminTab = 'pending';
 
-// ===== НАВИГАЦИЯ =====
-function showMainView() {
+// ===== ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ =====
+window.addEventListener('load', () => {
+  const savedUser = localStorage.getItem('diary_current_user');
+  if (savedUser) {
+    try {
+      currentUser = JSON.parse(savedUser);
+      showMainApp();
+    } catch(e) {
+      localStorage.removeItem('diary_current_user');
+    }
+  }
+});
+
+// ===== АВТОРИЗАЦИЯ =====
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+  
+  if (tab === 'login') {
+    document.querySelectorAll('.auth-tab')[0].classList.add('active');
+    document.getElementById('loginForm').classList.add('active');
+  } else {
+    document.querySelectorAll('.auth-tab')[1].classList.add('active');
+    document.getElementById('registerForm').classList.add('active');
+  }
+  
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('regError').textContent = '';
+}
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const phone = document.getElementById('regPhone').value.trim();
+  const name = document.getElementById('regName').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+  const errorEl = document.getElementById('regError');
+  
+  if (phone.length !== 4 || !/^\d{4}$/.test(phone)) {
+    errorEl.textContent = 'Введите ровно 4 цифры телефона';
+    return;
+  }
+  
+  if (password !== passwordConfirm) {
+    errorEl.textContent = 'Пароли не совпадают';
+    return;
+  }
+  
+  if (password.length < 4) {
+    errorEl.textContent = 'Пароль должен быть минимум 4 символа';
+    return;
+  }
+  
+  if (!db) {
+    errorEl.textContent = 'База данных недоступна';
+    return;
+  }
+  
+  try {
+    // Проверяем, существует ли пользователь
+    const snapshot = await db.collection(USERS_COLLECTION)
+      .where('phoneLast4', '==', phone)
+      .where('name', '==', name)
+      .get();
+    
+    if (!snapshot.empty) {
+      errorEl.textContent = 'Пользователь с такими данными уже существует. Войдите.';
+      return;
+    }
+    
+    // Создаём пользователя
+    const userData = {
+      phoneLast4: phone,
+      name: name,
+      password: password,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    
+    const docRef = await db.collection(USERS_COLLECTION).add(userData);
+    
+    currentUser = {
+      id: docRef.id,
+      phoneLast4: phone,
+      name: name,
+      password: password
+    };
+    
+    localStorage.setItem('diary_current_user', JSON.stringify(currentUser));
+    showToast('✅ Регистрация успешна!', 'success');
+    showMainApp();
+  } catch (error) {
+    console.error(error);
+    errorEl.textContent = 'Ошибка: ' + error.message;
+  }
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const phone = document.getElementById('loginPhone').value.trim();
+  const name = document.getElementById('loginName').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errorEl = document.getElementById('loginError');
+  
+  if (!db) {
+    errorEl.textContent = 'База данных недоступна';
+    return;
+  }
+  
+  try {
+    const snapshot = await db.collection(USERS_COLLECTION)
+      .where('phoneLast4', '==', phone)
+      .where('name', '==', name)
+      .where('password', '==', password)
+      .get();
+    
+    if (snapshot.empty) {
+      errorEl.textContent = 'Неверные данные. Проверьте телефон, имя и пароль.';
+      return;
+    }
+    
+    const doc = snapshot.docs[0];
+    currentUser = {
+      id: doc.id,
+      ...doc.data()
+    };
+    
+    localStorage.setItem('diary_current_user', JSON.stringify(currentUser));
+    showToast('👋 Добро пожаловать, ' + currentUser.name + '!', 'success');
+    showMainApp();
+  } catch (error) {
+    console.error(error);
+    errorEl.textContent = 'Ошибка: ' + error.message;
+  }
+}
+
+function handleLogout() {
+  if (!confirm('Выйти из аккаунта?')) return;
+  currentUser = null;
+  isAdmin = false;
+  localStorage.removeItem('diary_current_user');
+  location.reload();
+}
+
+function showMainApp() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('mainNav').style.display = 'flex';
   document.getElementById('mainView').style.display = 'block';
-  window.scrollTo(0, 0);
+  
+  // Показываем бейдж пользователя
+  document.getElementById('userBadge').style.display = 'flex';
+  document.getElementById('userAvatar').textContent = currentUser.name[0].toUpperCase();
+  document.getElementById('userNameDisplay').textContent = currentUser.name;
+  
+  // Показываем кнопку "Написать"
+  document.getElementById('writeBtn').style.display = 'inline-flex';
+  document.getElementById('fabBtn').style.display = 'flex';
+  document.getElementById('logoutBtn').style.display = 'inline-flex';
+  
+  // Загружаем посты
+  loadPostsFromFirebase();
+  setTodayDate();
 }
 
-function goToHome() {
-  window.location.href = 'index.html';
-}
-
-// ===== ЗАГРУЗКА ПОСТОВ ИЗ FIREBASE =====
+// ===== ЗАГРУЗКА ПОСТОВ =====
 function loadPostsFromFirebase() {
   if (!db) {
     console.error('Firebase не подключён');
@@ -866,115 +1365,120 @@ function loadPostsFromFirebase() {
 
   if (unsubscribePosts) unsubscribePosts();
 
-  unsubscribePosts = db.collection('diary_posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-    allPosts = [];
-    snapshot.forEach(doc => {
-      allPosts.push({ id: doc.id, ...doc.data() });
+  unsubscribePosts = db.collection(POSTS_COLLECTION)
+    .orderBy('createdAt', 'desc')
+    .onSnapshot(snapshot => {
+      allPosts = [];
+      snapshot.forEach(doc => {
+        allPosts.push({ id: doc.id, ...doc.data() });
+      });
+      
+      console.log('Загружено постов:', allPosts.length);
+      renderPosts();
+      updateStats();
+      if (isAdmin) renderAdminPosts();
+    }, error => {
+      console.error('Ошибка загрузки постов:', error);
     });
-    
-    console.log('Загружено постов:', allPosts.length);
-    renderPosts();
-    updateStats();
-  }, error => {
-    console.error('Ошибка загрузки постов:', error);
-  });
 }
 
 // ===== СОХРАНЕНИЕ ПОСТА =====
 async function savePostToFirebase(post) {
   if (!db) {
-    showToast('❌ Firebase не подключён', 'error');
+    showToast('❌ База данных недоступна', 'error');
     return null;
   }
   try {
-    const docRef = await db.collection('diary_posts').add(post);
-    console.log('Пост сохранён:', docRef.id);
+    const docRef = await db.collection(POSTS_COLLECTION).add(post);
     return docRef.id;
   } catch (error) {
-    console.error('Ошибка сохранения:', error);
+    console.error(error);
     showToast('❌ Ошибка: ' + error.message, 'error');
     return null;
   }
 }
 
-// ===== ОБНОВЛЕНИЕ ПОСТА =====
 async function updatePostInFirebase(postId, postData) {
   if (!db) {
-    showToast('❌ Firebase не подключён', 'error');
+    showToast('❌ База данных недоступна', 'error');
     return false;
   }
   try {
-    await db.collection('diary_posts').doc(postId).update(postData);
-    console.log('Пост обновлён:', postId);
+    await db.collection(POSTS_COLLECTION).doc(postId).update(postData);
     return true;
   } catch (error) {
-    console.error('Ошибка обновления:', error);
+    console.error(error);
     showToast('❌ Ошибка: ' + error.message, 'error');
     return false;
   }
 }
 
-// ===== УДАЛЕНИЕ ПОСТА =====
 async function deletePostFromFirebase(postId) {
   if (!db) {
-    showToast('❌ Firebase не подключён', 'error');
+    showToast('❌ База данных недоступна', 'error');
     return false;
   }
   try {
-    await db.collection('diary_posts').doc(postId).delete();
-    console.log('Пост удалён:', postId);
+    await db.collection(POSTS_COLLECTION).doc(postId).delete();
     return true;
   } catch (error) {
-    console.error('Ошибка удаления:', error);
+    console.error(error);
     showToast('❌ Ошибка: ' + error.message, 'error');
     return false;
   }
 }
 
-// ===== ОБНОВЛЕНИЕ ЛАЙКОВ =====
-async function updateLikesInFirebase(postId, likes) {
-  if (!db) return;
-  try {
-    await db.collection('diary_posts').doc(postId).update({ likes: likes });
-  } catch (error) {
-    console.error('Ошибка обновления лайков:', error);
-  }
-}
-
-// ===== РЕНДЕР =====
+// ===== РЕНДЕР ПОСТОВ =====
 const categoryNames = { thoughts: 'Мысль', songs: 'Песня', stories: 'История', photos: 'Фото' };
 const categoryTextClass = { thoughts: '', songs: 'lyrics', stories: 'story', photos: '' };
+
+function getVisiblePosts() {
+  // Обычные пользователи видят только одобренные + свои (любые статусы)
+  return allPosts.filter(post => {
+    if (post.status === 'approved') return true;
+    if (currentUser && post.authorId === currentUser.id) return true;
+    return false;
+  });
+}
 
 function renderPosts(filter = 'all') {
   const grid = document.getElementById('postsGrid');
   const liked = getLikedPosts();
-  const filtered = filter === 'all' ? allPosts : allPosts.filter(p => p.category === filter);
+  const visiblePosts = getVisiblePosts();
+  const filtered = filter === 'all' ? visiblePosts : visiblePosts.filter(p => p.category === filter);
 
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div class="empty-state">
         <div class="emoji">📝</div>
         <h3>Пока тут пусто</h3>
-        <p>Нажми кнопку "✏️ Написать" и создай первую запись!</p>
+        <p>${currentUser ? 'Нажми кнопку "️ Написать" и создай первую запись!' : 'Зарегистрируйтесь, чтобы писать свои записи.'}</p>
       </div>`;
     return;
   }
 
   grid.innerHTML = filtered.map(post => {
     const isLiked = liked.includes(post.id);
-    const imageHtml = post.image ? `<div class="post-image" style="background-image:url('${post.image}')"></div>` : '';
     const tagsHtml = (post.tags || []).map(t => `<span class="post-tag">#${t}</span>`).join('');
     const authorInitial = (post.author || '?')[0].toUpperCase();
-    const isAuthor = post.author === userName;
+    const isAuthor = currentUser && post.authorId === currentUser.id;
     
-    const editButtons = isAuthor ? `
+    // Статус-бар для своих неподтверждённых постов
+    let statusBar = '';
+    if (isAuthor && post.status === 'pending') {
+      statusBar = '<div class="post-status-bar pending">⏳ На модерации</div>';
+    } else if (isAuthor && post.status === 'rejected') {
+      statusBar = `<div class="post-status-bar rejected"> Отклонено${post.adminNote ? ': ' + escapeHtml(post.adminNote) : ''}</div>`;
+    }
+    
+    const editButtons = isAuthor && post.status !== 'pending' ? `
       <button class="post-edit-btn" onclick="editPost('${post.id}')" title="Редактировать">✏️</button>
       <button class="post-edit-btn delete" onclick="deletePost('${post.id}')" title="Удалить">🗑️</button>
     ` : '';
 
     return `
       <article class="post-card" data-category="${post.category}">
-        ${imageHtml}
+        ${statusBar}
         <div class="post-author">
           <div class="post-author-avatar">${authorInitial}</div>
           <span class="post-author-name">${escapeHtml(post.author || 'Аноним')}</span>
@@ -1008,10 +1512,11 @@ function escapeHtml(str) {
 }
 
 function updateStats() {
+  const visiblePosts = getVisiblePosts();
   const counts = { thoughts: 0, songs: 0, stories: 0, photos: 0 };
-  allPosts.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
+  visiblePosts.forEach(p => { if (p.status === 'approved') counts[p.category] = (counts[p.category] || 0) + 1; });
 
-  document.getElementById('count-all').textContent = allPosts.length;
+  document.getElementById('count-all').textContent = visiblePosts.filter(p => p.status === 'approved').length;
   document.getElementById('count-thoughts').textContent = counts.thoughts;
   document.getElementById('count-songs').textContent = counts.songs;
   document.getElementById('count-stories').textContent = counts.stories;
@@ -1044,6 +1549,15 @@ function filterPosts(cat) {
   showMainView();
 }
 
+function showMainView() {
+  document.getElementById('mainView').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function goToHome() {
+  window.location.href = 'index.html';
+}
+
 // ===== ЛАЙКИ =====
 function getLikedPosts() {
   const data = localStorage.getItem('evgenii_liked_posts');
@@ -1055,6 +1569,11 @@ function saveLikedPosts(liked) {
 }
 
 async function toggleLike(postId) {
+  if (!currentUser) {
+    showToast('Войдите, чтобы ставить лайки', 'error');
+    return;
+  }
+  
   const liked = getLikedPosts();
   const post = allPosts.find(p => p.id === postId);
   if (!post) return;
@@ -1071,15 +1590,21 @@ async function toggleLike(postId) {
   }
 
   saveLikedPosts(liked);
-  await updateLikesInFirebase(postId, newLikes);
+  await updatePostInFirebase(postId, { likes: newLikes });
 }
 
-// ===== МОДАЛЬНОЕ ОКНО СОЗДАНИЯ =====
+// ===== МОДАЛКА СОЗДАНИЯ =====
 function openCreateModal() {
+  if (!currentUser) {
+    showToast('Сначала войдите в аккаунт', 'error');
+    return;
+  }
+  
   editingId = null;
   document.getElementById('modalIcon').textContent = '✨';
   document.getElementById('modalTitleText').textContent = 'Новая запись';
-  document.getElementById('saveBtn').textContent = '✨ Опубликовать';
+  document.getElementById('saveBtn').textContent = '📤 Отправить на модерацию';
+  document.getElementById('moderationHint').style.display = 'block';
   resetForm();
   document.getElementById('createModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1096,7 +1621,6 @@ function resetForm() {
   document.getElementById('postText').value = '';
   document.getElementById('postTags').value = '';
   document.getElementById('postCategory').value = 'thoughts';
-  clearImage();
   setTodayDate();
 }
 
@@ -1106,38 +1630,12 @@ function setTodayDate() {
   document.getElementById('postDate').value = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-function updatePreview(url) {
-  const preview = document.getElementById('imagePreview');
-  const box = document.getElementById('previewBox');
-  const removeBtn = document.getElementById('removeImage');
-  
-  if (url && url.startsWith('http')) {
-    preview.src = url;
-    preview.style.display = 'block';
-    box.style.display = 'none';
-    removeBtn.style.display = 'inline-flex';
-    box.classList.add('has-image');
-  } else {
-    clearImage();
-  }
-}
-
-function clearImage() {
-  document.getElementById('imageUrl').value = '';
-  document.getElementById('imagePreview').style.display = 'none';
-  document.getElementById('previewBox').style.display = 'flex';
-  document.getElementById('previewBox').classList.remove('has-image');
-  document.getElementById('removeImage').style.display = 'none';
-}
-
-// ===== СОХРАНЕНИЕ ПОСТА =====
 async function savePost() {
   const category = document.getElementById('postCategory').value;
   const date = document.getElementById('postDate').value.trim();
   const title = document.getElementById('postTitle').value.trim();
   const text = document.getElementById('postText').value.trim();
   const tagsRaw = document.getElementById('postTags').value.trim();
-  const imageUrl = document.getElementById('imageUrl').value.trim();
 
   if (!title || !text) {
     showToast('Заполни заголовок и текст!', 'error');
@@ -1147,33 +1645,40 @@ async function savePost() {
   const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
 
   if (editingId) {
-    const postData = { category, date, title, text, tags, image: imageUrl || null };
+    // Редактирование — отправляем на модерацию
+    const postData = { 
+      category, date, title, text, tags,
+      status: 'pending',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
     const success = await updatePostInFirebase(editingId, postData);
     if (success) {
-      showToast('✅ Запись обновлена', 'success');
+      showToast('✅ Запись отправлена на повторную модерацию', 'success');
       closeCreateModal();
     }
   } else {
+    // Новая запись
     const newPost = {
       category,
       date,
       title,
       text,
       tags,
-      image: imageUrl || null,
       likes: 0,
-      author: userName,
-      createdAt: Date.now()
+      author: currentUser.name,
+      authorId: currentUser.id,
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     const postId = await savePostToFirebase(newPost);
     if (postId) {
-      showToast('✨ Запись опубликована!', 'success');
+      showToast('📤 Запись отправлена на модерацию!', 'success');
       closeCreateModal();
     }
   }
 }
 
-// ===== РЕДАКТИРОВАНИЕ =====
+// ===== РЕДАКТИРОВАНИЕ ПОЛЬЗОВАТЕЛЕМ =====
 function editPost(id) {
   const post = allPosts.find(p => p.id === id);
   if (!post) return;
@@ -1181,26 +1686,19 @@ function editPost(id) {
   editingId = id;
   document.getElementById('modalIcon').textContent = '✏️';
   document.getElementById('modalTitleText').textContent = 'Редактирование';
-  document.getElementById('saveBtn').textContent = '💾 Сохранить';
+  document.getElementById('saveBtn').textContent = '📤 Отправить на модерацию';
+  document.getElementById('moderationHint').style.display = 'block';
   
   document.getElementById('postCategory').value = post.category;
   document.getElementById('postDate').value = post.date;
   document.getElementById('postTitle').value = post.title;
   document.getElementById('postText').value = post.text;
   document.getElementById('postTags').value = (post.tags || []).join(', ');
-  
-  if (post.image) {
-    document.getElementById('imageUrl').value = post.image;
-    updatePreview(post.image);
-  } else {
-    clearImage();
-  }
 
   document.getElementById('createModal').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
-// ===== УДАЛЕНИЕ =====
 async function deletePost(id) {
   if (!confirm('Удалить эту запись?')) return;
   const success = await deletePostFromFirebase(id);
@@ -1208,6 +1706,189 @@ async function deletePost(id) {
     showToast('🗑️ Запись удалена', 'success');
   }
 }
+
+// ===== АДМИН-ПАНЕЛЬ =====
+function openAdminLogin() {
+  document.getElementById('adminLoginModal').classList.add('active');
+  document.getElementById('adminPassword').value = '';
+  document.getElementById('adminError').textContent = '';
+  setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+}
+
+function closeAdminLogin() {
+  document.getElementById('adminLoginModal').classList.remove('active');
+}
+
+function checkAdminPassword() {
+  const password = document.getElementById('adminPassword').value;
+  if (password === ADMIN_PASSWORD) {
+    isAdmin = true;
+    closeAdminLogin();
+    openAdminPanel();
+  } else {
+    document.getElementById('adminError').textContent = '❌ Неверный пароль!';
+  }
+}
+
+function openAdminPanel() {
+  document.getElementById('adminPanelModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  currentAdminTab = 'pending';
+  renderAdminPosts();
+}
+
+function closeAdminPanel() {
+  document.getElementById('adminPanelModal').classList.remove('active');
+  document.body.style.overflow = '';
+  isAdmin = false;
+}
+
+function switchAdminTab(tab) {
+  currentAdminTab = tab;
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.admin-tab[data-tab="${tab}"]`).classList.add('active');
+  renderAdminPosts();
+}
+
+function renderAdminPosts() {
+  const list = document.getElementById('adminPostsList');
+  
+  // Считаем количества
+  const pending = allPosts.filter(p => p.status === 'pending');
+  const approved = allPosts.filter(p => p.status === 'approved');
+  const rejected = allPosts.filter(p => p.status === 'rejected');
+  
+  document.getElementById('pendingCount').textContent = pending.length;
+  document.getElementById('approvedCount').textContent = approved.length;
+  document.getElementById('rejectedCount').textContent = rejected.length;
+  document.getElementById('allCount').textContent = allPosts.length;
+  
+  // Фильтруем по вкладке
+  let filtered = allPosts;
+  if (currentAdminTab !== 'all') {
+    filtered = allPosts.filter(p => p.status === currentAdminTab);
+  }
+  
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="emoji"></div><h3>Нет записей</h3></div>';
+    return;
+  }
+  
+  list.innerHTML = filtered.map(post => {
+    const statusLabels = {
+      pending: '⏳ На модерации',
+      approved: '✅ Опубликовано',
+      rejected: '❌ Отклонено'
+    };
+    
+    return `
+      <div class="admin-post-item">
+        <div class="admin-post-header">
+          <div class="admin-post-title">${escapeHtml(post.title)}</div>
+          <span class="status-badge ${post.status}">${statusLabels[post.status]}</span>
+        </div>
+        <div class="admin-post-meta">
+          <span>👤 ${escapeHtml(post.author || 'Аноним')}</span>
+          <span> ${post.date}</span>
+          <span>📂 ${categoryNames[post.category]}</span>
+          <span>♡ ${post.likes || 0}</span>
+          ${post.adminNote ? `<span style="color:var(--warning);">💬 ${escapeHtml(post.adminNote)}</span>` : ''}
+        </div>
+        <div class="admin-post-text">${escapeHtml(post.text)}</div>
+        <div class="admin-post-actions">
+          ${post.status !== 'approved' ? `<button class="btn btn-success" onclick="approvePost('${post.id}')">✅ Одобрить</button>` : ''}
+          ${post.status !== 'rejected' ? `<button class="btn btn-danger" onclick="rejectPost('${post.id}')">❌ Отклонить</button>` : ''}
+          <button class="btn btn-warning" onclick="openAdminEdit('${post.id}')">✏️ Редактировать</button>
+          <button class="btn btn-danger" onclick="adminDeletePost('${post.id}')">️ Удалить</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function approvePost(id) {
+  const note = prompt('Комментарий модератора (необязательно):') || '';
+  const success = await updatePostInFirebase(id, { 
+    status: 'approved',
+    adminNote: note,
+    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  if (success) showToast('✅ Запись одобрена и опубликована', 'success');
+}
+
+async function rejectPost(id) {
+  const note = prompt('Причина отклонения (обязательно):');
+  if (!note) {
+    showToast('Укажите причину отклонения', 'error');
+    return;
+  }
+  const success = await updatePostInFirebase(id, { 
+    status: 'rejected',
+    adminNote: note,
+    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  if (success) showToast('❌ Запись отклонена', 'success');
+}
+
+function openAdminEdit(id) {
+  const post = allPosts.find(p => p.id === id);
+  if (!post) return;
+  
+  adminEditingId = id;
+  document.getElementById('adminEditCategory').value = post.category;
+  document.getElementById('adminEditDate').value = post.date;
+  document.getElementById('adminEditTitle').value = post.title;
+  document.getElementById('adminEditText').value = post.text;
+  document.getElementById('adminEditTags').value = (post.tags || []).join(', ');
+  document.getElementById('adminEditNote').value = post.adminNote || '';
+  
+  document.getElementById('adminEditModal').classList.add('active');
+}
+
+function closeAdminEdit() {
+  document.getElementById('adminEditModal').classList.remove('active');
+  adminEditingId = null;
+}
+
+async function saveAdminEdit() {
+  const category = document.getElementById('adminEditCategory').value;
+  const date = document.getElementById('adminEditDate').value.trim();
+  const title = document.getElementById('adminEditTitle').value.trim();
+  const text = document.getElementById('adminEditText').value.trim();
+  const tagsRaw = document.getElementById('adminEditTags').value.trim();
+  const note = document.getElementById('adminEditNote').value.trim();
+  
+  if (!title || !text) {
+    showToast('Заголовок и текст обязательны', 'error');
+    return;
+  }
+  
+  const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+  
+  const postData = { category, date, title, text, tags, adminNote: note };
+  
+  const success = await updatePostInFirebase(adminEditingId, postData);
+  if (success) {
+    showToast('✅ Запись обновлена', 'success');
+    closeAdminEdit();
+  }
+}
+
+async function adminDeletePost(id) {
+  if (!confirm('Удалить эту запись навсегда?')) return;
+  const success = await deletePostFromFirebase(id);
+  if (success) showToast('🗑️ Запись удалена', 'success');
+}
+
+// ===== ЗАКРЫТИЕ МОДАЛОК ПО КЛИКУ НА ФОН =====
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+});
 
 // ===== TOAST =====
 function showToast(message, type = 'success') {
@@ -1217,20 +1898,8 @@ function showToast(message, type = 'success') {
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// ===== ЗАКРЫТИЕ МОДАЛКИ ПО КЛИКУ НА ФОН =====
-document.getElementById('createModal').addEventListener('click', (e) => {
-  if (e.target.id === 'createModal') closeCreateModal();
-});
-
-// ===== ИНИЦИАЛИЗАЦИЯ =====
-window.addEventListener('load', () => {
-  setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 1500);
-  setTodayDate();
-  loadPostsFromFirebase();
-});
-
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) loadPostsFromFirebase();
+  if (!document.hidden && currentUser) loadPostsFromFirebase();
 });
 </script>
 
