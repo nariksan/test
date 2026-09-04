@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EVGENII AI — Дневник</title>
+<title>EVGENII AI — Творческий дневник</title>
 <link rel="icon" type="image/png" href="favicon-48x48.png">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -15,11 +15,11 @@
 :root {
   --bg: #0a0a0f;
   --bg-2: #12121a;
-  --card: rgba(255, 255, 255, 0.03);
-  --card-2: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.08);
+  --card: rgba(255,255,255,0.03);
+  --card-2: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.08);
   --text: #e8e8e8;
-  --text-dim: rgba(255, 255, 255, 0.5);
+  --text-dim: rgba(255,255,255,0.5);
   --accent-1: #ff6b6b;
   --accent-2: #4ecdc4;
   --accent-3: #ffe66d;
@@ -35,7 +35,6 @@ body {
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
-  overflow-y: auto;
   line-height: 1.6;
 }
 
@@ -46,8 +45,8 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 15% 20%, rgba(255, 107, 107, 0.06), transparent 50%),
-              radial-gradient(circle at 85% 80%, rgba(78, 205, 196, 0.06), transparent 50%);
+  background: radial-gradient(circle at 15% 20%, rgba(255,107,107,0.06), transparent 50%),
+              radial-gradient(circle at 85% 80%, rgba(78,205,196,0.06), transparent 50%);
 }
 
 /* Preloader */
@@ -62,9 +61,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   transition: opacity 0.8s, visibility 0.8s;
 }
-
 .preloader.hidden { opacity: 0; visibility: hidden; }
-
 .preloader-title {
   font-size: clamp(2rem, 6vw, 4rem);
   font-weight: 900;
@@ -73,7 +70,6 @@ a { color: inherit; text-decoration: none; }
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 .preloader-sub {
   margin-top: 15px;
   font-size: 0.85rem;
@@ -87,21 +83,21 @@ nav {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 15px 20px;
+  padding: 15px 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
   backdrop-filter: blur(20px);
-  background: rgba(10, 10, 15, 0.85);
+  background: rgba(10,10,15,0.85);
   border-bottom: 1px solid var(--border);
   gap: 15px;
 }
 
 .logo {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 900;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.15em;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -112,19 +108,14 @@ nav {
 .nav-scroll {
   flex: 1;
   overflow-x: auto;
-  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  -ms-overflow-style: none;
 }
-
-.nav-scroll::-webkit-scrollbar {
-  display: none;
-}
+.nav-scroll::-webkit-scrollbar { display: none; }
 
 .nav-links {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   list-style: none;
   align-items: center;
   white-space: nowrap;
@@ -139,38 +130,36 @@ nav {
   cursor: pointer;
   flex-shrink: 0;
 }
-
 .nav-links a:hover { color: var(--text); }
 
-.admin-link {
-  padding: 6px 14px;
+.nav-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.btn-small {
+  padding: 8px 16px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
   font-size: 0.75rem;
   cursor: pointer;
+  color: var(--text);
+  font-weight: 600;
+  transition: all 0.3s;
+  white-space: nowrap;
 }
-
-.admin-link:hover {
-  background: rgba(255, 107, 107, 0.15);
-  border-color: var(--accent-1);
-  color: var(--accent-1);
+.btn-small:hover { background: rgba(255,255,255,0.1); }
+.btn-small.primary {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  border-color: transparent;
+  color: #fff;
 }
-
-.home-link {
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(255, 230, 109, 0.1);
-  border: 1px solid rgba(255, 230, 109, 0.3);
-  font-size: 0.75rem;
-  color: var(--accent-3) !important;
-  cursor: pointer;
-}
-
-.home-link:hover {
-  background: rgba(255, 230, 109, 0.2);
-  border-color: var(--accent-3);
-}
+.btn-small.primary:hover { box-shadow: 0 0 20px rgba(255,107,107,0.4); }
+.btn-small.home { border-color: var(--accent-3); color: var(--accent-3); }
+.btn-small.home:hover { background: rgba(255,230,109,0.15); }
 
 /* Hero */
 .hero {
@@ -182,19 +171,21 @@ nav {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 80px 20px 0;
+  padding: 100px 20px 60px;
 }
 
 .hero-badge {
-  display: inline-block;
-  padding: 8px 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
   border-radius: 30px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: var(--text-dim);
   margin-bottom: 30px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
 }
 
 .hero-title {
@@ -218,29 +209,28 @@ nav {
 .hero-subtitle {
   font-size: clamp(1rem, 2vw, 1.3rem);
   color: var(--text-dim);
-  max-width: 600px;
+  max-width: 700px;
   margin-bottom: 50px;
+  line-height: 1.6;
 }
 
 .hero-stats {
   display: flex;
-  gap: 50px;
+  gap: 60px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .stat { text-align: center; }
-
 .stat-num {
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 900;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -251,7 +241,7 @@ nav {
 .categories {
   position: relative;
   z-index: 1;
-  padding: 60px 20px;
+  padding: 40px 50px;
   text-align: center;
 }
 
@@ -260,7 +250,7 @@ nav {
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .filter-buttons {
@@ -284,34 +274,24 @@ nav {
   align-items: center;
   gap: 8px;
 }
-
-.filter-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text);
-  transform: translateY(-2px);
-}
-
+.filter-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); transform: translateY(-2px); }
 .filter-btn.active {
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   color: #fff;
   border-color: transparent;
 }
-
-.filter-count {
-  font-size: 0.75rem;
-  opacity: 0.7;
-}
+.filter-count { font-size: 0.75rem; opacity: 0.7; }
 
 /* Posts */
 .posts-section {
   position: relative;
   z-index: 1;
-  padding: 0 20px 100px;
+  padding: 0 50px 100px;
 }
 
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 25px;
   max-width: 1400px;
   margin: 0 auto;
@@ -322,7 +302,7 @@ nav {
   border: 1px solid var(--border);
   border-radius: 24px;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -336,8 +316,8 @@ nav {
 
 .post-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
 }
 
 .post-card[data-category="thoughts"] { --cat-color: var(--accent-1); }
@@ -345,8 +325,33 @@ nav {
 .post-card[data-category="stories"] { --cat-color: var(--accent-3); }
 .post-card[data-category="photos"] { --cat-color: var(--accent-4); }
 
+.post-author {
+  padding: 15px 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.post-author-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.post-author-name { font-weight: 600; color: var(--text); }
+
 .post-header {
-  padding: 25px 25px 0;
+  padding: 15px 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -363,15 +368,9 @@ nav {
   color: var(--bg);
 }
 
-.post-date {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-}
+.post-date { font-size: 0.75rem; color: var(--text-dim); }
 
-.post-content {
-  padding: 20px 25px;
-  flex: 1;
-}
+.post-content { padding: 20px; flex: 1; }
 
 .post-title {
   font-size: 1.3rem;
@@ -402,7 +401,7 @@ nav {
 
 .post-image {
   width: 100%;
-  height: 280px;
+  height: 250px;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -417,7 +416,7 @@ nav {
 }
 
 .post-footer {
-  padding: 0 25px 25px;
+  padding: 0 20px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -426,18 +425,19 @@ nav {
   gap: 10px;
 }
 
-.post-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
+.post-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .post-tag {
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.7rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,0.05);
   color: var(--text-dim);
+}
+
+.post-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .post-likes {
@@ -448,10 +448,29 @@ nav {
   gap: 5px;
   cursor: pointer;
   transition: color 0.3s;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.03);
 }
+.post-likes:hover { color: var(--accent-1); background: rgba(255,107,107,0.1); }
+.post-likes.liked { color: var(--accent-1); background: rgba(255,107,107,0.15); }
 
-.post-likes:hover { color: var(--accent-1); }
-.post-likes.liked { color: var(--accent-1); }
+.post-edit-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+}
+.post-edit-btn:hover { color: var(--accent-2); border-color: var(--accent-2); }
+.post-edit-btn.delete:hover { color: var(--danger); border-color: var(--danger); }
 
 .empty-state {
   text-align: center;
@@ -459,11 +478,7 @@ nav {
   color: var(--text-dim);
   grid-column: 1 / -1;
 }
-
-.empty-state .emoji {
-  font-size: 4rem;
-  margin-bottom: 20px;
-}
+.empty-state .emoji { font-size: 4rem; margin-bottom: 20px; }
 
 /* Footer */
 footer {
@@ -473,7 +488,6 @@ footer {
   padding: 50px 20px;
   border-top: 1px solid var(--border);
 }
-
 .footer-logo {
   font-size: 1.5rem;
   font-weight: 900;
@@ -483,141 +497,63 @@ footer {
   -webkit-text-fill-color: transparent;
   margin-bottom: 15px;
 }
+.footer-text { font-size: 0.85rem; color: var(--text-dim); }
 
-.footer-text {
-  font-size: 0.85rem;
-  color: var(--text-dim);
-}
-
-/* Admin Panel */
-.admin-panel {
-  display: none;
-  position: relative;
-  z-index: 1;
-  padding: 100px 20px 50px;
-}
-
-.admin-panel.active { display: block; }
-
-.admin-header {
-  padding: 25px;
-  border-radius: 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.admin-title {
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-
-.admin-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 10px 18px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn:hover {
-  background: var(--card-2);
-  transform: translateY(-1px);
-}
-
-.btn-primary {
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  border-color: transparent;
+  border: none;
   color: #fff;
-}
-
-.btn-primary:hover {
-  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
-}
-
-.btn-danger {
-  border-color: var(--danger);
-  color: var(--danger);
-}
-
-.btn-danger:hover {
-  background: rgba(255, 107, 107, 0.15);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 15px;
-  margin-bottom: 40px;
-}
-
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.stat-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+  transition: all 0.3s;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+}
+.fab:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 15px 40px rgba(255,107,107,0.6);
 }
 
-.stat-icon.thoughts { background: rgba(255, 107, 107, 0.15); }
-.stat-icon.songs { background: rgba(78, 205, 196, 0.15); }
-.stat-icon.stories { background: rgba(255, 230, 109, 0.15); }
-.stat-icon.photos { background: rgba(168, 230, 207, 0.15); }
-
-.stat-info .num {
-  font-size: 1.6rem;
-  font-weight: 900;
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,5,15,0.95);
+  backdrop-filter: blur(20px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
 }
+.modal-overlay.active { display: flex; }
 
-.stat-info .label {
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.form-card {
-  background: var(--card);
+.modal-content {
+  background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: 24px;
-  padding: 25px;
-  margin-bottom: 40px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-.form-title {
-  font-size: 1.3rem;
+.modal-title {
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -625,20 +561,10 @@ footer {
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 15px;
 }
-
-@media (min-width: 700px) {
-  .form-grid { grid-template-columns: 1fr 1fr; }
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
+.form-group { display: flex; flex-direction: column; gap: 8px; }
 .form-group.full { grid-column: 1 / -1; }
 
 .form-label {
@@ -652,30 +578,24 @@ footer {
 .form-input, .form-select, .form-textarea {
   padding: 12px 16px;
   border-radius: 12px;
-  background: var(--bg-2);
+  background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
   font-size: 0.95rem;
   font-family: inherit;
   transition: border-color 0.3s;
 }
-
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   outline: none;
   border-color: var(--accent-2);
 }
-
-.form-textarea {
-  resize: vertical;
-  min-height: 120px;
-  line-height: 1.6;
-}
+.form-textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
 
 .form-hint {
   font-size: 0.8rem;
   color: var(--text-dim);
   line-height: 1.5;
-  background: rgba(78, 205, 196, 0.05);
+  background: rgba(78,205,196,0.05);
   padding: 12px;
   border-radius: 8px;
   border-left: 3px solid var(--accent-2);
@@ -687,37 +607,15 @@ footer {
   border-radius: 14px;
   padding: 20px;
   text-align: center;
-  transition: all 0.3s;
-  min-height: 150px;
+  min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  transition: all 0.3s;
 }
-
-.image-preview-box.has-image {
-  padding: 10px;
-  border-style: solid;
-  border-color: var(--accent-2);
-}
-
-.image-preview {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 8px;
-  display: none;
-}
-
-.remove-image {
-  margin-top: 10px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: var(--danger);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
+.image-preview-box.has-image { border-style: solid; border-color: var(--accent-2); }
+.image-preview { max-width: 100%; max-height: 200px; border-radius: 8px; display: none; }
 
 .form-actions {
   display: flex;
@@ -727,153 +625,29 @@ footer {
   flex-wrap: wrap;
 }
 
-.posts-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.posts-title {
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-
-.search-box {
-  padding: 10px 16px;
+.btn {
+  padding: 12px 24px;
   border-radius: 12px;
-  background: var(--card);
   border: 1px solid var(--border);
+  background: var(--card);
   color: var(--text);
   font-size: 0.9rem;
-  min-width: 200px;
-  flex: 1;
-}
-
-.search-box:focus {
-  outline: none;
-  border-color: var(--accent-2);
-}
-
-.posts-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.post-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 15px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 15px;
-  align-items: center;
-  transition: all 0.3s;
-}
-
-.post-item:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  background: var(--card-2);
-}
-
-.post-item[data-category="thoughts"] { --cat-color: var(--accent-1); }
-.post-item[data-category="songs"] { --cat-color: var(--accent-2); }
-.post-item[data-category="stories"] { --cat-color: var(--accent-3); }
-.post-item[data-category="photos"] { --cat-color: var(--accent-4); }
-
-.post-item-thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--cat-color), rgba(255, 255, 255, 0.1));
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-
-.post-item-info { min-width: 0; }
-
-.post-item-title {
-  font-weight: 700;
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.95rem;
-}
-
-.post-item-meta {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.post-item-category {
-  padding: 3px 10px;
-  border-radius: 10px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: var(--cat-color);
-  color: var(--bg);
-}
-
-.post-item-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--card-2);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
+  font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: all 0.3s;
-  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
-
-.icon-btn:hover {
-  color: var(--text);
-  transform: translateY(-2px);
+.btn:hover { background: var(--card-2); transform: translateY(-1px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  border-color: transparent;
+  color: #fff;
 }
-
-.icon-btn.edit:hover {
-  border-color: var(--accent-2);
-  color: var(--accent-2);
-}
-
-.icon-btn.delete:hover {
-  border-color: var(--danger);
-  color: var(--danger);
-}
-
-.empty-list {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-dim);
-}
-
-.empty-list .emoji {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
+.btn-primary:hover { box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
+.btn-danger { border-color: var(--danger); color: var(--danger); }
+.btn-danger:hover { background: rgba(255,107,107,0.15); }
 
 /* Toast */
 .toast {
@@ -886,37 +660,29 @@ footer {
   border: 1px solid var(--border);
   color: var(--text);
   font-weight: 600;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   transform: translateY(100px);
   opacity: 0;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  z-index: 2000;
+  transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+  z-index: 3000;
   display: flex;
   align-items: center;
   gap: 10px;
-  max-width: 90%;
 }
-
-.toast.show {
-  transform: translateY(0);
-  opacity: 1;
-}
-
+.toast.show { transform: translateY(0); opacity: 1; }
 .toast.success { border-color: var(--success); }
 .toast.error { border-color: var(--danger); }
 
 @media (max-width: 768px) {
-  nav { padding: 12px 15px; }
-  .logo { font-size: 1rem; }
+  nav { padding: 15px 20px; }
   .nav-links { gap: 15px; }
   .nav-links a { font-size: 0.8rem; }
-  .categories, .posts-section, .admin-panel { padding-left: 15px; padding-right: 15px; }
+  .categories, .posts-section { padding-left: 20px; padding-right: 20px; }
   .posts-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 25px; }
-  .post-item { grid-template-columns: 1fr; }
-  .post-item-thumb { width: 100%; height: 120px; }
-  .post-item-actions { justify-content: flex-end; }
-  .hero { padding-top: 70px; }
+  .hero-stats { gap: 30px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .hero { padding-top: 80px; }
+  .fab { bottom: 20px; right: 20px; width: 55px; height: 55px; }
 }
 </style>
 </head>
@@ -938,9 +704,11 @@ footer {
       <li><a onclick="filterPosts('songs')">Песни</a></li>
       <li><a onclick="filterPosts('stories')">Истории</a></li>
       <li><a onclick="filterPosts('photos')">Фото</a></li>
-      <li><a class="home-link" onclick="goToHome()">🏠 На главную</a></li>
-      <li><a class="admin-link" onclick="toggleAdminPanel()">⚙ Админ</a></li>
     </ul>
+  </div>
+  <div class="nav-right">
+    <button class="btn-small home" onclick="goToHome()">🏠 На главную</button>
+    <button class="btn-small primary" onclick="openCreateModal()">️ Написать</button>
   </div>
 </nav>
 
@@ -963,7 +731,7 @@ footer {
       <button class="filter-btn" data-filter="thoughts">💭 Мысли <span class="filter-count" id="count-thoughts">0</span></button>
       <button class="filter-btn" data-filter="songs">🎵 Песни <span class="filter-count" id="count-songs">0</span></button>
       <button class="filter-btn" data-filter="stories">📖 Истории <span class="filter-count" id="count-stories">0</span></button>
-      <button class="filter-btn" data-filter="photos"> Фото <span class="filter-count" id="count-photos">0</span></button>
+      <button class="filter-btn" data-filter="photos">📸 Фото <span class="filter-count" id="count-photos">0</span></button>
     </div>
   </div>
 
@@ -973,28 +741,19 @@ footer {
 
   <footer>
     <div class="footer-logo">EVGENII AI</div>
-    <p class="footer-text">© 2026 · Творческий дневник Евгения · Все мысли, песни и истории — мои</p>
+    <p class="footer-text">© 2026 · Творческий дневник · Все мысли, песни и истории — наши</p>
   </footer>
 </div>
 
-<!-- ADMIN PANEL -->
-<div class="admin-panel" id="adminPanel">
-  <div class="admin-header">
-    <div class="admin-title">🔐 Админ-панель</div>
-    <div class="admin-actions">
-      <button class="btn" onclick="showMainView()">👁 На сайт</button>
-      <button class="btn" onclick="exportData()">💾 Экспорт</button>
-      <button class="btn" onclick="document.getElementById('importFile').click()">📥 Импорт</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-    </div>
-  </div>
+<!-- FAB -->
+<button class="fab" onclick="openCreateModal()" title="Создать запись">✏️</button>
 
-  <div class="stats-grid" id="adminStats"></div>
-
-  <div class="form-card">
-    <div class="form-title">
-      <span id="formTitleIcon">✨</span>
-      <span id="formTitleText">Новый пост</span>
+<!-- CREATE/EDIT MODAL -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal-content">
+    <div class="modal-title">
+      <span id="modalIcon">✨</span>
+      <span id="modalTitleText">Новая запись</span>
     </div>
 
     <div class="form-grid">
@@ -1002,7 +761,7 @@ footer {
         <label class="form-label">Категория</label>
         <select class="form-select" id="postCategory">
           <option value="thoughts">💭 Мысль</option>
-          <option value="songs">🎵 Песня</option>
+          <option value="songs"> Песня</option>
           <option value="stories">📖 История</option>
           <option value="photos">📸 Фото</option>
         </select>
@@ -1015,7 +774,7 @@ footer {
 
       <div class="form-group full">
         <label class="form-label">Заголовок</label>
-        <input type="text" class="form-input" id="postTitle" placeholder="Название поста">
+        <input type="text" class="form-input" id="postTitle" placeholder="Название записи">
       </div>
 
       <div class="form-group full">
@@ -1038,26 +797,20 @@ footer {
         </div>
         <input type="url" class="form-input" id="imageUrl" placeholder="https://raw.githubusercontent.com/..." oninput="updatePreview(this.value)">
         
-        <div class="image-preview-box" id="previewBox">
+        <div class="image-preview-box" id="previewBox" style="margin-top: 15px;">
           <span style="color: var(--text-dim); font-size: 2rem;">🖼️</span>
           <span style="color: var(--text-dim); margin-top: 10px;">Предпросмотр появится здесь</span>
         </div>
         <img id="imagePreview" class="image-preview">
-        <button type="button" class="remove-image" id="removeImage" style="display:none" onclick="clearImage()">Удалить фото</button>
+        <button type="button" class="btn btn-danger" id="removeImage" style="display:none; margin-top: 10px;" onclick="clearImage()">Удалить фото</button>
       </div>
     </div>
 
     <div class="form-actions">
-      <button class="btn" id="cancelEditBtn" style="display:none" onclick="cancelEdit()">Отмена</button>
-      <button class="btn btn-primary" id="saveBtn" onclick="savePost()">✨ Добавить пост</button>
+      <button class="btn" onclick="closeCreateModal()">Отмена</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="savePost()">✨ Опубликовать</button>
     </div>
   </div>
-
-  <div class="posts-header">
-    <div class="posts-title">📋 Все посты</div>
-    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Поиск..." oninput="renderAdminPostsList(this.value)">
-  </div>
-  <div class="posts-list" id="adminPostsList"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1078,9 +831,7 @@ try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
   console.log('Firebase подключён');
-} catch (e) {
-  console.error('Ошибка Firebase:', e);
-}
+} catch (e) { console.error('Ошибка Firebase:', e); }
 
 // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
 const userName = localStorage.getItem('evgenii_user');
@@ -1091,31 +842,17 @@ if (!userName || !licenseAccepted) {
 }
 
 // ===== ДАННЫЕ =====
-const ADMIN_PASSWORD = 'N130289s';
 let allPosts = [];
 let unsubscribePosts = null;
+let editingId = null;
+let currentFilter = 'all';
 
 // ===== НАВИГАЦИЯ =====
 function showMainView() {
   document.getElementById('mainView').style.display = 'block';
-  document.getElementById('adminPanel').classList.remove('active');
   window.scrollTo(0, 0);
 }
 
-function toggleAdminPanel() {
-  const password = prompt('🔐 Введите пароль администратора:');
-  if (password === ADMIN_PASSWORD) {
-    document.getElementById('mainView').style.display = 'none';
-    document.getElementById('adminPanel').classList.add('active');
-    renderAdminPostsList();
-    updateAdminStats();
-    window.scrollTo(0, 0);
-  } else if (password !== null) {
-    alert('❌ Неверный пароль!');
-  }
-}
-
-// КНОПКА "НА ГЛАВНУЮ" - возврат на страницу выбора проектов
 function goToHome() {
   window.location.href = 'index.html';
 }
@@ -1127,11 +864,9 @@ function loadPostsFromFirebase() {
     return;
   }
 
-  if (unsubscribePosts) {
-    unsubscribePosts();
-  }
+  if (unsubscribePosts) unsubscribePosts();
 
-  unsubscribePosts = db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+  unsubscribePosts = db.collection('diary_posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
     allPosts = [];
     snapshot.forEach(doc => {
       allPosts.push({ id: doc.id, ...doc.data() });
@@ -1140,23 +875,19 @@ function loadPostsFromFirebase() {
     console.log('Загружено постов:', allPosts.length);
     renderPosts();
     updateStats();
-    if (document.getElementById('adminPanel').classList.contains('active')) {
-      renderAdminPostsList();
-      updateAdminStats();
-    }
   }, error => {
     console.error('Ошибка загрузки постов:', error);
   });
 }
 
-// ===== FIREBASE ОПЕРАЦИИ =====
+// ===== СОХРАНЕНИЕ ПОСТА =====
 async function savePostToFirebase(post) {
   if (!db) {
     showToast('❌ Firebase не подключён', 'error');
     return null;
   }
   try {
-    const docRef = await db.collection('posts').add(post);
+    const docRef = await db.collection('diary_posts').add(post);
     console.log('Пост сохранён:', docRef.id);
     return docRef.id;
   } catch (error) {
@@ -1166,13 +897,14 @@ async function savePostToFirebase(post) {
   }
 }
 
+// ===== ОБНОВЛЕНИЕ ПОСТА =====
 async function updatePostInFirebase(postId, postData) {
   if (!db) {
     showToast('❌ Firebase не подключён', 'error');
     return false;
   }
   try {
-    await db.collection('posts').doc(postId).update(postData);
+    await db.collection('diary_posts').doc(postId).update(postData);
     console.log('Пост обновлён:', postId);
     return true;
   } catch (error) {
@@ -1182,13 +914,14 @@ async function updatePostInFirebase(postId, postData) {
   }
 }
 
+// ===== УДАЛЕНИЕ ПОСТА =====
 async function deletePostFromFirebase(postId) {
   if (!db) {
     showToast('❌ Firebase не подключён', 'error');
     return false;
   }
   try {
-    await db.collection('posts').doc(postId).delete();
+    await db.collection('diary_posts').doc(postId).delete();
     console.log('Пост удалён:', postId);
     return true;
   } catch (error) {
@@ -1198,10 +931,11 @@ async function deletePostFromFirebase(postId) {
   }
 }
 
+// ===== ОБНОВЛЕНИЕ ЛАЙКОВ =====
 async function updateLikesInFirebase(postId, likes) {
   if (!db) return;
   try {
-    await db.collection('posts').doc(postId).update({ likes: likes });
+    await db.collection('diary_posts').doc(postId).update({ likes: likes });
   } catch (error) {
     console.error('Ошибка обновления лайков:', error);
   }
@@ -1221,7 +955,7 @@ function renderPosts(filter = 'all') {
       <div class="empty-state">
         <div class="emoji">📝</div>
         <h3>Пока тут пусто</h3>
-        <p>Зайди в админ-панель и добавь первый пост!</p>
+        <p>Нажми кнопку "✏️ Написать" и создай первую запись!</p>
       </div>`;
     return;
   }
@@ -1230,10 +964,21 @@ function renderPosts(filter = 'all') {
     const isLiked = liked.includes(post.id);
     const imageHtml = post.image ? `<div class="post-image" style="background-image:url('${post.image}')"></div>` : '';
     const tagsHtml = (post.tags || []).map(t => `<span class="post-tag">#${t}</span>`).join('');
+    const authorInitial = (post.author || '?')[0].toUpperCase();
+    const isAuthor = post.author === userName;
+    
+    const editButtons = isAuthor ? `
+      <button class="post-edit-btn" onclick="editPost('${post.id}')" title="Редактировать">✏️</button>
+      <button class="post-edit-btn delete" onclick="deletePost('${post.id}')" title="Удалить">🗑️</button>
+    ` : '';
 
     return `
       <article class="post-card" data-category="${post.category}">
         ${imageHtml}
+        <div class="post-author">
+          <div class="post-author-avatar">${authorInitial}</div>
+          <span class="post-author-name">${escapeHtml(post.author || 'Аноним')}</span>
+        </div>
         <div class="post-header">
           <span class="post-category">${categoryNames[post.category]}</span>
           <span class="post-date">${post.date}</span>
@@ -1244,8 +989,11 @@ function renderPosts(filter = 'all') {
         </div>
         <div class="post-footer">
           <div class="post-tags">${tagsHtml}</div>
-          <div class="post-likes ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
-            ${isLiked ? '♥' : '♡'} ${post.likes || 0}
+          <div class="post-actions">
+            <div class="post-likes ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+              ${isLiked ? '♥' : '♡'} ${post.likes || 0}
+            </div>
+            ${editButtons}
           </div>
         </div>
       </article>
@@ -1283,13 +1031,15 @@ document.getElementById('filterButtons').addEventListener('click', (e) => {
   if (!btn) return;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderPosts(btn.dataset.filter);
+  currentFilter = btn.dataset.filter;
+  renderPosts(currentFilter);
 });
 
 function filterPosts(cat) {
   document.querySelectorAll('.filter-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.filter === cat);
   });
+  currentFilter = cat;
   renderPosts(cat);
   showMainView();
 }
@@ -1324,68 +1074,36 @@ async function toggleLike(postId) {
   await updateLikesInFirebase(postId, newLikes);
 }
 
-// ===== АДМИНКА =====
-let editingId = null;
+// ===== МОДАЛЬНОЕ ОКНО СОЗДАНИЯ =====
+function openCreateModal() {
+  editingId = null;
+  document.getElementById('modalIcon').textContent = '✨';
+  document.getElementById('modalTitleText').textContent = 'Новая запись';
+  document.getElementById('saveBtn').textContent = '✨ Опубликовать';
+  resetForm();
+  document.getElementById('createModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
-function renderAdminPostsList(search = '') {
-  const list = document.getElementById('adminPostsList');
-  let posts = allPosts;
+function closeCreateModal() {
+  document.getElementById('createModal').classList.remove('active');
+  document.body.style.overflow = '';
+  editingId = null;
+}
 
-  if (search) {
-    const q = search.toLowerCase();
-    posts = posts.filter(p => 
-      (p.title || '').toLowerCase().includes(q) || 
-      (p.text || '').toLowerCase().includes(q) || 
-      (p.tags || []).some(t => t.toLowerCase().includes(q))
-    );
-  }
-
-  if (posts.length === 0) {
-    list.innerHTML = `<div class="empty-list"><div class="emoji">${search ? '🔍' : '📝'}</div><h3>${search ? 'Ничего не найдено' : 'Пока нет постов'}</h3></div>`;
-    return;
-  }
-
-  list.innerHTML = posts.map(p => {
-    const thumbStyle = p.image ? `background-image:url('${p.image}')` : '';
-    const thumbContent = p.image ? '' : (categoryNames[p.category] || '📝');
-    const tags = (p.tags || []).map(t => `#${t}`).join(' ');
-    return `
-      <div class="post-item" data-category="${p.category}">
-        <div class="post-item-thumb" style="${thumbStyle}">${thumbContent}</div>
-        <div class="post-item-info">
-          <div class="post-item-title">${escapeHtml(p.title)}</div>
-          <div class="post-item-meta">
-            <span class="post-item-category">${categoryNames[p.category]}</span>
-            <span>📅 ${escapeHtml(p.date)}</span>
-            <span>♡ ${p.likes || 0}</span>
-            ${tags ? `<span>${escapeHtml(tags)}</span>` : ''}
-          </div>
-        </div>
-        <div class="post-item-actions">
-          <button class="icon-btn edit" onclick="editPost('${p.id}')" title="Редактировать">️</button>
-          <button class="icon-btn delete" onclick="deletePost('${p.id}')" title="Удалить">🗑️</button>
-        </div>
-      </div>
-    `;
-  }).join('');
+function resetForm() {
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postText').value = '';
+  document.getElementById('postTags').value = '';
+  document.getElementById('postCategory').value = 'thoughts';
+  clearImage();
+  setTodayDate();
 }
 
 function setTodayDate() {
   const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
   const d = new Date();
   document.getElementById('postDate').value = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
-
-function updateAdminStats() {
-  const counts = { thoughts: 0, songs: 0, stories: 0, photos: 0 };
-  allPosts.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
-
-  document.getElementById('adminStats').innerHTML = `
-    <div class="stat-card"><div class="stat-icon thoughts">💭</div><div class="stat-info"><div class="num">${counts.thoughts}</div><div class="label">Мыслей</div></div></div>
-    <div class="stat-card"><div class="stat-icon songs">🎵</div><div class="stat-info"><div class="num">${counts.songs}</div><div class="label">Песен</div></div></div>
-    <div class="stat-card"><div class="stat-icon stories">📖</div><div class="stat-info"><div class="num">${counts.stories}</div><div class="label">Историй</div></div></div>
-    <div class="stat-card"><div class="stat-icon photos">📸</div><div class="stat-info"><div class="num">${counts.photos}</div><div class="label">Фото</div></div></div>
-  `;
 }
 
 function updatePreview(url) {
@@ -1397,7 +1115,7 @@ function updatePreview(url) {
     preview.src = url;
     preview.style.display = 'block';
     box.style.display = 'none';
-    removeBtn.style.display = 'inline-block';
+    removeBtn.style.display = 'inline-flex';
     box.classList.add('has-image');
   } else {
     clearImage();
@@ -1412,6 +1130,7 @@ function clearImage() {
   document.getElementById('removeImage').style.display = 'none';
 }
 
+// ===== СОХРАНЕНИЕ ПОСТА =====
 async function savePost() {
   const category = document.getElementById('postCategory').value;
   const date = document.getElementById('postDate').value.trim();
@@ -1431,8 +1150,8 @@ async function savePost() {
     const postData = { category, date, title, text, tags, image: imageUrl || null };
     const success = await updatePostInFirebase(editingId, postData);
     if (success) {
-      showToast('✅ Пост обновлён', 'success');
-      cancelEdit();
+      showToast('✅ Запись обновлена', 'success');
+      closeCreateModal();
     }
   } else {
     const newPost = {
@@ -1443,39 +1162,27 @@ async function savePost() {
       tags,
       image: imageUrl || null,
       likes: 0,
+      author: userName,
       createdAt: Date.now()
     };
     const postId = await savePostToFirebase(newPost);
     if (postId) {
-      showToast('✨ Пост добавлен!', 'success');
-      resetForm();
+      showToast('✨ Запись опубликована!', 'success');
+      closeCreateModal();
     }
   }
 }
 
-function resetForm() {
-  document.getElementById('postTitle').value = '';
-  document.getElementById('postText').value = '';
-  document.getElementById('postTags').value = '';
-  document.getElementById('postCategory').value = 'thoughts';
-  clearImage();
-  setTodayDate();
-}
-
-function cancelEdit() {
-  editingId = null;
-  document.getElementById('formTitleText').textContent = 'Новый пост';
-  document.getElementById('formTitleIcon').textContent = '✨';
-  document.getElementById('saveBtn').textContent = '✨ Добавить пост';
-  document.getElementById('cancelEditBtn').style.display = 'none';
-  resetForm();
-}
-
+// ===== РЕДАКТИРОВАНИЕ =====
 function editPost(id) {
   const post = allPosts.find(p => p.id === id);
   if (!post) return;
 
   editingId = id;
+  document.getElementById('modalIcon').textContent = '✏️';
+  document.getElementById('modalTitleText').textContent = 'Редактирование';
+  document.getElementById('saveBtn').textContent = '💾 Сохранить';
+  
   document.getElementById('postCategory').value = post.category;
   document.getElementById('postDate').value = post.date;
   document.getElementById('postTitle').value = post.title;
@@ -1489,68 +1196,31 @@ function editPost(id) {
     clearImage();
   }
 
-  document.getElementById('formTitleText').textContent = 'Редактирование поста';
-  document.getElementById('formTitleIcon').textContent = '✏️';
-  document.getElementById('saveBtn').textContent = '💾 Сохранить изменения';
-  document.getElementById('cancelEditBtn').style.display = 'inline-flex';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('createModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
+// ===== УДАЛЕНИЕ =====
 async function deletePost(id) {
-  if (!confirm('Удалить этот пост?')) return;
+  if (!confirm('Удалить эту запись?')) return;
   const success = await deletePostFromFirebase(id);
   if (success) {
-    if (editingId === id) cancelEdit();
-    showToast('🗑️ Пост удалён', 'success');
+    showToast('🗑️ Запись удалена', 'success');
   }
 }
 
-function exportData() {
-  if (allPosts.length === 0) { 
-    showToast('Нечего экспортировать', 'error'); 
-    return; 
-  }
-  const blob = new Blob([JSON.stringify(allPosts, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `evgenii-ai-backup-${new Date().toISOString().split('T')[0]}.json`;
-  a.click();
-  showToast(' Бэкап сохранён', 'success');
-}
-
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    try {
-      const imported = JSON.parse(e.target.result);
-      if (!Array.isArray(imported)) throw new Error();
-      if (!confirm(`Импортировать ${imported.length} постов? Текущие будут заменены.`)) return;
-      
-      for (const post of allPosts) {
-        await deletePostFromFirebase(post.id);
-      }
-      
-      for (const post of imported) {
-        await savePostToFirebase(post);
-      }
-      
-      showToast(`✅ Импортировано: ${imported.length} постов`, 'success');
-    } catch {
-      showToast('❌ Ошибка файла', 'error');
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
-
+// ===== TOAST =====
 function showToast(message, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = message;
   toast.className = `toast ${type} show`;
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
+// ===== ЗАКРЫТИЕ МОДАЛКИ ПО КЛИКУ НА ФОН =====
+document.getElementById('createModal').addEventListener('click', (e) => {
+  if (e.target.id === 'createModal') closeCreateModal();
+});
 
 // ===== ИНИЦИАЛИЗАЦИЯ =====
 window.addEventListener('load', () => {
@@ -1560,11 +1230,10 @@ window.addEventListener('load', () => {
 });
 
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) {
-    loadPostsFromFirebase();
-  }
+  if (!document.hidden) loadPostsFromFirebase();
 });
 </script>
 
 </body>
 </html>
+
