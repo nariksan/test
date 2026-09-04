@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>EVGENII AI — Творческий дневник</title>
 <link rel="icon" type="image/png" href="favicon-48x48.png">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -50,26 +50,30 @@ a { color: inherit; text-decoration: none; }
               radial-gradient(circle at 85% 80%, rgba(78,205,196,0.06), transparent 50%);
 }
 
-/* ===== NAV ===== */
+/* ===== НАВИГАЦИЯ ===== */
 nav {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 15px 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   z-index: 1000;
   backdrop-filter: blur(20px);
-  background: rgba(10,10,15,0.85);
+  background: rgba(10,10,15,0.9);
   border-bottom: 1px solid var(--border);
-  gap: 15px;
+}
+
+.nav-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px 8px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .logo {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 900;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -77,88 +81,133 @@ nav {
   flex-shrink: 0;
 }
 
-.nav-scroll {
-  flex: 1;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.nav-scroll::-webkit-scrollbar { display: none; }
-
-.nav-links {
-  display: flex;
-  gap: 25px;
-  list-style: none;
-  align-items: center;
-  white-space: nowrap;
-  padding: 5px 0;
+.logo-ai {
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  vertical-align: middle;
+  margin-left: 4px;
 }
 
-.nav-links a {
+.nav-slogan {
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-dim);
-  transition: color 0.3s;
-  cursor: pointer;
-  flex-shrink: 0;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
-.nav-links a:hover { color: var(--text); }
 
-.nav-right {
+.nav-slogan .dot {
+  color: var(--accent-2);
+  margin: 0 6px;
+}
+
+.nav-bottom {
   display: flex;
-  gap: 10px;
   align-items: center;
-  flex-shrink: 0;
+  justify-content: center;
+  padding: 8px 20px 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-link {
+  padding: 8px 18px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.nav-link.primary {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  border-color: transparent;
+  color: #fff;
+}
+.nav-link.primary:hover {
+  box-shadow: 0 0 20px rgba(255,107,107,0.4);
+  transform: translateY(-1px);
+}
+
+.nav-link.home {
+  border-color: rgba(255,230,109,0.3);
+  color: var(--accent-3);
+}
+.nav-link.home:hover {
+  background: rgba(255,230,109,0.1);
+}
+
+.nav-link.admin {
+  border-color: rgba(255,179,71,0.3);
+  color: var(--warning);
+}
+.nav-link.admin:hover {
+  background: rgba(255,179,71,0.1);
+}
+
+.nav-link.logout {
+  border-color: rgba(255,107,107,0.3);
+  color: var(--danger);
+}
+.nav-link.logout:hover {
+  background: rgba(255,107,107,0.1);
 }
 
 .user-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 6px 12px;
   border-radius: 20px;
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
   font-size: 0.8rem;
   color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .user-avatar {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: #fff;
+  flex-shrink: 0;
 }
-
-.btn-small {
-  padding: 8px 16px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  font-size: 0.75rem;
-  cursor: pointer;
-  color: var(--text);
-  font-weight: 600;
-  transition: all 0.3s;
-  white-space: nowrap;
-}
-.btn-small:hover { background: rgba(255,255,255,0.1); }
-.btn-small.primary {
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  border-color: transparent;
-  color: #fff;
-}
-.btn-small.primary:hover { box-shadow: 0 0 20px rgba(255,107,107,0.4); }
-.btn-small.home { border-color: var(--accent-3); color: var(--accent-3); }
-.btn-small.home:hover { background: rgba(255,230,109,0.15); }
-.btn-small.admin { border-color: var(--warning); color: var(--warning); }
-.btn-small.admin:hover { background: rgba(255,179,71,0.15); }
 
 /* ===== HERO ===== */
 .hero {
@@ -170,7 +219,7 @@ nav {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 100px 20px 60px;
+  padding: 140px 20px 60px;
 }
 
 .hero-badge {
@@ -240,7 +289,7 @@ nav {
 .categories {
   position: relative;
   z-index: 1;
-  padding: 40px 50px;
+  padding: 40px 20px;
   text-align: center;
 }
 
@@ -254,24 +303,24 @@ nav {
 
 .filter-buttons {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .filter-btn {
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 50px;
   background: var(--card);
   border: 1px solid var(--border);
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 .filter-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); transform: translateY(-2px); }
 .filter-btn.active {
@@ -279,19 +328,19 @@ nav {
   color: #fff;
   border-color: transparent;
 }
-.filter-count { font-size: 0.75rem; opacity: 0.7; }
+.filter-count { font-size: 0.7rem; opacity: 0.7; }
 
 /* ===== POSTS ===== */
 .posts-section {
   position: relative;
   z-index: 1;
-  padding: 0 50px 100px;
+  padding: 0 20px 100px;
 }
 
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -508,23 +557,24 @@ footer {
 /* ===== FAB ===== */
 .fab {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 60px;
-  height: 60px;
+  bottom: 25px;
+  right: 25px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   border: none;
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   cursor: pointer;
   box-shadow: 0 10px 30px rgba(255,107,107,0.4);
   transition: all 0.3s;
   z-index: 100;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
 }
+.fab.visible { display: flex; }
 .fab:hover {
   transform: translateY(-5px) scale(1.1);
   box-shadow: 0 15px 40px rgba(255,107,107,0.6);
@@ -540,7 +590,7 @@ footer {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 15px;
   overflow-y: auto;
 }
 .modal-overlay.active { display: flex; }
@@ -549,7 +599,7 @@ footer {
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: 24px;
-  padding: 30px;
+  padding: 25px;
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
@@ -557,12 +607,12 @@ footer {
 }
 
 .modal-content.wide { max-width: 900px; }
-.modal-content.small { max-width: 450px; }
+.modal-content.small { max-width: 420px; }
 
 .modal-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -578,7 +628,7 @@ footer {
 .auth-warning-text {
   text-align: center;
   color: var(--text-dim);
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.6;
   margin-bottom: 25px;
 }
@@ -649,7 +699,7 @@ footer {
   color: var(--text-dim);
   font-size: 0.85rem;
   cursor: pointer;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   transition: color 0.3s;
 }
 .auth-back-btn:hover { color: var(--text); }
@@ -712,13 +762,13 @@ footer {
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 12px;
 }
-.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
 .form-group.full { grid-column: 1 / -1; }
 
 .form-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -726,12 +776,12 @@ footer {
 }
 
 .form-input, .form-select, .form-textarea {
-  padding: 12px 16px;
+  padding: 11px 14px;
   border-radius: 12px;
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-family: inherit;
   transition: border-color 0.3s;
 }
@@ -739,7 +789,7 @@ footer {
   outline: none;
   border-color: var(--accent-2);
 }
-.form-textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+.form-textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
 
 .form-hint {
   font-size: 0.8rem;
@@ -755,18 +805,18 @@ footer {
 .form-actions {
   display: flex;
   gap: 10px;
-  margin-top: 25px;
+  margin-top: 20px;
   justify-content: flex-end;
   flex-wrap: wrap;
 }
 
 .btn {
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
@@ -791,24 +841,24 @@ footer {
 /* ===== ADMIN PANEL ===== */
 .admin-tabs {
   display: flex;
-  gap: 10px;
-  margin-bottom: 25px;
+  gap: 8px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
 .admin-tab {
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 12px;
   background: var(--card);
   border: 1px solid var(--border);
   color: var(--text-dim);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 .admin-tab:hover { background: var(--card-2); }
 .admin-tab.active {
@@ -821,15 +871,15 @@ footer {
   background: rgba(255,255,255,0.2);
   padding: 2px 8px;
   border-radius: 10px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 .admin-post-item {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 15px;
+  padding: 18px;
+  margin-bottom: 12px;
   transition: all 0.3s;
 }
 .admin-post-item:hover { border-color: rgba(255,255,255,0.15); }
@@ -838,47 +888,47 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .admin-post-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   flex: 1;
 }
 
 .admin-post-meta {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
   margin-bottom: 10px;
   display: flex;
-  gap: 15px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .admin-post-text {
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.6;
-  margin-bottom: 15px;
-  max-height: 100px;
+  margin-bottom: 12px;
+  max-height: 80px;
   overflow: hidden;
   position: relative;
 }
 
 .admin-post-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .status-badge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 20px;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -890,14 +940,15 @@ footer {
 /* ===== TOAST ===== */
 .toast {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  padding: 15px 25px;
-  border-radius: 14px;
+  bottom: 25px;
+  right: 25px;
+  padding: 12px 20px;
+  border-radius: 12px;
   background: var(--bg-2);
   border: 1px solid var(--border);
   color: var(--text);
   font-weight: 600;
+  font-size: 0.9rem;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   transform: translateY(100px);
   opacity: 0;
@@ -906,23 +957,214 @@ footer {
   display: flex;
   align-items: center;
   gap: 10px;
+  max-width: calc(100% - 50px);
 }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast.success { border-color: var(--success); }
 .toast.error { border-color: var(--danger); }
 
-@media (max-width: 768px) {
-  nav { padding: 15px 20px; }
-  .nav-links { gap: 15px; }
-  .nav-links a { font-size: 0.8rem; }
-  .categories, .posts-section { padding-left: 20px; padding-right: 20px; }
-  .posts-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 30px; }
-  .form-grid { grid-template-columns: 1fr; }
-  .hero { padding-top: 80px; }
-  .fab { bottom: 20px; right: 20px; width: 55px; height: 55px; }
-  .user-badge span.user-name-text { display: none; }
-  .auth-choice-buttons { flex-direction: column; }
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 900px) {
+  .hero-stats { gap: 40px; }
+  .stat-num { font-size: 2.5rem; }
+  .posts-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .nav-top {
+    padding: 10px 15px 6px;
+    gap: 8px;
+  }
+  
+  .logo {
+    font-size: 1.1rem;
+  }
+  
+  .logo-ai {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+  }
+  
+  .nav-slogan {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+  
+  .nav-bottom {
+    padding: 6px 10px 10px;
+    gap: 6px;
+  }
+  
+  .nav-menu {
+    gap: 5px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    width: 100%;
+    padding-bottom: 4px;
+  }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  
+  .nav-link {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+    flex-shrink: 0;
+  }
+  
+  .user-badge {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+  
+  .user-avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+  }
+  
+  .hero {
+    padding: 120px 15px 40px;
+  }
+  
+  .hero-title {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+  
+  .hero-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+  }
+  
+  .hero-badge {
+    font-size: 0.8rem;
+    padding: 8px 18px;
+    margin-bottom: 20px;
+  }
+  
+  .hero-stats {
+    gap: 25px;
+  }
+  
+  .stat-num {
+    font-size: 2rem;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .categories {
+    padding: 30px 15px;
+  }
+  
+  .filter-btn {
+    padding: 8px 14px;
+    font-size: 0.78rem;
+  }
+  
+  .posts-section {
+    padding: 0 15px 80px;
+  }
+  
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .post-title {
+    font-size: 1.15rem;
+  }
+  
+  .post-text {
+    font-size: 0.9rem;
+  }
+  
+  .modal-content {
+    padding: 20px 15px;
+    border-radius: 20px;
+  }
+  
+  .modal-content.small {
+    max-width: 100%;
+  }
+  
+  .modal-title {
+    font-size: 1.15rem;
+  }
+  
+  .auth-choice-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .auth-warning-icon {
+    font-size: 2.5rem;
+  }
+  
+  .auth-warning-text {
+    font-size: 0.9rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .admin-tabs {
+    gap: 6px;
+  }
+  
+  .admin-tab {
+    padding: 7px 12px;
+    font-size: 0.72rem;
+  }
+  
+  .admin-post-item {
+    padding: 14px;
+  }
+  
+  .admin-post-actions {
+    flex-direction: column;
+  }
+  
+  .admin-post-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .fab {
+    width: 52px;
+    height: 52px;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.3rem;
+  }
+  
+  .toast {
+    bottom: 20px;
+    right: 15px;
+    left: 15px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .logo { font-size: 1rem; }
+  .logo-ai { font-size: 0.65rem; padding: 2px 6px; }
+  .nav-slogan { font-size: 0.65rem; }
+  .nav-link { padding: 4px 8px; font-size: 0.68rem; }
+  .hero-title { font-size: clamp(2rem, 12vw, 3rem); }
 }
 </style>
 </head>
@@ -932,25 +1174,24 @@ footer {
 
 <!-- ===== НАВИГАЦИЯ ===== -->
 <nav>
-  <div class="logo">EVGENII AI</div>
-  <div class="nav-scroll">
-    <ul class="nav-links">
-      <li><a onclick="showMainView()">Главная</a></li>
-      <li><a onclick="filterPosts('thoughts')">Мысли</a></li>
-      <li><a onclick="filterPosts('songs')">Песни</a></li>
-      <li><a onclick="filterPosts('stories')">Истории</a></li>
-      <li><a onclick="filterPosts('photos')">Фото</a></li>
-    </ul>
-  </div>
-  <div class="nav-right">
-    <div class="user-badge" id="userBadge" style="display:none;">
-      <div class="user-avatar" id="userAvatar">?</div>
-      <span class="user-name-text" id="userNameDisplay">Гость</span>
+  <div class="nav-top">
+    <div class="logo">EVGENII<span class="logo-ai">AI</span></div>
+    <div class="nav-slogan">
+      МУЗЫКА<span class="dot">·</span>МЫСЛИ<span class="dot">·</span>ТВОРЧЕСТВО
     </div>
-    <button class="btn-small home" onclick="goToHome()">🏠 На главную</button>
-    <button class="btn-small primary" id="writeBtn" onclick="onWriteClick()">✏️ Написать</button>
-    <button class="btn-small" id="logoutBtn" onclick="handleLogout()" style="display:none;">Выйти</button>
-    <button class="btn-small admin" id="adminBtn" onclick="openAdminLogin()">⚙️ Админ</button>
+  </div>
+  
+  <div class="nav-bottom">
+    <div class="nav-menu">
+      <button class="nav-link home" onclick="goToHome()">🏠 На главную</button>
+      <button class="nav-link primary" id="writeNavBtn" onclick="onWriteClick()">✏️ Написать</button>
+      <button class="nav-link admin" id="adminNavBtn" onclick="openAdminPanel()" style="display:none;">⚙️ Админ</button>
+      <div class="user-badge" id="userBadge" style="display:none;">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span id="userNameDisplay">Гость</span>
+      </div>
+      <button class="nav-link logout" id="logoutNavBtn" onclick="handleLogout()" style="display:none;">🚪 Выйти</button>
+    </div>
   </div>
 </nav>
 
@@ -1003,7 +1244,7 @@ footer {
       <button class="auth-choice-btn login-btn" onclick="showAuthForm('login')">🔑 Вход</button>
       <button class="auth-choice-btn register-btn" onclick="showAuthForm('register')">📝 Регистрация</button>
     </div>
-    <div class="auth-close-hint" onclick="closeAuthChoice()">✕ Закрыть и продолжить чтение</div>
+    <div class="auth-close-hint" onclick="closeAuthChoice()"> Закрыть и продолжить чтение</div>
   </div>
 </div>
 
@@ -1014,7 +1255,7 @@ footer {
     <!-- ФОРМА ВХОДА -->
     <div class="auth-form-container" id="loginFormContainer">
       <div class="auth-back-btn" onclick="backToChoice()">← Назад к выбору</div>
-      <div class="modal-title" style="justify-content:center;">🔑 Вход</div>
+      <div class="modal-title" style="justify-content:center;"> Вход</div>
       <form class="auth-form" onsubmit="handleLogin(event)">
         <input type="text" class="auth-input" id="loginPhone" placeholder="Последние 4 цифры телефона" maxlength="4" pattern="[0-9]{4}" required>
         <input type="text" class="auth-input" id="loginName" placeholder="Ваше имя" required>
@@ -1056,7 +1297,7 @@ footer {
     </div>
 
     <div class="form-hint">
-      ️ <b>Внимание:</b> После публикации запись отправится на модерацию. Она появится на сайте после одобрения администратора.
+      ⚠️ <b>Внимание:</b> После публикации запись отправится на модерацию. Она появится на сайте после одобрения администратора.
     </div>
 
     <div class="form-grid">
@@ -1098,37 +1339,23 @@ footer {
   </div>
 </div>
 
-<!-- ===== МОДАЛКА ВХОДА АДМИНА ===== -->
-<div class="modal-overlay" id="adminLoginModal">
-  <div class="modal-content small">
-    <div class="modal-title" style="justify-content:center;">🔐 Вход для администратора</div>
-    <p style="color:var(--text-dim); margin-bottom:20px; font-size:0.9rem; text-align:center;">Введите пароль владельца сайта</p>
-    <input type="password" class="form-input" id="adminPassword" placeholder="Пароль администратора" style="margin-bottom:15px;">
-    <div class="auth-error" id="adminError" style="margin-bottom:15px;"></div>
-    <div style="display:flex; gap:10px;">
-      <button class="btn" onclick="closeAdminLogin()" style="flex:1;">Отмена</button>
-      <button class="btn btn-primary" onclick="checkAdminPassword()" style="flex:1;">Войти</button>
-    </div>
-  </div>
-</div>
-
 <!-- ===== АДМИН-ПАНЕЛЬ ===== -->
 <div class="modal-overlay" id="adminPanelModal">
   <div class="modal-content wide">
     <div class="modal-title" style="justify-content:space-between;">
-      <span>⚙️ Панель модерации</span>
-      <button class="btn" onclick="closeAdminPanel()">✕ Закрыть</button>
+      <span>️ Панель модерации</span>
+      <button class="btn" onclick="closeAdminPanel()"> Закрыть</button>
     </div>
 
     <div class="admin-tabs">
       <div class="admin-tab active" data-tab="pending" onclick="switchAdminTab('pending')">
-        ⏳ На модерации <span class="count" id="pendingCount">0</span>
+         На модерации <span class="count" id="pendingCount">0</span>
       </div>
       <div class="admin-tab" data-tab="approved" onclick="switchAdminTab('approved')">
         ✅ Опубликовано <span class="count" id="approvedCount">0</span>
       </div>
       <div class="admin-tab" data-tab="rejected" onclick="switchAdminTab('rejected')">
-        ❌ Отклонено <span class="count" id="rejectedCount">0</span>
+         Отклонено <span class="count" id="rejectedCount">0</span>
       </div>
       <div class="admin-tab" data-tab="all" onclick="switchAdminTab('all')">
         📋 Все <span class="count" id="allCount">0</span>
@@ -1152,7 +1379,7 @@ footer {
         <label class="form-label">Категория</label>
         <select class="form-select" id="adminEditCategory">
           <option value="thoughts">💭 Мысль</option>
-          <option value="songs"> Песня</option>
+          <option value="songs">🎵 Песня</option>
           <option value="stories">📖 История</option>
           <option value="photos">📸 Фото</option>
         </select>
@@ -1212,13 +1439,11 @@ try {
 } catch (e) { console.error('Ошибка Firebase:', e); }
 
 // ===== КОНСТАНТЫ =====
-const ADMIN_PASSWORD = 'N130289s';
 const USERS_COLLECTION = 'diary_users';
 const POSTS_COLLECTION = 'diary_posts';
 
 // ===== СОСТОЯНИЕ =====
 let currentUser = null;
-let isAdmin = false;
 let allPosts = [];
 let unsubscribePosts = null;
 let editingId = null;
@@ -1226,8 +1451,19 @@ let adminEditingId = null;
 let currentFilter = 'all';
 let currentAdminTab = 'pending';
 
+// ===== ДАННЫЕ ВЛАДЕЛЬЦА (для автоматического создания) =====
+const OWNER_DATA = {
+  phoneLast4: '3734',
+  name: 'Евгений',
+  password: 'N130289s',
+  isAdmin: true
+};
+
 // ===== ПРИ ЗАГРУЗКЕ =====
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
+  // Создаём владельца в базе, если его нет
+  await ensureOwnerExists();
+  
   // Проверяем сохранённую сессию
   const savedUser = localStorage.getItem('diary_current_user');
   if (savedUser) {
@@ -1239,31 +1475,61 @@ window.addEventListener('load', () => {
     }
   }
   
-  // Сразу загружаем посты (читать может любой)
   loadPostsFromFirebase();
   setTodayDate();
 });
 
+// ===== СОЗДАНИЕ ВЛАДЕЛЬЦА В БАЗЕ =====
+async function ensureOwnerExists() {
+  if (!db) return;
+  
+  try {
+    const snapshot = await db.collection(USERS_COLLECTION)
+      .where('phoneLast4', '==', OWNER_DATA.phoneLast4)
+      .where('name', '==', OWNER_DATA.name)
+      .get();
+    
+    if (snapshot.empty) {
+      // Владелец не найден - создаём
+      await db.collection(USERS_COLLECTION).add({
+        ...OWNER_DATA,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      console.log('Владелец создан в базе');
+    }
+  } catch (error) {
+    console.error('Ошибка проверки владельца:', error);
+  }
+}
+
 // ===== ОБНОВЛЕНИЕ UI ПОЛЬЗОВАТЕЛЯ =====
 function updateUserUI() {
   if (currentUser) {
-    document.getElementById('userBadge').style.display = 'flex';
+    document.getElementById('userBadge').style.display = 'inline-flex';
     document.getElementById('userAvatar').textContent = currentUser.name[0].toUpperCase();
     document.getElementById('userNameDisplay').textContent = currentUser.name;
-    document.getElementById('logoutBtn').style.display = 'inline-flex';
+    document.getElementById('logoutNavBtn').style.display = 'inline-flex';
+    document.getElementById('fabBtn').classList.add('visible');
+    
+    // Показываем кнопку Админ только для владельца
+    if (currentUser.isAdmin) {
+      document.getElementById('adminNavBtn').style.display = 'inline-flex';
+    } else {
+      document.getElementById('adminNavBtn').style.display = 'none';
+    }
   } else {
     document.getElementById('userBadge').style.display = 'none';
-    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('logoutNavBtn').style.display = 'none';
+    document.getElementById('adminNavBtn').style.display = 'none';
+    document.getElementById('fabBtn').classList.remove('visible');
   }
 }
 
 // ===== КНОПКА "НАПИСАТЬ" =====
 function onWriteClick() {
   if (currentUser) {
-    // Пользователь авторизован — открываем форму создания
     openCreateModal();
   } else {
-    // Не авторизован — показываем выбор вход/регистрация
     openAuthChoice();
   }
 }
@@ -1280,19 +1546,15 @@ function closeAuthChoice() {
 }
 
 function showAuthForm(type) {
-  // Закрываем выбор, открываем форму
   document.getElementById('authChoiceModal').classList.remove('active');
   document.getElementById('authFormModal').classList.add('active');
   
-  // Скрываем обе формы
   document.getElementById('loginFormContainer').classList.remove('active');
   document.getElementById('registerFormContainer').classList.remove('active');
   
-  // Очищаем ошибки
   document.getElementById('loginError').textContent = '';
   document.getElementById('regError').textContent = '';
   
-  // Показываем нужную
   if (type === 'login') {
     document.getElementById('loginFormContainer').classList.add('active');
     setTimeout(() => document.getElementById('loginPhone').focus(), 100);
@@ -1353,6 +1615,7 @@ async function handleRegister(e) {
       phoneLast4: phone,
       name: name,
       password: password,
+      isAdmin: false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     
@@ -1362,7 +1625,8 @@ async function handleRegister(e) {
       id: docRef.id,
       phoneLast4: phone,
       name: name,
-      password: password
+      password: password,
+      isAdmin: false
     };
     
     localStorage.setItem('diary_current_user', JSON.stringify(currentUser));
@@ -1372,8 +1636,6 @@ async function handleRegister(e) {
     document.body.style.overflow = '';
     
     showToast('✅ Регистрация успешна! Теперь вы можете писать.', 'success');
-    
-    // Сразу открываем форму создания
     setTimeout(() => openCreateModal(), 500);
   } catch (error) {
     console.error(error);
@@ -1418,9 +1680,7 @@ async function handleLogin(e) {
     document.getElementById('authFormModal').classList.remove('active');
     document.body.style.overflow = '';
     
-    showToast('👋 Добро пожаловать, ' + currentUser.name + '!', 'success');
-    
-    // Сразу открываем форму создания
+    showToast(' Добро пожаловать, ' + currentUser.name + '!', 'success');
     setTimeout(() => openCreateModal(), 500);
   } catch (error) {
     console.error(error);
@@ -1432,7 +1692,6 @@ async function handleLogin(e) {
 function handleLogout() {
   if (!confirm('Выйти из аккаунта?')) return;
   currentUser = null;
-  isAdmin = false;
   localStorage.removeItem('diary_current_user');
   updateUserUI();
   renderPosts();
@@ -1459,7 +1718,7 @@ function loadPostsFromFirebase() {
       console.log('Загружено постов:', allPosts.length);
       renderPosts();
       updateStats();
-      if (isAdmin) renderAdminPosts();
+      if (currentUser && currentUser.isAdmin) renderAdminPosts();
     }, error => {
       console.error('Ошибка загрузки постов:', error);
     });
@@ -1468,7 +1727,7 @@ function loadPostsFromFirebase() {
 // ===== FIREBASE ОПЕРАЦИИ =====
 async function savePostToFirebase(post) {
   if (!db) {
-    showToast(' База данных недоступна', 'error');
+    showToast('❌ База данных недоступна', 'error');
     return null;
   }
   try {
@@ -1476,7 +1735,7 @@ async function savePostToFirebase(post) {
     return docRef.id;
   } catch (error) {
     console.error(error);
-    showToast('❌ Ошибка: ' + error.message, 'error');
+    showToast(' Ошибка: ' + error.message, 'error');
     return null;
   }
 }
@@ -1498,7 +1757,7 @@ async function updatePostInFirebase(postId, postData) {
 
 async function deletePostFromFirebase(postId) {
   if (!db) {
-    showToast('❌ База данных недоступна', 'error');
+    showToast(' База данных недоступна', 'error');
     return false;
   }
   try {
@@ -1785,29 +2044,13 @@ async function deletePost(id) {
 }
 
 // ===== АДМИН-ПАНЕЛЬ =====
-function openAdminLogin() {
-  document.getElementById('adminLoginModal').classList.add('active');
-  document.getElementById('adminPassword').value = '';
-  document.getElementById('adminError').textContent = '';
-  setTimeout(() => document.getElementById('adminPassword').focus(), 100);
-}
-
-function closeAdminLogin() {
-  document.getElementById('adminLoginModal').classList.remove('active');
-}
-
-function checkAdminPassword() {
-  const password = document.getElementById('adminPassword').value;
-  if (password === ADMIN_PASSWORD) {
-    isAdmin = true;
-    closeAdminLogin();
-    openAdminPanel();
-  } else {
-    document.getElementById('adminError').textContent = '❌ Неверный пароль!';
-  }
-}
-
 function openAdminPanel() {
+  // Проверяем, что это владелец
+  if (!currentUser || !currentUser.isAdmin) {
+    showToast('Доступ запрещён', 'error');
+    return;
+  }
+  
   document.getElementById('adminPanelModal').classList.add('active');
   document.body.style.overflow = 'hidden';
   currentAdminTab = 'pending';
@@ -1817,7 +2060,6 @@ function openAdminPanel() {
 function closeAdminPanel() {
   document.getElementById('adminPanelModal').classList.remove('active');
   document.body.style.overflow = '';
-  isAdmin = false;
 }
 
 function switchAdminTab(tab) {
@@ -1851,7 +2093,7 @@ function renderAdminPosts() {
   
   list.innerHTML = filtered.map(post => {
     const statusLabels = {
-      pending: '⏳ На модерации',
+      pending: ' На модерации',
       approved: '✅ Опубликовано',
       rejected: '❌ Отклонено'
     };
@@ -1864,10 +2106,10 @@ function renderAdminPosts() {
         </div>
         <div class="admin-post-meta">
           <span>👤 ${escapeHtml(post.author || 'Аноним')}</span>
-          <span> ${post.date}</span>
+          <span>📅 ${post.date}</span>
           <span>📂 ${categoryNames[post.category]}</span>
           <span>♡ ${post.likes || 0}</span>
-          ${post.adminNote ? `<span style="color:var(--warning);"> ${escapeHtml(post.adminNote)}</span>` : ''}
+          ${post.adminNote ? `<span style="color:var(--warning);">💬 ${escapeHtml(post.adminNote)}</span>` : ''}
         </div>
         <div class="admin-post-text">${escapeHtml(post.text)}</div>
         <div class="admin-post-actions">
