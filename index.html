@@ -24,7 +24,8 @@ body {
   background: var(--dark-bg);
   color: #fff;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .grid-bg {
@@ -134,6 +135,7 @@ body {
   width: 100%;
   max-width: 600px;
   animation: fadeInUp 1s ease;
+  padding: 20px 0;
 }
 
 .project-selector { display: none; max-width: 800px; }
@@ -146,56 +148,59 @@ body {
 
 .login-logo {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(3rem, 8vw, 5rem);
+  font-size: clamp(2.5rem, 7vw, 4rem);
   font-weight: 900;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   margin-bottom: 10px;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 30px rgba(0, 243, 255, 0.5));
+  text-align: center;
+  white-space: nowrap;
 }
 
 .ai-badge {
   display: inline-block;
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
   font-weight: 900;
-  letter-spacing: 0.25em;
-  padding: 8px 20px;
-  border-radius: 12px;
+  letter-spacing: 0.2em;
+  padding: 6px 16px;
+  border-radius: 10px;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
   color: #000;
   box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
-  margin-left: 15px;
+  margin-left: 10px;
   -webkit-text-fill-color: #000;
 }
 
 .login-slogan {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 70px;
+  margin-bottom: 50px;
   text-align: center;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  padding: 0 10px;
 }
 
 .login-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 25px;
 }
 
 .login-input {
   width: 100%;
-  padding: 22px 30px;
+  padding: 20px 25px;
   border: 2px solid rgba(0, 243, 255, 0.3);
   border-radius: 16px;
   background: rgba(10, 10, 20, 0.6);
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-family: 'Inter', sans-serif;
   outline: none;
   transition: all 0.3s ease;
@@ -211,14 +216,14 @@ body {
 
 .login-btn {
   width: 100%;
-  padding: 24px;
+  padding: 20px;
   border: none;
   border-radius: 16px;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
   background-size: 200% 200%;
   animation: gradientFlow 4s ease infinite;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
   font-family: 'Orbitron', sans-serif;
   cursor: pointer;
@@ -240,40 +245,42 @@ body {
 
 .selector-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   margin-bottom: 15px;
   text-align: center;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-transform: uppercase;
+  padding: 0 10px;
 }
 
 .selector-subtitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 70px;
+  margin-bottom: 40px;
   text-align: center;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  padding: 0 10px;
 }
 
 .project-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 35px;
+  gap: 25px;
   width: 100%;
 }
 
 .project-card {
-  padding: 50px 40px;
+  padding: 40px 30px;
   background: rgba(20, 20, 40, 0.4);
   border: 2px solid rgba(0, 243, 255, 0.2);
-  border-radius: 30px;
+  border-radius: 24px;
   cursor: pointer;
   transition: all 0.5s ease;
   text-align: center;
@@ -281,23 +288,23 @@ body {
 }
 
 .project-card:hover {
-  transform: translateY(-15px) scale(1.03);
+  transform: translateY(-10px) scale(1.02);
   border-color: var(--neon-cyan);
-  box-shadow: 0 30px 80px rgba(0, 243, 255, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 243, 255, 0.3);
 }
 
 .project-card-icon {
-  font-size: 5rem;
-  margin-bottom: 30px;
+  font-size: 4rem;
+  margin-bottom: 20px;
   display: block;
 }
 
 .project-card-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: 1.6rem;
+  font-size: clamp(1.3rem, 4vw, 1.6rem);
   font-weight: 700;
-  letter-spacing: 0.15em;
-  margin-bottom: 15px;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
   text-transform: uppercase;
   background: linear-gradient(135deg, #fff, var(--neon-cyan));
   -webkit-background-clip: text;
@@ -306,10 +313,10 @@ body {
 
 .project-card-desc {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.6);
-  line-height: 1.8;
+  line-height: 1.6;
   letter-spacing: 0.05em;
 }
 
@@ -323,9 +330,10 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 15px;
   opacity: 0;
   transition: opacity 0.4s ease;
+  overflow-y: auto;
 }
 
 .license-modal.active {
@@ -339,10 +347,11 @@ body {
   max-height: 90vh;
   background: linear-gradient(180deg, rgba(15, 21, 37, 0.95) 0%, rgba(10, 14, 26, 0.95) 100%);
   border: 2px solid var(--neon-cyan);
-  border-radius: 30px;
-  padding: 50px 40px 40px;
+  border-radius: 24px;
+  padding: 30px 20px 25px;
   overflow-y: auto;
   box-shadow: 0 0 60px rgba(0, 243, 255, 0.3);
+  margin: auto;
 }
 
 .license-content::-webkit-scrollbar { width: 6px; }
@@ -350,19 +359,19 @@ body {
 
 .license-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .license-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
+  font-size: 3rem;
+  margin-bottom: 15px;
 }
 
 .license-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: 1.6rem;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -370,40 +379,40 @@ body {
 }
 
 .license-text {
-  font-size: 0.95rem;
-  line-height: 1.9;
+  font-size: 0.9rem;
+  line-height: 1.8;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .license-text h4 {
   font-family: 'Orbitron', sans-serif;
   color: var(--neon-cyan);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
-  margin: 30px 0 15px;
+  letter-spacing: 0.1em;
+  margin: 25px 0 12px;
   text-transform: uppercase;
 }
 
 .license-text ul {
-  padding-left: 25px;
-  margin: 15px 0;
+  padding-left: 20px;
+  margin: 12px 0;
 }
 
 .license-text li {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .license-checkbox-wrapper {
   display: flex;
   align-items: flex-start;
-  gap: 18px;
-  padding: 22px;
-  margin: 35px 0;
+  gap: 15px;
+  padding: 18px;
+  margin: 25px 0;
   background: rgba(0, 243, 255, 0.05);
   border: 2px solid rgba(0, 243, 255, 0.2);
-  border-radius: 16px;
+  border-radius: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -414,13 +423,14 @@ body {
 }
 
 .license-checkbox {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   border: 2px solid rgba(0, 243, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .license-checkbox-wrapper.checked .license-checkbox {
@@ -430,15 +440,15 @@ body {
 
 .license-agree-btn {
   width: 100%;
-  padding: 22px;
+  padding: 18px;
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
   color: #fff;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 800;
   font-family: 'Orbitron', sans-serif;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
   opacity: 0.4;
@@ -452,8 +462,42 @@ body {
 }
 
 .license-agree-btn:not(:disabled):hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 60px rgba(0, 243, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0, 243, 255, 0.5);
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto !important;
+  }
+  
+  .main-container {
+    padding: 15px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  
+  .login-screen, .project-selector {
+    padding: 10px 0;
+  }
+  
+  .login-slogan {
+    margin-bottom: 35px;
+  }
+  
+  .selector-subtitle {
+    margin-bottom: 30px;
+  }
+  
+  .project-card {
+    padding: 30px 20px;
+  }
+  
+  .project-card-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+  }
 }
 
 @media (min-width: 700px) {
