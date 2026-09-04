@@ -216,6 +216,40 @@ body {
   margin: 0 auto;
 }
 
+/* ===== КНОПКА ВЫЙТИ В БАННЕРЕ ===== */
+.logout-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(10px);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 107, 107, 0.25);
+  border-color: #ff6b6b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+.logout-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
 .selector-header {
   display: flex;
   align-items: baseline;
@@ -580,6 +614,7 @@ body {
 @media (max-width: 600px) {
   .main-container { padding: 15px; justify-content: flex-start; padding-top: 20px; }
   .project-banner { padding: 20px 15px; margin-bottom: 25px; }
+  .logout-btn { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.75rem; }
   .selector-header { flex-direction: row; flex-wrap: wrap; justify-content: center; }
   .selector-title { font-size: 1rem; }
   .selector-subtitle { font-size: 0.8rem; width: 100%; margin-top: 5px; }
@@ -617,6 +652,14 @@ body {
   <div class="project-selector" id="projectSelector">
     
     <div class="project-banner">
+      <!-- КНОПКА ВЫЙТИ -->
+      <button class="logout-btn" onclick="logout()" title="Выйти из аккаунта">
+        <svg viewBox="0 0 24 24">
+          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+        </svg>
+        ВЫЙТИ
+      </button>
+      
       <h1 class="banner-logo">EVGENII<span style="font-size:0.3em; vertical-align:middle; margin-left:8px;">AI</span></h1>
       <div class="banner-tagline">ТВОРЧЕСКАЯ ВСЕЛЕННАЯ</div>
       <div class="banner-divider"></div>
@@ -633,7 +676,7 @@ body {
     
     <div class="project-grid">
       <div class="project-card" id="musicCard" onclick="selectProject('music')">
-        <div class="project-icon"></div>
+        <div class="project-icon">🎵</div>
         <h2 class="project-title">МУЗЫКА</h2>
         <p class="project-desc">
           Треки, плеер и живые обсуждения.<br>
@@ -811,6 +854,33 @@ function selectProject(project) {
   }
   if (project === 'music') window.location.href = 'music.html';
   if (project === 'diary') window.location.href = 'diary.html';
+}
+
+// ===== ФУНКЦИЯ ВЫХОДА =====
+function logout() {
+  if (confirm('Вы уверены, что хотите выйти?\n\nВам нужно будет снова ввести имя для входа.')) {
+    // Очищаем данные пользователя
+    localStorage.removeItem('evgenii_user');
+    localStorage.removeItem('evgenii_agreement_accepted');
+    
+    // Сбрасываем состояние
+    sectionStatus = { music: false, diary: false };
+    
+    // Показываем форму входа
+    document.getElementById('projectSelector').classList.remove('active');
+    document.getElementById('loginScreen').style.display = 'flex';
+    
+    // Очищаем поле ввода
+    document.getElementById('nameInput').value = '';
+    
+    // Сбрасываем чекбокс лицензии
+    isLicenseChecked = false;
+    document.getElementById('licenseCheckbox').classList.remove('checked');
+    document.getElementById('licenseBtn').classList.remove('active');
+    
+    // Прокрутка наверх
+    window.scrollTo(0, 0);
+  }
 }
 
 function loadSectionStatus() {
