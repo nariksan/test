@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EVGENII AI</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png?v=2">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png?v=2">
+<link rel="shortcut icon" href="favicon-48x48.png?v=2">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EVGENII AI">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#050508">
+<meta name="application-name" content="EVGENII AI">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #050508;
+  --bg-secondary: #0a0a12;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.12);
+  --accent-cyan: #00f0ff;
+  --accent-magenta: #ff00aa;
+  --accent-purple: #9d00ff;
+  --accent-gold: #ffcc00;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --success: #00ff9d;
+  --error: #ff3366;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --shadow-glow: 0 8px 32px rgba(0, 240, 255, 0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+.bg-mesh {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(255, 0, 170, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(157, 0, 255, 0.06) 0%, transparent 50%);
+  animation: meshMove 20s ease-in-out infinite alternate;
+}
+@keyframes meshMove {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.1) rotate(2deg); }
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-panel:hover {
+  border-color: var(--glass-highlight);
+  box-shadow: var(--shadow-glow);
+}
+
+.ai-badge {
+  display: inline-block;
+  font-size: 0.5em;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  color: #000;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.page {
+  display: none;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 20px 16px 140px;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease;
+}
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+.section-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 16px;
+  background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-purple));
+  border-radius: 2px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0, 240, 255, 0.4); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  padding: 12px 24px;
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-ghost:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0, 240, 255, 0.05); }
+.btn-ghost.danger { border-color: rgba(255, 51, 102, 0.3); color: var(--error); }
+.btn-ghost.danger:hover { border-color: var(--error); background: rgba(255, 51, 102, 0.05); }
+
+.btn-text {
+  background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.8rem; opacity: 0.5; transition: opacity 0.3s;
+}
+.btn-text:hover { opacity: 1; color: var(--accent-cyan); }
+
+.login-screen {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: var(--bg-primary);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.login-screen.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
+.login-container { width: 100%; max-width: 400px; text-align: center; }
+.login-logo {
+  font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.login-slogan { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 40px; letter-spacing: 1px; }
+.login-input {
+  width: 100%; padding: 16px 20px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03); color: var(--text-primary); font-size: 1rem;
+  font-family: 'Inter', sans-serif; outline: none; transition: all 0.3s ease; margin-bottom: 16px; text-align: center;
+}
+.login-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.15); }
+
+.main-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; margin-bottom: 24px; position: sticky; top: 10px; z-index: 50;
+}
+.header-brand { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 1.1rem; }
+.header-user { text-align: right; }
+.user-greeting { display: block; font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+.user-name { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--accent-cyan); }
+
+.hero-banner {
+  position: relative; padding: 40px 24px; text-align: center; overflow: hidden; margin-bottom: 32px;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.05), rgba(157, 0, 255, 0.05));
+}
+.hero-title { font-size: 2rem; font-weight: 900; margin-bottom: 12px; }
+.hero-slogan { color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem; }
+
+.bento-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 32px;
+}
+.bento-item {
+  padding: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 12px;
+}
+.bento-item:hover { transform: translateY(-3px); }
+.bento-icon {
+  width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+  border: 1px solid var(--glass-border);
+}
+.bento-text h3 { font-size: 0.95rem; font-weight: 600; font-family: 'Inter', sans-serif; }
+.bento-text p { font-size: 0.75rem; color: var(--text-secondary); }
+
+.bento-diary {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(255, 204, 0, 0.08), rgba(157, 0, 255, 0.08));
+  border-color: rgba(255, 204, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bento-diary:hover {
+  border-color: rgba(255, 204, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(255, 204, 0, 0.15), 0 0 40px rgba(157, 0, 255, 0.1);
+  transform: translateY(-4px);
+}
+.bento-diary::before {
+  content: '📔';
+  position: absolute;
+  top: -20px;
+  right: -15px;
+  font-size: 7rem;
+  opacity: 0.08;
+  transform: rotate(-15deg);
+  pointer-events: none;
+  transition: all 0.5s ease;
+}
+.bento-diary:hover::before {
+  opacity: 0.15;
+  transform: rotate(-10deg) scale(1.1);
+}
+.bento-diary .bento-icon {
+  background: linear-gradient(135deg, #ffcc00, #9d00ff);
+  border: none;
+  color: #000;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
+}
+.bento-diary .bento-text h3 {
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.bento-diary .bento-text p {
+  color: rgba(255, 204, 0, 0.7);
+}
+.bento-new-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  background: var(--accent-gold);
+  color: #000;
+  border-radius: 4px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 204, 0, 0); }
+}
+
+.release-card {
+  display: flex; align-items: center; gap: 16px; padding: 16px; cursor: pointer;
+}
+.release-cover {
+  width: 64px; height: 64px; border-radius: 14px; background: linear-gradient(135deg, #1a1a2e, #2a1a3a);
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+  position: relative; overflow: hidden; border: 1px solid var(--glass-border);
+}
+.release-cover img { width: 100%; height: 100%; object-fit: cover; }
+.release-badge {
+  position: absolute; top: 6px; left: 6px; background: var(--accent-cyan); color: #000;
+  font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;
+}
+.release-info { flex: 1; }
+.release-label { font-size: 0.65rem; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px; }
+.release-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+.release-meta { font-size: 0.8rem; color: var(--text-secondary); }
+
+.track-item {
+  display: flex; align-items: center; gap: 14px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer;
+}
+.track-item:hover { background: rgba(255, 255, 255, 0.05); }
+.track-item.active { border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.05); }
+.track-cover {
+  width: 50px; height: 50px; border-radius: 10px; background: linear-gradient(135deg, #1a1a2e, #2a1a3a);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
+}
+.track-cover img { width: 100%; height: 100%; object-fit: cover; }
+.track-info { flex: 1; min-width: 0; }
+.track-title { font-size: 0.95rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track-artist { font-size: 0.8rem; color: var(--text-secondary); }
+.track-duration { font-size: 0.85rem; color: var(--text-secondary); font-family: 'Orbitron', monospace; margin-right: 12px; }
+.track-download-btn {
+  width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--glass-border);
+  background: transparent; color: var(--text-secondary); cursor: pointer; display: flex;
+  align-items: center; justify-content: center; transition: all 0.2s;
+}
+.track-download-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+.track-download-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+.sticky-player {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
+  width: calc(100% - 32px); max-width: 600px; padding: 16px; z-index: 100;
+  border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 12px;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.sticky-player.visible { transform: translateX(-50%) translateY(0); }
+.player-top-row { display: flex; align-items: center; gap: 12px; }
+.player-cover {
+  width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, #1a1a2e, #2a1a3a);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
+}
+.player-cover img { width: 100%; height: 100%; object-fit: cover; }
+.player-details { flex: 1; min-width: 0; }
+.player-title { font-size: 0.95rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-artist { font-size: 0.75rem; color: var(--text-secondary); }
+.player-controls { display: flex; align-items: center; gap: 16px; }
+.ctrl-btn {
+  background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 4px;
+  display: flex; align-items: center; justify-content: center; transition: transform 0.2s;
+}
+.ctrl-btn:hover { transform: scale(1.1); color: var(--accent-cyan); }
+.ctrl-btn.play-btn {
+  width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #000; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+}
+.ctrl-btn.play-btn svg { width: 18px; height: 18px; fill: #000; margin-left: 2px; }
+.player-progress { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.time { font-size: 0.7rem; color: var(--text-secondary); font-family: 'Orbitron', monospace; min-width: 35px; }
+.time.end { text-align: right; }
+.progress-bar { flex: 1; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); border-radius: 2px; width: 0%; transition: width 0.1s linear; }
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 8, 0.9);
+  backdrop-filter: blur(12px); z-index: 2000; display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.modal-content {
+  width: 100%; max-width: 500px; background: var(--bg-secondary); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg); padding: 28px 24px; transform: translateY(20px) scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto;
+}
+.modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+.modal-header { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 3px; margin-bottom: 24px; color: var(--accent-cyan); }
+
+.yandex-pay-card {
+  position: relative; width: 100%; aspect-ratio: 16/10; border-radius: var(--radius-md); overflow: hidden;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255, 204, 0, 0.3); padding: 24px; display: flex; flex-direction: column;
+  justify-content: space-between; cursor: pointer; transition: all 0.3s ease;
+}
+.yandex-pay-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(255, 204, 0, 0.1); }
+.card-top-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.card-logo { display: flex; align-items: center; gap: 10px; }
+.card-logo-icon {
+  width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #ffcc00, #ff0000);
+  display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; font-family: 'Orbitron';
+}
+.card-logo-name { font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700; color: #ffcc00; letter-spacing: 1px; }
+.card-chip { width: 44px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, #ffd700, #b8860b); }
+.card-number { font-family: 'Orbitron', monospace; font-size: 1.3rem; font-weight: 700; letter-spacing: 3px; text-align: center; margin: 16px 0; user-select: all; }
+.card-bottom-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.copy-btn {
+  display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid rgba(255, 204, 0, 0.4);
+  border-radius: 8px; background: rgba(255, 204, 0, 0.1); color: #ffcc00; font-size: 0.75rem; font-weight: 700;
+  cursor: pointer; transition: all 0.3s;
+}
+.copy-btn:hover { background: rgba(255, 204, 0, 0.2); }
+.copy-btn.copied { background: rgba(0, 255, 157, 0.15); border-color: var(--success); color: var(--success); }
+
+.discussions-container {
+  display: flex; flex-direction: column; height: calc(100vh - 250px); min-height: 400px;
+}
+.discussions-list { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.discussion-item { display: flex; gap: 12px; animation: fadeIn 0.3s ease; }
+.discussion-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #000; flex-shrink: 0;
+}
+.discussion-bubble {
+  flex: 1; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border);
+  border-radius: 16px; border-top-left-radius: 4px; padding: 12px 16px;
+}
+.discussion-author { font-size: 0.85rem; font-weight: 600; color: var(--accent-cyan); margin-bottom: 4px; }
+.discussion-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+.discussion-input-area { padding: 16px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; align-items: flex-end; }
+.discussion-input {
+  flex: 1; padding: 12px 16px; border: 1px solid var(--glass-border); border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03); color: var(--text-primary); font-family: 'Inter'; font-size: 0.9rem;
+  outline: none; resize: none; min-height: 44px; max-height: 100px;
+}
+.discussion-input:focus { border-color: var(--accent-cyan); }
+.discussion-send-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.discussion-send-btn svg { width: 18px; height: 18px; fill: #000; }
+
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+.form-input, .form-textarea {
+  width: 100%; padding: 14px 16px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03); color: var(--text-primary); font-family: 'Inter'; font-size: 0.95rem;
+  outline: none; transition: all 0.3s;
+}
+.form-input:focus, .form-textarea:focus { border-color: var(--accent-cyan); }
+.form-textarea { min-height: 120px; resize: vertical; }
+.form-status { margin-top: 12px; text-align: center; font-size: 0.85rem; min-height: 20px; }
+.form-status.success { color: var(--success); }
+.form-status.error { color: var(--error); }
+
+.maintenance-screen {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--bg-primary); text-align: center; padding: 40px 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+}
+.maintenance-screen.active { opacity: 1; pointer-events: all; }
+.maintenance-icon { font-size: 4rem; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+.maintenance-title { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 16px; }
+.maintenance-subtitle { color: var(--text-secondary); max-width: 400px; margin-bottom: 30px; }
+
+@media (min-width: 768px) {
+  .bento-grid { grid-template-columns: repeat(3, 1fr); }
+  .hero-title { font-size: 2.8rem; }
+  .page { padding: 40px 24px 140px; }
+}
+@media (max-width: 380px) {
+  .hero-title { font-size: 1.6rem; }
+  .card-number { font-size: 1.1rem; letter-spacing: 2px; }
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+.copy-toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+  padding: 12px 24px; background: var(--success); color: #000; border-radius: 50px;
+  font-weight: 700; font-size: 0.85rem; box-shadow: 0 10px 30px rgba(0, 255, 157, 0.3);
+  opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5000;
+}
+.copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<!-- Maintenance Screen -->
+<div class="maintenance-screen" id="siteMaintenanceScreen">
+  <div class="maintenance-icon">🔧</div>
+  <div class="maintenance-title">ТЕХНИЧЕСКИЕ РАБОТЫ</div>
+  <div class="maintenance-subtitle">Извините, сайт временно недоступен.<br>Мы работаем над улучшением.<br><br><strong style="color:var(--accent-gold)">Скоро всё заработает!</strong></div>
+  <button class="btn-text" onclick="showMaintenanceAdminModal()" style="font-size: 1.5rem; opacity: 0.3;">⚙️</button>
+</div>
+
+<div class="modal-overlay" id="maintenanceAdminModal">
+  <div class="modal-content">
+    <div class="modal-header">🔐 ВХОД ДЛЯ АДМИНА</div>
+    <div class="form-group">
+      <label class="form-label">Email администратора</label>
+      <input type="email" class="form-input" id="maintenanceAdminEmail" placeholder="admin@example.com" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Пароль</label>
+      <input type="password" class="form-input" id="maintenanceAdminPassword" placeholder="Введите пароль" autocomplete="off">
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px;">
+      <button class="btn-primary" onclick="maintenanceAdminLogin()" style="flex:1">ВОЙТИ</button>
+      <button class="btn-ghost danger" onclick="closeMaintenanceAdminModal()" style="flex:1">ОТМЕНА</button>
+    </div>
+    <div class="form-status" id="maintenanceAdminStatus"></div>
+  </div>
+</div>
+
+<!-- License Modal -->
+<div class="modal-overlay" id="licenseModal">
+  <div class="modal-content">
+    <button class="btn-text" id="licenseCloseBtn" onclick="closeLicenseModal()" style="position:absolute;top:16px;right:16px;font-size:1.2rem;">✕</button>
+    <div class="modal-header">📜 СОГЛАШЕНИЕ</div>
+    <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;max-height:55vh;overflow-y:auto;padding-right:8px;">
+      
+      <h4 style="color:var(--accent-cyan);margin:16px 0 8px;font-family:'Orbitron';font-size:0.85rem;">🎵 1. Авторство и концепция</h4>
+      <p style="margin-bottom:8px;">Все идеи и концепции принадлежат полностью автору. Тексты песен создаются автором при вспомогательном участии искусственного интеллекта, доля которого варьируется в зависимости от конкретного произведения — от ≈20% (подбор рифм, синонимов, шлифовка отдельных строк) до ≈50% (совместная проработка отдельных фрагментов). При этом автор осуществляет общее творческое руководство, отбор, редактуру и финальное утверждение текста. Вокал и аранжировка генерируются AI на основе авторских указаний. Правообладателем всего контента является автор проекта EVGENII AI.</p>
+      <div style="background:rgba(255,179,71,0.06);border-left:3px solid var(--accent-gold);padding:8px 12px;border-radius:0 6px 6px 0;font-size:0.75rem;font-style:italic;color:rgba(255,179,71,0.85);margin-bottom:16px;">📌 Правовая основа: ГК РФ ст. 1228, 1229, 1255, 1259.</div>
+
+      <h4 style="color:var(--success);margin:16px 0 8px;font-family:'Orbitron';font-size:0.85rem;">✅ 2. Разрешено</h4>
+      <ul style="margin-bottom:8px;padding-left:20px;">
+        <li style="margin-bottom:4px;">Прослушивание всех треков онлайн</li>
+        <li style="margin-bottom:4px;">Скачивание для <strong style="color:var(--text-primary);">личного некоммерческого</strong> использования</li>
+        <li style="margin-bottom:4px;">Делиться ссылками на треки в соцсетях</li>
+        <li style="margin-bottom:4px;">Участие в обсуждениях и сообществах</li>
+      </ul>
+      <div style="background:rgba(255,179,71,0.06);border-left:3px solid var(--accent-gold);padding:8px 12px;border-radius:0 6px 6px 0;font-size:0.75rem;font-style:italic;color:rgba(255,179,71,0.85);margin-bottom:16px;">📌 Правовая основа: ГК РФ ст. 1273.</div>
+
+      <h4 style="color:var(--error);margin:16px 0 8px;font-family:'Orbitron';font-size:0.85rem;">🚫 3. Запрещено</h4>
+      <ul style="margin-bottom:8px;padding-left:20px;">
+        <li style="margin-bottom:4px;">Коммерческое использование без письменного разрешения</li>
+        <li style="margin-bottom:4px;">Загрузка на стриминговые платформы от своего имени</li>
+        <li style="margin-bottom:4px;">Использование треков для обучения сторонних AI-моделей</li>
+        <li style="margin-bottom:4px;">Присвоение авторства текстов или идей</li>
+      </ul>
+      <div style="background:rgba(255,179,71,0.06);border-left:3px solid var(--accent-gold);padding:8px 12px;border-radius:0 6px 6px 0;font-size:0.75rem;font-style:italic;color:rgba(255,179,71,0.85);margin-bottom:16px;">📌 Правовая основа: ГК РФ ст. 1270, 1301, КоАП РФ ст. 7.12, УК РФ ст. 146.</div>
+
+      <h4 style="color:var(--accent-cyan);margin:16px 0 8px;font-family:'Orbitron';font-size:0.85rem;">⚖️ 4. Ответственность</h4>
+      <p style="margin-bottom:8px;">Проект EVGENII AI носит исключительно развлекательный характер и является некоммерческим творческим проектом. Весь контент предоставляется «как есть», без каких-либо гарантий. Автор и правообладатель не несёт ответственности за возможные проблемы, убытки или последствия, возникшие в результате использования сайта, прослушивания контента или взаимодействия с сервисами проекта, за исключением случаев, прямо предусмотренных действующим законодательством.</p>
+      <div style="background:rgba(255,179,71,0.06);border-left:3px solid var(--accent-gold);padding:8px 12px;border-radius:0 6px 6px 0;font-size:0.75rem;font-style:italic;color:rgba(255,179,71,0.85);margin-bottom:16px;">📌 Правовая основа: ГК РФ ст. 15, 401.</div>
+
+      <h4 style="color:var(--accent-cyan);margin:16px 0 8px;font-family:'Orbitron';font-size:0.85rem;">💬 5. Обратная связь</h4>
+      <p>По вопросам лицензирования, сотрудничества или коммерческого использования — пишите через раздел «Связь» на сайте.</p>
+    </div>
+    
+    <div class="glass-panel" style="padding:14px;border-radius:12px;margin-bottom:16px;cursor:pointer;display:flex;align-items:center;gap:12px;" id="licenseCheckboxWrapper" onclick="toggleLicenseCheckbox()">
+      <div style="width:20px;height:20px;border-radius:6px;border:2px solid var(--glass-border);display:flex;align-items:center;justify-content:center;transition:all 0.3s;" id="licenseCheckbox">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#000;opacity:0;" id="licenseCheckIcon"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+      </div>
+      <div style="font-size:0.85rem;color:var(--text-secondary);">Я <strong style="color:var(--text-primary);">ознакомился(ась)</strong> с условиями и принимаю их</div>
+    </div>
+    <button class="btn-primary" id="licenseAgreeBtn" disabled onclick="acceptLicense()">ПРИНЯТЬ И ПРОДОЛЖИТЬ</button>
+  </div>
+</div>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-container">
+    <div class="login-logo">EVGENII<span class="ai-badge">AI</span></div>
+    <div class="login-slogan">Где заканчиваюсь я — и начинается ИИ</div>
+    <div id="loginGreeting" style="font-size:1.2rem;margin-bottom:24px;font-weight:300;"></div>
+    <form id="loginForm">
+      <input type="text" class="login-input" id="nameInput" placeholder="Введите ваше имя" autocomplete="off" maxlength="20">
+      <button type="submit" class="btn-primary">ВОЙТИ</button>
+    </form>
+  </div>
+</div>
+
+<!-- Home Page -->
+<div class="page active" id="homePage">
+  <header class="main-header glass-panel">
+    <div class="header-brand">EVGENII<span class="ai-badge">AI</span></div>
+    <div class="header-user">
+      <span class="user-greeting" id="headerGreeting">ДОБРЫЙ ДЕНЬ</span>
+      <span class="user-name" id="headerName">ГОСТЬ</span>
+    </div>
+  </header>
+
+  <div class="hero-banner glass-panel">
+    <h1 class="hero-title">EVGENII<span class="ai-badge">AI</span></h1>
+    <p class="hero-slogan">Где заканчиваюсь я — и начинается ИИ</p>
+    <button class="btn-primary" onclick="playNewRelease()" style="max-width:280px;margin:0 auto;">▶ СЛУШАТЬ НОВЫЙ РЕЛИЗ</button>
+  </div>
+
+  <div style="text-align:center;margin-bottom:32px;">
+    <button class="btn-ghost" id="agreementBtn" onclick="openLicenseModal(false)">📜 Лицензионное соглашение</button>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">НОВЫЙ РЕЛИЗ</h2>
+    <div class="release-card glass-panel" id="homeReleaseCard" onclick="playNewRelease()">
+      <div class="release-info"><div class="release-title">Загрузка...</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">БЫСТРЫЙ ДОСТУП</h2>
+    <div class="bento-grid">
+      <!-- 🌟 ТВОРЧЕСКИЙ ДНЕВНИК — выделенная плитка -->
+      <div class="bento-item glass-panel bento-diary" onclick="window.location.href='diary.html'">
+        <div class="bento-icon">📔</div>
+        <div class="bento-text">
+          <h3>Творческий дневник <span class="bento-new-badge">NEW</span></h3>
+          <p>Мысли, истории, процесс создания музыки</p>
+        </div>
+      </div>
+
+      <!-- Остальные плитки -->
+      <div class="bento-item glass-panel" onclick="navigateTo('tracksPage')">
+        <div class="bento-icon">🎵</div>
+        <div class="bento-text"><h3>Все треки</h3><p>Полная дискография</p></div>
+      </div>
+      <div class="bento-item glass-panel" onclick="navigateTo('discussionsPage');loadDiscussions()">
+        <div class="bento-icon">💬</div>
+        <div class="bento-text"><h3>Обсуждения</h3><p>Общий чат слушателей</p></div>
+      </div>
+      <div class="bento-item glass-panel" onclick="navigateTo('communityPage')">
+        <div class="bento-icon">🌐</div>
+        <div class="bento-text"><h3>Сообщества</h3><p>Bip & Telegram</p></div>
+      </div>
+      <div class="bento-item glass-panel" onclick="navigateTo('contactPage')">
+        <div class="bento-icon">✉️</div>
+        <div class="bento-text"><h3>Связь</h3><p>Написать автору</p></div>
+      </div>
+      <div class="bento-item glass-panel" onclick="navigateTo('supportPage')">
+        <div class="bento-icon">💜</div>
+        <div class="bento-text"><h3>Поддержать</h3><p>Сказать спасибо</p></div>
+      </div>
+      <div class="bento-item glass-panel" onclick="navigateTo('aboutPage')">
+        <div class="bento-icon">ℹ️</div>
+        <div class="bento-text"><h3>О проекте</h3><p>Узнать больше</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ УБРАНА КНОПКА "НА ГЛАВНУЮ" — она больше не нужна -->
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:40px;">
+    <button class="btn-ghost danger" id="logoutBtn">ВЫЙТИ</button>
+    <button class="btn-text" onclick="showAdminLogin()" style="margin-top:8px;">⚙️ Админ</button>
+  </div>
+</div>
+
+<!-- Admin Page -->
+<div class="page" id="adminPage">
+  <header class="main-header glass-panel" style="margin-bottom:24px;">
+    <button class="btn-ghost" onclick="goBack()" style="padding:8px 16px;">← Назад</button>
+    <div class="header-brand">⚙️ АДМИН-ПАНЕЛЬ</div>
+  </header>
+
+  <div id="adminLoginSection" class="glass-panel" style="padding:32px;max-width:400px;margin:0 auto;">
+    <h3 style="text-align:center;margin-bottom:24px;color:var(--accent-cyan);">🔐 АВТОРИЗАЦИЯ</h3>
+    <div class="form-group">
+      <label class="form-label">Email администратора</label>
+      <input type="email" class="form-input" id="adminEmailInput" placeholder="admin@example.com" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Пароль</label>
+      <input type="password" class="form-input" id="adminPasswordInput" placeholder="Введите пароль" autocomplete="off">
+    </div>
+    <button class="btn-primary" onclick="adminLogin()" style="width:100%;margin-top:8px;">ВОЙТИ</button>
+    <div class="form-status" id="adminLoginStatus"></div>
+  </div>
+
+  <div id="adminContent" style="display:none;">
+    <div class="glass-panel" style="padding:24px;margin-bottom:24px;">
+      <h3 style="color:var(--accent-gold);margin-bottom:16px;font-size:0.9rem;letter-spacing:2px;">🔧 ТЕХНИЧЕСКИЕ РАБОТЫ</h3>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:rgba(0,0,0,0.2);border-radius:12px;border:1px solid var(--glass-border);">
+        <div>
+          <div style="font-weight:600;font-size:0.95rem;">🌐 Для всего сайта</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);">Закрыть сайт для пользователей</div>
+        </div>
+        <div class="glass-panel" id="siteMaintenanceSwitch" onclick="toggleSiteMaintenance()" style="width:50px;height:28px;border-radius:14px;position:relative;cursor:pointer;transition:all 0.3s;background:rgba(255,255,255,0.1);">
+          <div style="width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:all 0.3s;box-shadow:0 2px 4px rgba(0,0,0,0.3);" id="maintenanceSwitchKnob"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-panel" style="padding:24px;margin-bottom:24px;">
+      <h3 style="color:var(--accent-cyan);margin-bottom:16px;font-size:0.9rem;letter-spacing:2px;">🎵 УПРАВЛЕНИЕ РЕЛИЗАМИ</h3>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <input type="text" id="adminTrackTitle" class="form-input" placeholder="Название трека *">
+        <input type="text" id="adminTrackSubtitle" class="form-input" placeholder="Подзаголовок (по умолчанию: EVGENII AI)">
+        <input type="text" id="adminTrackFile" class="form-input" placeholder="Путь к файлу (MP3) *">
+        <input type="text" id="adminTrackDuration" class="form-input" placeholder="Длительность (например: 3:45) *">
+        <input type="text" id="adminTrackCover" class="form-input" placeholder="Путь к обложке (URL)">
+        <button class="btn-primary" id="submitTrackBtn" onclick="addNewRelease()">🚀 ОПУБЛИКОВАТЬ</button>
+        <button class="btn-ghost" id="cancelEditBtn" onclick="cancelEditTrack()" style="display:none;width:100%;">❌ ОТМЕНИТЬ РЕДАКТИРОВАНИЕ</button>
+        <div class="form-status" id="adminTrackStatus"></div>
+      </div>
+    </div>
+
+    <div class="glass-panel" style="padding:24px;">
+      <h3 style="color:var(--error);margin-bottom:16px;font-size:0.9rem;letter-spacing:2px;">📋 СПИСОК ТРЕКОВ</h3>
+      <div id="adminTracksList" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tracks Page -->
+<div class="page" id="tracksPage">
+  <header class="main-header glass-panel" style="margin-bottom:24px;">
+    <button class="btn-ghost" onclick="goBack()" style="padding:8px 16px;">← Назад</button>
+    <div class="header-brand">ВСЕ ТРЕКИ</div>
+  </header>
+  <div class="release-card glass-panel" id="featuredRelease" onclick="playNewRelease()" style="margin-bottom:24px;padding:24px;"></div>
+  <div id="allTracksList"></div>
+</div>
+
+<!-- About Page -->
+<div class="page" id="aboutPage">
+  <header class="main-header glass-panel" style="margin-bottom:24px;">
+    <button class="btn-ghost" onclick="goBack()" style="padding:8px 16px;">← Назад</button>
+    <div class="header-brand">О ПРОЕКТЕ</div>
+  </header>
+  <div class="glass-panel" style="padding:24px;line-height:1.8;color:var(--text-secondary);">
+    <p style="margin-bottom:16px;"><strong style="color:var(--accent-cyan);font-family:'Orbitron';">EVGENII AI</strong> — это эксперимент на стыке человеческих эмоций и искусственного интеллекта.</p>
+    <blockquote style="border-left:3px solid var(--accent-cyan);padding-left:16px;margin:20px 0;font-style:italic;color:var(--text-primary);font-size:1.05rem;">«Я придумываю текст и стиль исполнения. А выучить и воплотить в песню доверяю ИИ.»</blockquote>
+    <p style="margin-bottom:16px;">Искусственный интеллект становится моим голосом. Он заучивает мои слова, учится чувствовать ритм, подбирать интонации.</p>
+    <p style="margin-bottom:16px;">Это не замена человеку — это <strong style="color:var(--text-primary);">новый инструмент выражения</strong>.</p>
+    <p>Вместе мы создаём что-то третье. Не совсем человеческое, не совсем машинное. Что-то среднее, где технологии усиливают эмоции, а не заменяют их.</p>
+  </div>
+</div>
+
+<!-- Community Page -->
+<div class="page" id="communityPage">
+  <header class="main-header glass-panel" style="margin-bottom:24px;">
+    <button class="btn-ghost" onclick="goBack()" style="padding:8px 16px;">← Назад</button>
+    <div class="header-brand">СООБЩЕСТВА</div>
+  </header>
+  <div class="glass-panel" style="padding:20px;margin-bottom:16px;color:var(--text-secondary);font-size:0.9rem;">Присоединяйтесь, чтобы быть в курсе новых релизов</div>
+  <div class="glass-panel" style="padding:20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;opacity:0.6;cursor:not-allowed;">
+    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent-cyan),var(--accent-purple));display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎵</div>
+    <div style="flex:1;"><div style="font-weight:600;">Bip</div><div style="font-size:0.8rem;color:var(--text-secondary);">Музыкальная платформа</div></div>
+    <span style="font-size:0.7rem;padding:4px 8px;background:rgba(255,255,255,0.1);border-radius:6px;">Скоро</span>
+  </div>
+  <div class="glass-panel" style="padding:20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;opacity:0.6;cursor:not-allowed;">
+    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#0088cc,#00a8e8);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">✈️</div>
+    <div style="flex:1;"><div style="font-weight:600;">Telegram</div><div style="font-size:0.8rem;color:var(--text-secondary);">Новости и обновления</div></div>
+    <span style="font-size:0.7rem;padding:4px 8px;background:rgba(255,255,255,0.1);border-radius:6px;">Скоро</span>
+  </div>
+</div>
+
+<!-- Contact Page -->
+<div class="page" id="contactPage">
+  <header class="main-header glass-panel" style="margin-bottom:24px;">
+    <button class="btn-ghost" onclick="goBack()" style="padding:8px 16px;">← Назад</button>
+    <div class="header-brand">СВЯЗЬ</div>
+  </header>
+  <div class="glass-panel" style="padding:24px;">
+    <h3 style="text-align:center;margin-bottom:24px;font-family:'Orbitron';letter-spacing:2px;">НАПИСАТЬ АВТОРУ</h3>
+    <form id="contactForm">
+      <div class="form-group">
+        <label class="form-label">Ваше имя</label>
+        <input type="text" class="form-input" name="name" placeholder="Как к вам обращаться?" required maxlength="50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email или Telegram</label>
+        <input type="text" class="form-input" name="contact" placeholder="Для обратной связи" required maxlength="100">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Сообщение</label>
+        <textarea class="form-textarea" name="message" placeholder="Напишите ваш вопрос или предложение..." required maxlength="1000"></textarea>
+      </div>
+      <div style="background:rgba(255,170,0,0.05);border-left:3px solid var(--accent-gold);padding:12px;border-radius:0 8px 8px 0;margin-bottom:20px;font-size:0.85rem;color:var(--text-secondary);">
+        <strong style="color:var(--accent-gold);">Важно:</strong> Сообщения отправляются в Telegram. Включите <strong>VPN</strong> для отправки.
+      </div>
+      <button type="submit" class="btn-primary" id="submitBtn"><span>ОТПРАВИТЬ СООБЩЕНИЕ</span></button>
+      <div class="form-status" id="formStatus"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Support Page -->
+<div class="page" id="supportPage">
+  <header class="main-header glass-panel" style="margin-bottom:24px;">
+    <button class="btn-ghost" onclick="goBack()" style="padding:8px 16px;">← Назад</button>
+    <div class="header-brand">ПОДДЕРЖАТЬ</div>
+  </header>
+  <div style="text-align:center;margin-bottom:24px;color:var(--text-secondary);font-size:0.95rem;">
+    <div style="font-size:2.5rem;margin-bottom:12px;animation:float 2s ease-in-out infinite;">💜</div>
+    <p>Твоя поддержка помогает создавать новую музыку. Каждая чашка кофе — это новый трек.</p>
+  </div>
+  
+  <div class="yandex-pay-card" onclick="copyCardNumber()">
+    <div class="card-top-row">
+      <div class="card-logo">
+        <div class="card-logo-icon">Я</div>
+        <div>
+          <div style="font-size:0.6rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;">Pay с помощью</div>
+          <div class="card-logo-name">YANDEX PAY</div>
+        </div>
+      </div>
+      <div class="card-chip"></div>
+    </div>
+    <div>
+      <div style="font-size:0.7rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:8px;">Номер карты</div>
+      <div class="card-number" id="cardNumber">2204 3110 0721 9604</div>
+    </div>
+    <div class="card-bottom-row">
+      <div>
+        <div style="font-size:0.6rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;">Получатель</div>
+        <div style="font-family:'Orbitron';font-weight:700;font-size:0.9rem;letter-spacing:1px;">EVGENII</div>
+      </div>
+      <button class="copy-btn" id="copyBtn" onclick="event.stopPropagation();copyCardNumber()">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        <span id="copyBtnText">Копировать</span>
+      </button>
+    </div>
+  </div>
+  
+  <div style="text-align:center;margin-top:20px;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;font-size:0.85rem;color:var(--text-secondary);">
+    💡 Нажми на карту или кнопку <strong style="color:var(--accent-gold);">«Копировать»</strong>. Перевести можно через приложение любого банка.
+  </div>
+</div>
+
+<!-- Discussions Page -->
+<div class="page" id="discussionsPage">
+  <header class="main-header glass-panel" style="margin-bottom:16px;">
+    <button class="btn-ghost" onclick="goBack()" style="padding:8px 16px;">← Назад</button>
+    <div class="header-brand">ОБСУЖДЕНИЯ</div>
+  </header>
+  <div class="discussions-container glass-panel">
+    <div style="padding:16px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'Orbitron';font-size:0.8rem;font-weight:700;letter-spacing:2px;color:var(--accent-cyan);">💬 ОБЩИЙ ЧАТ</span>
+      <span id="discussionsCount" style="font-size:0.7rem;padding:2px 8px;background:rgba(0,240,255,0.1);color:var(--accent-cyan);border-radius:10px;">0</span>
+    </div>
+    <div class="discussions-list" id="discussionsList">
+      <div style="text-align:center;color:var(--text-secondary);padding:40px 20px;">Загрузка обсуждений...</div>
+    </div>
+    <div class="discussion-input-area">
+      <label style="font-size:0.75rem;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:8px;width:100%;">
+        <input type="checkbox" id="discussionAttachToggle" style="accent-color:var(--accent-cyan);">
+        <span id="discussionAttachText">🎵 Сначала включи любой трек</span>
+      </label>
+      <div style="display:flex;gap:10px;width:100%;">
+        <textarea class="discussion-input" id="discussionInput" placeholder="Написать в чат..." maxlength="500" rows="1"></textarea>
+        <button class="discussion-send-btn" id="discussionSendBtn" onclick="sendDiscussion()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky Player -->
+<div class="sticky-player glass-panel" id="stickyPlayer">
+  <div class="player-top-row">
+    <div class="player-cover" id="playerCover">🎵</div>
+    <div class="player-details">
+      <div class="player-title" id="playerTitle">Название трека</div>
+      <div class="player-artist" id="playerArtist">Исполнитель</div>
+    </div>
+    <div class="player-controls">
+      <button class="ctrl-btn" onclick="skipBackward()">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor;"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
+      <button class="ctrl-btn play-btn" onclick="togglePlay()">
+        <svg viewBox="0 0 24 24" id="miniPlayIcon"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <button class="ctrl-btn" onclick="skipForward()">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="player-progress" onclick="seek(event)">
+    <span class="time" id="playerCurrentTime">0:00</span>
+    <div class="progress-bar">
+      <div class="progress-fill" id="playerBarFill"></div>
+    </div>
+    <span class="time end" id="playerTotalTime">0:00</span>
+  </div>
+</div>
+
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModal">
+  <div class="modal-content" style="text-align:center;">
+    <div class="modal-header">СКАЧИВАНИЕ ТРЕКА</div>
+    <div class="glass-panel" style="padding:24px;margin-bottom:20px;">
+      <div id="modalCover" style="width:120px;height:120px;border-radius:16px;background:linear-gradient(135deg,#1a1a2e,#2a1a3a);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:3rem;overflow:hidden;">🎵</div>
+      <div id="modalTitle" style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">Название</div>
+      <div id="modalArtist" style="font-family:'Orbitron';font-size:0.8rem;color:var(--text-secondary);letter-spacing:2px;margin-bottom:8px;">EVGENII AI</div>
+      <div id="modalDuration" style="font-family:'Orbitron';color:var(--accent-cyan);">0:00</div>
+    </div>
+    <div style="background:rgba(255,51,102,0.08);border:1px solid rgba(255,51,102,0.2);border-radius:12px;padding:16px;margin-bottom:20px;text-align:left;font-size:0.85rem;color:var(--text-secondary);">
+      <strong style="color:var(--error);display:block;margin-bottom:4px;">⚠ Внимание!</strong>
+      Скачивание происходит не сразу. Пожалуйста, подождите несколько секунд.
+    </div>
+    <button class="btn-primary" id="modalDownloadBtn" onclick="startDownload()">СКАЧАТЬ ТРЕК</button>
+    <button class="btn-ghost" onclick="closeDownloadModal()" style="width:100%;margin-top:12px;">Отмена</button>
+  </div>
+</div>
+
+<div class="copy-toast" id="copyToast"><span>✓ </span><span id="copyToastText">Номер карты скопирован!</span></div>
+
+<audio id="audioPlayer" preload="auto" playsinline></audio>
+
+<script>
+// === FIREBASE CONFIG ===
+var firebaseConfig = {
+  apiKey: "AIzaSyCw8S1fghfKUMUtNsDFDbz-oFeSkRD_NOk",
+  authDomain: "evgenii-music-b5adf.firebaseapp.com",
+  projectId: "evgenii-music-b5adf",
+  storageBucket: "evgenii-music-b5adf.firebasestorage.app",
+  messagingSenderId: "518513745915",
+  appId: "1:518513745915:web:2d0e8dc9e1e6f37bccb55e"
+};
+
+var db = null;
+try { 
+  firebase.initializeApp(firebaseConfig); 
+  db = firebase.firestore(); 
+  console.log('Firebase подключён успешно!'); 
+} catch (e) { 
+  console.error('Ошибка инициализации Firebase:', e); 
+}
+
+var TELEGRAM_BOT_TOKEN = '8620797853:AAGE9OaW5GIun46NFaGxxGMIUL8LRxPvTrY';
+var TELEGRAM_CHAT_ID = '5129595944';
+var isAdminLoggedIn = false;
+var licenseForceMode = false;
+var licenseCheckboxChecked = false;
+
+// === LICENSE ===
+function isLicenseAccepted() { try { return localStorage.getItem('evgenii_agreement_accepted') === 'true'; } catch(e) { return false; } }
+function openLicenseModal(force) {
+  licenseForceMode = force;
+  licenseCheckboxChecked = isLicenseAccepted();
+  var wrapper = document.getElementById('licenseCheckboxWrapper');
+  var checkbox = document.getElementById('licenseCheckbox');
+  var icon = document.getElementById('licenseCheckIcon');
+  var agreeBtn = document.getElementById('licenseAgreeBtn');
+  var closeBtn = document.getElementById('licenseCloseBtn');
+  
+  if (licenseCheckboxChecked) {
+    wrapper.style.borderColor = 'var(--success)';
+    wrapper.style.background = 'rgba(0, 255, 157, 0.05)';
+    checkbox.style.background = 'var(--success)';
+    checkbox.style.borderColor = 'var(--success)';
+    icon.style.opacity = '1';
+    agreeBtn.disabled = false;
+  } else {
+    wrapper.style.borderColor = 'var(--glass-border)';
+    wrapper.style.background = 'transparent';
+    checkbox.style.background = 'transparent';
+    checkbox.style.borderColor = 'var(--glass-border)';
+    icon.style.opacity = '0';
+    agreeBtn.disabled = true;
+  }
+  closeBtn.style.display = force ? 'none' : 'flex';
+  document.getElementById('licenseModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLicenseModal() { if (licenseForceMode) return; document.getElementById('licenseModal').classList.remove('active'); document.body.style.overflow = ''; }
+function toggleLicenseCheckbox() {
+  licenseCheckboxChecked = !licenseCheckboxChecked;
+  openLicenseModal(licenseForceMode);
+}
+function acceptLicense() {
+  if (!licenseCheckboxChecked) return;
+  try { localStorage.setItem('evgenii_agreement_accepted', 'true'); } catch(e) {}
+  licenseForceMode = false;
+  document.getElementById('licenseModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.getElementById('licenseModal').addEventListener('click', function(e) { if (e.target === this) closeLicenseModal(); });
+
+// === MAINTENANCE ===
+var maintenanceUnsubscribe = null;
+var siteMaintenance = false;
+function loadMaintenanceSettings() {
+  if (!db) return;
+  if (maintenanceUnsubscribe) maintenanceUnsubscribe();
+  maintenanceUnsubscribe = db.collection('settings').doc('maintenance').onSnapshot(function(doc) {
+    if (doc.exists) { siteMaintenance = doc.data().siteMode || false; } else { siteMaintenance = false; }
+    updateMaintenanceUI();
+  }, function(error) { console.error('Ошибка загрузки настроек тех работ:', error); });
+}
+function updateMaintenanceUI() {
+  var siteSwitch = document.getElementById('siteMaintenanceSwitch');
+  var knob = document.getElementById('maintenanceSwitchKnob');
+  if (siteSwitch) {
+    if (siteMaintenance) {
+      siteSwitch.style.background = 'var(--accent-gold)';
+      knob.style.left = '25px';
+    } else {
+      siteSwitch.style.background = 'rgba(255,255,255,0.1)';
+      knob.style.left = '3px';
+    }
+  }
+  var siteScreen = document.getElementById('siteMaintenanceScreen');
+  if (siteScreen) { 
+    if (siteMaintenance && !isAdminLoggedIn) { siteScreen.classList.add('active'); } 
+    else { siteScreen.classList.remove('active'); } 
+  }
+}
+function toggleSiteMaintenance() {
+  if (!db) return;
+  var newValue = !siteMaintenance;
+  if (newValue) { var confirmed = confirm('ВНИМАНИЕ!\nЭто закроет весь сайт для всех пользователей.\nАдмин сможет войти через скрытую кнопку на экране тех работ.\nПродолжить?'); if (!confirmed) return; }
+  db.collection('settings').doc('maintenance').set({siteMode: newValue}, {merge: true}).then(function() { 
+    siteMaintenance = newValue; 
+    updateMaintenanceUI(); 
+    alert(newValue ? 'Тех работы для всего сайта ВКЛЮЧЕНЫ' : 'Тех работы для всего сайта ВЫКЛЮЧЕНЫ'); 
+  }).catch(function(error) { alert('Ошибка: ' + error.message); });
+}
+function showMaintenanceAdminModal() { 
+  document.getElementById('maintenanceAdminModal').classList.add('active'); 
+  document.getElementById('maintenanceAdminEmail').value = '';
+  document.getElementById('maintenanceAdminPassword').value = ''; 
+  document.getElementById('maintenanceAdminStatus').textContent = ''; 
+}
+function closeMaintenanceAdminModal() { document.getElementById('maintenanceAdminModal').classList.remove('active'); }
+
+function maintenanceAdminLogin() {
+  var email = document.getElementById('maintenanceAdminEmail').value.trim();
+  var password = document.getElementById('maintenanceAdminPassword').value;
+  var status = document.getElementById('maintenanceAdminStatus');
+
+  if (!email || !password) { status.textContent = '⚠️ Введите email и пароль'; status.className = 'form-status error'; return; }
+  status.textContent = '⏳ Проверка данных...'; status.className = 'form-status';
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(function(userCredential) {
+      isAdminLoggedIn = true;
+      status.textContent = '✅ Успешный вход!'; status.className = 'form-status success';
+      setTimeout(function() {
+        closeMaintenanceAdminModal();
+        updateMaintenanceUI();
+        var savedName = localStorage.getItem('evgenii_user') || 'Админ';
+        showMainScreen(savedName);
+        navigateTo('adminPage');
+        document.getElementById('adminLoginSection').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+      }, 500);
+    })
+    .catch(function(error) {
+      var msg = '❌ Ошибка входа';
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') msg = '❌ Неверный email или пароль';
+      else if (error.code === 'auth/too-many-requests') msg = '❌ Слишком много попыток. Попробуйте позже';
+      status.textContent = msg; status.className = 'form-status error';
+    });
+}
+document.getElementById('maintenanceAdminModal').addEventListener('click', function(e) { if (e.target === this) closeMaintenanceAdminModal(); });
+
+// === TRACKS MANAGEMENT ===
+var tracksData = [];
+var currentEditingTrackId = null;
+
+function loadTracksFromFirestore() {
+    if (!db) return;
+    db.collection('tracks').orderBy('createdAt', 'desc').onSnapshot(function(snapshot) {
+        tracksData = [];
+        snapshot.forEach(function(doc) { tracksData.push({ id: doc.id, ...doc.data() }); });
+        renderNewRelease();
+        renderAllTracksList();
+        renderAdminTracksList();
+        updateAttachLabel();
+    }, function(error) { console.error('Ошибка загрузки треков:', error); });
+}
+
+function addNewRelease() {
+    var title = document.getElementById('adminTrackTitle').value.trim();
+    var subtitle = document.getElementById('adminTrackSubtitle').value.trim();
+    var file = document.getElementById('adminTrackFile').value.trim();
+    var duration = document.getElementById('adminTrackDuration').value.trim();
+    var cover = document.getElementById('adminTrackCover').value.trim();
+    var status = document.getElementById('adminTrackStatus');
+
+    if (!title || !file || !duration) { status.textContent = '⚠️ Заполните название, путь к файлу и длительность!'; status.className = 'form-status error'; return; }
+    status.textContent = '⏳ Добавление...'; status.className = 'form-status';
+
+    db.collection('tracks').add({
+        title: title, subtitle: subtitle || 'EVGENII AI', file: file, duration: duration, cover: cover,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+        status.textContent = '✅ Новый релиз успешно добавлен!'; status.className = 'form-status success';
+        cancelEditTrack();
+    }).catch(function(error) { status.textContent = '❌ Ошибка: ' + error.message; status.className = 'form-status error'; });
+}
+
+function editTrack(trackId) {
+    var track = tracksData.find(t => t.id === trackId);
+    if (!track) return;
+    currentEditingTrackId = trackId;
+    document.getElementById('adminTrackTitle').value = track.title || '';
+    document.getElementById('adminTrackSubtitle').value = track.subtitle === 'EVGENII AI' ? '' : (track.subtitle || '');
+    document.getElementById('adminTrackFile').value = track.file || '';
+    document.getElementById('adminTrackDuration').value = track.duration || '';
+    document.getElementById('adminTrackCover').value = track.cover || '';
+
+    var submitBtn = document.getElementById('submitTrackBtn');
+    submitBtn.textContent = '💾 СОХРАНИТЬ ИЗМЕНЕНИЯ';
+    submitBtn.onclick = function() { updateTrack(trackId); };
+    document.getElementById('cancelEditBtn').style.display = 'block';
+    document.getElementById('adminTrackTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var status = document.getElementById('adminTrackStatus');
+    status.textContent = '✏️ Режим редактирования: ' + track.title; status.className = 'form-status';
+}
+
+function cancelEditTrack() {
+    currentEditingTrackId = null;
+    document.getElementById('adminTrackTitle').value = '';
+    document.getElementById('adminTrackSubtitle').value = '';
+    document.getElementById('adminTrackFile').value = '';
+    document.getElementById('adminTrackDuration').value = '';
+    document.getElementById('adminTrackCover').value = '';
+    var submitBtn = document.getElementById('submitTrackBtn');
+    submitBtn.textContent = '🚀 ОПУБЛИКОВАТЬ';
+    submitBtn.onclick = addNewRelease;
+    document.getElementById('cancelEditBtn').style.display = 'none';
+    document.getElementById('adminTrackStatus').textContent = '';
+}
+
+function updateTrack(trackId) {
+    var title = document.getElementById('adminTrackTitle').value.trim();
+    var subtitle = document.getElementById('adminTrackSubtitle').value.trim();
+    var file = document.getElementById('adminTrackFile').value.trim();
+    var duration = document.getElementById('adminTrackDuration').value.trim();
+    var cover = document.getElementById('adminTrackCover').value.trim();
+    var status = document.getElementById('adminTrackStatus');
+
+    if (!title || !file || !duration) { status.textContent = '⚠️ Заполните обязательные поля!'; status.className = 'form-status error'; return; }
+    status.textContent = '⏳ Сохранение...'; status.className = 'form-status';
+
+    db.collection('tracks').doc(trackId).update({
+        title: title, subtitle: subtitle || 'EVGENII AI', file: file, duration: duration, cover: cover
+    }).then(function() {
+        status.textContent = '✅ Трек успешно обновлен!'; status.className = 'form-status success';
+        cancelEditTrack();
+    }).catch(function(error) { status.textContent = '❌ Ошибка: ' + error.message; status.className = 'form-status error'; });
+}
+
+function deleteTrack(trackId) {
+    if (!confirm('Вы уверены, что хотите удалить этот трек?')) return;
+    db.collection('tracks').doc(trackId).delete().then(function() { alert('Трек удален'); }).catch(function(error) { alert('Ошибка: ' + error.message); });
+}
+
+function renderAdminTracksList() {
+    var list = document.getElementById('adminTracksList');
+    if (!list) return;
+    if (tracksData.length === 0) { list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">Треков пока нет</div>'; return; }
+    list.innerHTML = tracksData.map(function(track, index) {
+        var isNew = index === 0 ? '<span style="color:var(--accent-cyan);font-size:0.7rem;margin-left:8px;">[NEW]</span>' : '';
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid var(--glass-border);">' +
+            '<div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:0.9rem;">' + escapeHtml(track.title) + isNew + '</div>' +
+            '<div style="font-size:0.75rem;color:var(--text-secondary);">' + escapeHtml(track.file) + '</div></div>' +
+            '<div style="display:flex;gap:5px;">' +
+            '<button class="btn-ghost" style="padding:6px 10px;font-size:0.75rem;" onclick="editTrack(\'' + track.id + '\')">✏️</button>' +
+            '<button class="btn-ghost danger" style="padding:6px 10px;font-size:0.75rem;" onclick="deleteTrack(\'' + track.id + '\')">🗑️</button>' +
+            '</div></div>';
+    }).join('');
+}
+
+function renderNewRelease() {
+    var h = document.getElementById('homeReleaseCard');
+    var f = document.getElementById('featuredRelease');
+    if (tracksData.length === 0) {
+        if (h) h.innerHTML = '<div class="release-info"><div class="release-title">Пока нет релизов</div></div>';
+        return;
+    }
+    var latestTrack = tracksData[0];
+    if (h) {
+        h.innerHTML = '<div class="release-cover"><span class="release-badge">NEW</span>' + (latestTrack.cover ? '<img src="' + latestTrack.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">' : '') + '</div>' +
+            '<div class="release-info"><div class="release-label">ПРЕМЬЕРА</div><div class="release-title">' + escapeHtml(latestTrack.title) + '</div><div class="release-meta">' + escapeHtml(latestTrack.subtitle).toUpperCase() + ' · ' + latestTrack.duration + '</div></div>';
+    }
+    if (f) {
+        f.innerHTML = '<div class="release-cover" style="width:80px;height:80px;margin-right:16px;">' + (latestTrack.cover ? '<img src="' + latestTrack.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">' : '') + '</div>' +
+            '<div class="release-info"><div class="release-label">★ НОВЫЙ РЕЛИЗ</div><div class="release-title" style="font-size:1.2rem;">' + escapeHtml(latestTrack.title) + '</div><div class="release-meta">' + escapeHtml(latestTrack.subtitle) + ' · ' + latestTrack.duration + '</div></div>' +
+            '<button class="ctrl-btn play-btn" onclick="event.stopPropagation();playTrack(tracksData[0], 0)" style="margin-left:auto;"><svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:#000;"><polygon points="5,3 19,12 5,21"/></svg></button>';
+    }
+}
+
+function renderAllTracksList() {
+    var list = document.getElementById('allTracksList');
+    if (!list) return;
+    list.innerHTML = '';
+    tracksData.forEach(function(track, index) {
+        var el = document.createElement('div');
+        el.className = 'track-item glass-panel';
+        el.dataset.id = track.id;
+        var coverHtml = track.cover ? '<img src="' + track.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">' : '🎵';
+        el.innerHTML = '<div class="track-cover" onclick="playTrack(tracksData[' + index + '],' + index + ')">' + coverHtml + '</div>' +
+            '<div class="track-info" onclick="playTrack(tracksData[' + index + '],' + index + ')">' +
+            '<div class="track-title">' + escapeHtml(track.title) + '</div>' +
+            '<div class="track-artist">' + escapeHtml(track.subtitle || 'EVGENII AI') + '</div></div>' +
+            '<div class="track-duration">' + track.duration + '</div>' +
+            '<button class="track-download-btn" onclick="event.stopPropagation();openDownloadModal(tracksData[' + index + '])">' +
+            '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></button>';
+        list.appendChild(el);
+    });
+}
+
+// === AUDIO PLAYER ===
+var audio = document.getElementById('audioPlayer');
+var currentTrack = null;
+var isPlaying = false;
+var simulationInterval = null;
+var currentTrackIndex = -1;
+var isHandlingTrackEnd = false;
+
+function stopPlayer() {
+  audio.pause(); clearInterval(simulationInterval); setPlayingState(false);
+  document.getElementById('playerBarFill').style.width = '0%';
+  document.getElementById('playerCurrentTime').textContent = '0:00';
+  document.getElementById('stickyPlayer').classList.remove('visible');
+  isHandlingTrackEnd = false; updateAttachLabel();
+}
+
+function playTrack(track, index) {
+  stopPlayer();
+  currentTrack = track;
+  currentTrackIndex = (index !== undefined && index >= 0) ? index : tracksData.findIndex(function(t) { return t.id === track.id; });
+  document.getElementById('playerTitle').textContent = track.title;
+  document.getElementById('playerArtist').textContent = track.subtitle || 'EVGENII AI';
+  var pc = document.getElementById('playerCover');
+  if (track.cover) { pc.innerHTML = '<img src="' + track.cover + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">'; } else { pc.textContent = '🎵'; }
+  document.getElementById('playerTotalTime').textContent = track.duration;
+  document.getElementById('stickyPlayer').classList.add('visible');
+  document.querySelectorAll('.track-item').forEach(function(el) { el.classList.remove('active'); });
+  var ae = document.querySelector('.track-item[data-id="' + track.id + '"]');
+  if (ae) ae.classList.add('active');
+  audio.src = track.file;
+  audio.play().then(function() { setPlayingState(true); updateAttachLabel(); updateMediaSession(); }).catch(function() { startSimulation(); updateAttachLabel(); });
+}
+
+function playNewRelease() { if (tracksData.length > 0) playTrack(tracksData[0], 0); }
+
+function togglePlay() {
+  if (!currentTrack) return;
+  if (isPlaying) { audio.pause(); clearInterval(simulationInterval); setPlayingState(false); } 
+  else { audio.play().catch(function() { startSimulation(); }); setPlayingState(true); }
+}
+
+function setPlayingState(state) {
+  isPlaying = state;
+  document.getElementById('miniPlayIcon').innerHTML = state ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' : '<polygon points="5,3 19,12 5,21"/>';
+  if ('mediaSession' in navigator) { try { navigator.mediaSession.playbackState = state ? 'playing' : 'paused'; } catch(e) {} }
+}
+
+function skipForward() { playNextTrack(); }
+function skipBackward() { playPreviousTrack(); }
+function playNextTrack() { if (tracksData.length === 0) return; var n = currentTrackIndex < tracksData.length - 1 ? currentTrackIndex + 1 : 0; playTrack(tracksData[n], n); }
+function playPreviousTrack() { if (tracksData.length === 0) return; var n = currentTrackIndex > 0 ? currentTrackIndex - 1 : tracksData.length - 1; playTrack(tracksData[n], n); }
+
+function seek(event) {
+  if (!currentTrack) return;
+  audio.currentTime = (event.offsetX / event.currentTarget.offsetWidth) * (audio.duration || pd(currentTrack.duration));
+}
+
+function updateMediaSession() {
+  if ('mediaSession' in navigator && currentTrack) {
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({ title: currentTrack.title, artist: currentTrack.subtitle || 'EVGENII AI', album: 'EVGENII AI' });
+      navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+    } catch(e) {}
+  }
+}
+
+function startSimulation() {
+  setPlayingState(true);
+  var c = 0; var d = pd(currentTrack.duration); if (d <= 0) d = 180;
+  clearInterval(simulationInterval);
+  simulationInterval = setInterval(function() {
+    if (!audio.paused && audio.currentTime > 0 && !audio.ended) { clearInterval(simulationInterval); return; }
+    c++; if (c >= d) { clearInterval(simulationInterval); handleTrackEnd(); } 
+    else { document.getElementById('playerBarFill').style.width = (c / d * 100) + '%'; document.getElementById('playerCurrentTime').textContent = ft(c); }
+  }, 1000);
+}
+
+function handleTrackEnd() {
+  if (isHandlingTrackEnd || !isPlaying) return;
+  isHandlingTrackEnd = true; clearInterval(simulationInterval); setPlayingState(false);
+  document.getElementById('playerBarFill').style.width = '0%'; document.getElementById('playerCurrentTime').textContent = '0:00';
+  setTimeout(function() { isHandlingTrackEnd = false; playNextTrack(); }, 200);
+}
+
+function pd(s) { if (!s || s === '0:00') return 0; var p = s.split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); }
+function ft(s) { if (isNaN(s)) return '0:00'; return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0'); }
+
+audio.addEventListener('timeupdate', function() {
+  if (!currentTrack) return;
+  var d = audio.duration || pd(currentTrack.duration); if (d <= 0) return;
+  document.getElementById('playerBarFill').style.width = (audio.currentTime / d * 100) + '%';
+  document.getElementById('playerCurrentTime').textContent = ft(audio.currentTime);
+  if (audio.duration && audio.currentTime >= audio.duration - 0.3 && isPlaying) handleTrackEnd();
+});
+audio.addEventListener('loadedmetadata', function() { if (audio.duration && !isNaN(audio.duration)) document.getElementById('playerTotalTime').textContent = ft(audio.duration); });
+audio.addEventListener('play', function() { setPlayingState(true); });
+audio.addEventListener('pause', function() { if (!isHandlingTrackEnd) setPlayingState(false); });
+audio.addEventListener('ended', function() { handleTrackEnd(); });
+
+// === DOWNLOAD ===
+var downloadTrack = null;
+function openDownloadModal(track) {
+  downloadTrack = track;
+  var mc = document.getElementById('modalCover');
+  if (track.cover) { mc.innerHTML = '<img src="' + track.cover + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🎵\'">'; } else { mc.textContent = '🎵'; }
+  document.getElementById('modalTitle').textContent = track.title;
+  document.getElementById('modalArtist').textContent = 'EVGENII AI';
+  document.getElementById('modalDuration').textContent = track.duration;
+  var b = document.getElementById('modalDownloadBtn'); b.textContent = 'СКАЧАТЬ ТРЕК'; b.disabled = false;
+  document.getElementById('downloadModal').classList.add('active'); document.body.style.overflow = 'hidden';
+}
+function closeDownloadModal() { document.getElementById('downloadModal').classList.remove('active'); document.body.style.overflow = ''; downloadTrack = null; }
+function startDownload() {
+  if (!downloadTrack) return;
+  var b = document.getElementById('modalDownloadBtn'); b.textContent = 'ЗАГРУЗКА...'; b.disabled = true;
+  var l = document.createElement('a'); l.href = downloadTrack.file; l.download = downloadTrack.title + '.mp3'; l.style.display = 'none';
+  document.body.appendChild(l);
+  setTimeout(function() { l.click(); document.body.removeChild(l); b.textContent = 'ТРЕК ЗАГРУЖЕН'; setTimeout(function() { closeDownloadModal(); }, 1500); }, 1500);
+}
+document.getElementById('downloadModal').addEventListener('click', function(e) { if (e.target === this) closeDownloadModal(); });
+
+// === DISCUSSIONS ===
+var discussionsUnsubscribe = null;
+var discussionsData = [];
+function getCurrentPlayingTrack() { if (currentTrack) return currentTrack; return null; }
+function updateAttachLabel() {
+  var label = document.getElementById('discussionAttachText');
+  var toggle = document.getElementById('discussionAttachToggle');
+  if (!label || !toggle) return;
+  var current = getCurrentPlayingTrack();
+  if (current) { label.textContent = '🎵 Прикрепить: ' + current.title; toggle.disabled = false; toggle.parentElement.style.opacity = '1'; }
+  else { label.textContent = '🎵 Сначала включи любой трек'; toggle.disabled = true; toggle.checked = false; toggle.parentElement.style.opacity = '0.5'; }
+}
+function loadDiscussions() {
+  if (!db) return;
+  var list = document.getElementById('discussionsList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:40px 20px;">Загрузка обсуждений...</div>';
+  if (discussionsUnsubscribe) discussionsUnsubscribe();
+  discussionsUnsubscribe = db.collection('discussions').orderBy('createdAt', 'desc').limit(100).onSnapshot(function(snapshot) {
+    discussionsData = [];
+    snapshot.forEach(function(doc) { discussionsData.push({ id: doc.id, ...doc.data() }); });
+    renderDiscussions();
+  }, function(error) { console.error(error); list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:40px 20px;">Ошибка загрузки</div>'; });
+}
+function renderDiscussions() {
+  var list = document.getElementById('discussionsList');
+  var count = document.getElementById('discussionsCount');
+  if (!list) return;
+  if (discussionsData.length === 0) { list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:40px 20px;">💬 Пока нет сообщений.<br>Будь первым!</div>'; if (count) count.textContent = '0'; return; }
+  if (count) count.textContent = discussionsData.length;
+  var reversed = discussionsData.slice().reverse();
+  list.innerHTML = reversed.map(function(d) {
+    var initial = (d.userName || '?')[0].toUpperCase();
+    var time = formatDiscussionTime(d.createdAt);
+    var trackHtml = d.trackTitle ? '<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.2);border-radius:8px;margin-bottom:8px;font-size:0.75rem;color:var(--accent-cyan);">🎵 ' + escapeHtml(d.trackTitle) + '</div>' : '';
+    return '<div class="discussion-item"><div class="discussion-avatar">' + escapeHtml(initial) + '</div>' +
+      '<div class="discussion-bubble"><div class="discussion-author">' + escapeHtml(d.userName) + ' <span style="font-weight:400;color:var(--text-secondary);font-size:0.75rem;">' + time + '</span></div>' + trackHtml +
+      '<div class="discussion-text">' + escapeHtml(d.text) + '</div></div></div>';
+  }).join('');
+  list.scrollTop = list.scrollHeight;
+}
+function formatDiscussionTime(timestamp) {
+  if (!timestamp) return '';
+  var date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  var diff = Math.floor((new Date() - date) / 1000);
+  if (diff < 60) return 'только что'; if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад'; return Math.floor(diff / 86400) + ' дн назад';
+}
+function sendDiscussion() {
+  if (!db) return;
+  var input = document.getElementById('discussionInput');
+  var text = input.value.trim(); if (!text) return;
+  var userName = localStorage.getItem('evgenii_user') || 'Гость';
+  var btn = document.getElementById('discussionSendBtn');
+  var attachToggle = document.getElementById('discussionAttachToggle');
+  btn.disabled = true;
+  var data = { userName: userName, text: text, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+  if (attachToggle && attachToggle.checked) { var current = getCurrentPlayingTrack(); if (current) { data.trackId = String(current.id); data.trackTitle = current.title; } }
+  db.collection('discussions').add(data).then(function() { input.value = ''; input.style.height = 'auto'; }).catch(function(e) { alert('Ошибка: ' + e.message); }).finally(function() { btn.disabled = false; input.focus(); });
+}
+document.getElementById('discussionInput').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
+document.getElementById('discussionInput').addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendDiscussion(); } });
+
+// === ADMIN & NAVIGATION ===
+function showAdminLogin() { navigateTo('adminPage'); document.getElementById('adminLoginSection').style.display = 'block'; document.getElementById('adminContent').style.display = 'none'; document.getElementById('adminEmailInput').value = ''; document.getElementById('adminPasswordInput').value = ''; document.getElementById('adminLoginStatus').textContent = ''; }
+function adminLogin() {
+  var email = document.getElementById('adminEmailInput').value.trim();
+  var password = document.getElementById('adminPasswordInput').value;
+  var status = document.getElementById('adminLoginStatus');
+  if (!email || !password) { status.textContent = '⚠️ Введите email и пароль'; status.className = 'form-status error'; return; }
+  status.textContent = '⏳ Проверка...'; status.className = 'form-status';
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(function() {
+      isAdminLoggedIn = true; status.textContent = '✅ Успешный вход!'; status.className = 'form-status success';
+      setTimeout(function() { document.getElementById('adminLoginSection').style.display = 'none'; document.getElementById('adminContent').style.display = 'block'; updateMaintenanceUI(); }, 500);
+    })
+    .catch(function(error) {
+      var msg = '❌ Ошибка входа';
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') msg = '❌ Неверный email или пароль';
+      status.textContent = msg; status.className = 'form-status error';
+    });
+}
+
+function getGreeting(h) { if (h >= 5 && h < 12) return 'ДОБРОЕ УТРО'; if (h >= 12 && h < 17) return 'ДОБРЫЙ ДЕНЬ'; if (h >= 17 && h < 22) return 'ДОБРЫЙ ВЕЧЕР'; return 'ДОБРОЙ НОЧИ'; }
+function getLoginGreeting(h) { if (h >= 5 && h < 12) return 'Доброе утро'; if (h >= 12 && h < 17) return 'Добрый день'; if (h >= 17 && h < 22) return 'Добрый вечер'; return 'Доброй ночи'; }
+function escapeHtml(text) { var d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
+
+var currentPage = 'homePage';
+function navigateTo(pageId) {
+  if (currentPage === pageId) return;
+  var ce = document.getElementById(currentPage); var ne = document.getElementById(pageId);
+  if (ce) ce.classList.remove('active');
+  if (ne) ne.classList.add('active');
+  window.scrollTo(0, 0); currentPage = pageId;
+  if (pageId === 'discussionsPage') loadDiscussions();
+  if (pageId === 'adminPage' && !isAdminLoggedIn) showAdminLogin();
+}
+function goBack() { navigateTo('homePage'); }
+// ✅ Функция goToHome() удалена — больше не нужна
+
+// === INITIALIZATION ===
+var loginScreen = document.getElementById('loginScreen');
+var loginForm = document.getElementById('loginForm');
+var nameInput = document.getElementById('nameInput');
+var loginGreeting = document.getElementById('loginGreeting');
+var headerName = document.getElementById('headerName');
+var logoutBtn = document.getElementById('logoutBtn');
+
+loginGreeting.textContent = getLoginGreeting(new Date().getHours());
+loginScreen.addEventListener('transitionend', function() { if (loginScreen.classList.contains('hidden')) loginScreen.style.display = 'none'; });
+
+var savedName = null;
+try { savedName = localStorage.getItem('evgenii_user'); } catch(e) {}
+if (savedName) { showMainScreen(savedName); if (!isLicenseAccepted()) setTimeout(function() { openLicenseModal(true); }, 400); }
+
+loadMaintenanceSettings();
+
+loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  var name = nameInput.value.trim();
+  if (name) {
+    try { localStorage.setItem('evgenii_user', name); } catch(err) {}
+    showMainScreen(name);
+    if (!isLicenseAccepted()) setTimeout(function() { openLicenseModal(true); }, 400);
+  } else {
+    nameInput.style.borderColor = 'var(--error)';
+    setTimeout(function() { nameInput.style.borderColor = ''; }, 1500);
+  }
+});
+
+function showMainScreen(name) {
+  loginScreen.classList.add('hidden'); loginScreen.style.display = 'none';
+  document.getElementById('homePage').classList.add('active');
+  headerName.textContent = name.toUpperCase();
+  document.getElementById('headerGreeting').textContent = getGreeting(new Date().getHours());
+  loadTracksFromFirestore();
+  updateAttachLabel();
+}
+
+logoutBtn.addEventListener('click', function() {
+  firebase.auth().signOut().catch(function(){});
+  try { localStorage.removeItem('evgenii_user'); } catch(e) {}
+  var pages = ['homePage','tracksPage','aboutPage','communityPage','contactPage','supportPage','discussionsPage','adminPage'];
+  pages.forEach(function(p) { var el = document.getElementById(p); if (el) el.classList.remove('active'); });
+  currentPage = 'homePage';
+  loginScreen.style.display = 'flex'; loginScreen.classList.remove('hidden');
+  nameInput.value = ''; loginGreeting.textContent = getLoginGreeting(new Date().getHours());
+  stopPlayer();
+  if (discussionsUnsubscribe) { discussionsUnsubscribe(); discussionsUnsubscribe = null; }
+  if (maintenanceUnsubscribe) { maintenanceUnsubscribe(); maintenanceUnsubscribe = null; }
+  isAdminLoggedIn = false;
+});
+
+// === CONTACT FORM ===
+var contactForm = document.getElementById('contactForm');
+var formSubmitBtn = document.getElementById('submitBtn');
+var formStatus = document.getElementById('formStatus');
+if (contactForm) {
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    var name = formData.get('name'); var contact = formData.get('contact'); var messageText = formData.get('message');
+    formSubmitBtn.disabled = true; formSubmitBtn.innerHTML = '<span>ОТПРАВКА...</span>'; formStatus.textContent = ''; formStatus.className = 'form-status';
+    var message = '📩 <b>НОВОЕ СООБЩЕНИЕ С САЙТА</b>\n👤 <b>Имя:</b> ' + name + '\n📧 <b>Контакт:</b> ' + contact + '\n💬 <b>Сообщение:</b>\n' + messageText + '\n⏰ <b>Время:</b> ' + new Date().toLocaleString('ru-RU');
+    var telegramURL = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage';
+    fetch(telegramURL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' }) })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.ok) { formStatus.textContent = 'Сообщение отправлено! Я отвечу вам скоро.'; formStatus.className = 'form-status success'; contactForm.reset(); }
+      else { throw new Error(data.description || 'Ошибка Telegram API'); }
+    }).catch(function(error) { console.error(error); formStatus.textContent = 'Ошибка: ' + error.message; formStatus.className = 'form-status error'; })
+    .finally(function() { formSubmitBtn.disabled = false; formSubmitBtn.innerHTML = '<span>ОТПРАВИТЬ СООБЩЕНИЕ</span>'; });
+  });
+}
+
+// === SUPPORT COPY ===
+var CARD_NUMBER = '2204311007219604';
+var copyTimeout = null;
+function copyCardNumber() {
+  var btn = document.getElementById('copyBtn');
+  var btnText = document.getElementById('copyBtnText');
+  var toast = document.getElementById('copyToast');
+  function showCopySuccess() {
+    btn.classList.add('copied'); btnText.textContent = 'Скопировано!'; toast.classList.add('show');
+    if (copyTimeout) clearTimeout(copyTimeout);
+    copyTimeout = setTimeout(function() { btn.classList.remove('copied'); btnText.textContent = 'Копировать'; toast.classList.remove('show'); }, 2500);
+  }
+  function fallbackCopy() {
+    var textarea = document.createElement('textarea'); textarea.value = CARD_NUMBER; textarea.style.position = 'fixed'; textarea.style.opacity = '0';
+    document.body.appendChild(textarea); textarea.select();
+    try { document.execCommand('copy'); showCopySuccess(); } catch (err) { alert('Номер карты: ' + CARD_NUMBER); }
+    document.body.removeChild(textarea);
+  }
+  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(CARD_NUMBER).then(function() { showCopySuccess(); }).catch(function() { fallbackCopy(); }); }
+  else { fallbackCopy(); }
+}
+updateAttachLabel();
+</script>
+</body>
+</html>
