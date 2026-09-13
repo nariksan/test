@@ -336,8 +336,8 @@ footer { text-align: center; padding: 3rem 20px; border-top: 1px solid var(--bor
   <div class="nav-top">
     <div class="logo" onclick="window.location.href='index.html'">EVGENII AI · ДНЕВНИК</div>
     <div class="nav-actions">
-      <!-- ✅ ИЗМЕНЕНО: Кнопка теперь ведёт в music.html и называется EVGENII AI -->
-      <a href="music.html" class="btn-small" style="display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none;">🎵 EVGENII AI</a>
+      <!-- ✅ ИСПРАВЛЕНО: теперь ссылка ведёт на index.html -->
+      <a href="index.html" class="btn-small" style="display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none;">🎵 EVGENII AI</a>
       <button class="btn-small" id="adminNavBtn" style="display: none;" onclick="openAdminPanel()">⚙️ Админ</button>
       <div class="user-badge" id="userBadge">
         <div class="user-avatar" id="userAvatar">?</div>
@@ -589,7 +589,6 @@ firebase.auth().onAuthStateChanged(async (user) => {
       if (doc.exists) {
         currentUser = { uid: user.uid, email: user.email, ...doc.data() };
       } else {
-        // Резервный вариант, если профиль не создан
         currentUser = { 
           uid: user.uid, 
           email: user.email, 
@@ -699,7 +698,6 @@ async function handleRegister(e) {
     const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
     const user = userCredential.user;
     
-    // Сохраняем имя, email и статус админа в базу данных
     await db.collection(USERS_COLLECTION).doc(user.uid).set({
       name: name,
       email: email,
@@ -837,7 +835,6 @@ function renderPosts(filter = 'all') {
   grid.innerHTML = filtered.map(post => {
     const isLiked = liked.includes(post.id);
     const tagsHtml = (post.tags || []).map(t => `<span class="post-tag">#${t}</span>`).join('');
-    // Отображаем имя автора из базы данных
     const authorName = post.author || 'Аноним';
     const authorInitial = authorName[0].toUpperCase();
     const canEdit = currentUser && (currentUser.isAdmin || post.authorId === currentUser.uid);
@@ -925,8 +922,6 @@ document.getElementById('filterButtons').addEventListener('click', (e) => {
   renderPosts(currentFilter);
 });
 
-// ✅ Функция goToHome() удалена, так как теперь используется прямая ссылка <a href="music.html">
-
 // ===== ЛАЙКИ =====
 function getLikedPosts() {
   const data = localStorage.getItem('evgenii_liked_posts');
@@ -1013,7 +1008,7 @@ async function savePost() {
       category, date, title, text, tags, 
       image: image || null, 
       likes: 0, 
-      author: currentUser.name, // Сохраняем имя из профиля
+      author: currentUser.name,
       authorId: currentUser.uid, 
       status: status, 
       createdAt: firebase.firestore.FieldValue.serverTimestamp() 
